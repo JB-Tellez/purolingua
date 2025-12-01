@@ -96,13 +96,16 @@ Before writing acceptance criteria, you must **understand the current behavior**
    - These scenarios should apply to both the original app AND your ported version
    - The behavior should remain the same, only the language changes
 
-## Expected Outcome
+## Expected Outcomes
 
-By the end of this exercise, your team should have:
+By the end of this exercise, your group should have:
 
 1. ✅ A **running version** of the app ported to your chosen language
 2. ✅ **Gherkin-style acceptance criteria** that describes the app's behavior
-3. ✅ **Confirmation** that your ported app meets all acceptance criteria
+
+**NOTE:** This exercise is not a coding test. Get the app running as best you can. If you run into blockers we can discuss. 
+
+Record the acceptance criteria in text files, traditionally with `.feature` extension.
 
 ## Current App Features
 
