@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impara l'Italiano</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">🇮🇹 Italiano</div>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Mazzi</a></li>
+                <li><a href="#" id="reset-progress-btn">Reset</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="app-container">
+            <!-- Deck Selection View -->
+            <section id="deck-selection" class="view active">
+                <h1>Scegli un Mazzo</h1>
+                <div class="deck-grid" id="deck-grid">
+                    <!-- Decks will be injected here -->
+                </div>
+            </section>
+
+            <!-- Flashcard View -->
+            <section id="flashcard-view" class="view hidden">
+                <button id="back-button" class="icon-btn">← Indietro</button>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+
+                <div id="feedback-message" class="feedback-message hidden"></div>
+
+                <div class="card-container">
+                    <div class="card" id="current-card">
+                        <div class="card-face card-front">
+                            <button class="audio-btn" id="audio-btn-front" aria-label="Ascolta">🔊</button>
+                            <p id="card-front-text">Front Text</p>
+                        </div>
+                        <div class="card-face card-back">
+                            <div id="quiz-options" class="quiz-options">
+                                <!-- Options injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="flip-btn" class="btn secondary">Gira</button>
+                    <button id="next-btn" class="btn primary">Prossimo</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
