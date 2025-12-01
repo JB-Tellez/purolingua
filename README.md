@@ -1,93 +1,137 @@
-# italiano
+# Italiano - Language Learning Flashcard App
 
+## Overview
 
+This is a **learning exercise** focused on using AI to make changes to an existing application. The app is a functional Italian language learning tool that uses flashcards and spaced repetition to help users learn vocabulary.
 
-## Getting started
+**⚠️ Important: Only use company-approved AI tools for this exercise.**
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Exercise Goal
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+**Port this Italian language learning app to another spoken language of your team's choice.**
 
-## Add your files
+The primary objective is to practice using AI assistants to understand, modify, and test existing code. This exercise does not require coding experience, though developers are welcome to review and edit code directly.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Getting Started
 
+### Option 1: With Git (Recommended)
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd italiano
+   ```
+
+2. **Create a team branch**
+   - Use your team name as a prefix (e.g., `artichoke-prod`, `broccoli-localization`)
+   ```bash
+   git checkout -b <teamname>-<descriptive-name>
+   ```
+
+3. **Make your changes on your team branch**
+
+4. **Follow standard git practices** (commit regularly, write clear commit messages, push to remote)
+
+### Option 2: Without Git
+
+If your team is not experienced with Git:
+
+1. Download the repository as a ZIP file
+2. Extract and work on the files locally
+3. Keep backups of your work manually
+
+## Running the App
+
+This app is a simple HTML/CSS/JavaScript application that **runs without a server**.
+
+**To run:**
+1. Open `index.html` in a web browser
+2. That's it!
+
+**Optional:** If your team has experience with local servers, feel free to use one (e.g., `python -m http.server` or `npx serve`).
+
+## Team Collaboration
+
+- **Teams can work together** or **break into smaller groups** to create different language versions
+- Each group should work on their own branch (if using Git) or in their own directory (if not using Git)
+- Communication and coordination are key!
+
+## Testing Requirements
+
+### Automated Tests (Stretch Goal)
+Automated tests are **not required** but can be added as a stretch goal for teams interested in learning test automation.
+
+### Acceptance Criteria (Required)
+**Gherkin-style acceptance criteria are required** to confirm correct behavior of your ported app.
+
+#### What is Gherkin?
+Gherkin uses a Given-When-Then format to describe behavior:
+
+```gherkin
+Feature: Deck Selection
+
+  Scenario: User selects a deck with due cards
+    Given I am on the deck selection page
+    And the "Greetings" deck has 5 cards due
+    When I click on the "Greetings" deck
+    Then I should see the flashcard view
+    And I should see the first due card
 ```
-cd existing_repo
-git remote add origin https://gitlab.galvanize.com/cohorts/ent/allstate/as-xp-25-12-ana-wave-b/class-projects/italiano.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
+#### Characterization Testing
+Before writing acceptance criteria, you must **understand the current behavior** of the app through characterization testing:
 
-- [ ] [Set up project integrations](https://gitlab.galvanize.com/cohorts/ent/allstate/as-xp-25-12-ana-wave-b/class-projects/italiano/-/settings/integrations)
+1. **Explore the app thoroughly**
+   - Click every button
+   - Try every feature
+   - Observe what happens in different scenarios
 
-## Collaborate with your team
+2. **Document the current behavior**
+   - What does each screen do?
+   - How does navigation work?
+   - What happens when you answer correctly vs. incorrectly?
+   - How does the spaced repetition system work?
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+3. **Write Gherkin scenarios** that capture this behavior
+   - These scenarios should apply to both the original app AND your ported version
+   - The behavior should remain the same, only the language changes
 
-## Test and Deploy
+## Expected Outcome
 
-Use the built-in continuous integration in GitLab.
+By the end of this exercise, your team should have:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+1. ✅ A **running version** of the app ported to your chosen language
+2. ✅ **Gherkin-style acceptance criteria** that describes the app's behavior
+3. ✅ **Confirmation** that your ported app meets all acceptance criteria
 
-***
+## Current App Features
 
-# Editing this README
+- **Deck Selection**: Choose from multiple flashcard decks
+- **Flashcard Quiz**: Multiple-choice questions to test knowledge
+- **Spaced Repetition**: Leitner box system with 3 levels (1 day, 3 days, 7 days)
+- **Audio Support**: Text-to-speech pronunciation
+- **Progress Tracking**: Saves progress in browser localStorage
+- **Due Card Indicators**: Shows how many cards are due for review
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## Tech Stack
 
-## Suggestions for a good README
+- HTML5
+- CSS3
+- Vanilla JavaScript (no frameworks)
+- Web Speech API (for text-to-speech)
+- localStorage (for persistence)
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## Tips for Success
 
-## Name
-Choose a self-explaining name for your project.
+1. **Start by understanding** - Use AI to explain how the code works
+2. **Test frequently** - Open the app in your browser after each change
+3. **Ask questions** - Use AI to help you understand what each piece of code does
+4. **Document your acceptance criteria early** - This helps ensure you don't miss any features
+5. **Commit often** (if using Git) - Small, incremental changes are easier to manage
+6. **Communicate with your team** - Share what you're learning!
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Questions?
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+This is a learning exercise - there are no wrong questions! Use your AI assistant to help you understand and make progress.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Have fun! 🚀
