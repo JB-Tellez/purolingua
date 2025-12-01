@@ -70,10 +70,9 @@ Gherkin uses a Given-When-Then format to describe behavior:
 ```gherkin
 Feature: Deck Selection
 
-  Scenario: User selects a deck with due cards
+  Scenario: User selects a deck of cards
     Given I am on the deck selection page
-    And the "Greetings" deck has 5 cards due
-    When I click on the "Greetings" deck
+    When I click on a deck
     Then I should see the flashcard view
     And I should see the first due card
 ```
@@ -85,6 +84,7 @@ Before writing acceptance criteria, you must **understand the current behavior**
    - Click every button
    - Try every feature
    - Observe what happens in different scenarios
+   - Use the browser's console to inspect application progress in local storage
 
 2. **Document the current behavior**
    - What does each screen do?
