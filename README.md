@@ -116,6 +116,55 @@ Record the acceptance criteria in text files, traditionally with `.feature` exte
 - **Progress Tracking**: Saves progress in browser localStorage
 - **Due Card Indicators**: Shows how many cards are due for review
 
+## Feature Extension Ideas
+
+Once you've successfully ported the app, consider adding new features to deepen your learning. Here's a feature idea that enhances the learning experience:
+
+### Study Mode Toggle
+
+Add different study modes to give users alternative ways to learn:
+
+**Current Behavior:**
+- Multiple-choice quiz only
+- Immediate right/wrong feedback
+- Spaced repetition scheduling
+
+**Proposed Study Modes:**
+
+1. **Quiz Mode** (current default)
+   - Multiple-choice questions with 4 options
+   - Immediate feedback on correct/incorrect answers
+   - Updates spaced repetition progress
+
+2. **Typing Practice Mode**
+   - See the phrase in the target language
+   - Type the translation in a text input field
+   - Check if answer matches (exact or fuzzy matching)
+   - Better for active recall vs. recognition
+
+3. **Review Mode** (Browse Only)
+   - Flip through cards at your own pace
+   - No quiz pressure or right/wrong feedback
+   - Good for refreshing memory before tests
+   - Doesn't update spaced repetition progress
+
+4. **Cram Mode**
+   - Like quiz mode, but shows ALL cards (ignores due dates)
+   - Doesn't update progress/Leitner boxes
+   - Good for intensive study sessions
+
+**Implementation Considerations:**
+- Add mode selector UI (buttons or dropdown) before starting a deck
+- Modify the flashcard view based on selected mode
+- Conditionally update progress based on mode
+- Write Gherkin scenarios for each mode's behavior
+
+**Learning Value:**
+- Understand existing quiz and spaced repetition logic
+- Practice conditional rendering and feature flags
+- Work with different UI patterns (buttons vs. text input)
+- Create comprehensive acceptance criteria for multiple scenarios
+
 ## Tech Stack
 
 - HTML5
