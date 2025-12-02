@@ -58,8 +58,8 @@ This app is a simple HTML/CSS/JavaScript application that **runs without a serve
 
 ## Testing Requirements
 
-### Automated Tests (Stretch Goal)
-Automated tests are **not required** but can be added as a stretch goal for teams interested in learning test automation.
+### Automated Tests (Required)
+Automated tests are **now required**. Starter tests and a test runner are supplied. But feel free to use more formal testing tools as a **stretch** goal. 
 
 ### Acceptance Criteria (Required)
 **Gherkin-style acceptance criteria are required** to confirm correct behavior of your ported app.
