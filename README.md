@@ -59,7 +59,35 @@ This app is a simple HTML/CSS/JavaScript application that **runs without a serve
 ## Testing Requirements
 
 ### Automated Tests (Required)
-Automated tests are **now required**. Starter tests and a test runner are supplied. But feel free to use more formal testing tools as a **stretch** goal. 
+Automated tests are **now required**. Two testing options are available:
+
+#### Option 1: Custom Test Runner (No Setup Required)
+A simple browser-based test runner is provided for teams without Node.js/npm:
+1. Open [tests.html](tests.html) in your browser
+2. View test results immediately
+
+#### Option 2: Vitest (Recommended for Advanced Teams)
+A professional testing setup using Vitest is available as a **stretch goal**:
+1. **Install dependencies** (one-time setup):
+   ```bash
+   npm install
+   ```
+
+2. **Run tests**:
+   ```bash
+   npm test              # Run all tests once
+   npm run test:watch    # Run tests in watch mode (re-runs on file changes)
+   npm run test:ui       # Open Vitest UI in browser
+   ```
+
+3. **Benefits of Vitest**:
+   - Professional development experience
+   - Watch mode for instant feedback
+   - Better error messages and debugging
+   - Code coverage reports (run `npm run test:coverage`)
+   - Industry-standard tooling
+
+Both test runners validate the same core functionality (spaced repetition logic, quiz generation, progress persistence). 
 
 ### Acceptance Criteria (Required)
 **Gherkin-style acceptance criteria are required** to confirm correct behavior of your ported app.

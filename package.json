@@ -1,0 +1,25 @@
+{
+  "name": "italiano",
+  "version": "1.0.0",
+  "description": "## Overview",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.galvanize.com/cohorts/ent/allstate/as-xp-25-12-ana-wave-b/class-projects/italiano.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vitest/ui": "^4.0.15",
+    "jsdom": "^27.2.0",
+    "vitest": "^4.0.15"
+  }
+}
