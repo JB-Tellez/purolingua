@@ -13,6 +13,17 @@ const localStorageMock = (() => {
 
 global.localStorage = localStorageMock;
 
+// Mock SpeechSynthesisUtterance
+global.SpeechSynthesisUtterance = class SpeechSynthesisUtterance {
+  constructor(text) {
+    this.text = text;
+    this.lang = '';
+    this.rate = 1.0;
+    this.pitch = 1.0;
+    this.volume = 1.0;
+  }
+};
+
 // Mock speechSynthesis API
 global.speechSynthesis = {
   speak: () => {},
