@@ -3,6 +3,8 @@ const decks = [
         id: 'daily',
         title: 'Vita Quotidiana',
         description: 'Frasi utili per la vita di tutti i giorni.',
+        icon: '☀️',
+        theme: 'teal',
         cards: [
             {
                 front: "Ho perso il treno.",
@@ -42,6 +44,8 @@ const decks = [
         id: 'restaurant',
         title: 'Al Ristorante',
         description: 'Ordinare cibo e chiedere il conto.',
+        icon: '🍝',
+        theme: 'red',
         cards: [
             {
                 front: "Vorrei prenotare un tavolo per due.",
@@ -81,6 +85,8 @@ const decks = [
         id: 'travel',
         title: 'In Viaggio',
         description: 'Muoversi in città e chiedere indicazioni.',
+        icon: '🗺️',
+        theme: 'yellow',
         cards: [
             {
                 front: "Quanto dista il centro?",
@@ -120,6 +126,8 @@ const decks = [
         id: 'shopping',
         title: 'Fare Spese',
         description: 'Comprare nei negozi e al mercato.',
+        icon: '🛒',
+        theme: 'blue',
         cards: [
             {
                 front: "Quanto costa questo?",
@@ -159,6 +167,8 @@ const decks = [
         id: 'hotel',
         title: 'In Albergo',
         description: 'Prenotazioni e servizi in hotel.',
+        icon: '🏨',
+        theme: 'green',
         cards: [
             {
                 front: "Ho una prenotazione a nome Rossi.",
@@ -198,6 +208,8 @@ const decks = [
         id: 'emergencies',
         title: 'Emergenze',
         description: 'Frasi importanti per situazioni urgenti.',
+        icon: '🚨',
+        theme: 'pink',
         cards: [
             {
                 front: "Ho bisogno di aiuto!",
@@ -237,6 +249,8 @@ const decks = [
         id: 'social',
         title: 'Conversazioni Sociali',
         description: 'Presentarsi e parlare con le persone.',
+        icon: '💬',
+        theme: 'purple',
         cards: [
             {
                 front: "Come ti chiami?",
@@ -276,6 +290,8 @@ const decks = [
         id: 'weather',
         title: 'Il Tempo',
         description: 'Parlare del meteo e delle stagioni.',
+        icon: '☁️',
+        theme: 'orange',
         cards: [
             {
                 front: "Fa molto caldo oggi.",

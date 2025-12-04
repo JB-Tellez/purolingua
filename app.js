@@ -203,26 +203,38 @@ function init() {
     }
 }
 
+// Icon Mapping
+const deckIcons = {
+    'daily': '☀️',
+    'restaurant': '🍝',
+    'travel': '🗺️',
+    'shopping': '🛒',
+    'hotel': '🏨',
+    'emergencies': '🚨',
+    'social': '💬',
+    'weather': '☁️'
+};
+
 // Render Decks
 function renderDecks() {
     deckGrid.innerHTML = '';
     decks.forEach(deck => {
+        // Skip decks that don't have a theme (optional, if we want to hide Social/Weather)
+        if (!deck.theme) return;
+
         const dueCount = getDueCount(deck);
         const card = document.createElement('div');
-        card.className = 'deck-card';
+        card.className = `deck-card theme-${deck.theme}`;
 
-        let badgeHTML = '';
-        if (dueCount > 0) {
-            badgeHTML = `<span class="due-badge">${dueCount}</span>`;
-        } else {
-            badgeHTML = `<span class="due-badge completed">✓</span>`;
-        }
+        const badgeText = dueCount > 0 ? `${dueCount} carte` : 'Completato';
 
         card.innerHTML = `
-            ${badgeHTML}
-            <h3>${deck.title}</h3>
-            <p>${deck.description}</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: #aaa;">${deck.cards.length} carte</p>
+            <div class="deck-icon-circle">${deck.icon}</div>
+            <div>
+                <h3>${deck.title}</h3>
+                <p>${deck.description}</p>
+            </div>
+            <div class="deck-card-badge">${badgeText}</div>
         `;
         card.addEventListener('click', () => startDeck(deck));
         deckGrid.appendChild(card);
