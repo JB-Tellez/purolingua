@@ -1,0 +1,1 @@
+I'd like to update the look of this site to have it be funner and cute. Think DuoLingo but not too close to be obvious. Steam and Google classroom are good references too.
