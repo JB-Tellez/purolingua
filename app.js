@@ -23,6 +23,79 @@ const audioBtnFront = document.getElementById('audio-btn-front');
 const feedbackMessage = document.getElementById('feedback-message');
 const resetProgressBtn = document.getElementById('reset-progress-btn');
 
+// Modal Elements
+const modal = document.getElementById('custom-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalMessage = document.getElementById('modal-message');
+const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+const modalCancelBtn = document.getElementById('modal-cancel-btn');
+
+// Custom Modal Functions
+function showAlert(title, message) {
+    return new Promise((resolve) => {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        modalCancelBtn.style.display = 'none';
+        modalConfirmBtn.textContent = 'OK';
+
+        modal.classList.remove('hidden');
+
+        const handleConfirm = () => {
+            modal.classList.add('hidden');
+            modalConfirmBtn.removeEventListener('click', handleConfirm);
+            resolve(true);
+        };
+
+        modalConfirmBtn.addEventListener('click', handleConfirm);
+
+        // Close on overlay click
+        const overlay = modal.querySelector('.modal-overlay');
+        const handleOverlayClick = () => {
+            modal.classList.add('hidden');
+            overlay.removeEventListener('click', handleOverlayClick);
+            modalConfirmBtn.removeEventListener('click', handleConfirm);
+            resolve(true);
+        };
+        overlay.addEventListener('click', handleOverlayClick);
+    });
+}
+
+function showConfirm(title, message) {
+    return new Promise((resolve) => {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        modalCancelBtn.style.display = 'inline-block';
+        modalConfirmBtn.textContent = 'Conferma';
+
+        modal.classList.remove('hidden');
+
+        const handleConfirm = () => {
+            modal.classList.add('hidden');
+            cleanup();
+            resolve(true);
+        };
+
+        const handleCancel = () => {
+            modal.classList.add('hidden');
+            cleanup();
+            resolve(false);
+        };
+
+        const cleanup = () => {
+            modalConfirmBtn.removeEventListener('click', handleConfirm);
+            modalCancelBtn.removeEventListener('click', handleCancel);
+            overlay.removeEventListener('click', handleCancel);
+        };
+
+        modalConfirmBtn.addEventListener('click', handleConfirm);
+        modalCancelBtn.addEventListener('click', handleCancel);
+
+        // Close on overlay click (same as cancel)
+        const overlay = modal.querySelector('.modal-overlay');
+        overlay.addEventListener('click', handleCancel);
+    });
+}
+
 // Feedback
 function showFeedback(message, isCorrect) {
     feedbackMessage.textContent = message;
@@ -170,7 +243,7 @@ function startDeck(deck) {
 
     // Check if any cards are due
     if (dueCardIndices.length === 0) {
-        alert('Tutto fatto! Torna domani! ✓');
+        showAlert('Completato! ✓', 'Tutto fatto! Torna domani!');
         return;
     }
 
@@ -311,7 +384,7 @@ function findBestItalianVoice() {
 
 function speak(text) {
     if (!window.speechSynthesis) {
-        alert("Il tuo browser non supporta l'audio.");
+        showAlert('Audio non disponibile', "Il tuo browser non supporta l'audio.");
         return;
     }
 
@@ -360,8 +433,9 @@ function setupEventListeners() {
             currentCardIndex++;
             renderCard();
         } else {
-            alert("Hai completato tutte le carte! Torna domani per più!");
-            goHome();
+            showAlert('Complimenti! 🎉', 'Hai completato tutte le carte! Torna domani per più!').then(() => {
+                goHome();
+            });
         }
     });
 
@@ -385,8 +459,12 @@ function goHome() {
     renderDecks();
 }
 
-function resetProgress() {
-    const confirmed = confirm('Sei sicuro di voler resettare tutto il progresso? Questa azione non può essere annullata.');
+async function resetProgress() {
+    const confirmed = await showConfirm(
+        'Conferma reset',
+        'Sei sicuro di voler resettare tutto il progresso? Questa azione non può essere annullata.'
+    );
+
     if (confirmed) {
         // Clear localStorage
         localStorage.removeItem('italiano-progress');
@@ -400,7 +478,7 @@ function resetProgress() {
             renderDecks();
         }
 
-        alert('Progresso resettato con successo!');
+        await showAlert('Completato', 'Progresso resettato con successo!');
     }
 }
 
