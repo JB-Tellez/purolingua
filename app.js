@@ -300,38 +300,35 @@ function renderCard() {
     // Reset Flip
     currentCard.classList.remove('flipped');
 
-    // Update Content
-    setTimeout(() => {
-        cardFrontText.textContent = card.front;
+    // Update Content immediately
+    cardFrontText.textContent = card.front;
 
-        // Generate Quiz Options
-        const choices = generateChoices(card, currentDeck);
-        quizOptionsContainer.innerHTML = '';
+    // Generate Quiz Options
+    const choices = generateChoices(card, currentDeck);
+    quizOptionsContainer.innerHTML = '';
 
-        choices.forEach(choice => {
-            const btn = document.createElement('button');
-            btn.className = 'quiz-btn';
+    choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-btn';
 
-            // Create audio icon
-            const audioIcon = document.createElement('span');
-            audioIcon.className = 'quiz-audio-icon';
-            audioIcon.textContent = '🔊';
-            audioIcon.onclick = (e) => {
-                e.stopPropagation();
-                speak(choice.text);
-            };
+        // Create audio icon
+        const audioIcon = document.createElement('span');
+        audioIcon.className = 'quiz-audio-icon';
+        audioIcon.textContent = '🔊';
+        audioIcon.onclick = (e) => {
+            e.stopPropagation();
+            speak(choice.text);
+        };
 
-            // Create text span
-            const textSpan = document.createElement('span');
-            textSpan.textContent = choice.text;
+        // Create text span
+        const textSpan = document.createElement('span');
+        textSpan.textContent = choice.text;
 
-            btn.appendChild(audioIcon);
-            btn.appendChild(textSpan);
-            btn.onclick = (e) => handleAnswer(e, choice, btn);
-            quizOptionsContainer.appendChild(btn);
-        });
-
-    }, 200);
+        btn.appendChild(audioIcon);
+        btn.appendChild(textSpan);
+        btn.onclick = (e) => handleAnswer(e, choice, btn);
+        quizOptionsContainer.appendChild(btn);
+    });
 
     // Update Progress (based on due cards, not total cards)
     const progressPercent = ((currentCardIndex + 1) / dueCardIndices.length) * 100;
