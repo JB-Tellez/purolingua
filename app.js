@@ -254,6 +254,16 @@ function renderDecks() {
     });
 }
 
+// Utility: Fisher-Yates Shuffle
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
 // Start Deck
 function startDeck(deck) {
     currentDeck = deck;
@@ -271,6 +281,9 @@ function startDeck(deck) {
         showAlert('Completato! ✓', 'Tutto fatto! Torna domani!');
         return;
     }
+
+    // Randomize the order of cards
+    dueCardIndices = shuffleArray(dueCardIndices);
 
     currentCardIndex = 0;
 
