@@ -1,4 +1,5 @@
 // State
+let decks = []; // Loaded from decks.json
 let currentDeck = null;
 let currentCardIndex = 0;
 let dueCardIndices = []; // Indices of cards due for review today
@@ -187,8 +188,20 @@ function getDueCount(deck) {
 }
 
 // Initialize
-function init() {
+async function init() {
     loadProgress();
+
+    // Load decks from JSON
+    try {
+        const response = await fetch('decks.json');
+        if (!response.ok) throw new Error('Failed to load decks');
+        decks = await response.json();
+    } catch (e) {
+        console.error('Failed to load decks:', e);
+        deckGrid.innerHTML = '<p style="color: red; text-align: center;">Errore caricando i dati. Ricarica la pagina.</p>';
+        return;
+    }
+
     renderDecks();
     setupEventListeners();
 
