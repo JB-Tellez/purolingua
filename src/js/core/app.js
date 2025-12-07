@@ -1,8 +1,8 @@
 // Imports
-import { speak, initializeVoices } from './audio.js';
-import { loadProgress, isCardDue, updateCardProgress, getDueCount, resetAllProgress } from './progress.js';
-import { initializeUIElements, showAlert, showConfirm, showFeedback } from './ui.js';
-import { shuffleArray, generateChoices } from './deck-utils.js';
+import { speak, initializeVoices } from '../features/audio.js';
+import { loadProgress, isCardDue, updateCardProgress, getDueCount, resetAllProgress } from '../features/progress.js';
+import { initializeUIElements, showAlert, showConfirm, showFeedback } from '../features/ui.js';
+import { shuffleArray, generateChoices } from '../utils/deck-utils.js';
 import { initializeViewElements, switchToFlashcardView, switchToDeckSelectionView, isFlashcardViewVisible } from './views.js';
 import { getDecks, getCurrentDeck, getCurrentCardIndex, getDueCardIndices, getIsQuizAnswered, setCurrentDeck, setCurrentCardIndex, incrementCardIndex, setDueCardIndices, setIsQuizAnswered, resetDeckState } from './state.js';
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateChoices } from './deck-utils.js';
+import { generateChoices } from '../src/js/utils/deck-utils.js';
 
 const mockDeck = {
   id: 'test-deck',
