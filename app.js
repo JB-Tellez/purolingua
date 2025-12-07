@@ -31,18 +31,6 @@ function init() {
     initializeVoices();
 }
 
-// Icon Mapping
-const deckIcons = {
-    'daily': '☀️',
-    'restaurant': '🍝',
-    'travel': '🗺️',
-    'shopping': '🛒',
-    'hotel': '🏨',
-    'emergencies': '🚨',
-    'social': '💬',
-    'weather': '☁️'
-};
-
 // Render Decks
 function renderDecks() {
     deckGrid.innerHTML = '';
