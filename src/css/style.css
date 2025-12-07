@@ -390,6 +390,16 @@ h1 {
     border: 2px solid rgba(139, 107, 74, 0.15);
 }
 
+/* When card is flipped, disable pointer events on front to prevent click-through */
+.card.flipped .card-front {
+    pointer-events: none;
+}
+
+/* When card is not flipped, disable pointer events on back */
+.card:not(.flipped) .card-back {
+    pointer-events: none;
+}
+
 .card-front::before {
     content: '';
     position: absolute;
@@ -852,9 +862,11 @@ h1 {
     0% {
         box-shadow: 0 0 0 0 rgba(231, 90, 90, 0.7);
     }
+
     70% {
         box-shadow: 0 0 0 15px rgba(231, 90, 90, 0);
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(231, 90, 90, 0);
     }

@@ -21,9 +21,11 @@ const nextBtn = document.getElementById('next-btn');
 
 const audioBtnFront = document.getElementById('audio-btn-front');
 const micBtnFront = document.getElementById('mic-btn-front');
+const micBtnBack = document.getElementById('mic-btn-back');
 const resetProgressBtn = document.getElementById('reset-progress-btn');
 
 const voiceService = new VoiceRecognitionService();
+let currentQuizChoices = [];
 
 // Initialize
 function init() {
@@ -36,6 +38,7 @@ function init() {
 
     if (voiceService.isSupported()) {
         micBtnFront.classList.remove('hidden');
+        micBtnBack.classList.remove('hidden');
     }
 }
 
@@ -110,6 +113,7 @@ function renderCard() {
 
     // Generate Quiz Options
     const choices = generateChoices(card, getCurrentDeck());
+    currentQuizChoices = choices;
     quizOptionsContainer.innerHTML = '';
 
     choices.forEach(choice => {
@@ -177,8 +181,20 @@ function handleAnswer(e, choice, btn) {
 function setupEventListeners() {
     // Flip
     currentCard.addEventListener('click', (e) => {
-        // Don't flip if clicking audio or quiz buttons
-        if (e.target.closest('.audio-btn') || e.target.closest('.quiz-btn')) return;
+        // Don't flip if clicking audio, quiz, or mic buttons
+        const clickedElement = e.target;
+
+        // Check if we clicked on or inside an interactive element
+        if (clickedElement.closest('.audio-btn') ||
+            clickedElement.closest('.quiz-btn') ||
+            clickedElement.closest('.mic-btn') ||
+            clickedElement.closest('#mic-btn-front') ||
+            clickedElement.closest('#mic-btn-back') ||
+            clickedElement.closest('#audio-btn-front')) {
+            e.stopImmediatePropagation();
+            return;
+        }
+
         currentCard.classList.toggle('flipped');
     });
 
@@ -197,6 +213,7 @@ function setupEventListeners() {
     // Voice Recognition Button
     micBtnFront.addEventListener('click', (e) => {
         e.stopPropagation();
+        e.stopImmediatePropagation();
 
         if (voiceService.isListening) {
             voiceService.stopListening();
@@ -234,6 +251,61 @@ function setupEventListeners() {
             }
         );
     });
+
+    // Voice Quiz Button (Back)
+    micBtnBack.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        if (voiceService.isListening) {
+            voiceService.stopListening();
+            micBtnBack.classList.remove('listening');
+            return;
+        }
+
+        micBtnBack.classList.add('listening');
+
+        voiceService.startListening(
+            (transcript) => {
+                micBtnBack.classList.remove('listening');
+                console.log('Heard (Back):', transcript);
+
+                const normalize = (text) => text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+                const spoken = normalize(transcript);
+
+                // Find matching choice
+                const matchIndex = currentQuizChoices.findIndex(choice => {
+                    const optionText = normalize(choice.text);
+                    return spoken.includes(optionText) || optionText.includes(spoken) || spoken === optionText;
+                });
+
+                if (matchIndex !== -1) {
+                    const choice = currentQuizChoices[matchIndex];
+                    const buttons = quizOptionsContainer.querySelectorAll('.quiz-btn');
+                    const btn = buttons[matchIndex];
+
+                    if (btn) {
+                        // Simulate click or call handleAnswer directly
+                        // We need to pass a valid event object or handle null in handleAnswer. 
+                        // handleAnswer uses e.stopPropagation(), so we mock it.
+                        handleAnswer({ stopPropagation: () => { } }, choice, btn);
+                    }
+                } else {
+                    showFeedback(`Non ho trovato: "${transcript}"`, false);
+                }
+            },
+            (error) => {
+                console.error('Voice error:', error);
+                micBtnBack.classList.remove('listening');
+                showFeedback('Riprova', false);
+            },
+            () => {
+                micBtnBack.classList.remove('listening');
+            }
+        );
+    });
+
+    // Next Card
 
     // Next Card
     nextBtn.addEventListener('click', () => {
