@@ -42,13 +42,25 @@ If your team is not experienced with Git:
 
 ## Running the App
 
-This app is a simple HTML/CSS/JavaScript application that **runs without a server**.
+This app requires a web server to run correctly due to security restrictions on loading local modules and resources. It **will not work** if you simply open `index.html` in a browser.
 
 **To run:**
-1. Open `index.html` in a web browser
-2. That's it!
 
-**Optional:** If your team has experience with local servers, feel free to use one (e.g., `python -m http.server` or `npx serve`).
+You must run a local web server in the project directory. Here are a few options:
+
+- **Using Node.js (Recommended):**
+  ```bash
+  npx serve
+  ```
+- **Using Python:**
+  ```bash
+  python -m http.server
+  ```
+- **Using VS Code:**
+  Install the "Live Server" extension and click "Go Live".
+
+> [!NOTE]
+> If you have trouble setting up a web server, please reach out to your instructor for assistance.
 
 ## Team Collaboration
 
