@@ -3,6 +3,7 @@ import { speak, initializeVoices } from './audio.js';
 import { loadProgress, isCardDue, updateCardProgress, getDueCount, resetAllProgress } from './progress.js';
 import { initializeUIElements, showAlert, showConfirm, showFeedback } from './ui.js';
 import { shuffleArray, generateChoices } from './deck-utils.js';
+import { initializeViewElements, switchToFlashcardView, switchToDeckSelectionView, isFlashcardViewVisible } from './views.js';
 
 // State
 let decks = window.DECKS_DATA || [];
@@ -12,8 +13,6 @@ let dueCardIndices = []; // Indices of cards due for review today
 let isQuizAnswered = false;
 
 // DOM Elements
-const deckSelectionView = document.getElementById('deck-selection');
-const flashcardView = document.getElementById('flashcard-view');
 const deckGrid = document.getElementById('deck-grid');
 const backButton = document.getElementById('back-button');
 
@@ -30,6 +29,7 @@ const resetProgressBtn = document.getElementById('reset-progress-btn');
 
 // Initialize
 function init() {
+    initializeViewElements();
     initializeUIElements();
     loadProgress();
     renderDecks();
@@ -99,8 +99,7 @@ function startDeck(deck) {
     currentCardIndex = 0;
 
     // Switch Views
-    deckSelectionView.classList.add('hidden');
-    flashcardView.classList.remove('hidden');
+    switchToFlashcardView();
 
     renderCard();
 }
@@ -231,8 +230,7 @@ function goHome() {
     currentDeck = null;
     currentCardIndex = 0;
     dueCardIndices = [];
-    deckSelectionView.classList.remove('hidden');
-    flashcardView.classList.add('hidden');
+    switchToDeckSelectionView();
     // Re-render decks to update due count badges
     renderDecks();
 }
@@ -248,7 +246,7 @@ async function resetProgress() {
         resetAllProgress();
 
         // Return to home if in flashcard view
-        if (!flashcardView.classList.contains('hidden')) {
+        if (isFlashcardViewVisible()) {
             goHome();
         } else {
             // Just re-render decks if already on home
