@@ -1,0 +1,714 @@
+window.DECKS_DATA = [
+    {
+        "id": "daily",
+        "title": "Vita Quotidiana",
+        "description": "Frasi utili per la vita di tutti i giorni.",
+        "icon": "☀️",
+        "theme": "teal",
+        "cards": [
+            {
+                "front": "Ho perso il treno.",
+                "back": "Non sono arrivato in tempo alla stazione."
+            },
+            {
+                "front": "Dove posso comprare i biglietti?",
+                "back": "Cerco un posto per acquistare i ticket."
+            },
+            {
+                "front": "Mi sono svegliato tardi.",
+                "back": "Ho dormito più del previsto."
+            },
+            {
+                "front": "Hai voglia di uscire stasera?",
+                "back": "Ti va di fare qualcosa insieme questa sera?"
+            },
+            {
+                "front": "Che tempo fa oggi?",
+                "back": "Com'è il meteo adesso?"
+            },
+            {
+                "front": "Ho bisogno di una pausa.",
+                "back": "Devo riposarmi un po'."
+            },
+            {
+                "front": "Sono stanco morto.",
+                "back": "Sono completamente esausto."
+            },
+            {
+                "front": "Non ho tempo adesso.",
+                "back": "Sono troppo occupato in questo momento."
+            },
+            {
+                "front": "Devo fare la spesa.",
+                "back": "Ho bisogno di comprare del cibo."
+            },
+            {
+                "front": "A che ora chiude il negozio?",
+                "back": "Fino a quando è aperto?"
+            },
+            {
+                "front": "Sto aspettando un amico.",
+                "back": "Qualcuno dovrebbe arrivare presto."
+            },
+            {
+                "front": "Hai già mangiato?",
+                "back": "Hai fatto pranzo o cena?"
+            },
+            {
+                "front": "Mi sono dimenticato le chiavi.",
+                "back": "Non ho portato le chiavi con me."
+            },
+            {
+                "front": "Devo andare in banca.",
+                "back": "Ho bisogno di fare un'operazione bancaria."
+            },
+            {
+                "front": "Che giorno è oggi?",
+                "back": "Qual è la data di oggi?"
+            },
+            {
+                "front": "Sono in ritardo.",
+                "back": "Non arriverò in orario."
+            },
+            {
+                "front": "Hai visto il mio telefono?",
+                "back": "Sai dove ho messo il cellulare?"
+            },
+            {
+                "front": "Devo ricaricare il telefono.",
+                "back": "La batteria è scarica."
+            },
+            {
+                "front": "Facciamo una pausa caffè?",
+                "back": "Prendiamo un caffè insieme?"
+            },
+            {
+                "front": "Quanto manca per arrivare?",
+                "back": "Siamo quasi arrivati?"
+            }
+        ]
+    },
+    {
+        "id": "restaurant",
+        "title": "Al Ristorante",
+        "description": "Ordinare cibo e chiedere il conto.",
+        "icon": "🍝",
+        "theme": "red",
+        "cards": [
+            {
+                "front": "Vorrei prenotare un tavolo per due.",
+                "back": "Chiamo per riservare due posti."
+            },
+            {
+                "front": "Il conto, per favore.",
+                "back": "Vorrei pagare adesso."
+            },
+            {
+                "front": "Sono allergico alle noci.",
+                "back": "Non posso mangiare noci per motivi di salute."
+            },
+            {
+                "front": "Avete piatti vegetariani?",
+                "back": "Cerco opzioni senza carne o pesce."
+            },
+            {
+                "front": "Cosa mi consiglia?",
+                "back": "Qual è la sua raccomandazione?"
+            },
+            {
+                "front": "Questo è delizioso!",
+                "back": "È buonissimo!"
+            },
+            {
+                "front": "Vorrei un po' d'acqua, per favore.",
+                "back": "Mi può portare dell'acqua?"
+            },
+            {
+                "front": "Il servizio è incluso?",
+                "back": "La mancia è compresa nel conto?"
+            },
+            {
+                "front": "Qual è il piatto del giorno?",
+                "back": "Cosa offrite oggi di speciale?"
+            },
+            {
+                "front": "Vorrei ordinare un antipasto.",
+                "back": "Prendo qualcosa prima del piatto principale."
+            },
+            {
+                "front": "La pasta è fatta in casa?",
+                "back": "È pasta fresca o secca?"
+            },
+            {
+                "front": "Posso avere il menù dei vini?",
+                "back": "Vorrei vedere la carta dei vini."
+            },
+            {
+                "front": "Quanto tempo ci vuole?",
+                "back": "Quanto devo aspettare per il cibo?"
+            },
+            {
+                "front": "Possiamo sederci fuori?",
+                "back": "C'è un tavolo all'aperto?"
+            },
+            {
+                "front": "Il pane è compreso?",
+                "back": "Il pane fa parte del coperto?"
+            },
+            {
+                "front": "Vorrei un dolce.",
+                "back": "Prendo anche il dessert."
+            },
+            {
+                "front": "Posso pagare con carta?",
+                "back": "Accettate pagamenti elettronici?"
+            },
+            {
+                "front": "C'è un errore nel conto.",
+                "back": "Penso che ci sia uno sbaglio."
+            },
+            {
+                "front": "Era tutto ottimo!",
+                "back": "Abbiamo mangiato benissimo!"
+            },
+            {
+                "front": "Posso avere la ricevuta?",
+                "back": "Mi serve lo scontrino fiscale."
+            }
+        ]
+    },
+    {
+        "id": "travel",
+        "title": "In Viaggio",
+        "description": "Muoversi in città e chiedere indicazioni.",
+        "icon": "🗺️",
+        "theme": "yellow",
+        "cards": [
+            {
+                "front": "Quanto dista il centro?",
+                "back": "È lontano il centro città da qui?"
+            },
+            {
+                "front": "Mi sono perso.",
+                "back": "Non so dove mi trovo."
+            },
+            {
+                "front": "A che ora parte il treno?",
+                "back": "Quando lascia la stazione il treno?"
+            },
+            {
+                "front": "Dov'è la fermata dell'autobus?",
+                "back": "Cerco il luogo dove prendere il bus."
+            },
+            {
+                "front": "Può indicarmi sulla mappa?",
+                "back": "Mi può mostrare dove siamo sulla cartina?"
+            },
+            {
+                "front": "Quanto costa il biglietto?",
+                "back": "Qual è il prezzo del ticket?"
+            },
+            {
+                "front": "È lontano a piedi?",
+                "back": "Posso arrivarci camminando?"
+            },
+            {
+                "front": "Devo cambiare treno?",
+                "back": "È necessario fare un trasbordo?"
+            },
+            {
+                "front": "Dove posso noleggiare una macchina?",
+                "back": "Cerco un autonoleggio."
+            },
+            {
+                "front": "Quanto tempo ci vuole?",
+                "back": "Quanto dura il viaggio?"
+            },
+            {
+                "front": "C'è una metro qui vicino?",
+                "back": "Dov'è la stazione della metropolitana?"
+            },
+            {
+                "front": "Questo autobus va in centro?",
+                "back": "È la linea giusta per il centro?"
+            },
+            {
+                "front": "Dove devo scendere?",
+                "back": "Qual è la mia fermata?"
+            },
+            {
+                "front": "Ho perso la coincidenza.",
+                "back": "Non ho preso il treno successivo."
+            },
+            {
+                "front": "C'è un ritardo?",
+                "back": "Il treno è in orario?"
+            },
+            {
+                "front": "Da quale binario parte?",
+                "back": "Qual è il numero del binario?"
+            },
+            {
+                "front": "Posso comprare il biglietto a bordo?",
+                "back": "È possibile pagare sul treno?"
+            },
+            {
+                "front": "Dov'è l'ufficio informazioni?",
+                "back": "Cerco il punto informazioni turistiche."
+            },
+            {
+                "front": "Avete una mappa della città?",
+                "back": "Posso avere una piantina?"
+            },
+            {
+                "front": "Come arrivo all'aeroporto?",
+                "back": "Qual è il modo migliore per raggiungere l'aeroporto?"
+            }
+        ]
+    },
+    {
+        "id": "shopping",
+        "title": "Fare Spese",
+        "description": "Comprare nei negozi e al mercato.",
+        "icon": "🛒",
+        "theme": "blue",
+        "cards": [
+            {
+                "front": "Quanto costa questo?",
+                "back": "Qual è il prezzo di questo articolo?"
+            },
+            {
+                "front": "Posso provarlo?",
+                "back": "È possibile fare una prova?"
+            },
+            {
+                "front": "Avete una taglia più grande?",
+                "back": "Esiste questa in una misura superiore?"
+            },
+            {
+                "front": "È troppo caro.",
+                "back": "Il prezzo è eccessivo per me."
+            },
+            {
+                "front": "Accettate carte di credito?",
+                "back": "Posso pagare con la carta?"
+            },
+            {
+                "front": "Posso avere uno sconto?",
+                "back": "È possibile un prezzo ridotto?"
+            },
+            {
+                "front": "Dove sono i camerini?",
+                "back": "Dove posso provare i vestiti?"
+            },
+            {
+                "front": "Vorrei restituire questo.",
+                "back": "Devo fare un reso di questo prodotto."
+            },
+            {
+                "front": "Avete questo in altri colori?",
+                "back": "Esiste in una tonalità diversa?"
+            },
+            {
+                "front": "Sto solo guardando.",
+                "back": "Non ho bisogno di assistenza al momento."
+            },
+            {
+                "front": "Quanto costa al chilo?",
+                "back": "Qual è il prezzo per chilogrammo?"
+            },
+            {
+                "front": "Posso avere una borsa?",
+                "back": "Mi serve un sacchetto."
+            },
+            {
+                "front": "Avete la garanzia?",
+                "back": "Questo prodotto è coperto da garanzia?"
+            },
+            {
+                "front": "È in saldo?",
+                "back": "C'è uno sconto su questo?"
+            },
+            {
+                "front": "Posso pagare in contanti?",
+                "back": "Accettate soldi?"
+            },
+            {
+                "front": "Dove si trova il reparto scarpe?",
+                "back": "A che piano sono le calzature?"
+            },
+            {
+                "front": "Avete la taglia 42?",
+                "back": "C'è disponibile questa misura?"
+            },
+            {
+                "front": "Mi sta bene?",
+                "back": "Come mi sta addosso?"
+            },
+            {
+                "front": "Vorrei cambiare questo.",
+                "back": "Posso sostituirlo con un altro?"
+            },
+            {
+                "front": "A che ora chiudete?",
+                "back": "Fino a quando siete aperti?"
+            }
+        ]
+    },
+    {
+        "id": "hotel",
+        "title": "In Albergo",
+        "description": "Prenotazioni e servizi in hotel.",
+        "icon": "🏨",
+        "theme": "green",
+        "cards": [
+            {
+                "front": "Ho una prenotazione a nome Rossi.",
+                "back": "Il mio nome è Rossi e ho riservato una camera."
+            },
+            {
+                "front": "A che ora è il check-out?",
+                "back": "Quando devo lasciare la stanza?"
+            },
+            {
+                "front": "La colazione è inclusa?",
+                "back": "Il breakfast fa parte del prezzo?"
+            },
+            {
+                "front": "Il WiFi non funziona.",
+                "back": "La connessione internet è rotta."
+            },
+            {
+                "front": "Può chiamarmi un taxi?",
+                "back": "Mi serve un'auto per favore."
+            },
+            {
+                "front": "Vorrei un'altra camera.",
+                "back": "Posso cambiare stanza?"
+            },
+            {
+                "front": "Dov'è la palestra?",
+                "back": "Dove si trova la sala fitness?"
+            },
+            {
+                "front": "Ho bisogno di più asciugamani.",
+                "back": "Mi servono altri teli."
+            },
+            {
+                "front": "Posso avere una camera con vista?",
+                "back": "C'è disponibilità per una stanza panoramica?"
+            },
+            {
+                "front": "A che ora inizia la colazione?",
+                "back": "Quando aprono la sala colazioni?"
+            },
+            {
+                "front": "C'è un ristorante nell'hotel?",
+                "back": "Posso cenare qui?"
+            },
+            {
+                "front": "Vorrei prolungare il soggiorno.",
+                "back": "Posso restare un'altra notte?"
+            },
+            {
+                "front": "La camera è troppo rumorosa.",
+                "back": "C'è troppo rumore, non riesco a dormire."
+            },
+            {
+                "front": "Posso lasciare i bagagli qui?",
+                "back": "C'è un deposito bagagli?"
+            },
+            {
+                "front": "Qual è la password del WiFi?",
+                "back": "Come mi connetto a internet?"
+            },
+            {
+                "front": "C'è una cassaforte in camera?",
+                "back": "Dove posso mettere i valori?"
+            },
+            {
+                "front": "Il riscaldamento non funziona.",
+                "back": "Fa freddo nella stanza."
+            },
+            {
+                "front": "Posso avere un cuscino in più?",
+                "back": "Mi serve un altro guanciale."
+            },
+            {
+                "front": "Dov'è la piscina?",
+                "back": "C'è una piscina nell'hotel?"
+            },
+            {
+                "front": "Vorrei il servizio in camera.",
+                "back": "Posso ordinare da mangiare in stanza?"
+            }
+        ]
+    },
+    {
+        "id": "emergencies",
+        "title": "Emergenze",
+        "description": "Frasi importanti per situazioni urgenti.",
+        "icon": "🚨",
+        "theme": "pink",
+        "cards": [
+            {
+                "front": "Ho bisogno di aiuto!",
+                "back": "Mi serve assistenza urgente!"
+            },
+            {
+                "front": "Chiamate un medico!",
+                "back": "Ho bisogno di un dottore subito!"
+            },
+            {
+                "front": "Ho perso il passaporto.",
+                "back": "Non trovo più il mio documento."
+            },
+            {
+                "front": "Dov'è l'ospedale più vicino?",
+                "back": "Quale ospedale è il più prossimo?"
+            },
+            {
+                "front": "Mi hanno rubato il portafoglio.",
+                "back": "Qualcuno ha preso i miei soldi."
+            },
+            {
+                "front": "Non mi sento bene.",
+                "back": "Sto male."
+            },
+            {
+                "front": "Dov'è la farmacia?",
+                "back": "Cerco una farmacia."
+            },
+            {
+                "front": "C'è stato un incidente.",
+                "back": "È successo qualcosa di grave."
+            },
+            {
+                "front": "Chiamate la polizia!",
+                "back": "Ho bisogno delle forze dell'ordine!"
+            },
+            {
+                "front": "Ho bisogno di un'ambulanza.",
+                "back": "Serve assistenza medica urgente."
+            },
+            {
+                "front": "Qualcuno mi sta seguendo.",
+                "back": "Non mi sento al sicuro."
+            },
+            {
+                "front": "Ho perso la borsa.",
+                "back": "Non trovo più la mia borsa."
+            },
+            {
+                "front": "Dov'è l'ambasciata?",
+                "back": "Cerco il consolato del mio paese."
+            },
+            {
+                "front": "Mi fa male qui.",
+                "back": "Sento dolore in questa zona."
+            },
+            {
+                "front": "Sono caduto.",
+                "back": "Ho avuto una brutta caduta."
+            },
+            {
+                "front": "Ho bisogno di un dentista.",
+                "back": "Ho un problema ai denti."
+            },
+            {
+                "front": "Sono allergico a questo.",
+                "back": "Questa sostanza mi fa male."
+            },
+            {
+                "front": "Dov'è l'uscita di emergenza?",
+                "back": "Cerco la via di fuga."
+            },
+            {
+                "front": "C'è un incendio!",
+                "back": "Sta bruciando qualcosa!"
+            },
+            {
+                "front": "Ho bisogno di un interprete.",
+                "back": "Non riesco a comunicare."
+            }
+        ]
+    },
+    {
+        "id": "social",
+        "title": "Conversazioni Sociali",
+        "description": "Presentarsi e parlare con le persone.",
+        "icon": "💬",
+        "theme": "purple",
+        "cards": [
+            {
+                "front": "Come ti chiami?",
+                "back": "Qual è il tuo nome?"
+            },
+            {
+                "front": "Piacere di conoscerti.",
+                "back": "Felice di fare la tua conoscenza."
+            },
+            {
+                "front": "Di dove sei?",
+                "back": "Da quale città o paese vieni?"
+            },
+            {
+                "front": "Che lavoro fai?",
+                "back": "Qual è la tua professione?"
+            },
+            {
+                "front": "Parli inglese?",
+                "back": "Conosci la lingua inglese?"
+            },
+            {
+                "front": "Mi dispiace, non capisco.",
+                "back": "Scusa, non ho compreso."
+            },
+            {
+                "front": "Può ripetere, per favore?",
+                "back": "Può dirlo di nuovo?"
+            },
+            {
+                "front": "Parliamo più tardi.",
+                "back": "Ci sentiamo dopo."
+            },
+            {
+                "front": "Quanti anni hai?",
+                "back": "Qual è la tua età?"
+            },
+            {
+                "front": "Hai fratelli o sorelle?",
+                "back": "Sei figlio unico?"
+            },
+            {
+                "front": "Dove abiti?",
+                "back": "In quale zona vivi?"
+            },
+            {
+                "front": "Sei sposato?",
+                "back": "Hai una famiglia?"
+            },
+            {
+                "front": "Cosa ti piace fare nel tempo libero?",
+                "back": "Quali sono i tuoi hobby?"
+            },
+            {
+                "front": "Hai animali domestici?",
+                "back": "Hai un cane o un gatto?"
+            },
+            {
+                "front": "Da quanto tempo sei qui?",
+                "back": "Quando sei arrivato?"
+            },
+            {
+                "front": "Ti piace l'Italia?",
+                "back": "Come ti trovi in questo paese?"
+            },
+            {
+                "front": "Posso avere il tuo numero?",
+                "back": "Mi dai il tuo contatto?"
+            },
+            {
+                "front": "Sei su Instagram?",
+                "back": "Hai i social media?"
+            },
+            {
+                "front": "Ci vediamo presto!",
+                "back": "A presto!"
+            },
+            {
+                "front": "È stato un piacere parlare con te.",
+                "back": "Mi è piaciuto molto chiacchierare."
+            }
+        ]
+    },
+    {
+        "id": "weather",
+        "title": "Il Tempo",
+        "description": "Parlare del meteo e delle stagioni.",
+        "icon": "☁️",
+        "theme": "orange",
+        "cards": [
+            {
+                "front": "Fa molto caldo oggi.",
+                "back": "La temperatura è alta."
+            },
+            {
+                "front": "Sta piovendo.",
+                "back": "Cade la pioggia."
+            },
+            {
+                "front": "Che bella giornata!",
+                "back": "Il tempo è magnifico!"
+            },
+            {
+                "front": "Fa freddo stamattina.",
+                "back": "La temperatura è bassa questa mattina."
+            },
+            {
+                "front": "Pensi che nevicherà?",
+                "back": "Secondo te cadrà la neve?"
+            },
+            {
+                "front": "È nuvoloso.",
+                "back": "Il cielo è coperto."
+            },
+            {
+                "front": "C'è vento.",
+                "back": "Tira aria."
+            },
+            {
+                "front": "Dovrebbe schiarire nel pomeriggio.",
+                "back": "Il tempo migliorerà più tardi."
+            },
+            {
+                "front": "Che umidità!",
+                "back": "L'aria è molto pesante."
+            },
+            {
+                "front": "C'è il sole.",
+                "back": "È una giornata soleggiata."
+            },
+            {
+                "front": "Sta per piovere.",
+                "back": "Arriverà la pioggia presto."
+            },
+            {
+                "front": "Che freddo polare!",
+                "back": "La temperatura è gelida."
+            },
+            {
+                "front": "È una giornata afosa.",
+                "back": "Fa caldo e c'è umidità."
+            },
+            {
+                "front": "Il cielo è sereno.",
+                "back": "Non ci sono nuvole."
+            },
+            {
+                "front": "C'è la nebbia.",
+                "back": "La visibilità è ridotta."
+            },
+            {
+                "front": "Che temporale!",
+                "back": "Piove forte con tuoni."
+            },
+            {
+                "front": "Le previsioni dicono pioggia.",
+                "back": "Il meteo annuncia brutto tempo."
+            },
+            {
+                "front": "Fa più fresco stasera.",
+                "back": "La temperatura è scesa."
+            },
+            {
+                "front": "È una bella serata.",
+                "back": "Il tempo è piacevole."
+            },
+            {
+                "front": "Domani sarà una bella giornata.",
+                "back": "Il tempo migliorerà domani."
+            }
+        ]
+    }
+];
