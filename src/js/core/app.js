@@ -1,5 +1,6 @@
 // Imports
 import { speak, initializeVoices } from '../features/audio.js';
+import { VoiceRecognitionService } from '../features/voice.js';
 import { loadProgress, isCardDue, updateCardProgress, getDueCount, resetAllProgress } from '../features/progress.js';
 import { initializeUIElements, showAlert, showConfirm, showFeedback } from '../features/ui.js';
 import { shuffleArray, generateChoices } from '../utils/deck-utils.js';
@@ -19,7 +20,10 @@ const flipBtn = document.getElementById('flip-btn');
 const nextBtn = document.getElementById('next-btn');
 
 const audioBtnFront = document.getElementById('audio-btn-front');
+const micBtnFront = document.getElementById('mic-btn-front');
 const resetProgressBtn = document.getElementById('reset-progress-btn');
+
+const voiceService = new VoiceRecognitionService();
 
 // Initialize
 function init() {
@@ -29,6 +33,10 @@ function init() {
     renderDecks();
     setupEventListeners();
     initializeVoices();
+
+    if (voiceService.isSupported()) {
+        micBtnFront.classList.remove('hidden');
+    }
 }
 
 // Render Decks
@@ -184,6 +192,47 @@ function setupEventListeners() {
         const actualCardIndex = getDueCardIndices()[getCurrentCardIndex()];
         const card = getCurrentDeck().cards[actualCardIndex];
         speak(card.front);
+    });
+
+    // Voice Recognition Button
+    micBtnFront.addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        if (voiceService.isListening) {
+            voiceService.stopListening();
+            micBtnFront.classList.remove('listening');
+            return;
+        }
+
+        micBtnFront.classList.add('listening');
+
+        voiceService.startListening(
+            (transcript) => {
+                micBtnFront.classList.remove('listening');
+                console.log('Heard:', transcript);
+
+                const normalize = (text) => text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+                const spoken = normalize(transcript);
+                const expected = normalize(cardFrontText.textContent);
+
+                // Fuzzy match: check if one contains the other (allows for partial phrases or extra noise)
+                // Also check Levenshtein distance if needed, but simple includes is good start
+                if (spoken.includes(expected) || expected.includes(spoken) || spoken === expected) {
+                    showFeedback('Bravo! 🗣️', true);
+                    currentCard.classList.add('flipped');
+                } else {
+                    showFeedback(`Ho sentito: "${transcript}"`, false);
+                }
+            },
+            (error) => {
+                console.error('Voice error:', error);
+                micBtnFront.classList.remove('listening');
+                showFeedback('Riprova', false);
+            },
+            () => {
+                micBtnFront.classList.remove('listening');
+            }
+        );
     });
 
     // Next Card
