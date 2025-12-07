@@ -4,13 +4,7 @@ import { loadProgress, isCardDue, updateCardProgress, getDueCount, resetAllProgr
 import { initializeUIElements, showAlert, showConfirm, showFeedback } from './ui.js';
 import { shuffleArray, generateChoices } from './deck-utils.js';
 import { initializeViewElements, switchToFlashcardView, switchToDeckSelectionView, isFlashcardViewVisible } from './views.js';
-
-// State
-let decks = window.DECKS_DATA || [];
-let currentDeck = null;
-let currentCardIndex = 0;
-let dueCardIndices = []; // Indices of cards due for review today
-let isQuizAnswered = false;
+import { getDecks, getCurrentDeck, getCurrentCardIndex, getDueCardIndices, getIsQuizAnswered, setCurrentDeck, setCurrentCardIndex, incrementCardIndex, setDueCardIndices, setIsQuizAnswered, resetDeckState } from './state.js';
 
 // DOM Elements
 const deckGrid = document.getElementById('deck-grid');
@@ -52,7 +46,7 @@ const deckIcons = {
 // Render Decks
 function renderDecks() {
     deckGrid.innerHTML = '';
-    decks.forEach(deck => {
+    getDecks().forEach(deck => {
         // Skip decks that don't have a theme (optional, if we want to hide Social/Weather)
         if (!deck.theme) return;
 
@@ -77,26 +71,26 @@ function renderDecks() {
 
 // Start Deck
 function startDeck(deck) {
-    currentDeck = deck;
+    setCurrentDeck(deck);
 
     // Filter to only due cards
-    dueCardIndices = [];
+    const tempDueIndices = [];
     deck.cards.forEach((card, index) => {
         if (isCardDue(deck.id, index)) {
-            dueCardIndices.push(index);
+            tempDueIndices.push(index);
         }
     });
 
     // Check if any cards are due
-    if (dueCardIndices.length === 0) {
+    if (tempDueIndices.length === 0) {
         showAlert('Completato! ✓', 'Tutto fatto! Torna domani!');
         return;
     }
 
     // Randomize the order of cards
-    dueCardIndices = shuffleArray(dueCardIndices);
+    setDueCardIndices(shuffleArray(tempDueIndices));
 
-    currentCardIndex = 0;
+    setCurrentCardIndex(0);
 
     // Switch Views
     switchToFlashcardView();
@@ -106,11 +100,11 @@ function startDeck(deck) {
 
 // Render Current Card
 function renderCard() {
-    if (!currentDeck) return;
+    if (!getCurrentDeck()) return;
 
-    const actualCardIndex = dueCardIndices[currentCardIndex];
-    const card = currentDeck.cards[actualCardIndex];
-    isQuizAnswered = false;
+    const actualCardIndex = getDueCardIndices()[getCurrentCardIndex()];
+    const card = getCurrentDeck().cards[actualCardIndex];
+    setIsQuizAnswered(false);
 
     // Reset Flip
     currentCard.classList.remove('flipped');
@@ -119,7 +113,7 @@ function renderCard() {
     cardFrontText.textContent = card.front;
 
     // Generate Quiz Options
-    const choices = generateChoices(card, currentDeck);
+    const choices = generateChoices(card, getCurrentDeck());
     quizOptionsContainer.innerHTML = '';
 
     choices.forEach(choice => {
@@ -146,7 +140,7 @@ function renderCard() {
     });
 
     // Update Progress (based on due cards, not total cards)
-    const progressPercent = ((currentCardIndex + 1) / dueCardIndices.length) * 100;
+    const progressPercent = ((getCurrentCardIndex() + 1) / getDueCardIndices().length) * 100;
     progressFill.style.width = `${progressPercent}%`;
 }
 
@@ -154,25 +148,25 @@ function renderCard() {
 function handleAnswer(e, choice, btn) {
     e.stopPropagation(); // Prevent card flip if we click button (though buttons are on back)
 
-    if (isQuizAnswered) return; // Prevent multiple guesses
-    isQuizAnswered = true;
+    if (getIsQuizAnswered()) return; // Prevent multiple guesses
+    setIsQuizAnswered(true);
 
-    const actualCardIndex = dueCardIndices[currentCardIndex];
+    const actualCardIndex = getDueCardIndices()[getCurrentCardIndex()];
 
     if (choice.isCorrect) {
         btn.classList.add('correct');
         showFeedback('✓ Corretto!', true);
         // Update progress: move card up in Leitner box
-        updateCardProgress(currentDeck.id, actualCardIndex, true);
+        updateCardProgress(getCurrentDeck().id, actualCardIndex, true);
     } else {
         btn.classList.add('incorrect');
         showFeedback('Riprova domani', false);
         // Update progress: move card back to box 1
-        updateCardProgress(currentDeck.id, actualCardIndex, false);
+        updateCardProgress(getCurrentDeck().id, actualCardIndex, false);
 
         // Highlight the correct one
         const buttons = quizOptionsContainer.querySelectorAll('.quiz-btn');
-        const correctAnswer = currentDeck.cards[actualCardIndex].back;
+        const correctAnswer = getCurrentDeck().cards[actualCardIndex].back;
         buttons.forEach(b => {
             const textSpan = b.querySelector('span:not(.quiz-audio-icon)');
             if (textSpan && textSpan.textContent === correctAnswer) {
@@ -199,15 +193,15 @@ function setupEventListeners() {
     // Audio Button (Front only - back options have individual audio icons)
     audioBtnFront.addEventListener('click', (e) => {
         e.stopPropagation();
-        const actualCardIndex = dueCardIndices[currentCardIndex];
-        const card = currentDeck.cards[actualCardIndex];
+        const actualCardIndex = getDueCardIndices()[getCurrentCardIndex()];
+        const card = getCurrentDeck().cards[actualCardIndex];
         speak(card.front);
     });
 
     // Next Card
     nextBtn.addEventListener('click', () => {
-        if (currentCardIndex < dueCardIndices.length - 1) {
-            currentCardIndex++;
+        if (getCurrentCardIndex() < getDueCardIndices().length - 1) {
+            incrementCardIndex();
             renderCard();
         } else {
             showAlert('Complimenti! 🎉', 'Hai completato tutte le carte! Torna domani per più!').then(() => {
@@ -227,9 +221,7 @@ function setupEventListeners() {
 }
 
 function goHome() {
-    currentDeck = null;
-    currentCardIndex = 0;
-    dueCardIndices = [];
+    resetDeckState();
     switchToDeckSelectionView();
     // Re-render decks to update due count badges
     renderDecks();
