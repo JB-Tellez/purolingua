@@ -344,6 +344,7 @@ h1 {
 }
 
 .card-container {
+    -webkit-perspective: 1000px;
     perspective: 1000px;
     width: 100%;
     height: 500px;
@@ -355,6 +356,7 @@ h1 {
     height: 100%;
     text-align: center;
     transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     cursor: pointer;
 }
@@ -369,6 +371,7 @@ h1 {
     height: 100%;
     top: 0;
     left: 0;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     display: flex;
     flex-direction: column;
@@ -388,6 +391,9 @@ h1 {
 .card-front {
     background: linear-gradient(135deg, #FFF9F0 0%, #F5EDE0 100%);
     border: 2px solid rgba(139, 107, 74, 0.15);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 /* When card is flipped, disable pointer events on front to prevent click-through */
@@ -445,7 +451,10 @@ h1 {
 .card-back {
     background: linear-gradient(135deg, #F0F6F0 0%, #E8F2E8 100%);
     border: 2px solid rgba(39, 174, 96, 0.15);
-    transform: rotateY(180deg);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: rotateY(180deg) translateZ(0);
+    transform: rotateY(180deg) translateZ(0);
     justify-content: center;
     padding: 2.5rem;
 }
@@ -797,24 +806,24 @@ h1 {
 @keyframes cardEntrance {
     from {
         opacity: 0;
-        transform: scale(0.9) translateY(20px);
+        transform: scale(0.9) translateY(20px) translateZ(0);
     }
 
     to {
         opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: scale(1) translateY(0) translateZ(0);
     }
 }
 
 @keyframes cardBackEntrance {
     from {
         opacity: 0;
-        transform: rotateY(180deg) scale(0.9) translateY(20px);
+        transform: rotateY(180deg) scale(0.9) translateY(20px) translateZ(0);
     }
 
     to {
         opacity: 1;
-        transform: rotateY(180deg) scale(1) translateY(0);
+        transform: rotateY(180deg) scale(1) translateY(0) translateZ(0);
     }
 }
 
