@@ -396,14 +396,29 @@ h1 {
     transform: translateZ(0);
 }
 
-/* When card is flipped, disable pointer events on front to prevent click-through */
+/* When card is flipped, hide front face completely (iOS Safari fix) */
 .card.flipped .card-front {
     pointer-events: none;
+    visibility: hidden;
+    transition: visibility 0s linear 0.35s;
 }
 
-/* When card is not flipped, disable pointer events on back */
+/* When card is not flipped, hide back face completely (iOS Safari fix) */
 .card:not(.flipped) .card-back {
     pointer-events: none;
+    visibility: hidden;
+    transition: visibility 0s linear 0.35s;
+}
+
+/* Show faces immediately when becoming visible */
+.card:not(.flipped) .card-front {
+    visibility: visible;
+    transition: visibility 0s linear 0s;
+}
+
+.card.flipped .card-back {
+    visibility: visible;
+    transition: visibility 0s linear 0s;
 }
 
 .card-front::before {
@@ -794,7 +809,8 @@ h1 {
     gap: 1rem;
 }
 
-/* Card Flip Enhancement */
+/* Card Flip Enhancement - animations disabled for iOS compatibility */
+/*
 .card-front {
     animation: cardEntrance 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -826,6 +842,7 @@ h1 {
         transform: rotateY(180deg) scale(1) translateY(0) translateZ(0);
     }
 }
+*/
 
 
 /* Microphone Button */
