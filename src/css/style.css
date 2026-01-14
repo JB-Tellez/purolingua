@@ -82,7 +82,29 @@ nav {
 .nav-links {
     list-style: none;
     display: flex;
+    align-items: center;
     gap: 1.5rem;
+}
+
+.nav-links a {
+    display: flex;
+    align-items: center;
+}
+
+.nav-back-btn {
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.nav-back-btn:hover {
+    color: var(--color-teal);
+}
+
+.nav-back-btn.hidden {
+    display: none;
 }
 
 .profile-link {
