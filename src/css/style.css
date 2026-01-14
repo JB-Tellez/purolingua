@@ -988,11 +988,4 @@ h1 {
         font-size: 0.95rem;
     }
 
-    .controls {
-        flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
-    }
 }
