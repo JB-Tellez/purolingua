@@ -163,9 +163,10 @@ function setupLanguageSelector() {
 
     if (!languageBtn || !languageDropdown) return;
 
-    // Toggle dropdown on button click
+    // Toggle dropdown on button click (only if not disabled)
     languageBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (languageBtn.disabled) return;
         languageDropdown.classList.toggle('hidden');
     });
 
@@ -173,6 +174,14 @@ function setupLanguageSelector() {
     document.addEventListener('click', () => {
         languageDropdown.classList.add('hidden');
     });
+}
+
+// Enable/disable language selector
+function setLanguageSelectorEnabled(enabled) {
+    const languageBtn = document.getElementById('language-btn');
+    if (languageBtn) {
+        languageBtn.disabled = !enabled;
+    }
 }
 
 // Switch language and reload UI
@@ -258,6 +267,7 @@ function startDeck(deck) {
 
     // Switch Views
     switchToFlashcardView();
+    setLanguageSelectorEnabled(false);
 
     renderCard();
 }
@@ -497,6 +507,7 @@ function setupEventListeners() {
 function goHome() {
     resetDeckState();
     switchToDeckSelectionView();
+    setLanguageSelectorEnabled(true);
     // Re-render decks to update due count badges
     renderDecks();
 }
