@@ -1,4 +1,5 @@
 // UI Utilities - Modal and Feedback Functions
+import { t } from '../core/i18n.js';
 
 // Modal Elements (will be initialized on DOM load)
 let modal, modalTitle, modalMessage, modalConfirmBtn, modalCancelBtn, feedbackMessage;
@@ -18,7 +19,7 @@ function showAlert(title, message) {
         modalTitle.textContent = title;
         modalMessage.textContent = message;
         modalCancelBtn.style.display = 'none';
-        modalConfirmBtn.textContent = 'OK';
+        modalConfirmBtn.textContent = t('modal.ok');
 
         modal.classList.remove('hidden');
 
@@ -47,7 +48,7 @@ function showConfirm(title, message) {
         modalTitle.textContent = title;
         modalMessage.textContent = message;
         modalCancelBtn.style.display = 'inline-block';
-        modalConfirmBtn.textContent = 'Conferma';
+        modalConfirmBtn.textContent = t('modal.confirm');
 
         modal.classList.remove('hidden');
 

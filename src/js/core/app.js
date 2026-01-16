@@ -6,6 +6,19 @@ import { initializeUIElements, showAlert, showConfirm, showFeedback } from '../f
 import { shuffleArray, generateChoices } from '../utils/deck-utils.js';
 import { initializeViewElements, switchToFlashcardView, switchToDeckSelectionView, isFlashcardViewVisible } from './views.js';
 import { getDecks, getCurrentDeck, getCurrentCardIndex, getDueCardIndices, getIsQuizAnswered, setCurrentDeck, setCurrentCardIndex, incrementCardIndex, setDueCardIndices, setIsQuizAnswered, resetDeckState } from './state.js';
+import { t, getLocaleMeta, getLocale, setLocale, getAvailableLocales } from './i18n.js';
+
+// Sync URL with current locale on page load
+function syncURLWithLocale() {
+    const url = new URL(window.location);
+    const currentLang = url.searchParams.get('lang');
+    const locale = getLocale();
+
+    if (currentLang !== locale) {
+        url.searchParams.set('lang', locale);
+        window.history.replaceState({}, '', url);
+    }
+}
 
 // DOM Elements
 const deckGrid = document.getElementById('deck-grid');
@@ -27,8 +40,108 @@ const resetProgressBtn = document.getElementById('reset-progress-btn');
 const voiceService = new VoiceRecognitionService();
 let currentQuizChoices = [];
 
+// Initialize i18n strings in the DOM
+function initializeI18n() {
+    const meta = getLocaleMeta();
+
+    // Set document language
+    document.documentElement.lang = meta.code;
+
+    // Set logo with flag and name
+    const logo = document.getElementById('logo');
+    if (logo) {
+        logo.textContent = `${meta.flag} ${meta.name}`;
+    }
+
+    // Set streak title (hardcoded to 3 for now - will be dynamic later)
+    const streakTitle = document.getElementById('streak-title');
+    if (streakTitle) {
+        streakTitle.textContent = t('streak.daysInARow', { count: 3 });
+    }
+
+    // Populate all data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = t(key);
+    });
+
+    // Populate all data-i18n-aria elements (for aria-label)
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+        const key = el.getAttribute('data-i18n-aria');
+        el.setAttribute('aria-label', t(key));
+    });
+}
+
+// Update Language Selector UI (called on init and language switch)
+function updateLanguageSelectorUI() {
+    const languageBtn = document.getElementById('language-btn');
+    const languageDropdown = document.getElementById('language-dropdown');
+
+    if (!languageBtn || !languageDropdown) return;
+
+    const locales = getAvailableLocales();
+    const currentLocale = getLocale();
+    const currentLocaleData = locales.find(l => l.code === currentLocale);
+
+    // Set button to show current language flag
+    languageBtn.textContent = currentLocaleData ? currentLocaleData.flag : '🌐';
+
+    // Populate dropdown
+    languageDropdown.innerHTML = '';
+    locales.forEach(locale => {
+        const option = document.createElement('div');
+        option.className = 'language-option' + (locale.code === currentLocale ? ' active' : '');
+        option.innerHTML = `<span class="flag">${locale.flag}</span> ${locale.name}`;
+        option.addEventListener('click', () => switchLanguage(locale.code));
+        languageDropdown.appendChild(option);
+    });
+}
+
+// Setup Language Selector event listeners (called once on init)
+function setupLanguageSelector() {
+    const languageBtn = document.getElementById('language-btn');
+    const languageDropdown = document.getElementById('language-dropdown');
+
+    if (!languageBtn || !languageDropdown) return;
+
+    // Toggle dropdown on button click
+    languageBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        languageDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+        languageDropdown.classList.add('hidden');
+    });
+}
+
+// Switch language and reload UI
+function switchLanguage(localeCode) {
+    if (localeCode === getLocale()) return;
+
+    setLocale(localeCode);
+
+    // Reload progress for new language
+    loadProgress();
+
+    // Re-initialize UI with new language
+    initializeI18n();
+    updateLanguageSelectorUI();
+
+    // Re-render decks with new language content
+    renderDecks();
+
+    // Close dropdown
+    document.getElementById('language-dropdown').classList.add('hidden');
+}
+
 // Initialize
 function init() {
+    syncURLWithLocale();
+    initializeI18n();
+    updateLanguageSelectorUI();
+    setupLanguageSelector();
     initializeViewElements();
     initializeUIElements();
     loadProgress();
@@ -53,7 +166,7 @@ function renderDecks() {
         const card = document.createElement('div');
         card.className = `deck-card theme-${deck.theme}`;
 
-        const badgeText = dueCount > 0 ? `${dueCount} carte` : 'Completato';
+        const badgeText = dueCount > 0 ? t('deckSelection.cardCount', { count: dueCount }) : t('deckSelection.completed');
 
         card.innerHTML = `
             <div class="deck-icon-circle">${deck.icon}</div>
@@ -82,7 +195,7 @@ function startDeck(deck) {
 
     // Check if any cards are due
     if (tempDueIndices.length === 0) {
-        showAlert('Completato! ✓', 'Tutto fatto! Torna domani!');
+        showAlert(t('alerts.deckCompleteTitle'), t('alerts.deckCompleteMessage'));
         return;
     }
 
@@ -155,12 +268,12 @@ function handleAnswer(e, choice, btn) {
 
     if (choice.isCorrect) {
         btn.classList.add('correct');
-        showFeedback('✓ Corretto!', true);
+        showFeedback(t('feedback.correct'), true);
         // Update progress: move card up in Leitner box
         updateCardProgress(getCurrentDeck().id, actualCardIndex, true);
     } else {
         btn.classList.add('incorrect');
-        showFeedback('Riprova domani', false);
+        showFeedback(t('feedback.tryAgainTomorrow'), false);
         // Update progress: move card back to box 1
         updateCardProgress(getCurrentDeck().id, actualCardIndex, false);
 
@@ -235,16 +348,16 @@ function setupEventListeners() {
                 // Fuzzy match: check if one contains the other (allows for partial phrases or extra noise)
                 // Also check Levenshtein distance if needed, but simple includes is good start
                 if (spoken.includes(expected) || expected.includes(spoken) || spoken === expected) {
-                    showFeedback('Bravo! 🗣️', true);
+                    showFeedback(t('feedback.wellDone'), true);
                     currentCard.classList.add('flipped');
                 } else {
-                    showFeedback(`Ho sentito: "${transcript}"`, false);
+                    showFeedback(t('feedback.heard', { text: transcript }), false);
                 }
             },
             (error) => {
                 console.error('Voice error:', error);
                 micBtnFront.classList.remove('listening');
-                showFeedback('Riprova', false);
+                showFeedback(t('feedback.tryAgain'), false);
             },
             () => {
                 micBtnFront.classList.remove('listening');
@@ -291,13 +404,13 @@ function setupEventListeners() {
                         handleAnswer({ stopPropagation: () => { } }, choice, btn);
                     }
                 } else {
-                    showFeedback(`Non ho trovato: "${transcript}"`, false);
+                    showFeedback(t('feedback.notFound', { text: transcript }), false);
                 }
             },
             (error) => {
                 console.error('Voice error:', error);
                 micBtnBack.classList.remove('listening');
-                showFeedback('Riprova', false);
+                showFeedback(t('feedback.tryAgain'), false);
             },
             () => {
                 micBtnBack.classList.remove('listening');
@@ -313,7 +426,7 @@ function setupEventListeners() {
             incrementCardIndex();
             renderCard();
         } else {
-            showAlert('Complimenti! 🎉', 'Hai completato tutte le carte! Torna domani per più!').then(() => {
+            showAlert(t('alerts.allCardsCompleteTitle'), t('alerts.allCardsCompleteMessage')).then(() => {
                 goHome();
             });
         }
@@ -338,8 +451,8 @@ function goHome() {
 
 async function resetProgress() {
     const confirmed = await showConfirm(
-        'Conferma reset',
-        'Sei sicuro di voler resettare tutto il progresso? Questa azione non può essere annullata.'
+        t('alerts.resetConfirmTitle'),
+        t('alerts.resetConfirmMessage')
     );
 
     if (confirmed) {
@@ -354,7 +467,7 @@ async function resetProgress() {
             renderDecks();
         }
 
-        await showAlert('Completato', 'Progresso resettato con successo!');
+        await showAlert(t('alerts.resetCompleteTitle'), t('alerts.resetCompleteMessage'));
     }
 }
 

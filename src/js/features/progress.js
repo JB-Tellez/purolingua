@@ -1,9 +1,16 @@
 // Progress Management - Leitner Box System for Spaced Repetition
+import { getLocale } from '../core/i18n.js';
+
 let progress = {}; // Stores card progress: { "deckId_cardIndex": { box: 1-3, nextReview: "YYYY-MM-DD" } }
+
+function getStorageKey() {
+    const locale = getLocale();
+    return `${locale}-progress`;
+}
 
 function loadProgress() {
     try {
-        const saved = localStorage.getItem('italiano-progress');
+        const saved = localStorage.getItem(getStorageKey());
         progress = saved ? JSON.parse(saved) : {};
     } catch (e) {
         console.warn('Failed to load progress from localStorage:', e);
@@ -13,7 +20,7 @@ function loadProgress() {
 
 function saveProgress() {
     try {
-        localStorage.setItem('italiano-progress', JSON.stringify(progress));
+        localStorage.setItem(getStorageKey(), JSON.stringify(progress));
     } catch (e) {
         console.warn('Failed to save progress to localStorage:', e);
     }
@@ -80,7 +87,7 @@ function getDueCount(deck) {
 }
 
 function resetAllProgress() {
-    localStorage.removeItem('italiano-progress');
+    localStorage.removeItem(getStorageKey());
     progress = {};
 }
 

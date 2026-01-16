@@ -1,6 +1,6 @@
 // State Management - Centralized application state
+import { getLocaleDecks } from './i18n.js';
 
-let decks = window.DECKS_DATA || [];
 let currentDeck = null;
 let currentCardIndex = 0;
 let dueCardIndices = [];
@@ -8,7 +8,8 @@ let isQuizAnswered = false;
 
 // Getters
 function getDecks() {
-    return decks;
+    // Dynamically return decks for the current locale
+    return getLocaleDecks();
 }
 
 function getCurrentDeck() {

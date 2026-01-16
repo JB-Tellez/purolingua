@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impara l'Italiano</title>
+    <title>Italiano</title>
     <link rel="stylesheet" href="src/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,11 +16,16 @@
 <body>
     <header>
         <nav>
-            <div class="logo">🇮🇹 Italiano</div>
+            <div class="logo" id="logo"></div>
             <ul class="nav-links">
-                <li><a href="#" id="back-button" class="nav-back-btn hidden">← Indietro</a></li>
-                <li><a href="#" id="reset-progress-btn">Reset</a></li>
-                <li><a href="#" class="profile-link">Profilo</a></li>
+                <li><a href="#" id="back-button" class="nav-back-btn hidden" data-i18n="nav.back"></a></li>
+                <li><a href="#" id="reset-progress-btn" data-i18n="nav.reset"></a></li>
+                <li>
+                    <div class="language-selector" id="language-selector">
+                        <button class="language-btn" id="language-btn" aria-label="Change language"></button>
+                        <div class="language-dropdown hidden" id="language-dropdown"></div>
+                    </div>
+                </li>
             </ul>
         </nav>
     </header>
@@ -34,8 +39,8 @@
                 <div class="streak-banner">
                     <div class="streak-icon">🔥</div>
                     <div class="streak-info">
-                        <h2>3 giorni di fila!</h2>
-                        <p>Continua così</p>
+                        <h2 id="streak-title"></h2>
+                        <p id="streak-subtitle" data-i18n="streak.keepItUp"></p>
                     </div>
                     <div class="streak-days">
                         <div class="day-circle completed">✓</div>
@@ -48,8 +53,8 @@
                     </div>
                 </div>
 
-                <h1>Scegli un Mazzo</h1>
-                <p class="subtitle">Seleziona una categoria per iniziare</p>
+                <h1 data-i18n="deckSelection.title"></h1>
+                <p class="subtitle" data-i18n="deckSelection.subtitle"></p>
                 <div class="deck-grid" id="deck-grid">
                     <!-- Decks will be injected here -->
                 </div>
@@ -66,12 +71,12 @@
                 <div class="card-container">
                     <div class="card" id="current-card">
                         <div class="card-face card-front">
-                            <button class="audio-btn" id="audio-btn-front" aria-label="Ascolta">🔊</button>
-                            <button class="mic-btn hidden" id="mic-btn-front" aria-label="Parla">🎤</button>
+                            <button class="audio-btn" id="audio-btn-front" data-i18n-aria="flashcard.listenLabel">🔊</button>
+                            <button class="mic-btn hidden" id="mic-btn-front" data-i18n-aria="flashcard.speakLabel">🎤</button>
                             <p id="card-front-text">Front Text</p>
                         </div>
                         <div class="card-face card-back">
-                            <button class="mic-btn hidden" id="mic-btn-back" aria-label="Rispondi">🎤</button>
+                            <button class="mic-btn hidden" id="mic-btn-back" data-i18n-aria="flashcard.answerLabel">🎤</button>
                             <div id="quiz-options" class="quiz-options">
                                 <!-- Options injected here -->
                             </div>
@@ -80,8 +85,8 @@
                 </div>
 
                 <div class="controls">
-                    <button id="flip-btn" class="btn secondary">Gira</button>
-                    <button id="next-btn" class="btn primary">Prossimo</button>
+                    <button id="flip-btn" class="btn secondary" data-i18n="flashcard.flipButton"></button>
+                    <button id="next-btn" class="btn primary" data-i18n="flashcard.nextButton"></button>
                 </div>
             </section>
         </div>
@@ -98,8 +103,8 @@
                 <p id="modal-message">Message</p>
             </div>
             <div class="modal-footer">
-                <button id="modal-cancel-btn" class="btn secondary">Annulla</button>
-                <button id="modal-confirm-btn" class="btn primary">OK</button>
+                <button id="modal-cancel-btn" class="btn secondary" data-i18n="modal.cancel"></button>
+                <button id="modal-confirm-btn" class="btn primary" data-i18n="modal.ok"></button>
             </div>
         </div>
     </div>

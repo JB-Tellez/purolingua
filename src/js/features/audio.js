@@ -1,25 +1,45 @@
-// Audio Logic - Speech Synthesis for Italian text
-let bestItalianVoice = null;
+// Audio Logic - Speech Synthesis
+import { getLocaleMeta, getLocaleData } from '../core/i18n.js';
 
-function findBestItalianVoice() {
+let cachedVoice = null;
+let cachedLocale = null;
+
+function findBestVoice() {
+    const meta = getLocaleMeta();
+    const localeData = getLocaleData();
+    const langCode = meta.code; // e.g., 'it', 'es'
+    const fullLocale = meta.locale; // e.g., 'it-IT', 'es-ES'
+
     const voices = window.speechSynthesis.getVoices();
-    const italianVoices = voices.filter(voice => voice.lang.startsWith('it'));
+    const matchingVoices = voices.filter(voice => voice.lang.startsWith(langCode));
 
-    if (italianVoices.length === 0) return null;
+    if (matchingVoices.length === 0) return null;
 
-    // Prefer specific high-quality voices on iOS
-    const preferredNames = ['Alice', 'Luca', 'Google italiano', 'it-IT-Premium'];
+    // Use preferred voice names from locale if available
+    const preferredNames = localeData.voices?.preferred || [];
     for (const name of preferredNames) {
-        const voice = italianVoices.find(v => v.name.includes(name));
+        const voice = matchingVoices.find(v => v.name.includes(name));
         if (voice) return voice;
     }
 
-    // Otherwise, prefer voices explicitly marked as it-IT
-    const itITVoice = italianVoices.find(v => v.lang === 'it-IT');
-    if (itITVoice) return itITVoice;
+    // Otherwise, prefer voices explicitly marked with full locale (e.g., it-IT)
+    const exactLocaleVoice = matchingVoices.find(v => v.lang === fullLocale);
+    if (exactLocaleVoice) return exactLocaleVoice;
 
-    // Fall back to first Italian voice
-    return italianVoices[0];
+    // Fall back to first matching voice
+    return matchingVoices[0];
+}
+
+function getVoice() {
+    const currentLocale = getLocaleMeta().locale;
+
+    // Re-fetch voice if locale changed
+    if (cachedLocale !== currentLocale) {
+        cachedVoice = findBestVoice();
+        cachedLocale = currentLocale;
+    }
+
+    return cachedVoice;
 }
 
 function speak(text) {
@@ -30,17 +50,14 @@ function speak(text) {
 
     window.speechSynthesis.cancel();
 
-    // Ensure voices are loaded
-    if (!bestItalianVoice) {
-        bestItalianVoice = findBestItalianVoice();
-    }
-
+    const meta = getLocaleMeta();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'it-IT';
+    utterance.lang = meta.locale;
     utterance.rate = 0.9;
 
-    if (bestItalianVoice) {
-        utterance.voice = bestItalianVoice;
+    const voice = getVoice();
+    if (voice) {
+        utterance.voice = voice;
     }
 
     window.speechSynthesis.speak(utterance);
@@ -50,10 +67,12 @@ function initializeVoices() {
     if (window.speechSynthesis) {
         // Voices may load asynchronously
         window.speechSynthesis.onvoiceschanged = () => {
-            bestItalianVoice = findBestItalianVoice();
+            cachedVoice = findBestVoice();
+            cachedLocale = getLocaleMeta().locale;
         };
         // Try loading immediately too
-        bestItalianVoice = findBestItalianVoice();
+        cachedVoice = findBestVoice();
+        cachedLocale = getLocaleMeta().locale;
     }
 }
 

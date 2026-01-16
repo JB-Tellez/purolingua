@@ -1,3 +1,5 @@
+import { getLocaleMeta } from '../core/i18n.js';
+
 export class VoiceRecognitionService {
     constructor() {
         this.recognition = null;
@@ -10,7 +12,7 @@ export class VoiceRecognitionService {
             this.recognition = new webkitSpeechRecognition();
             this.recognition.continuous = false; // Stop after one sentence
             this.recognition.interimResults = false;
-            this.recognition.lang = 'it-IT'; // Default to Italian
+            this.updateLanguage();
 
             this.recognition.onstart = () => {
                 this.isListening = true;
@@ -35,8 +37,18 @@ export class VoiceRecognitionService {
         }
     }
 
+    updateLanguage() {
+        if (this.recognition) {
+            const meta = getLocaleMeta();
+            this.recognition.lang = meta.locale;
+        }
+    }
+
     startListening(onResult, onError, onEnd) {
         if (!this.recognition) return;
+
+        // Update language before starting (in case locale changed)
+        this.updateLanguage();
 
         // If already listening, stop first (clean restart)
         if (this.isListening) {
