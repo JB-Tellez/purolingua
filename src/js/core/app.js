@@ -6,7 +6,7 @@ import { initializeUIElements, showAlert, showConfirm, showFeedback } from '../f
 import { shuffleArray, generateChoices } from '../utils/deck-utils.js';
 import { initializeViewElements, switchToFlashcardView, switchToDeckSelectionView, isFlashcardViewVisible } from './views.js';
 import { getDecks, getCurrentDeck, getCurrentCardIndex, getDueCardIndices, getIsQuizAnswered, setCurrentDeck, setCurrentCardIndex, incrementCardIndex, setDueCardIndices, setIsQuizAnswered, resetDeckState } from './state.js';
-import { t, getLocaleMeta, getLocale, setLocale, getAvailableLocales } from './i18n.js';
+import { t, getLocaleMeta, getLocale, setLocale, getAvailableLocales, hasLanguagePreference } from './i18n.js';
 
 // Sync URL with current locale on page load
 function syncURLWithLocale() {
@@ -17,6 +17,65 @@ function syncURLWithLocale() {
     if (currentLang !== locale) {
         url.searchParams.set('lang', locale);
         window.history.replaceState({}, '', url);
+    }
+}
+
+// Show language selection modal for first-time visitors
+function showLanguageSelectionModal() {
+    const modal = document.getElementById('language-modal');
+    const choicesContainer = document.getElementById('language-choices');
+
+    if (!modal || !choicesContainer) return;
+
+    // Populate language choices
+    const locales = getAvailableLocales();
+    choicesContainer.innerHTML = '';
+
+    locales.forEach(locale => {
+        const choice = document.createElement('div');
+        choice.className = 'language-choice';
+        choice.innerHTML = `
+            <span class="flag">${locale.flag}</span>
+            <span class="name">${locale.name}</span>
+        `;
+        choice.addEventListener('click', () => {
+            selectInitialLanguage(locale.code);
+        });
+        choicesContainer.appendChild(choice);
+    });
+
+    // Show modal
+    modal.classList.remove('hidden');
+}
+
+// Handle initial language selection
+function selectInitialLanguage(localeCode) {
+    // Hide modal
+    document.getElementById('language-modal').classList.add('hidden');
+
+    // Set the locale
+    setLocale(localeCode);
+
+    // Now initialize the full app
+    initializeApp();
+}
+
+// Full app initialization (called after language is chosen)
+function initializeApp() {
+    syncURLWithLocale();
+    initializeI18n();
+    updateLanguageSelectorUI();
+    setupLanguageSelector();
+    initializeViewElements();
+    initializeUIElements();
+    loadProgress();
+    renderDecks();
+    setupEventListeners();
+    initializeVoices();
+
+    if (voiceService.isSupported()) {
+        micBtnFront.classList.remove('hidden');
+        micBtnBack.classList.remove('hidden');
     }
 }
 
@@ -138,20 +197,13 @@ function switchLanguage(localeCode) {
 
 // Initialize
 function init() {
-    syncURLWithLocale();
-    initializeI18n();
-    updateLanguageSelectorUI();
-    setupLanguageSelector();
-    initializeViewElements();
-    initializeUIElements();
-    loadProgress();
-    renderDecks();
-    setupEventListeners();
-    initializeVoices();
-
-    if (voiceService.isSupported()) {
-        micBtnFront.classList.remove('hidden');
-        micBtnBack.classList.remove('hidden');
+    // Check if user has chosen a language before
+    if (hasLanguagePreference()) {
+        // Language already chosen, initialize app directly
+        initializeApp();
+    } else {
+        // First visit - show language selection modal
+        showLanguageSelectionModal();
     }
 }
 

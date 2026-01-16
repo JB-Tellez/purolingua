@@ -17,6 +17,22 @@ const localeDecks = {
 // Storage key for locale preference
 const LOCALE_STORAGE_KEY = 'language-learning-locale';
 
+// Check if user has explicitly chosen a language
+function hasLanguagePreference() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLang = urlParams.get('lang');
+    if (urlLang && locales[urlLang]) {
+        return true;
+    }
+
+    const storedLang = localStorage.getItem(LOCALE_STORAGE_KEY);
+    if (storedLang && locales[storedLang]) {
+        return true;
+    }
+
+    return false;
+}
+
 // Get locale from URL, localStorage, or default to Italian
 function getInitialLocale() {
     // Check URL parameter first (highest priority)
@@ -32,7 +48,7 @@ function getInitialLocale() {
         return storedLang;
     }
 
-    // Default to Italian
+    // Default to Italian (but app should show picker first)
     return 'it';
 }
 
@@ -163,5 +179,6 @@ export {
     getLocaleDecks,
     t,
     getAvailableLocales,
-    registerLocale
+    registerLocale,
+    hasLanguagePreference
 };
