@@ -1,4 +1,4 @@
-window.DECKS_DATA = [
+export default [
     {
         "id": "daily",
         "title": "Vita Quotidiana",

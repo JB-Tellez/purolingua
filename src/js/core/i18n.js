@@ -1,5 +1,6 @@
 // Internationalization (i18n) Manager
 import itUI from '../../locales/it/ui.js';
+import itDecks from '../../locales/it/decks.js';
 import esUI from '../../locales/es/ui.js';
 import esDecks from '../../locales/es/decks.js';
 
@@ -9,8 +10,9 @@ const locales = {
     es: esUI
 };
 
-// Locale-specific decks (Italian uses window.DECKS_DATA loaded from script)
+// Locale-specific decks
 const localeDecks = {
+    it: itDecks,
     es: esDecks
 };
 
@@ -106,10 +108,6 @@ function getLocaleMeta() {
  * @returns {Array} - Array of deck objects
  */
 function getLocaleDecks() {
-    if (currentLocale === 'it') {
-        // Italian decks are loaded via script tag (window.DECKS_DATA)
-        return window.DECKS_DATA || [];
-    }
     return localeDecks[currentLocale] || [];
 }
 
