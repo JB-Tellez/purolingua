@@ -1,229 +1,126 @@
-# Italiano - Language Learning Flashcard App
+# PuroLingua
 
-## Overview
+A browser-based language learning app built with vanilla JavaScript. PuroLingua uses flashcard decks and a spaced repetition algorithm to help you build real conversational vocabulary — no frameworks, no backend required.
 
-This is a **learning exercise** focused on using AI to make changes to an existing application. The app is a functional Italian language learning tool that uses flashcards and spaced repetition to help users learn vocabulary.
+**[Live Site](https://purolingua.com/?lang=it)** &nbsp;·&nbsp; **[GitHub](https://github.com/JB-Tellez/purolingua)**
 
-**⚠️ Important: Only use company-approved AI tools for this exercise.**
+---
 
-## Exercise Goal
+## Features
 
-**Port this Italian language learning app to another spoken language of your team's choice.**
+- **Spaced Repetition (Leitner System)** — Cards are scheduled across 3 boxes (1, 3, and 7-day intervals). Correct answers advance a card; incorrect answers reset it to box 1.
+- **Multi-language Support** — Currently supports Italian and Spanish, with an extensible i18n system for adding new languages.
+- **Topic Decks** — Vocabulary organized into practical categories: Daily Life, Restaurant, Travel, Shopping, Hotel, Emergencies, Social, and Weather.
+- **Audio Playback** — Hear any card read aloud via the Web Speech API.
+- **Voice Recognition** — Speak your answer and get instant feedback using the browser's speech recognition API.
+- **Multiple-Choice Quiz** — The card back presents randomized answer choices including plausible distractors.
+- **Persistent Progress** — Progress is saved per language to `localStorage` with no sign-up required.
+- **No Build Required to Use** — Works directly in the browser via Vite's dev server or as a static build.
 
-The primary objective is to practice using AI assistants to understand, modify, and test existing code. This exercise does not require coding experience, though developers are welcome to review and edit code directly.
-
-## Getting Started
-
-### Option 1: With Git (Recommended)
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd italiano
-   ```
-
-2. **Create a team branch**
-   - Use your team name as a prefix (e.g., `artichoke-prod`, `broccoli-localization`)
-   ```bash
-   git checkout -b <teamname>-<descriptive-name>
-   ```
-
-3. **Make your changes on your team branch**
-
-4. **Follow standard git practices** (commit regularly, write clear commit messages, push to remote)
-
-### Option 2: Without Git
-
-If your team is not experienced with Git:
-
-1. Download the repository as a ZIP file
-2. Extract and work on the files locally
-3. Keep backups of your work manually
-
-## Running the App
-
-This app requires a web server to run correctly due to security restrictions on loading local modules and resources. It **will not work** if you simply open `index.html` in a browser.
-
-**To run:**
-
-You must run a local web server in the project directory. Here are a few options:
-
-- **Using Node.js (Recommended):**
-  ```bash
-  npx serve
-  ```
-- **Using Python:**
-  ```bash
-  python -m http.server
-  ```
-- **Using VS Code:**
-  Install the "Live Server" extension and click "Go Live".
-
-> [!NOTE]
-> If you have trouble setting up a web server, please reach out to your instructor for assistance.
-
-## Team Collaboration
-
-- **Teams can work together** or **break into smaller groups** to create different language versions
-- Each group should work on their own branch (if using Git) or in their own directory (if not using Git)
-- Communication and coordination are key!
-
-## Testing Requirements
-
-### Automated Tests (Required)
-Automated tests are **now required**. Two testing options are available:
-
-#### Option 1: Custom Test Runner (No Setup Required)
-A simple browser-based test runner is provided for teams without Node.js/npm:
-1. Open [tests.html](tests.html) in your browser
-2. View test results immediately
-
-#### Option 2: Vitest (Recommended for Advanced Teams)
-A professional testing setup using Vitest is available as a **stretch goal**:
-1. **Install dependencies** (one-time setup):
-   ```bash
-   npm install
-   ```
-
-2. **Run tests**:
-   ```bash
-   npm test              # Run all tests once
-   npm run test:watch    # Run tests in watch mode (re-runs on file changes)
-   npm run test:ui       # Open Vitest UI in browser
-   ```
-
-3. **Benefits of Vitest**:
-   - Professional development experience
-   - Watch mode for instant feedback
-   - Better error messages and debugging
-   - Code coverage reports (run `npm run test:coverage`)
-   - Industry-standard tooling
-
-Both test runners validate the same core functionality (spaced repetition logic, quiz generation, progress persistence). 
-
-### Acceptance Criteria (Required)
-**Gherkin-style acceptance criteria are required** to confirm correct behavior of your ported app.
-
-#### What is Gherkin?
-Gherkin uses a Given-When-Then format to describe behavior:
-
-```gherkin
-Feature: Deck Selection
-
-  Scenario: User selects a deck of cards
-    Given I am on the deck selection page
-    When I click on a deck
-    Then I should see the flashcard view
-    And I should see the first due card
-```
-
-#### Characterization Testing
-Before writing acceptance criteria, you must **understand the current behavior** of the app through characterization testing:
-
-1. **Explore the app thoroughly**
-   - Click every button
-   - Try every feature
-   - Observe what happens in different scenarios
-   - Use the browser's console to inspect application progress in local storage
-
-2. **Document the current behavior**
-   - What does each screen do?
-   - How does navigation work?
-   - What happens when you answer correctly vs. incorrectly?
-   - How does the spaced repetition system work?
-
-3. **Write Gherkin scenarios** that capture this behavior
-   - These scenarios should apply to both the original app AND your ported version
-   - The behavior should remain the same, only the language changes
-
-## Expected Outcomes
-
-By the end of this exercise, your group should have:
-
-1. ✅ A **running version** of the app ported to your chosen language
-2. ✅ **Gherkin-style acceptance criteria** that describes the app's behavior
-
-**NOTE:** This exercise is not a coding test. Get the app running as best you can. If you run into blockers we can discuss. 
-
-Record the acceptance criteria in text files, traditionally with `.feature` extension.
-
-## Current App Features
-
-- **Deck Selection**: Choose from multiple flashcard decks
-- **Flashcard Quiz**: Multiple-choice questions to test knowledge
-- **Spaced Repetition**: Leitner box system with 3 levels (1 day, 3 days, 7 days)
-- **Audio Support**: Text-to-speech pronunciation
-- **Progress Tracking**: Saves progress in browser localStorage
-- **Due Card Indicators**: Shows how many cards are due for review
-
-## Feature Extension Ideas
-
-Once you've successfully ported the app, consider adding new features to deepen your learning. Here's a feature idea that enhances the learning experience:
-
-### Study Mode Toggle
-
-Add different study modes to give users alternative ways to learn:
-
-**Current Behavior:**
-- Multiple-choice quiz only
-- Immediate right/wrong feedback
-- Spaced repetition scheduling
-
-**Proposed Study Modes:**
-
-1. **Quiz Mode** (current default)
-   - Multiple-choice questions with 4 options
-   - Immediate feedback on correct/incorrect answers
-   - Updates spaced repetition progress
-
-2. **Typing Practice Mode**
-   - See the phrase in the target language
-   - Type the translation in a text input field
-   - Check if answer matches (exact or fuzzy matching)
-   - Better for active recall vs. recognition
-
-3. **Review Mode** (Browse Only)
-   - Flip through cards at your own pace
-   - No quiz pressure or right/wrong feedback
-   - Good for refreshing memory before tests
-   - Doesn't update spaced repetition progress
-
-4. **Cram Mode**
-   - Like quiz mode, but shows ALL cards (ignores due dates)
-   - Doesn't update progress/Leitner boxes
-   - Good for intensive study sessions
-
-**Implementation Considerations:**
-- Add mode selector UI (buttons or dropdown) before starting a deck
-- Modify the flashcard view based on selected mode
-- Conditionally update progress based on mode
-- Write Gherkin scenarios for each mode's behavior
-
-**Learning Value:**
-- Understand existing quiz and spaced repetition logic
-- Practice conditional rendering and feature flags
-- Work with different UI patterns (buttons vs. text input)
-- Create comprehensive acceptance criteria for multiple scenarios
+---
 
 ## Tech Stack
 
-- HTML5
-- CSS3
-- Vanilla JavaScript (no frameworks)
-- Web Speech API (for text-to-speech)
-- localStorage (for persistence)
+| Category | Technology |
+|---|---|
+| Language | Vanilla JavaScript (ES Modules) |
+| Build Tool | Vite |
+| Unit Tests | Vitest + jsdom |
+| E2E Tests | Playwright (Chromium, Firefox, WebKit) |
+| Browser APIs | Web Speech API (TTS + recognition) |
+| Persistence | localStorage |
+| Styling | Custom CSS |
 
-## Tips for Success
+---
 
-1. **Start by understanding** - Use AI to explain how the code works
-2. **Test frequently** - Open the app in your browser after each change
-3. **Ask questions** - Use AI to help you understand what each piece of code does
-4. **Document your acceptance criteria early** - This helps ensure you don't miss any features
-5. **Commit often** (if using Git) - Small, incremental changes are easier to manage
-6. **Communicate with your team** - Share what you're learning!
+## Getting Started
 
-## Questions?
+**Prerequisites:** [Bun](https://bun.sh) or Node.js 18+
 
-This is a learning exercise - there are no wrong questions! Use your AI assistant to help you understand and make progress.
+```bash
+# Clone the repository
+git clone https://github.com/JB-Tellez/purolingua.git
+cd purolingua
 
-Have fun! 🚀
+# Install dependencies
+bun install
+
+# Start the dev server
+bun run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## Scripts
+
+| Command | Description |
+|---|---|
+| `bun run dev` | Start local dev server |
+| `bun run build` | Build for production |
+| `bun run preview` | Preview the production build |
+| `bun run test` | Run unit tests (Vitest) |
+| `bun run test:watch` | Run unit tests in watch mode |
+| `bun run test:ui` | Open the Vitest browser UI |
+| `bun run test:coverage` | Generate a coverage report |
+
+For end-to-end tests (requires Playwright browsers):
+
+```bash
+npx playwright install
+npx playwright test
+```
+
+---
+
+## Project Structure
+
+```
+purolingua/
+├── src/
+│   ├── js/
+│   │   ├── core/          # App bootstrap, state, view routing, i18n
+│   │   ├── features/      # Audio, voice recognition, progress tracking, UI helpers
+│   │   └── utils/         # Deck utilities (shuffle, choice generation)
+│   ├── locales/
+│   │   ├── es/            # Spanish UI strings and decks
+│   │   └── it/            # Italian UI strings and decks
+│   └── css/
+│       └── style.css
+├── tests/                 # Vitest unit tests
+├── vite.config.js
+├── vitest.config.js
+└── playwright.config.js
+```
+
+---
+
+## How the Spaced Repetition Works
+
+Every card starts unreviewed (due immediately). After each session:
+
+| Result | Box | Next Review |
+|---|---|---|
+| Correct (Box 1 → 2) | 2 | 3 days |
+| Correct (Box 2 → 3) | 3 | 7 days |
+| Correct (Box 3) | 3 | 7 days |
+| Incorrect (any box) | 1 | 1 day |
+
+Progress is stored in `localStorage` under a per-language key, so switching languages preserves each language's independent study history.
+
+---
+
+## Adding a New Language
+
+1. Create `src/locales/<code>/ui.js` with translated UI strings and locale metadata.
+2. Create `src/locales/<code>/decks.js` with vocabulary decks.
+3. Import and register both in `src/js/core/i18n.js`.
+
+The language picker will automatically include the new locale.
+
+---
+
+## License
+
+ISC

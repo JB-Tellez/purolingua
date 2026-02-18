@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "italiano",
+      "name": "purolingua",
       "devDependencies": {
         "@vitest/coverage-v8": "4.0.15",
         "@vitest/ui": "^4.0.15",

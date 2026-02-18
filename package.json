@@ -1,7 +1,7 @@
 {
-  "name": "italiano",
+  "name": "purolingua",
   "version": "1.0.0",
-  "description": "Language learning flashcard app",
+  "description": "Language learning the puro way",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.galvanize.com/cohorts/ent/allstate/as-xp-25-12-ana-wave-b/class-projects/italiano.git"
+    "url": "https://github.com/JB-Tellez/purolingua.git"
   },
   "keywords": [],
   "author": "",
