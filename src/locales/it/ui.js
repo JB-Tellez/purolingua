@@ -25,12 +25,6 @@ export default {
         completed: 'Completato'
     },
 
-    // Streak Banner
-    streak: {
-        daysInARow: '{count} giorni di fila!',
-        keepItUp: 'Continua così'
-    },
-
     // Flashcard View
     flashcard: {
         flipButton: 'Gira',

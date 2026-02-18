@@ -151,73 +151,6 @@ h1 {
     font-size: 1.1rem;
 }
 
-/* Streak Banner */
-.streak-banner {
-    background-color: #F3E5C2;
-    /* Darker beige/gold */
-    border-radius: var(--radius-lg);
-    padding: 1.5rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow-sm);
-}
-
-.streak-info {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.streak-icon {
-    background-color: #E69B00;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: white;
-    box-shadow: 0 2px 4px rgba(230, 155, 0, 0.3);
-}
-
-.streak-text h2 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--color-text);
-    margin-bottom: 0.2rem;
-}
-
-.streak-text p {
-    font-size: 0.9rem;
-    color: var(--color-text-light);
-}
-
-.streak-days {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.day-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    color: var(--color-text-light);
-    font-weight: 600;
-}
-
-.day-circle.completed {
-    background-color: var(--color-success);
-    color: white;
-}
 
 /* Section Header */
 .section-header {
@@ -924,16 +857,6 @@ h1 {
 @media (max-width: 600px) {
     .deck-grid {
         grid-template-columns: 1fr;
-    }
-
-    .streak-banner {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .streak-days {
-        width: 100%;
-        justify-content: space-between;
     }
 
     .card-container {

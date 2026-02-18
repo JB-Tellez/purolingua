@@ -112,12 +112,6 @@ function initializeI18n() {
         logo.textContent = `${meta.flag} ${meta.name}`;
     }
 
-    // Set streak title (hardcoded to 3 for now - will be dynamic later)
-    const streakTitle = document.getElementById('streak-title');
-    if (streakTitle) {
-        streakTitle.textContent = t('streak.daysInARow', { count: 3 });
-    }
-
     // Populate all data-i18n elements
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
