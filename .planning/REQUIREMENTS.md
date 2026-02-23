@@ -56,24 +56,24 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONT-01 | — | Pending |
-| CONT-02 | — | Pending |
-| CONT-03 | — | Pending |
-| FLTR-01 | — | Pending |
-| FLTR-02 | — | Pending |
-| FLTR-03 | — | Pending |
-| FLTR-04 | — | Pending |
-| FLTR-05 | — | Pending |
-| FLTR-06 | — | Pending |
-| FLTR-07 | — | Pending |
-| FLTR-08 | — | Pending |
-| FLTR-09 | — | Pending |
+| CONT-01 | Phase 6 | Pending |
+| CONT-02 | Phase 6 | Pending |
+| CONT-03 | Phase 6 | Pending |
+| FLTR-01 | Phase 8 | Pending |
+| FLTR-02 | Phase 7 | Pending |
+| FLTR-03 | Phase 7 | Pending |
+| FLTR-04 | Phase 7 | Pending |
+| FLTR-05 | Phase 7 | Pending |
+| FLTR-06 | Phase 7 | Pending |
+| FLTR-07 | Phase 7 | Pending |
+| FLTR-08 | Phase 7 | Pending |
+| FLTR-09 | Phase 8 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 12 total
-- Mapped to phases: 0
-- Unmapped: 12 ⚠️
+- Mapped to phases: 12
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-22*
-*Last updated: 2026-02-22 after initial definition*
+*Last updated: 2026-02-22 — traceability filled after roadmap creation*
