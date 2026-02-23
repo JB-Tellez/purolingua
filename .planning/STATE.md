@@ -10,24 +10,24 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 6 of 8 (Content and Data)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-02-23 — Completed plan 06-02 (Spanish A2 tagging and A1 card append)
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-02-23 — Completed plan 06-03 (data-integrity test suite for card level fields)
 
-Progress: [██░░░░░░░░] 20%
+Progress: [███░░░░░░░] 30%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 4min
-- Total execution time: 8min
+- Total plans completed: 3
+- Average duration: 3min
+- Total execution time: 10min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 06-content-and-data | 2 | 8min | 4min |
+| 06-content-and-data | 3 | 10min | 3min |
 
 *Updated after each plan completion*
 
@@ -45,6 +45,7 @@ Progress: [██░░░░░░░░] 20%
 - Card schema: every card must have {front, back, level} with level one of 'A1' | 'A2'
 - 20 A1 cards per deck provides minimum foil pool coverage for 4-option quiz format
 - [Phase 06-content-and-data]: Spanish A1 cards authored independently (not translated from Italian A1 cards); card schema requires level field after back; A2 at indices 0-19, A1 at indices 20-39
+- [Phase 06-content-and-data plan 03]: Data-integrity test (tests/data-integrity.test.js) verifies level fields, min 4 A1 cards per deck, and append order — run `bun run test` to verify after any deck edit
 
 ### Pending Todos
 
@@ -58,5 +59,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 06-02-PLAN.md — Spanish A2 tagging and A1 card content appended to all 8 decks
+Stopped at: Completed 06-03-PLAN.md — data-integrity test suite for card level fields (Phase 6 complete)
 Resume file: None
