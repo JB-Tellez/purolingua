@@ -25,11 +25,25 @@ Users can study real conversational vocabulary offline, in any browser, with zer
 - ✓ Extensible i18n system for adding new languages — v1.0
 - ✓ GitHub Pages staging deployment — v1.0
 
+## Current Milestone: v1.1 Difficulty Levels
+
+**Goal:** Learners can choose their vocabulary level (A1/A2) so beginners can start with simpler phrase content before advancing.
+
+**Target features:**
+- A1 phrase content for all 8 topic decks in Italian and Spanish
+- Level filter chips on the deck screen (multi-select: A1, A2, or both)
+- Default level: A1 (users opt into A2)
+- Existing cards tagged as A2; one SRS track per language regardless of level
+
 ### Active
 
 <!-- Current scope. Building toward these. -->
 
-(None yet — milestone v1.1 in progress)
+- [ ] A1-level phrase content for Italian (all 8 topic categories)
+- [ ] A1-level phrase content for Spanish (all 8 topic categories)
+- [ ] Level property on all cards (A1 or A2)
+- [ ] Level filter UI on deck screen (default: A1 only)
+- [ ] Level filter persists across sessions
 
 ### Out of Scope
 
@@ -64,4 +78,4 @@ Users can study real conversational vocabulary offline, in any browser, with zer
 | Web Speech API for audio | No cost, browser-native | ✓ Good |
 
 ---
-*Last updated: 2026-02-22 after GSD initialization*
+*Last updated: 2026-02-22 after milestone v1.1 started*
