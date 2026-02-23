@@ -107,10 +107,10 @@ function updateCardProgress(deckId, cardIndex, isCorrect) {
     saveProgress();
 }
 
-function getDueCount(deck) {
+function getDueCount(deck, activeLevels) {
     let count = 0;
     deck.cards.forEach((card, index) => {
-        if (isCardDue(deck.id, index)) {
+        if (activeLevels.includes(card.level) && isCardDue(deck.id, index)) {
             count++;
         }
     });

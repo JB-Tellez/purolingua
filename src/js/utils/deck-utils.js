@@ -11,9 +11,9 @@ function shuffleArray(array) {
 }
 
 // Generate Choices (1 Correct + 3 Foils)
-function generateChoices(correctCard, deck) {
-    // Filter out the correct card to get potential foils
-    const potentialFoils = deck.cards.filter(c => c.back !== correctCard.back);
+function generateChoices(correctCard, filteredCards) {
+    // filteredCards is already the level-filtered subset of deck.cards
+    const potentialFoils = filteredCards.filter(c => c.back !== correctCard.back);
 
     // Shuffle potential foils
     const shuffledFoils = potentialFoils.sort(() => 0.5 - Math.random());

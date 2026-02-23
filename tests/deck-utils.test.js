@@ -17,14 +17,14 @@ const mockDeck = {
 describe('Deck Utils - Quiz Generation', () => {
   it('generateChoices should return 4 options', () => {
     const card = mockDeck.cards[0];
-    const choices = generateChoices(card, mockDeck);
+    const choices = generateChoices(card, mockDeck.cards);
 
     expect(choices.length).toBe(4);
   });
 
   it('generateChoices should include the correct answer', () => {
     const card = mockDeck.cards[0];
-    const choices = generateChoices(card, mockDeck);
+    const choices = generateChoices(card, mockDeck.cards);
 
     const hasCorrect = choices.some(c => c.text === card.back && c.isCorrect === true);
     expect(hasCorrect).toBe(true);
@@ -32,7 +32,7 @@ describe('Deck Utils - Quiz Generation', () => {
 
   it('generateChoices should have exactly one correct answer', () => {
     const card = mockDeck.cards[0];
-    const choices = generateChoices(card, mockDeck);
+    const choices = generateChoices(card, mockDeck.cards);
 
     const correctCount = choices.filter(c => c.isCorrect).length;
     expect(correctCount).toBe(1);
@@ -40,7 +40,7 @@ describe('Deck Utils - Quiz Generation', () => {
 
   it('generateChoices should include 3 foils from other cards', () => {
     const card = mockDeck.cards[0];
-    const choices = generateChoices(card, mockDeck);
+    const choices = generateChoices(card, mockDeck.cards);
 
     const foils = choices.filter(c => !c.isCorrect);
     expect(foils.length).toBe(3);
