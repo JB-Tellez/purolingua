@@ -66,6 +66,6 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 6. Content and Data | v1.1 | 0/3 | Not started | - |
+| 6. Content and Data | 1/3 | In Progress|  | - |
 | 7. Filter Logic | v1.1 | 0/? | Not started | - |
 | 8. Filter UI | v1.1 | 0/? | Not started | - |

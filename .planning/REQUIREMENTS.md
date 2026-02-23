@@ -9,8 +9,8 @@ Requirements for the Difficulty Levels milestone. Each maps to roadmap phases.
 
 ### Content
 
-- [ ] **CONT-01**: All 160 existing Italian and Spanish cards have `level: "A2"` added to their data
-- [ ] **CONT-02**: Italian decks include A1 phrase content for all 8 topic categories (minimum 4 cards per deck, ~20 target)
+- [x] **CONT-01**: All 160 existing Italian and Spanish cards have `level: "A2"` added to their data
+- [x] **CONT-02**: Italian decks include A1 phrase content for all 8 topic categories (minimum 4 cards per deck, ~20 target)
 - [ ] **CONT-03**: Spanish decks include A1 phrase content for all 8 topic categories (minimum 4 cards per deck, ~20 target)
 
 ### Filter
@@ -56,8 +56,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONT-01 | Phase 6 | Pending |
-| CONT-02 | Phase 6 | Pending |
+| CONT-01 | Phase 6 | Complete |
+| CONT-02 | Phase 6 | Complete |
 | CONT-03 | Phase 6 | Pending |
 | FLTR-01 | Phase 8 | Pending |
 | FLTR-02 | Phase 7 | Pending |
