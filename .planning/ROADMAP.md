@@ -31,7 +31,12 @@ Features shipped: Leitner SRS, Italian + Spanish vocabulary decks (8 topics each
   2. All 8 Italian topic decks contain A1 phrase cards (minimum 4 per deck) appended after the existing cards
   3. All 8 Spanish topic decks contain A1 phrase cards (minimum 4 per deck) appended after the existing cards
   4. A Vitest data-integrity test passes confirming every card in every deck has a valid `level` field of "A1" or "A2"
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Tag + append A1 cards: Italian decks (CONT-01, CONT-02)
+- [ ] 06-02-PLAN.md — Tag + append A1 cards: Spanish decks (CONT-01, CONT-03)
+- [ ] 06-03-PLAN.md — Data-integrity Vitest test (CONT-01, CONT-02, CONT-03)
 
 ### Phase 7: Filter Logic
 **Goal**: Level filter state is wired through SRS due-count, session start, and quiz distractor logic — the filter works correctly even without a UI
@@ -61,6 +66,6 @@ Features shipped: Leitner SRS, Italian + Spanish vocabulary decks (8 topics each
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 6. Content and Data | v1.1 | 0/? | Not started | - |
+| 6. Content and Data | v1.1 | 0/3 | Not started | - |
 | 7. Filter Logic | v1.1 | 0/? | Not started | - |
 | 8. Filter UI | v1.1 | 0/? | Not started | - |
