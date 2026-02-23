@@ -8,6 +8,37 @@ function getStorageKey() {
     return `${locale}-progress`;
 }
 
+function getLevelFilterKey() {
+    return `${getLocale()}-level-filter`;
+}
+
+function loadLevelFilter() {
+    try {
+        const saved = localStorage.getItem(getLevelFilterKey());
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                return parsed;
+            }
+        }
+    } catch (e) {
+        console.warn('Failed to load level filter from localStorage:', e);
+    }
+    return null; // null = no saved preference; caller decides default
+}
+
+function saveLevelFilter(levels) {
+    try {
+        localStorage.setItem(getLevelFilterKey(), JSON.stringify(levels));
+    } catch (e) {
+        console.warn('Failed to save level filter to localStorage:', e);
+    }
+}
+
+function hasProgressData() {
+    return Object.keys(progress).length > 0;
+}
+
 function loadProgress() {
     try {
         const saved = localStorage.getItem(getStorageKey());
@@ -97,5 +128,8 @@ export {
     isCardDue,
     updateCardProgress,
     getDueCount,
-    resetAllProgress
+    resetAllProgress,
+    loadLevelFilter,
+    saveLevelFilter,
+    hasProgressData
 };
