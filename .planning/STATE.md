@@ -5,29 +5,30 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Users can study real conversational vocabulary offline, in any browser, with zero friction — no sign-up, no app install, just open and learn.
-**Current focus:** Phase 6 — Content and Data (v1.1 Difficulty Levels)
+**Current focus:** Phase 7 — Filter Logic (v1.1 Difficulty Levels)
 
 ## Current Position
 
-Phase: 6 of 8 (Content and Data)
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-02-23 — Completed plan 06-03 (data-integrity test suite for card level fields)
+Phase: 7 of 8 (Filter Logic)
+Plan: 1 of 4 in current phase
+Status: In progress
+Last activity: 2026-02-23 — Completed plan 07-01 (activeLevels state + level-filter persistence helpers)
 
-Progress: [███░░░░░░░] 30%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
+- Total plans completed: 4
 - Average duration: 3min
-- Total execution time: 10min
+- Total execution time: 18min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 06-content-and-data | 3 | 10min | 3min |
+| 07-filter-logic | 1 | 8min | 8min |
 
 *Updated after each plan completion*
 
@@ -46,6 +47,7 @@ Progress: [███░░░░░░░] 30%
 - 20 A1 cards per deck provides minimum foil pool coverage for 4-option quiz format
 - [Phase 06-content-and-data]: Spanish A1 cards authored independently (not translated from Italian A1 cards); card schema requires level field after back; A2 at indices 0-19, A1 at indices 20-39
 - [Phase 06-content-and-data plan 03]: Data-integrity test (tests/data-integrity.test.js) verifies level fields, min 4 A1 cards per deck, and append order — run `bun run test` to verify after any deck edit
+- [Phase 07-filter-logic plan 01]: setActiveLevels does NOT call saveLevelFilter — coordinator pattern in app.js (Plan 03) handles save-on-set; loadLevelFilter returns null (not default) so initActiveLevels() can distinguish new vs returning user; activeLevels excluded from resetDeckState() (persists across deck navigation)
 
 ### Pending Todos
 
@@ -59,5 +61,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 06-03-PLAN.md — data-integrity test suite for card level fields (Phase 6 complete)
+Stopped at: Completed 07-01-PLAN.md — activeLevels state variable + level-filter persistence helpers (Phase 7, Plan 1 of 4)
 Resume file: None

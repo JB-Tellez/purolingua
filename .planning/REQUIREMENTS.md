@@ -16,11 +16,11 @@ Requirements for the Difficulty Levels milestone. Each maps to roadmap phases.
 ### Filter
 
 - [ ] **FLTR-01**: User can filter decks by level using A1/A2 chips on the deck screen
-- [ ] **FLTR-02**: Level filter is multi-select — user can have A1 only, A2 only, or both active simultaneously
-- [ ] **FLTR-03**: New users (no prior SRS progress in localStorage) default to A1 only
-- [ ] **FLTR-04**: Returning users (existing SRS progress detected in localStorage) default to A1+A2
-- [ ] **FLTR-05**: Level filter selection persists across browser sessions via localStorage
-- [ ] **FLTR-06**: At least one level chip must remain selected — deselecting all is prevented
+- [x] **FLTR-02**: Level filter is multi-select — user can have A1 only, A2 only, or both active simultaneously
+- [x] **FLTR-03**: New users (no prior SRS progress in localStorage) default to A1 only
+- [x] **FLTR-04**: Returning users (existing SRS progress detected in localStorage) default to A1+A2
+- [x] **FLTR-05**: Level filter selection persists across browser sessions via localStorage
+- [x] **FLTR-06**: At least one level chip must remain selected — deselecting all is prevented
 - [ ] **FLTR-07**: Due-count badge and study session use the same level filter logic (no count mismatch)
 - [ ] **FLTR-08**: Quiz answer choices (distractors) are drawn from the level-filtered card pool only
 - [ ] **FLTR-09**: Level chip labels are defined in the i18n system (it/ui.js and es/ui.js)
@@ -60,11 +60,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-02 | Phase 6 | Complete |
 | CONT-03 | Phase 6 | Complete |
 | FLTR-01 | Phase 8 | Pending |
-| FLTR-02 | Phase 7 | Pending |
-| FLTR-03 | Phase 7 | Pending |
-| FLTR-04 | Phase 7 | Pending |
-| FLTR-05 | Phase 7 | Pending |
-| FLTR-06 | Phase 7 | Pending |
+| FLTR-02 | Phase 7 | Complete |
+| FLTR-03 | Phase 7 | Complete |
+| FLTR-04 | Phase 7 | Complete |
+| FLTR-05 | Phase 7 | Complete |
+| FLTR-06 | Phase 7 | Complete |
 | FLTR-07 | Phase 7 | Pending |
 | FLTR-08 | Phase 7 | Pending |
 | FLTR-09 | Phase 8 | Pending |
