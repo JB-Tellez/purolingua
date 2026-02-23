@@ -21,8 +21,8 @@ Requirements for the Difficulty Levels milestone. Each maps to roadmap phases.
 - [x] **FLTR-04**: Returning users (existing SRS progress detected in localStorage) default to A1+A2
 - [x] **FLTR-05**: Level filter selection persists across browser sessions via localStorage
 - [x] **FLTR-06**: At least one level chip must remain selected — deselecting all is prevented
-- [ ] **FLTR-07**: Due-count badge and study session use the same level filter logic (no count mismatch)
-- [ ] **FLTR-08**: Quiz answer choices (distractors) are drawn from the level-filtered card pool only
+- [x] **FLTR-07**: Due-count badge and study session use the same level filter logic (no count mismatch)
+- [x] **FLTR-08**: Quiz answer choices (distractors) are drawn from the level-filtered card pool only
 - [ ] **FLTR-09**: Level chip labels are defined in the i18n system (it/ui.js and es/ui.js)
 
 ## v2 Requirements
@@ -65,8 +65,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FLTR-04 | Phase 7 | Complete |
 | FLTR-05 | Phase 7 | Complete |
 | FLTR-06 | Phase 7 | Complete |
-| FLTR-07 | Phase 7 | Pending |
-| FLTR-08 | Phase 7 | Pending |
+| FLTR-07 | Phase 7 | Complete |
+| FLTR-08 | Phase 7 | Complete |
 | FLTR-09 | Phase 8 | Pending |
 
 **Coverage:**
