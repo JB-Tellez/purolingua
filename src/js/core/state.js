@@ -5,6 +5,7 @@ let currentDeck = null;
 let currentCardIndex = 0;
 let dueCardIndices = [];
 let isQuizAnswered = false;
+let activeLevels = ['A1']; // default; overwritten by initActiveLevels() at app init
 
 // Getters
 function getDecks() {
@@ -28,6 +29,10 @@ function getIsQuizAnswered() {
     return isQuizAnswered;
 }
 
+function getActiveLevels() {
+    return [...activeLevels]; // return copy to prevent external mutation (Pitfall 5)
+}
+
 // Setters
 function setCurrentDeck(deck) {
     currentDeck = deck;
@@ -49,6 +54,11 @@ function setIsQuizAnswered(value) {
     isQuizAnswered = value;
 }
 
+function setActiveLevels(levels) {
+    if (!levels || levels.length === 0) return; // FLTR-06: silent no-op on empty/null
+    activeLevels = [...levels]; // store copy
+}
+
 function resetDeckState() {
     currentDeck = null;
     currentCardIndex = 0;
@@ -61,10 +71,12 @@ export {
     getCurrentCardIndex,
     getDueCardIndices,
     getIsQuizAnswered,
+    getActiveLevels,
     setCurrentDeck,
     setCurrentCardIndex,
     incrementCardIndex,
     setDueCardIndices,
     setIsQuizAnswered,
+    setActiveLevels,
     resetDeckState
 };
