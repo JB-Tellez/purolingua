@@ -48,7 +48,13 @@ Plans:
   3. The level filter selection survives a browser close and reopen — it is read back from localStorage on next load
   4. Attempting to deselect the last active chip is silently ignored — the user cannot reach a state with zero active levels
   5. Quiz answer choices (distractors) are drawn only from cards matching the active level filter — no cross-level foil contamination
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Add activeLevels to state.js and level-filter persistence helpers to progress.js
+- [ ] 07-02-PLAN.md — TDD: filter state + persistence tests (FLTR-02, FLTR-03, FLTR-04, FLTR-05, FLTR-06)
+- [ ] 07-03-PLAN.md — Wire app.js initActiveLevels, getDueCount, startDeck, generateChoices (FLTR-03–08)
+- [ ] 07-04-PLAN.md — TDD: count parity + foil contamination tests (FLTR-07, FLTR-08)
 
 ### Phase 8: Filter UI
 **Goal**: Users can see and toggle level filter chips above the deck grid, with labels rendered from the i18n system
