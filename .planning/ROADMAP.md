@@ -51,10 +51,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Add activeLevels to state.js and level-filter persistence helpers to progress.js
-- [ ] 07-02-PLAN.md — TDD: filter state + persistence tests (FLTR-02, FLTR-03, FLTR-04, FLTR-05, FLTR-06)
-- [ ] 07-03-PLAN.md — Wire app.js initActiveLevels, getDueCount, startDeck, generateChoices (FLTR-03–08)
-- [ ] 07-04-PLAN.md — TDD: count parity + foil contamination tests (FLTR-07, FLTR-08)
+- [x] 07-01-PLAN.md — Add activeLevels to state.js and level-filter persistence helpers to progress.js
+- [x] 07-02-PLAN.md — TDD: filter state + persistence tests (FLTR-02, FLTR-03, FLTR-04, FLTR-05, FLTR-06)
+- [x] 07-03-PLAN.md — Wire app.js initActiveLevels, getDueCount, startDeck, generateChoices (FLTR-03–08)
+- [x] 07-04-PLAN.md — TDD: count parity + foil contamination tests (FLTR-07, FLTR-08)
 
 ### Phase 8: Filter UI
 **Goal**: Users can see and toggle level filter chips above the deck grid, with labels rendered from the i18n system
@@ -73,5 +73,5 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 6. Content and Data | 3/3 | Complete    | 2026-02-23 | - |
-| 7. Filter Logic | 3/4 | In Progress|  | - |
+| 7. Filter Logic | 4/4 | Complete | 2026-02-23 | - |
 | 8. Filter UI | v1.1 | 0/? | Not started | - |

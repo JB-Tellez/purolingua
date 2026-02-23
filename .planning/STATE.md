@@ -10,25 +10,25 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 7 of 8 (Filter Logic)
-Plan: 3 of 4 in current phase
-Status: In progress
-Last activity: 2026-02-23 — Completed plan 07-03 (filter logic wiring in app.js)
+Plan: 4 of 4 in current phase
+Status: Phase complete
+Last activity: 2026-02-23 — Completed plan 07-04 (count parity and foil filtering tests)
 
-Progress: [██████░░░░] 63%
+Progress: [███████░░░] 75%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 3min
-- Total execution time: 24min
+- Total plans completed: 6
+- Average duration: 4min
+- Total execution time: 30min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 06-content-and-data | 3 | 10min | 3min |
-| 07-filter-logic | 3 | 17min | 5min |
+| 07-filter-logic | 4 | 23min | 5min |
 
 *Updated after each plan completion*
 
@@ -50,6 +50,7 @@ Progress: [██████░░░░] 63%
 - [Phase 07-filter-logic plan 01]: setActiveLevels does NOT call saveLevelFilter — coordinator pattern in app.js (Plan 03) handles save-on-set; loadLevelFilter returns null (not default) so initActiveLevels() can distinguish new vs returning user; activeLevels excluded from resetDeckState() (persists across deck navigation)
 - [Phase 07-filter-logic plan 02]: filter-logic tests use direct source imports (no mocking) following existing test patterns; beforeEach sets locale key so locale-scoped localStorage keys resolve to it-level-filter / it-progress
 - [Phase 07-filter-logic plan 03]: updateActiveLevels() is the coordinator (sets state + persists); initActiveLevels() must run after loadProgress() in both initializeApp and switchLanguage; generateChoices now takes filteredCards array (not deck object); badge count (getDueCount) and session queue (startDeck) use identical card-level predicate for parity
+- [Phase 07-filter-logic plan 04]: loadProgress() must be called before getDueCount in tests (initialises module-level progress from localStorage); mockLevelDeck fixture shared at module scope across FLTR-07 and FLTR-08 describe blocks; foil-contamination tests assert foil IS in correct pool AND IS NOT in other pool
 
 ### Pending Todos
 
@@ -63,5 +64,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 07-03-PLAN.md — filter logic wiring in app.js (Phase 7, Plan 3 of 4)
+Stopped at: Completed 07-04-PLAN.md — count parity and foil filtering tests (Phase 7, Plan 4 of 4 — Phase 7 complete)
 Resume file: None
