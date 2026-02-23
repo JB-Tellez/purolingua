@@ -1,11 +1,11 @@
 // Imports
 import { speak, initializeVoices } from '../features/audio.js';
 import { VoiceRecognitionService } from '../features/voice.js';
-import { loadProgress, isCardDue, updateCardProgress, getDueCount, resetAllProgress } from '../features/progress.js';
+import { loadProgress, isCardDue, updateCardProgress, getDueCount, resetAllProgress, loadLevelFilter, saveLevelFilter, hasProgressData } from '../features/progress.js';
 import { initializeUIElements, showAlert, showConfirm, showFeedback } from '../features/ui.js';
 import { shuffleArray, generateChoices } from '../utils/deck-utils.js';
 import { initializeViewElements, switchToFlashcardView, switchToDeckSelectionView, isFlashcardViewVisible } from './views.js';
-import { getDecks, getCurrentDeck, getCurrentCardIndex, getDueCardIndices, getIsQuizAnswered, setCurrentDeck, setCurrentCardIndex, incrementCardIndex, setDueCardIndices, setIsQuizAnswered, resetDeckState } from './state.js';
+import { getDecks, getCurrentDeck, getCurrentCardIndex, getDueCardIndices, getIsQuizAnswered, getActiveLevels, setCurrentDeck, setCurrentCardIndex, incrementCardIndex, setDueCardIndices, setIsQuizAnswered, setActiveLevels, resetDeckState } from './state.js';
 import { t, getLocaleMeta, getLocale, setLocale, getAvailableLocales, hasLanguagePreference } from './i18n.js';
 
 // Sync URL with current locale on page load
@@ -69,6 +69,7 @@ function initializeApp() {
     initializeViewElements();
     initializeUIElements();
     loadProgress();
+    initActiveLevels();  // NEW — must come after loadProgress (hasProgressData needs it)
     renderDecks();
     setupEventListeners();
     initializeVoices();
@@ -98,6 +99,23 @@ const resetProgressBtn = document.getElementById('reset-progress-btn');
 
 const voiceService = new VoiceRecognitionService();
 let currentQuizChoices = [];
+
+// Coordinator: updates state and persists. Called by initActiveLevels and (Phase 8) chip click handlers.
+function updateActiveLevels(levels) {
+    setActiveLevels(levels);           // enforces FLTR-06 guard internally
+    saveLevelFilter(getActiveLevels()); // persist after guard (getActiveLevels returns current value)
+}
+
+function initActiveLevels() {
+    const saved = loadLevelFilter();
+    if (saved !== null) {
+        setActiveLevels(saved); // restore saved preference (FLTR-05); no need to re-save
+        return;
+    }
+    // No saved preference — apply new/returning user default (FLTR-03, FLTR-04)
+    const defaultLevels = hasProgressData() ? ['A1', 'A2'] : ['A1'];
+    updateActiveLevels(defaultLevels); // sets state + saves for next load
+}
 
 // Initialize i18n strings in the DOM
 function initializeI18n() {
@@ -186,6 +204,7 @@ function switchLanguage(localeCode) {
 
     // Reload progress for new language
     loadProgress();
+    initActiveLevels();  // NEW — re-derive filter for new locale (Pitfall 3/6 prevention)
 
     // Re-initialize UI with new language
     initializeI18n();
@@ -217,7 +236,7 @@ function renderDecks() {
         // Skip decks that don't have a theme (optional, if we want to hide Social/Weather)
         if (!deck.theme) return;
 
-        const dueCount = getDueCount(deck);
+        const dueCount = getDueCount(deck, getActiveLevels());
         const card = document.createElement('div');
         card.className = `deck-card theme-${deck.theme}`;
 
@@ -240,10 +259,11 @@ function renderDecks() {
 function startDeck(deck) {
     setCurrentDeck(deck);
 
-    // Filter to only due cards
+    // Filter to only due cards at active levels
     const tempDueIndices = [];
+    const levels = getActiveLevels();
     deck.cards.forEach((card, index) => {
-        if (isCardDue(deck.id, index)) {
+        if (levels.includes(card.level) && isCardDue(deck.id, index)) {
             tempDueIndices.push(index);
         }
     });
@@ -280,8 +300,10 @@ function renderCard() {
     // Update Content immediately
     cardFrontText.textContent = card.front;
 
-    // Generate Quiz Options
-    const choices = generateChoices(card, getCurrentDeck());
+    // Generate Quiz Options (pre-filter to active levels so foils don't cross levels)
+    const activeLevels = getActiveLevels();
+    const filteredCards = getCurrentDeck().cards.filter(c => activeLevels.includes(c.level));
+    const choices = generateChoices(card, filteredCards);
     currentQuizChoices = choices;
     quizOptionsContainer.innerHTML = '';
 
