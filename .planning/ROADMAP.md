@@ -67,7 +67,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — TDD: failing filter-ui.test.js (RED phase — FLTR-01, FLTR-09)
+- [x] 08-01-PLAN.md — TDD: failing filter-ui.test.js (RED phase — FLTR-01, FLTR-09)
 - [ ] 08-02-PLAN.md — Implement chip UI: HTML, CSS, i18n keys, app.js wiring (GREEN phase — FLTR-01, FLTR-09)
 
 ## Progress
@@ -78,4 +78,4 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 6. Content and Data | 3/3 | Complete    | 2026-02-23 | - |
 | 7. Filter Logic | 4/4 | Complete | 2026-02-23 | - |
-| 8. Filter UI | v1.1 | 0/? | Not started | - |
+| 8. Filter UI | v1.1 | 1/2 | In progress | - |

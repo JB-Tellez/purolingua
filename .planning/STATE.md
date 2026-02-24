@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Users can study real conversational vocabulary offline, in any browser, with zero friction — no sign-up, no app install, just open and learn.
-**Current focus:** Phase 7 — Filter Logic (v1.1 Difficulty Levels)
+**Current focus:** Phase 8 — Filter UI (v1.1 Difficulty Levels)
 
 ## Current Position
 
-Phase: 7 of 8 (Filter Logic)
-Plan: 4 of 4 in current phase
-Status: Phase complete
-Last activity: 2026-02-23 — Completed plan 07-04 (count parity and foil filtering tests)
+Phase: 8 of 8 (Filter UI)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-24 — Completed plan 08-01 (filter UI test suite — RED phase)
 
-Progress: [███████░░░] 75%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 4min
-- Total execution time: 30min
+- Total execution time: 32min
 
 **By Phase:**
 
@@ -29,6 +29,7 @@ Progress: [███████░░░] 75%
 |-------|-------|-------|----------|
 | 06-content-and-data | 3 | 10min | 3min |
 | 07-filter-logic | 4 | 23min | 5min |
+| 08-filter-ui | 1 | 2min | 2min |
 
 *Updated after each plan completion*
 
@@ -51,6 +52,7 @@ Progress: [███████░░░] 75%
 - [Phase 07-filter-logic plan 02]: filter-logic tests use direct source imports (no mocking) following existing test patterns; beforeEach sets locale key so locale-scoped localStorage keys resolve to it-level-filter / it-progress
 - [Phase 07-filter-logic plan 03]: updateActiveLevels() is the coordinator (sets state + persists); initActiveLevels() must run after loadProgress() in both initializeApp and switchLanguage; generateChoices now takes filteredCards array (not deck object); badge count (getDueCount) and session queue (startDeck) use identical card-level predicate for parity
 - [Phase 07-filter-logic plan 04]: loadProgress() must be called before getDueCount in tests (initialises module-level progress from localStorage); mockLevelDeck fixture shared at module scope across FLTR-07 and FLTR-08 describe blocks; foil-contamination tests assert foil IS in correct pool AND IS NOT in other pool
+- [Phase 08-filter-ui plan 01]: renderFilterChips imported from app.js — will be undefined until Plan 02 exports it; test uses optional chaining (?.) on filters namespace so failure is clear "toBeTruthy received undefined" not TypeError
 
 ### Pending Todos
 
@@ -63,6 +65,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-23
-Stopped at: Completed 07-04-PLAN.md — count parity and foil filtering tests (Phase 7, Plan 4 of 4 — Phase 7 complete)
+Last session: 2026-02-24
+Stopped at: Completed 08-01-PLAN.md — filter UI test suite RED phase (Phase 8, Plan 1 of 2)
 Resume file: None
