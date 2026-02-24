@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Initial Release** - Phases 1–5 (shipped 2025)
-- 🚧 **v1.1 Difficulty Levels** - Phases 6–8 (in progress)
+- ✅ **v1.1 Difficulty Levels** - Phases 6–8 (complete 2026-02-23)
 
 ## Phases
 
@@ -16,7 +16,7 @@ Features shipped: Leitner SRS, Italian + Spanish vocabulary decks (8 topics each
 
 </details>
 
-### 🚧 v1.1 Difficulty Levels (In Progress)
+### ✅ v1.1 Difficulty Levels (Complete — 2026-02-23)
 
 **Milestone Goal:** Learners can filter vocabulary by CEFR level (A1/A2) so beginners start with simpler content before advancing. Existing 160 cards tagged A2; ~320 new A1 cards added; level filter chips on the deck screen persist across sessions.
 
@@ -68,7 +68,7 @@ Plans:
 
 Plans:
 - [x] 08-01-PLAN.md — TDD: failing filter-ui.test.js (RED phase — FLTR-01, FLTR-09)
-- [ ] 08-02-PLAN.md — Implement chip UI: HTML, CSS, i18n keys, app.js wiring (GREEN phase — FLTR-01, FLTR-09)
+- [x] 08-02-PLAN.md — Implement chip UI: HTML, CSS, i18n keys, app.js wiring (GREEN phase — FLTR-01, FLTR-09)
 
 ## Progress
 
@@ -78,4 +78,4 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 6. Content and Data | 3/3 | Complete    | 2026-02-23 | - |
 | 7. Filter Logic | 4/4 | Complete | 2026-02-23 | - |
-| 8. Filter UI | v1.1 | 1/2 | In progress | - |
+| 8. Filter UI | v1.1 | 2/2 | Complete | 2026-02-23 |

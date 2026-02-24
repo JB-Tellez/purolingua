@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 8 of 8 (Filter UI)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-24 — Completed plan 08-01 (filter UI test suite — RED phase)
+Plan: 2 of 2 in current phase
+Status: Complete
+Last activity: 2026-02-23 — Completed plan 08-02 (filter chip UI implementation — GREEN phase, human verified)
 
-Progress: [████████░░] 80%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 4min
-- Total execution time: 32min
+- Total execution time: 47min
 
 **By Phase:**
 
@@ -29,7 +29,7 @@ Progress: [████████░░] 80%
 |-------|-------|-------|----------|
 | 06-content-and-data | 3 | 10min | 3min |
 | 07-filter-logic | 4 | 23min | 5min |
-| 08-filter-ui | 1 | 2min | 2min |
+| 08-filter-ui | 2 | 17min | 8min |
 
 *Updated after each plan completion*
 
@@ -53,6 +53,7 @@ Progress: [████████░░] 80%
 - [Phase 07-filter-logic plan 03]: updateActiveLevels() is the coordinator (sets state + persists); initActiveLevels() must run after loadProgress() in both initializeApp and switchLanguage; generateChoices now takes filteredCards array (not deck object); badge count (getDueCount) and session queue (startDeck) use identical card-level predicate for parity
 - [Phase 07-filter-logic plan 04]: loadProgress() must be called before getDueCount in tests (initialises module-level progress from localStorage); mockLevelDeck fixture shared at module scope across FLTR-07 and FLTR-08 describe blocks; foil-contamination tests assert foil IS in correct pool AND IS NOT in other pool
 - [Phase 08-filter-ui plan 01]: renderFilterChips imported from app.js — will be undefined until Plan 02 exports it; test uses optional chaining (?.) on filters namespace so failure is clear "toBeTruthy received undefined" not TypeError
+- [Phase 08-filter-ui plan 02]: renderFilterChips() exported from app.js; event delegation on #level-filter attached once in setupEventListeners(); renderDecks() calls renderFilterChips() first so chip state always consistent; chips placed inside #deck-selection for automatic hide during flashcard view; CEFR codes A1/A2 used as labels (language-neutral, same in all locales)
 
 ### Pending Todos
 
@@ -65,6 +66,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-24
-Stopped at: Completed 08-01-PLAN.md — filter UI test suite RED phase (Phase 8, Plan 1 of 2)
+Last session: 2026-02-23
+Stopped at: Completed 08-02-PLAN.md — filter chip UI implementation (Phase 8, Plan 2 of 2); v1.1 Difficulty Levels milestone complete
 Resume file: None
