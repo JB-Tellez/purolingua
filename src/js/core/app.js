@@ -106,6 +106,13 @@ function updateActiveLevels(levels) {
     saveLevelFilter(getActiveLevels()); // persist after guard (getActiveLevels returns current value)
 }
 
+export function renderFilterChips() {
+    const activeLevels = getActiveLevels();
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.classList.toggle('active', activeLevels.includes(chip.dataset.level));
+    });
+}
+
 function initActiveLevels() {
     const saved = loadLevelFilter();
     if (saved !== null) {
@@ -231,6 +238,7 @@ function init() {
 
 // Render Decks
 function renderDecks() {
+    renderFilterChips();
     deckGrid.innerHTML = '';
     getDecks().forEach(deck => {
         // Skip decks that don't have a theme (optional, if we want to hide Social/Weather)
@@ -517,6 +525,21 @@ function setupEventListeners() {
     resetProgressBtn.addEventListener('click', (e) => {
         e.preventDefault();
         resetProgress();
+    });
+
+    // Level Filter Chip click handler (event delegation — attached once, not in renderDecks)
+    document.getElementById('level-filter').addEventListener('click', (e) => {
+        const chip = e.target.closest('.filter-chip');
+        if (!chip) return;
+
+        const clickedLevel = chip.dataset.level;
+        const current = getActiveLevels();
+        const next = current.includes(clickedLevel)
+            ? current.filter(l => l !== clickedLevel)  // remove (may produce [])
+            : [...current, clickedLevel];               // add
+
+        updateActiveLevels(next); // FLTR-06 guard in setActiveLevels handles empty []
+        renderDecks();            // re-renders badges AND chips via renderFilterChips()
     });
 }
 
