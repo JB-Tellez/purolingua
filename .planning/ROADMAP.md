@@ -64,7 +64,11 @@ Plans:
   1. Level filter chips (A1 and A2) are visible above the deck grid on the deck selection screen
   2. Clicking a chip toggles its active state and immediately updates which decks (and their due-count badges) are visible
   3. Chip labels change language when the user switches the app language — they are i18n strings, not hardcoded
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — TDD: failing filter-ui.test.js (RED phase — FLTR-01, FLTR-09)
+- [ ] 08-02-PLAN.md — Implement chip UI: HTML, CSS, i18n keys, app.js wiring (GREEN phase — FLTR-01, FLTR-09)
 
 ## Progress
 
