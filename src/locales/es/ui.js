@@ -63,6 +63,12 @@ export default {
         resetCompleteMessage: '¡Progreso reiniciado con éxito!'
     },
 
+    // Level Filter Chips
+    filters: {
+        levelA1: 'A1',
+        levelA2: 'A2'
+    },
+
     // Preferred voice names for text-to-speech
     voices: {
         preferred: ['Monica', 'Jorge', 'Google español', 'es-ES-Premium', 'Paulina']
