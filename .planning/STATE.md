@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 
 Phase: v1.1 complete — planning next milestone
 Status: Complete
-Last activity: 2026-02-24 — Archived v1.1 Difficulty Levels milestone
+Last activity: 2026-02-25 - Completed quick task 1: Remove Playwright tests
 
 ## Accumulated Context
 
@@ -37,6 +37,12 @@ Last activity: 2026-02-24 — Archived v1.1 Difficulty Levels milestone
 ### Blockers/Concerns
 
 None.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Remove Playwright tests | 2026-02-25 | 956ea3d | [1-remove-playwright-tests](.planning/quick/1-remove-playwright-tests/) |
 
 ## Session Continuity
 
