@@ -20,7 +20,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.3",
     "@vitest/coverage-v8": "4.0.15",
     "@vitest/ui": "^4.0.15",
