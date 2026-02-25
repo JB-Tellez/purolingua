@@ -28,3 +28,27 @@
 
 ---
 *Last updated: 2026-02-22*
+
+## v1.1 — Difficulty Levels
+
+**Shipped:** 2026-02-23
+**Phases:** 6–8 (3 phases, 9 plans)
+**Files changed:** 37 | **Net lines:** +4,307 | **Timeline:** 2 days
+
+### What Shipped
+
+- CEFR level tagging: all 320 existing Italian and Spanish cards tagged `level: "A2"`
+- ~160 A1 phrase cards added to all 8 Italian topic decks (appended, no index corruption)
+- ~160 A1 phrase cards added to all 8 Spanish topic decks (appended, no index corruption)
+- Level filter state machine: `activeLevels` in state.js, localStorage persistence, new/returning user defaults
+- Level filter wired through `getDueCount`, `startDeck`, and `generateChoices` — no count mismatch, no cross-level foil contamination
+- A1/A2 pill-shaped filter chips above deck grid with i18n labels and FLTR-06 guard (can't deselect all)
+
+### Tech Debt
+
+- A1 phrase linguistic quality: content synthesized from training data, not verified by native speaker
+- Browser visual confirmation pending for chip styles and localStorage round-trip behavior
+- FLTR-03 edge case: `resetProgress()` does not reset level filter preference (product decision deferred)
+
+---
+
