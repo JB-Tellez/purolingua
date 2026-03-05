@@ -34,7 +34,7 @@ export interface Deck {
 // Key format MUST match v1.1 exactly — see src/js/features/progress.js on main branch
 export interface Progress {
   box: number;
-  nextReview: number; // Unix timestamp (ms)
+  nextReview: string; // YYYY-MM-DD date string; matches v1.1 localStorage format exactly
 }
 
 export type ProgressRecord = Record<string, Progress>;
