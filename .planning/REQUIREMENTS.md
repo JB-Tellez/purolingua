@@ -103,10 +103,10 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 | TEST-04 | Phase 11 | Pending |
 
 **Coverage:**
-- v1.2 requirements: 24 total
-- Mapped to phases: 24
+- v1.2 requirements: 25 total
+- Mapped to phases: 25
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-04*
-*Last updated: 2026-03-04 after initial definition*
+*Last updated: 2026-03-04 — traceability confirmed against v1.2 roadmap (phases 9–13)*
