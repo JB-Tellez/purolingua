@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 11-logic-and-tests-03-PLAN.md
-last_updated: "2026-03-05T09:51:19.822Z"
+stopped_at: Completed 12-routing-02-PLAN.md (Task 1 done, awaiting human-verify checkpoint Task 2)
+last_updated: "2026-03-05T15:32:50.146Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 10
+  completed_plans: 9
   percent: 0
 ---
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 11-logic-and-tests P01 | 5 | 2 tasks | 8 files |
 | Phase 11-logic-and-tests P02 | 4 | 2 tasks | 4 files |
 | Phase 11-logic-and-tests P03 | 2 | 2 tasks | 4 files |
+| Phase 12-routing P02 | 2 | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 11-logic-and-tests]: Fisher-Yates shuffle used over biased sort in generateChoices.ts - upgrade from v1.1
 - [Phase 11-logic-and-tests]: useSRS localStorage key is exactly ${lang}-progress — matches v1.1 format for existing user data continuity
 - [Phase 11-logic-and-tests]: FLTR-06 guard: setActiveLevels([]) and (null) are silent no-ops in useLevelFilter hook
+- [Phase 12-routing]: StudySession placed in separate file from page.tsx to satisfy Next.js use client + generateStaticParams separation constraint
+- [Phase 12-routing]: StudySession uses isCardDueForDeck + updateCard (actual useSRS API) not getDueCards/markCard (plan pseudocode)
 
 ### Pending Todos
 
@@ -97,6 +100,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05T09:48:07.225Z
-Stopped at: Completed 11-logic-and-tests-03-PLAN.md
+Last session: 2026-03-05T15:32:50.143Z
+Stopped at: Completed 12-routing-02-PLAN.md (Task 1 done, awaiting human-verify checkpoint Task 2)
 Resume file: None

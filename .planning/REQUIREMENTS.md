@@ -30,8 +30,8 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 
 - [ ] **ROUTE-01**: Home page (`/`) with language picker
 - [ ] **ROUTE-02**: Deck grid page (`/[lang]`) with deck tiles and due-count badges
-- [ ] **ROUTE-03**: Study session page (`/[lang]/[deck]`) with full quiz flow
-- [ ] **ROUTE-04**: `generateStaticParams` covers all lang + deck combinations
+- [x] **ROUTE-03**: Study session page (`/[lang]/[deck]`) with full quiz flow
+- [x] **ROUTE-04**: `generateStaticParams` covers all lang + deck combinations
 
 ### Components
 
@@ -88,8 +88,8 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 | SRS-04 | Phase 11 | Complete |
 | ROUTE-01 | Phase 12 | Pending |
 | ROUTE-02 | Phase 12 | Pending |
-| ROUTE-03 | Phase 12 | Pending |
-| ROUTE-04 | Phase 12 | Pending |
+| ROUTE-03 | Phase 12 | Complete |
+| ROUTE-04 | Phase 12 | Complete |
 | UI-01 | Phase 13 | Pending |
 | UI-02 | Phase 13 | Pending |
 | UI-03 | Phase 13 | Pending |
