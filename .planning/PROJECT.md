@@ -35,7 +35,7 @@ Users can study real conversational vocabulary offline, in any browser, with zer
 - ✓ Quiz distractors drawn only from level-filtered card pool — v1.1
 - ✓ Level chip labels defined in i18n system — v1.1
 
-## Current Milestone: v2.0 Next.js Port
+## Current Milestone: v1.2 Next.js Port
 
 **Goal:** Port all existing v1.1 functionality to Next.js + TypeScript + Tailwind as a portfolio piece, on a feature branch.
 
