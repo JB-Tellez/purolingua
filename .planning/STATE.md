@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 11-logic-and-tests-01-PLAN.md
-last_updated: "2026-03-05T09:38:55.290Z"
+stopped_at: Completed 11-logic-and-tests-02-PLAN.md
+last_updated: "2026-03-05T09:44:19.908Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
   completed_phases: 2
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
   percent: 0
 ---
 
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 10-data-migration P01 | 15 | 2 tasks | 8 files |
 | Phase 10-data-migration P03 | 5 | 2 tasks | 3 files |
 | Phase 11-logic-and-tests P01 | 5 | 2 tasks | 8 files |
+| Phase 11-logic-and-tests P02 | 4 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 10-data-migration]: DECK_IDS exported as flat DeckId[] without lang for Phase 12 generateStaticParams
 - [Phase 11-logic-and-tests]: Test stubs avoid importing unimplemented modules — stubs use expect(true).toBe(true) placeholder until Plans 02/03 replace them
 - [Phase 11-logic-and-tests]: Progress.nextReview changed from number (Unix ms) to string (YYYY-MM-DD) to match v1.1 localStorage format
+- [Phase 11-logic-and-tests]: addDays uses setUTCDate to avoid PST timezone offset corrupting YYYY-MM-DD date math
+- [Phase 11-logic-and-tests]: makeCards test helper includes level in back string to distinguish pool isolation test data
+- [Phase 11-logic-and-tests]: Fisher-Yates shuffle used over biased sort in generateChoices.ts - upgrade from v1.1
 
 ### Pending Todos
 
@@ -90,6 +94,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05T09:38:55.287Z
-Stopped at: Completed 11-logic-and-tests-01-PLAN.md
+Last session: 2026-03-05T09:44:19.905Z
+Stopped at: Completed 11-logic-and-tests-02-PLAN.md
 Resume file: None
