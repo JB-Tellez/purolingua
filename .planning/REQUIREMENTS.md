@@ -17,7 +17,7 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 - [x] **DATA-01**: Core TypeScript types defined (Card, Deck, Progress, Lang, DeckId, Level)
 - [x] **DATA-02**: Italian card arrays (all 8 decks) ported to typed TypeScript modules
 - [x] **DATA-03**: Spanish card arrays (all 8 decks) ported to typed TypeScript modules
-- [ ] **DATA-04**: Deck metadata module created (id, i18n key per deck)
+- [x] **DATA-04**: Deck metadata module created (id, i18n key per deck)
 
 ### SRS Logic
 
@@ -81,7 +81,7 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 | DATA-01 | Phase 9 | Complete |
 | DATA-02 | Phase 10 | Complete |
 | DATA-03 | Phase 10 | Complete |
-| DATA-04 | Phase 10 | Pending |
+| DATA-04 | Phase 10 | Complete |
 | SRS-01 | Phase 11 | Pending |
 | SRS-02 | Phase 11 | Pending |
 | SRS-03 | Phase 11 | Pending |
