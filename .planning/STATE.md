@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 09-scaffold-01-PLAN.md
-last_updated: "2026-03-05T08:13:49.111Z"
+stopped_at: Completed 09-scaffold-02-PLAN.md
+last_updated: "2026-03-05T08:18:06.859Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -51,6 +51,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 09-scaffold P01 | 5 | 3 tasks | 10 files |
+| Phase 09-scaffold P02 | 5 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 09-scaffold]: Scaffolded create-next-app to /tmp then copied files — tool refuses to run in directories with existing content (.planning/, tests/)
 - [Phase 09-scaffold]: i18n/request.ts stub with hardcoded locale 'it' satisfies next-intl plugin at build time; Plan 02 replaces with routing-aware config
 - [Phase 09-scaffold]: DeckId uses eight confirmed literals from main-branch vanilla JS source: daily, restaurant, travel, shopping, hotel, emergencies, social, weather
+- [Phase 09-scaffold]: trailingSlash: true required in next.config.ts for out/{locale}/index.html output (Hostinger static hosting format)
+- [Phase 09-scaffold]: No middleware.ts created — static export is incompatible with Next.js middleware; locale routing uses generateStaticParams + setRequestLocale pattern only
 
 ### Pending Todos
 
@@ -76,6 +79,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05T08:13:49.108Z
-Stopped at: Completed 09-scaffold-01-PLAN.md
+Last session: 2026-03-05T08:17:55.454Z
+Stopped at: Completed 09-scaffold-02-PLAN.md
 Resume file: None

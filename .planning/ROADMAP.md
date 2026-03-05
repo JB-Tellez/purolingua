@@ -36,7 +36,7 @@ Full archive: `.planning/milestones/v1.1-ROADMAP.md`
 
 #### Phase 9: Scaffold
 
-- [ ] **Phase 9: Scaffold** — Initialize Next.js 15 project with TypeScript, Tailwind, next-intl, and core types
+- [x] **Phase 9: Scaffold** — Initialize Next.js 15 project with TypeScript, Tailwind, next-intl, and core types (completed 2026-03-05)
 
 #### Phase 10: Data Migration
 
@@ -124,7 +124,7 @@ Plans:
 | 6. Content and Data | v1.1 | 3/3 | Complete | 2026-02-23 |
 | 7. Filter Logic | v1.1 | 4/4 | Complete | 2026-02-23 |
 | 8. Filter UI | v1.1 | 2/2 | Complete | 2026-02-23 |
-| 9. Scaffold | 1/2 | In Progress|  | - |
+| 9. Scaffold | 2/2 | Complete   | 2026-03-05 | - |
 | 10. Data Migration | v1.2 | 0/? | Not started | - |
 | 11. Logic and Tests | v1.2 | 0/? | Not started | - |
 | 12. Routing | v1.2 | 0/? | Not started | - |
