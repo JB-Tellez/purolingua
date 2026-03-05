@@ -113,7 +113,11 @@ Plans:
   2. Visiting `/it` (or `/es`) renders a deck grid with due-count badges for each of the 8 topic decks
   3. Visiting `/it/restaurant` (or any valid lang/deck path) renders a study session with quiz flow
   4. `generateStaticParams` covers all 2 lang × 8 deck combinations — no dynamic server routes needed at build time
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Implement /[lang] deck grid page with 8 deck tiles and due-count badges
+- [ ] 12-02-PLAN.md — Create /[lang]/[deck] study session page with generateStaticParams for all 16 paths
 
 ### Phase 13: UI, i18n, and Styling
 **Goal**: All UI components are built with Tailwind, next-intl delivers Italian and Spanish UI strings, and the rendered app is visually equivalent to v1.1
@@ -137,5 +141,5 @@ Plans:
 | 9. Scaffold | 2/2 | Complete   | 2026-03-05 | - |
 | 10. Data Migration | 3/3 | Complete    | 2026-03-05 | - |
 | 11. Logic and Tests | 3/3 | Complete    | 2026-03-05 | - |
-| 12. Routing | v1.2 | 0/? | Not started | - |
+| 12. Routing | v1.2 | 0/2 | Planning | - |
 | 13. UI, i18n, and Styling | v1.2 | 0/? | Not started | - |
