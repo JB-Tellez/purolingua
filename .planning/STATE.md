@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.2
+milestone_name: Next.js Port
+status: planning
+stopped_at: Phase 9 context gathered
+last_updated: "2026-03-05T07:51:48.323Z"
+last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
+progress:
+  total_phases: 5
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
+---
+
 # State
 
 ## Project Reference
@@ -56,6 +72,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-04
-Stopped at: Roadmap for v1.2 created — ready to plan Phase 9
-Resume file: None
+Last session: 2026-03-05T07:51:48.316Z
+Stopped at: Phase 9 context gathered
+Resume file: .planning/phases/09-scaffold/09-CONTEXT.md
