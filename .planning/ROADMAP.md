@@ -57,7 +57,7 @@ Full archive: `.planning/milestones/v1.1-ROADMAP.md`
 ## Phase Details
 
 ### Phase 9: Scaffold
-**Goal**: A working Next.js 15 project on `feat/nextjs-port` with TypeScript, Tailwind, and next-intl configured — plus core domain types that all subsequent phases depend on
+**Goal**: A working Next.js 16 project on `feat/nextjs-port` with TypeScript, Tailwind, and next-intl configured — plus core domain types that all subsequent phases depend on
 **Depends on**: Nothing (first phase of milestone)
 **Requirements**: INFRA-01, INFRA-02, DATA-01
 **Success Criteria** (what must be TRUE):
@@ -65,7 +65,11 @@ Full archive: `.planning/milestones/v1.1-ROADMAP.md`
   2. TypeScript types Card, Deck, Progress, Lang, DeckId, and Level are importable and enforce shape at compile time
   3. next-intl middleware is wired — requests to `/` resolve without 404
   4. Tailwind utility classes compile into the build output
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — Scaffold Next.js project, configure static export, define domain types
+- [ ] 09-02-PLAN.md — Wire next-intl i18n routing, create [lang] layout, verify full build
 
 ### Phase 10: Data Migration
 **Goal**: All 320 A2 + ~320 A1 card records from both languages exist as typed TypeScript modules, with deck metadata describing each deck's id and i18n key
@@ -120,7 +124,7 @@ Full archive: `.planning/milestones/v1.1-ROADMAP.md`
 | 6. Content and Data | v1.1 | 3/3 | Complete | 2026-02-23 |
 | 7. Filter Logic | v1.1 | 4/4 | Complete | 2026-02-23 |
 | 8. Filter UI | v1.1 | 2/2 | Complete | 2026-02-23 |
-| 9. Scaffold | v1.2 | 0/? | Not started | - |
+| 9. Scaffold | v1.2 | 0/2 | Not started | - |
 | 10. Data Migration | v1.2 | 0/? | Not started | - |
 | 11. Logic and Tests | v1.2 | 0/? | Not started | - |
 | 12. Routing | v1.2 | 0/? | Not started | - |
