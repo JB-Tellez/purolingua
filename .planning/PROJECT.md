@@ -35,12 +35,36 @@ Users can study real conversational vocabulary offline, in any browser, with zer
 - ✓ Quiz distractors drawn only from level-filtered card pool — v1.1
 - ✓ Level chip labels defined in i18n system — v1.1
 
+## Current Milestone: v2.0 Next.js Port
+
+**Goal:** Port all existing v1.1 functionality to Next.js + TypeScript + Tailwind as a portfolio piece, on a feature branch.
+
+**Target features:**
+- Next.js 15 static export (deployable to Hostinger VPS)
+- TypeScript throughout (components, hooks, data, types)
+- Tailwind CSS replacing custom CSS
+- next-intl replacing custom i18n system
+- Proper URL routing (`/[lang]/[deck]`)
+- `useSRS` + `useLevelFilter` hooks (no external state library)
+- Full feature parity with v1.1
+
 ### Active
 
-<!-- Requirements for the next milestone. -->
+<!-- Requirements for the current milestone. -->
 
-- [ ] A1 phrase linguistic quality verified by native speaker (Italian and Spanish)
-- [ ] Level filter chips hidden during active study session (FLTR-10)
+- [ ] Next.js 15 project scaffolded with TypeScript, Tailwind, next-intl on feature branch
+- [ ] TypeScript types defined (Card, Deck, Progress, LevelFilter, Lang, DeckId)
+- [ ] All card data ported to typed TypeScript modules
+- [ ] SRS logic (Leitner math, generateChoices) ported to TypeScript lib functions
+- [ ] useSRS hook with localStorage persistence
+- [ ] useLevelFilter hook with localStorage persistence and FLTR-06 guard
+- [ ] URL routing: /, /[lang], /[lang]/[deck]
+- [ ] All 8 deck pages with DeckCard, due-count badge, LevelFilterChips
+- [ ] StudySession with FlashCard, ChoiceButton, AudioButton (Web Speech API)
+- [ ] next-intl message files for Italian and Spanish UI strings
+- [ ] Tailwind styles matching v1.1 visual design
+- [ ] Vitest + React Testing Library unit tests for SRS lib and hooks
+- [ ] Static export verified, deployable artifact confirmed
 
 ### Out of Scope
 
@@ -85,4 +109,4 @@ Live at purolingua.com; GitHub Pages for staging.
 | resetProgress() does not reset level filter | Filter preference is independent of SRS progress | ⚠️ Revisit |
 
 ---
-*Last updated: 2026-02-24 after v1.1 milestone*
+*Last updated: 2026-03-04 after v2.0 milestone start*

@@ -5,13 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-24)
 
 **Core value:** Users can study real conversational vocabulary offline, in any browser, with zero friction — no sign-up, no app install, just open and learn.
-**Current focus:** Planning next milestone
+**Current focus:** v2.0 — Next.js Port
 
 ## Current Position
 
-Phase: v1.1 complete — planning next milestone
-Status: Complete
-Last activity: 2026-02-25 - Completed quick task 1: Remove Playwright tests
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-04 — Milestone v2.0 started
 
 ## Accumulated Context
 
