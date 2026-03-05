@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 12-routing-02-PLAN.md (Task 1 done, awaiting human-verify checkpoint Task 2)
-last_updated: "2026-03-05T15:32:50.146Z"
+stopped_at: Completed 12-routing-01-PLAN.md
+last_updated: "2026-03-05T15:33:33.400Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 10
-  completed_plans: 9
+  completed_plans: 10
   percent: 0
 ---
 
@@ -59,6 +59,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 11-logic-and-tests P02 | 4 | 2 tasks | 4 files |
 | Phase 11-logic-and-tests P03 | 2 | 2 tasks | 4 files |
 | Phase 12-routing P02 | 2 | 1 tasks | 3 files |
+| Phase 12-routing P01 | 15 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 11-logic-and-tests]: FLTR-06 guard: setActiveLevels([]) and (null) are silent no-ops in useLevelFilter hook
 - [Phase 12-routing]: StudySession placed in separate file from page.tsx to satisfy Next.js use client + generateStaticParams separation constraint
 - [Phase 12-routing]: StudySession uses isCardDueForDeck + updateCard (actual useSRS API) not getDueCards/markCard (plan pseudocode)
+- [Phase 12-routing]: 'use client' page with useParams() — setRequestLocale delegated to layout.tsx; generateStaticParams cannot coexist with use client in Next.js 16
+- [Phase 12-routing]: Due badge counts ProgressRecord keys by deckId prefix — useSRS has no getDueCount; badges show 0 until Phase 13 wires card data
 
 ### Pending Todos
 
@@ -100,6 +103,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05T15:32:50.143Z
-Stopped at: Completed 12-routing-02-PLAN.md (Task 1 done, awaiting human-verify checkpoint Task 2)
+Last session: 2026-03-05T15:33:33.397Z
+Stopped at: Completed 12-routing-01-PLAN.md
 Resume file: None

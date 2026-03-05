@@ -48,7 +48,7 @@ Full archive: `.planning/milestones/v1.1-ROADMAP.md`
 
 #### Phase 12: Routing
 
-- [ ] **Phase 12: Routing** — Implement all URL routes and static param generation
+- [x] **Phase 12: Routing** — Implement all URL routes and static param generation (completed 2026-03-05)
 
 #### Phase 13: UI, i18n, and Styling
 
@@ -141,5 +141,5 @@ Plans:
 | 9. Scaffold | 2/2 | Complete   | 2026-03-05 | - |
 | 10. Data Migration | 3/3 | Complete    | 2026-03-05 | - |
 | 11. Logic and Tests | 3/3 | Complete    | 2026-03-05 | - |
-| 12. Routing | 1/2 | In Progress|  | - |
+| 12. Routing | 2/2 | Complete   | 2026-03-05 | - |
 | 13. UI, i18n, and Styling | v1.2 | 0/? | Not started | - |
