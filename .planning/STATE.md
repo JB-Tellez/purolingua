@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 10-data-migration-02-PLAN.md
-last_updated: "2026-03-05T08:37:36.201Z"
+stopped_at: Completed 10-data-migration-01-PLAN.md
+last_updated: "2026-03-05T08:38:25.636Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 09-scaffold P01 | 5 | 3 tasks | 10 files |
 | Phase 09-scaffold P02 | 5 | 2 tasks | 8 files |
 | Phase 10-data-migration P02 | 3 | 2 tasks | 8 files |
+| Phase 10-data-migration P01 | 15 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 09-scaffold]: trailingSlash: true required in next.config.ts for out/{locale}/index.html output (Hostinger static hosting format)
 - [Phase 09-scaffold]: No middleware.ts created — static export is incompatible with Next.js middleware; locale routing uses generateStaticParams + setRequestLocale pattern only
 - [Phase 10-data-migration]: Card order preserved exactly from main-branch vanilla JS source — positional indices are SRS localStorage keys
+- [Phase 10-data-migration]: Card order preserved exactly from main-branch source — A2 first, A1 appended — to maintain SRS key integrity
+- [Phase 10-data-migration]: Italian deck modules omit id/title/description/icon/theme — those go in Plan 03 metadata module; only front/back/level copied
 
 ### Pending Todos
 
@@ -81,6 +84,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05T08:37:36.198Z
-Stopped at: Completed 10-data-migration-02-PLAN.md
+Last session: 2026-03-05T08:38:25.633Z
+Stopped at: Completed 10-data-migration-01-PLAN.md
 Resume file: None

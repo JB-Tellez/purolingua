@@ -130,7 +130,7 @@ Plans:
 | 7. Filter Logic | v1.1 | 4/4 | Complete | 2026-02-23 |
 | 8. Filter UI | v1.1 | 2/2 | Complete | 2026-02-23 |
 | 9. Scaffold | 2/2 | Complete   | 2026-03-05 | - |
-| 10. Data Migration | 1/3 | In Progress|  | - |
+| 10. Data Migration | 2/3 | In Progress|  | - |
 | 11. Logic and Tests | v1.2 | 0/? | Not started | - |
 | 12. Routing | v1.2 | 0/? | Not started | - |
 | 13. UI, i18n, and Styling | v1.2 | 0/? | Not started | - |
