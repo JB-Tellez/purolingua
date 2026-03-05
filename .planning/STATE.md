@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 11-logic-and-tests-02-PLAN.md
-last_updated: "2026-03-05T09:44:19.908Z"
+stopped_at: Completed 11-logic-and-tests-03-PLAN.md
+last_updated: "2026-03-05T09:48:07.228Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
   percent: 0
 ---
 
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 10-data-migration P03 | 5 | 2 tasks | 3 files |
 | Phase 11-logic-and-tests P01 | 5 | 2 tasks | 8 files |
 | Phase 11-logic-and-tests P02 | 4 | 2 tasks | 4 files |
+| Phase 11-logic-and-tests P03 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 11-logic-and-tests]: addDays uses setUTCDate to avoid PST timezone offset corrupting YYYY-MM-DD date math
 - [Phase 11-logic-and-tests]: makeCards test helper includes level in back string to distinguish pool isolation test data
 - [Phase 11-logic-and-tests]: Fisher-Yates shuffle used over biased sort in generateChoices.ts - upgrade from v1.1
+- [Phase 11-logic-and-tests]: useSRS localStorage key is exactly ${lang}-progress — matches v1.1 format for existing user data continuity
+- [Phase 11-logic-and-tests]: FLTR-06 guard: setActiveLevels([]) and (null) are silent no-ops in useLevelFilter hook
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05T09:44:19.905Z
-Stopped at: Completed 11-logic-and-tests-02-PLAN.md
+Last session: 2026-03-05T09:48:07.225Z
+Stopped at: Completed 11-logic-and-tests-03-PLAN.md
 Resume file: None

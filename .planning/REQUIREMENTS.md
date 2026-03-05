@@ -23,8 +23,8 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 
 - [x] **SRS-01**: Leitner box math in `lib/srs.ts` as pure TypeScript functions
 - [x] **SRS-02**: Distractor generation in `lib/generateChoices.ts`
-- [ ] **SRS-03**: `useSRS(lang)` hook with localStorage persistence, same key format as v1.1
-- [ ] **SRS-04**: `useLevelFilter()` hook with localStorage persistence and FLTR-06 guard (cannot deselect all)
+- [x] **SRS-03**: `useSRS(lang)` hook with localStorage persistence, same key format as v1.1
+- [x] **SRS-04**: `useLevelFilter()` hook with localStorage persistence and FLTR-06 guard (cannot deselect all)
 
 ### Routing
 
@@ -54,7 +54,7 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 - [x] **TEST-01**: Vitest + React Testing Library configured
 - [x] **TEST-02**: `lib/srs.ts` unit tested
 - [x] **TEST-03**: `lib/generateChoices.ts` unit tested
-- [ ] **TEST-04**: `useSRS` and `useLevelFilter` tested via `renderHook`
+- [x] **TEST-04**: `useSRS` and `useLevelFilter` tested via `renderHook`
 
 ## Deferred (v2.0+)
 
@@ -84,8 +84,8 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 | DATA-04 | Phase 10 | Complete |
 | SRS-01 | Phase 11 | Complete |
 | SRS-02 | Phase 11 | Complete |
-| SRS-03 | Phase 11 | Pending |
-| SRS-04 | Phase 11 | Pending |
+| SRS-03 | Phase 11 | Complete |
+| SRS-04 | Phase 11 | Complete |
 | ROUTE-01 | Phase 12 | Pending |
 | ROUTE-02 | Phase 12 | Pending |
 | ROUTE-03 | Phase 12 | Pending |
@@ -100,7 +100,7 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 | TEST-01 | Phase 11 | Complete |
 | TEST-02 | Phase 11 | Complete |
 | TEST-03 | Phase 11 | Complete |
-| TEST-04 | Phase 11 | Pending |
+| TEST-04 | Phase 11 | Complete |
 
 **Coverage:**
 - v1.2 requirements: 25 total
