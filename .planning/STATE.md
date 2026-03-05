@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 10-data-migration-03-PLAN.md
-last_updated: "2026-03-05T08:44:06.213Z"
+stopped_at: Completed 11-logic-and-tests-01-PLAN.md
+last_updated: "2026-03-05T09:38:55.290Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 8
+  completed_plans: 6
   percent: 0
 ---
 
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 10-data-migration P02 | 3 | 2 tasks | 8 files |
 | Phase 10-data-migration P01 | 15 | 2 tasks | 8 files |
 | Phase 10-data-migration P03 | 5 | 2 tasks | 3 files |
+| Phase 11-logic-and-tests P01 | 5 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 10-data-migration]: Italian deck modules omit id/title/description/icon/theme — those go in Plan 03 metadata module; only front/back/level copied
 - [Phase 10-data-migration]: i18nKey equals DeckId string — deck IDs match message file namespace keys exactly
 - [Phase 10-data-migration]: DECK_IDS exported as flat DeckId[] without lang for Phase 12 generateStaticParams
+- [Phase 11-logic-and-tests]: Test stubs avoid importing unimplemented modules — stubs use expect(true).toBe(true) placeholder until Plans 02/03 replace them
+- [Phase 11-logic-and-tests]: Progress.nextReview changed from number (Unix ms) to string (YYYY-MM-DD) to match v1.1 localStorage format
 
 ### Pending Todos
 
@@ -87,6 +90,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05T08:41:25.347Z
-Stopped at: Completed 10-data-migration-03-PLAN.md
+Last session: 2026-03-05T09:38:55.287Z
+Stopped at: Completed 11-logic-and-tests-01-PLAN.md
 Resume file: None

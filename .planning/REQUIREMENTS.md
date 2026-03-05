@@ -51,7 +51,7 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 
 ### Tests
 
-- [ ] **TEST-01**: Vitest + React Testing Library configured
+- [x] **TEST-01**: Vitest + React Testing Library configured
 - [ ] **TEST-02**: `lib/srs.ts` unit tested
 - [ ] **TEST-03**: `lib/generateChoices.ts` unit tested
 - [ ] **TEST-04**: `useSRS` and `useLevelFilter` tested via `renderHook`
@@ -97,7 +97,7 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 | I18N-01 | Phase 13 | Pending |
 | I18N-02 | Phase 13 | Pending |
 | STYLE-01 | Phase 13 | Pending |
-| TEST-01 | Phase 11 | Pending |
+| TEST-01 | Phase 11 | Complete |
 | TEST-02 | Phase 11 | Pending |
 | TEST-03 | Phase 11 | Pending |
 | TEST-04 | Phase 11 | Pending |
