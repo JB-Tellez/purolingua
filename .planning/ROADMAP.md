@@ -97,7 +97,12 @@ Plans:
   3. `useSRS(lang)` hook reads and writes localStorage using the same key format as v1.1
   4. `useLevelFilter()` hook enforces the FLTR-06 guard — at least one level always remains selected
   5. `bun run test` passes all SRS and hook test cases with zero failures
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 11-01-PLAN.md — Install Vitest + RTL, create vitest.config.ts, write test stubs, fix Progress type
+- [ ] 11-02-PLAN.md — Implement lib/srs.ts and lib/generateChoices.ts with full unit tests
+- [ ] 11-03-PLAN.md — Implement hooks/useSRS.ts and hooks/useLevelFilter.ts with renderHook tests
 
 ### Phase 12: Routing
 **Goal**: Users can navigate to `/`, `/[lang]`, and `/[lang]/[deck]` — all routes resolve, render, and are included in the static export
@@ -131,6 +136,6 @@ Plans:
 | 8. Filter UI | v1.1 | 2/2 | Complete | 2026-02-23 |
 | 9. Scaffold | 2/2 | Complete   | 2026-03-05 | - |
 | 10. Data Migration | 3/3 | Complete    | 2026-03-05 | - |
-| 11. Logic and Tests | v1.2 | 0/? | Not started | - |
+| 11. Logic and Tests | v1.2 | 0/3 | Not started | - |
 | 12. Routing | v1.2 | 0/? | Not started | - |
 | 13. UI, i18n, and Styling | v1.2 | 0/? | Not started | - |
