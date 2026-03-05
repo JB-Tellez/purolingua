@@ -80,7 +80,12 @@ Plans:
   2. All 8 Spanish topic decks are importable as typed arrays with Card shape (front, back, level)
   3. Deck metadata module exports an array of all 16 deck descriptors with id and i18n key fields
   4. TypeScript compiler accepts all data files with no type errors
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 10-01-PLAN.md — Port all 8 Italian card decks to typed TypeScript modules in src/data/it/
+- [ ] 10-02-PLAN.md — Port all 8 Spanish card decks to typed TypeScript modules in src/data/es/
+- [ ] 10-03-PLAN.md — Create barrel index files and deck metadata module (src/data/decks.ts)
 
 ### Phase 11: Logic and Tests
 **Goal**: SRS Leitner math and distractor generation exist as pure TypeScript functions, useSRS and useLevelFilter hooks manage state and localStorage, and Vitest tests confirm correctness
@@ -125,7 +130,7 @@ Plans:
 | 7. Filter Logic | v1.1 | 4/4 | Complete | 2026-02-23 |
 | 8. Filter UI | v1.1 | 2/2 | Complete | 2026-02-23 |
 | 9. Scaffold | 2/2 | Complete   | 2026-03-05 | - |
-| 10. Data Migration | v1.2 | 0/? | Not started | - |
+| 10. Data Migration | v1.2 | 0/3 | Not started | - |
 | 11. Logic and Tests | v1.2 | 0/? | Not started | - |
 | 12. Routing | v1.2 | 0/? | Not started | - |
 | 13. UI, i18n, and Styling | v1.2 | 0/? | Not started | - |
