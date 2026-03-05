@@ -124,7 +124,7 @@ Plans:
 | 6. Content and Data | v1.1 | 3/3 | Complete | 2026-02-23 |
 | 7. Filter Logic | v1.1 | 4/4 | Complete | 2026-02-23 |
 | 8. Filter UI | v1.1 | 2/2 | Complete | 2026-02-23 |
-| 9. Scaffold | v1.2 | 0/2 | Not started | - |
+| 9. Scaffold | 1/2 | In Progress|  | - |
 | 10. Data Migration | v1.2 | 0/? | Not started | - |
 | 11. Logic and Tests | v1.2 | 0/? | Not started | - |
 | 12. Routing | v1.2 | 0/? | Not started | - |

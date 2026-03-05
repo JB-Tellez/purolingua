@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Phase 9 context gathered
-last_updated: "2026-03-05T07:51:48.323Z"
+stopped_at: Completed 09-scaffold-01-PLAN.md
+last_updated: "2026-03-05T08:13:49.111Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
   percent: 0
 ---
 
@@ -50,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 09-scaffold P01 | 5 | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,9 @@ Progress: [░░░░░░░░░░] 0%
 - FLTR-06 guard must be enforced in useLevelFilter — cannot deselect all levels
 - Tests live alongside logic in Phase 11 (not a separate phase) — test-alongside-build pattern
 - CEFR codes A1/A2 are language-neutral; next-intl message files cover deck names and UI strings only
+- [Phase 09-scaffold]: Scaffolded create-next-app to /tmp then copied files — tool refuses to run in directories with existing content (.planning/, tests/)
+- [Phase 09-scaffold]: i18n/request.ts stub with hardcoded locale 'it' satisfies next-intl plugin at build time; Plan 02 replaces with routing-aware config
+- [Phase 09-scaffold]: DeckId uses eight confirmed literals from main-branch vanilla JS source: daily, restaurant, travel, shopping, hotel, emergencies, social, weather
 
 ### Pending Todos
 
@@ -72,6 +76,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05T07:51:48.316Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-scaffold/09-CONTEXT.md
+Last session: 2026-03-05T08:13:49.108Z
+Stopped at: Completed 09-scaffold-01-PLAN.md
+Resume file: None
