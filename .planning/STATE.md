@@ -4,7 +4,7 @@ milestone: v1.2
 milestone_name: Next.js Port
 status: planning
 stopped_at: Completed 11-logic-and-tests-03-PLAN.md
-last_updated: "2026-03-05T09:48:07.228Z"
+last_updated: "2026-03-05T09:51:19.822Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
