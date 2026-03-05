@@ -1,0 +1,18 @@
+{
+  "nav": {
+    "home": "Inicio"
+  },
+  "decks": {
+    "daily": "Vida Diaria",
+    "restaurant": "Restaurante",
+    "travel": "Viaje",
+    "shopping": "Compras",
+    "hotel": "Hotel",
+    "emergencies": "Emergencias",
+    "social": "Vida Social",
+    "weather": "El Tiempo"
+  },
+  "filter": {
+    "label": "Nivel"
+  }
+}

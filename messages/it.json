@@ -1,0 +1,18 @@
+{
+  "nav": {
+    "home": "Home"
+  },
+  "decks": {
+    "daily": "Vita Quotidiana",
+    "restaurant": "Ristorante",
+    "travel": "Viaggio",
+    "shopping": "Shopping",
+    "hotel": "Hotel",
+    "emergencies": "Emergenze",
+    "social": "Vita Sociale",
+    "weather": "Meteo"
+  },
+  "filter": {
+    "label": "Livello"
+  }
+}
