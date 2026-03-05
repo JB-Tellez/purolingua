@@ -4,7 +4,7 @@ milestone: v1.2
 milestone_name: Next.js Port
 status: planning
 stopped_at: Completed 09-scaffold-02-PLAN.md
-last_updated: "2026-03-05T08:18:06.859Z"
+last_updated: "2026-03-05T08:21:13.458Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
