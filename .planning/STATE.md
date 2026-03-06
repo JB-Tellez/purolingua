@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 14-voice-recognition/14-01-PLAN.md
-last_updated: "2026-03-06T06:02:16.713Z"
+stopped_at: Completed 14-voice-recognition/14-02-PLAN.md
+last_updated: "2026-03-06T06:06:03.791Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 7
   completed_phases: 5
   total_plans: 16
-  completed_plans: 14
+  completed_plans: 15
   percent: 0
 ---
 
@@ -63,6 +63,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 13-ui-i18n-and-styling P01 | 2 | 2 tasks | 4 files |
 | Phase 13-ui-i18n-and-styling P02 | 2 | 2 tasks | 3 files |
 | Phase 14-voice-recognition P01 | 5 | 2 tasks | 4 files |
+| Phase 14-voice-recognition P02 | 5 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 13-ui-i18n-and-styling]: generateChoices actual signature is (correctCard, filteredCards) returning Choice[] — plan interface was wrong; StudySession adapted to use choice.isCorrect flag
 - [Phase 14-voice-recognition]: Singleton mockRecognitionInstance exported from setup.ts so tests can access handler fields directly without re-importing
 - [Phase 14-voice-recognition]: Stub test files avoid importing unimplemented modules — stubs use expect(true).toBe(true) placeholders until Plans 02/03 replace them
+- [Phase 14-voice-recognition]: MockSpeechRecognition uses regular function not arrow function — arrow functions cannot be used as constructors with new()
+- [Phase 14-voice-recognition]: RecognitionClass captured at render time (not in startListening) so isSupported reflects window state at hook mount
 
 ### Pending Todos
 
@@ -117,6 +120,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-06T06:02:16.709Z
-Stopped at: Completed 14-voice-recognition/14-01-PLAN.md
+Last session: 2026-03-06T06:06:03.787Z
+Stopped at: Completed 14-voice-recognition/14-02-PLAN.md
 Resume file: None
