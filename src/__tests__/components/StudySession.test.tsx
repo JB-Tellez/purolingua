@@ -96,13 +96,15 @@ describe('StudySession voice integration', () => {
     vi.useFakeTimers();
     renderStudySession();
 
-    // Card front should be visible; mic button should be present
-    const micBtn = screen.getByRole('button', { name: /start speaking/i });
-    expect(micBtn).toBeDefined();
+    // On card front (not yet flipped), there is exactly one mic button
+    const micBtns = screen.getAllByRole('button', { name: /start speaking/i });
+    // Only the front mic button should be present before flip
+    expect(micBtns.length).toBe(1);
+    const frontMicBtn = micBtns[0];
 
     // Click mic button to start listening
     act(() => {
-      micBtn.click();
+      frontMicBtn.click();
     });
 
     // Fire onresult with transcript matching card front text (normalized)
@@ -110,15 +112,10 @@ describe('StudySession voice integration', () => {
       fireOnResult('Ciao'); // matches testCards[0].front
     });
 
-    // After match, card should be flipped — quiz-options / choice buttons should appear
-    // (flipped state renders ChoiceButtons)
-    const choiceButtons = screen.getAllByRole('button').filter(
-      (btn) => !['backToDecks', 'revealAnswer', 'correct', 'incorrect'].some(
-        (label) => btn.textContent?.includes(label)
-      )
-    );
-    // The card back content is present when flipped
-    expect(screen.getByText('Hello')).toBeDefined();
+    // After match, card should be flipped — quiz choices should appear in DOM
+    // ChoiceButton renders with class quiz-btn
+    const choiceButtons = document.querySelectorAll('.quiz-btn');
+    expect(choiceButtons.length).toBeGreaterThan(0);
 
     vi.useRealTimers();
   });
@@ -128,6 +125,7 @@ describe('StudySession voice integration', () => {
     vi.useFakeTimers();
     renderStudySession();
 
+    // On card front (not flipped), only one mic button
     const micBtn = screen.getByRole('button', { name: /start speaking/i });
 
     act(() => {
@@ -163,18 +161,18 @@ describe('StudySession voice integration', () => {
       revealBtn.click();
     });
 
-    // Now we should see the back mic button
-    const micBtn = screen.getByRole('button', { name: /start speaking/i });
+    // After flip: both front and back mic buttons are in DOM
+    // The back mic button is the second one (front is first in DOM order)
+    const micBtns = screen.getAllByRole('button', { name: /start speaking/i });
+    expect(micBtns.length).toBe(2);
+    const backMicBtn = micBtns[1]; // card-back is second in DOM
 
     act(() => {
-      micBtn.click();
+      backMicBtn.click();
     });
 
-    // Find one of the rendered choice texts and speak it
-    // choices are generated from testCards; find which one is in the DOM
-    const choiceButtons = screen.getAllByRole('button').filter(btn =>
-      ['Hello', 'Thank you', 'Please', 'Goodbye'].includes(btn.textContent ?? '')
-    );
+    // Find which choice texts are rendered in the DOM
+    const choiceButtons = document.querySelectorAll('.quiz-btn');
     const targetText = choiceButtons[0].textContent ?? 'Hello';
 
     // Fire matching transcript for a choice
@@ -182,12 +180,10 @@ describe('StudySession voice integration', () => {
       fireOnResult(targetText);
     });
 
-    // One of the choice buttons should now be in correct or incorrect state
-    // (selectedChoice is set, triggering state class on ChoiceButton)
-    const answeredBtn = screen.getAllByRole('button').find(
-      btn => btn.className.includes('choice-btn--correct') || btn.className.includes('choice-btn--incorrect')
-    );
-    expect(answeredBtn).toBeDefined();
+    // After selection, one choice button should have a state class (correct or incorrect)
+    // ChoiceButton applies state directly as class: 'quiz-btn correct' or 'quiz-btn incorrect'
+    const answeredBtn = document.querySelector('.quiz-btn.correct, .quiz-btn.incorrect');
+    expect(answeredBtn).not.toBeNull();
 
     vi.useRealTimers();
   });
@@ -203,10 +199,13 @@ describe('StudySession voice integration', () => {
       revealBtn.click();
     });
 
-    const micBtn = screen.getByRole('button', { name: /start speaking/i });
+    // After flip: both front and back mic buttons
+    const micBtns = screen.getAllByRole('button', { name: /start speaking/i });
+    expect(micBtns.length).toBe(2);
+    const backMicBtn = micBtns[1]; // card-back is second in DOM
 
     act(() => {
-      micBtn.click();
+      backMicBtn.click();
     });
 
     // Non-matching transcript
@@ -214,13 +213,13 @@ describe('StudySession voice integration', () => {
       fireOnResult('something that matches no choice at all xyz');
     });
 
-    expect(micBtn).toHaveClass('mic-btn--error');
+    expect(backMicBtn).toHaveClass('mic-btn--error');
 
     act(() => {
       vi.advanceTimersByTime(800);
     });
 
-    expect(micBtn).not.toHaveClass('mic-btn--error');
+    expect(backMicBtn).not.toHaveClass('mic-btn--error');
 
     vi.useRealTimers();
   });

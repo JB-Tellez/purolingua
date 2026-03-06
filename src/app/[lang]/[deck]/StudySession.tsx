@@ -8,6 +8,8 @@ import { useLevelFilter } from '@/hooks/useLevelFilter';
 import { generateChoices } from '@/lib/generateChoices';
 import AudioButton from '@/components/AudioButton';
 import ChoiceButton from '@/components/ChoiceButton';
+import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
+import MicButton from '@/components/MicButton';
 
 interface Props {
   lang: Lang;
@@ -26,11 +28,14 @@ export default function StudySession({ lang, deckId, cards }: Props) {
       activeLevels.includes(card.level) && isCardDueForDeck(deckId, originalIndex)
     );
 
+  const { isSupported, isListening, startListening } = useVoiceRecognition(lang);
+
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [done, setDone] = useState(false);
   // selectedChoice: null = not answered, index of selected choice once answered
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
+  const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
 
   const backLink = `/${lang}`;
 
@@ -60,6 +65,51 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
   // Generate multiple-choice options: 1 correct + up to 3 foils, shuffled
   const choices = generateChoices(currentCard, cards);
+
+  const normalize = (s: string) => s.toLowerCase().trim();
+
+  function handleFrontMicPress() {
+    if (isListening) return;
+    setMicState('listening');
+    startListening(
+      (transcript) => {
+        setMicState('idle');
+        if (normalize(transcript) === normalize(currentCard.front)) {
+          setFlipped(true);
+        } else {
+          setMicState('error');
+          setTimeout(() => setMicState('idle'), 800);
+        }
+      },
+      () => {
+        setMicState('error');
+        setTimeout(() => setMicState('idle'), 800);
+      }
+    );
+  }
+
+  function handleBackMicPress() {
+    if (isListening || selectedChoice !== null) return;
+    setMicState('listening');
+    startListening(
+      (transcript) => {
+        setMicState('idle');
+        const matchedIndex = choices.findIndex(
+          (c) => normalize(c.text) === normalize(transcript)
+        );
+        if (matchedIndex !== -1) {
+          handleChoiceClick(matchedIndex);
+        } else {
+          setMicState('error');
+          setTimeout(() => setMicState('idle'), 800);
+        }
+      },
+      () => {
+        setMicState('error');
+        setTimeout(() => setMicState('idle'), 800);
+      }
+    );
+  }
 
   function handleAnswer(isCorrect: boolean) {
     updateCard(deckId, originalIndex, isCorrect);
@@ -101,6 +151,9 @@ export default function StudySession({ lang, deckId, cards }: Props) {
           <div className={`card${flipped ? ' flipped' : ''}`}>
             <div className="card-face card-front">
               <AudioButton phrase={currentCard.front} lang={lang} />
+              {isSupported && (
+                <MicButton state={micState} onPress={handleFrontMicPress} />
+              )}
               <span id="card-front-text">{currentCard.front}</span>
               {!flipped && (
                 <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>
@@ -119,6 +172,9 @@ export default function StudySession({ lang, deckId, cards }: Props) {
               }}>
                 {currentCard.back}
               </p>
+              {isSupported && flipped && (
+                <MicButton state={micState} onPress={handleBackMicPress} />
+              )}
             </div>
           </div>
         </div>
