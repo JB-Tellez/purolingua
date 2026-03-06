@@ -34,9 +34,9 @@ function DeckGrid({ lang }: DeckGridProps) {
           <Link
             key={deck.id}
             href={`/${lang}/${deck.id}`}
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: 'none', display: 'block', height: '100%' }}
           >
-            <div className={`deck-card theme-${deck.theme}`}>
+            <div className={`deck-card theme-${deck.theme}`} style={{ height: '100%' }}>
               <div className="deck-icon-circle">{deck.icon}</div>
               <h3>{t(deck.i18nKey)}</h3>
               <p>{td(deck.i18nKey)}</p>
