@@ -152,7 +152,7 @@ Plans:
 **Goal:** Add audio icon per ChoiceButton (speak option text on click), feedback message overlay (correct/incorrect/heard/not-found), and deck-complete/all-done alert modals
 **Requirements**: TBD
 **Depends on:** Phase 14
-**Plans:** 0 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] TBD (run /gsd:plan-phase 15 to break down)
@@ -169,4 +169,4 @@ Plans:
 | 11. Logic and Tests | 3/3 | Complete    | 2026-03-05 | - |
 | 12. Routing | 2/2 | Complete    | 2026-03-06 | - |
 | 13. UI, i18n, and Styling | 2/3 | Complete    | 2026-03-06 | - |
-| 14. Voice Recognition | 0/3 | Planned | - | - |
+| 14. Voice Recognition | 1/3 | In Progress|  | - |

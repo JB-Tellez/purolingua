@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Phase 14 context gathered
-last_updated: "2026-03-06T05:42:42.049Z"
+stopped_at: Completed 14-voice-recognition/14-01-PLAN.md
+last_updated: "2026-03-06T06:02:16.713Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 7
   completed_phases: 5
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 16
+  completed_plans: 14
   percent: 0
 ---
 
@@ -62,6 +62,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 12-routing P01 | 15 | 1 tasks | 1 files |
 | Phase 13-ui-i18n-and-styling P01 | 2 | 2 tasks | 4 files |
 | Phase 13-ui-i18n-and-styling P02 | 2 | 2 tasks | 3 files |
+| Phase 14-voice-recognition P01 | 5 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 12-routing]: Deck theme class (theme-teal, theme-red, etc.) sourced directly from deckMetadata[].theme — no mapping layer needed
 - [Phase 13-ui-i18n-and-styling]: LANG_NAMES static map used for language proper nouns (Italiano, Español) — not i18n-managed
 - [Phase 13-ui-i18n-and-styling]: generateChoices actual signature is (correctCard, filteredCards) returning Choice[] — plan interface was wrong; StudySession adapted to use choice.isCorrect flag
+- [Phase 14-voice-recognition]: Singleton mockRecognitionInstance exported from setup.ts so tests can access handler fields directly without re-importing
+- [Phase 14-voice-recognition]: Stub test files avoid importing unimplemented modules — stubs use expect(true).toBe(true) placeholders until Plans 02/03 replace them
 
 ### Pending Todos
 
@@ -114,6 +117,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-06T05:42:42.040Z
-Stopped at: Phase 14 context gathered
-Resume file: .planning/phases/14-voice-recognition/14-CONTEXT.md
+Last session: 2026-03-06T06:02:16.709Z
+Stopped at: Completed 14-voice-recognition/14-01-PLAN.md
+Resume file: None
