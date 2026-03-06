@@ -35,15 +35,15 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 
 ### Components
 
-- [ ] **UI-01**: LevelFilterChips on deck grid, hidden during active study session
+- [x] **UI-01**: LevelFilterChips on deck grid, hidden during active study session
 - [ ] **UI-02**: FlashCard with front/back reveal
 - [ ] **UI-03**: ChoiceButton for multiple-choice quiz
 - [ ] **UI-04**: AudioButton using Web Speech API TTS
 
 ### i18n
 
-- [ ] **I18N-01**: next-intl message files for Italian and Spanish UI strings
-- [ ] **I18N-02**: All UI strings (deck names, button labels, chip labels) in message files
+- [x] **I18N-01**: next-intl message files for Italian and Spanish UI strings
+- [x] **I18N-02**: All UI strings (deck names, button labels, chip labels) in message files
 
 ### Styling
 
@@ -90,12 +90,12 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 | ROUTE-02 | Phase 12 | Complete |
 | ROUTE-03 | Phase 12 | Complete |
 | ROUTE-04 | Phase 12 | Complete |
-| UI-01 | Phase 13 | Pending |
+| UI-01 | Phase 13 | Complete |
 | UI-02 | Phase 13 | Pending |
 | UI-03 | Phase 13 | Pending |
 | UI-04 | Phase 13 | Pending |
-| I18N-01 | Phase 13 | Pending |
-| I18N-02 | Phase 13 | Pending |
+| I18N-01 | Phase 13 | Complete |
+| I18N-02 | Phase 13 | Complete |
 | STYLE-01 | Phase 13 | Pending |
 | TEST-01 | Phase 11 | Complete |
 | TEST-02 | Phase 11 | Complete |

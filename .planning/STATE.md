@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 12-routing-02-PLAN.md
-last_updated: "2026-03-06T03:31:57.603Z"
+stopped_at: Completed 13-ui-i18n-and-styling-01-PLAN.md
+last_updated: "2026-03-06T04:52:16.894Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 13
+  completed_plans: 11
   percent: 0
 ---
 
@@ -60,6 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 11-logic-and-tests P03 | 2 | 2 tasks | 4 files |
 | Phase 12-routing P02 | 2 | 1 tasks | 3 files |
 | Phase 12-routing P01 | 15 | 1 tasks | 1 files |
+| Phase 13-ui-i18n-and-styling P01 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,7 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 12-routing]: Due badge counts ProgressRecord keys by deckId prefix — useSRS has no getDueCount; badges show 0 until Phase 13 wires card data
 - [Phase 12-routing]: style-reference.css imported globally in globals.css so all design system classes are available to both pages without scoped imports
 - [Phase 12-routing]: Deck theme class (theme-teal, theme-red, etc.) sourced directly from deckMetadata[].theme — no mapping layer needed
+- [Phase 13-ui-i18n-and-styling]: LANG_NAMES static map used for language proper nouns (Italiano, Español) — not i18n-managed
 
 ### Pending Todos
 
@@ -105,6 +107,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-06T03:24:05.633Z
-Stopped at: Completed 12-routing-02-PLAN.md
+Last session: 2026-03-06T04:52:16.890Z
+Stopped at: Completed 13-ui-i18n-and-styling-01-PLAN.md
 Resume file: None
