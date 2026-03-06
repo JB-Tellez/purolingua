@@ -11,11 +11,6 @@ import type { Lang } from '@/types';
 // Note: generateStaticParams for [lang] is in layout.tsx
 // 'use client' and generateStaticParams cannot coexist on a page file.
 
-const LANG_NAMES: Record<Lang, string> = {
-  it: 'Italiano',
-  es: 'Español',
-};
-
 interface DeckGridProps {
   lang: Lang;
 }
@@ -23,6 +18,7 @@ interface DeckGridProps {
 function DeckGrid({ lang }: DeckGridProps) {
   const { progress } = useSRS(lang);
   const t = useTranslations('decks');
+  const td = useTranslations('deckDescriptions');
 
   const decks = deckMetadata.filter((d) => d.lang === lang);
 
@@ -43,6 +39,7 @@ function DeckGrid({ lang }: DeckGridProps) {
             <div className={`deck-card theme-${deck.theme}`}>
               <div className="deck-icon-circle">{deck.icon}</div>
               <h3>{t(deck.i18nKey)}</h3>
+              <p>{td(deck.i18nKey)}</p>
               {dueCount > 0 && (
                 <span className="deck-card-badge">{dueCount}</span>
               )}
@@ -62,8 +59,8 @@ export default function LangPage() {
   return (
     <main>
       <div className="section-header">
-        <h1>{LANG_NAMES[lang]}</h1>
-        <p className="subtitle">{t('chooseDeck')}</p>
+        <h1>{t('title')}</h1>
+        <p className="subtitle">{t('subtitle')}</p>
       </div>
       <LevelFilterChips lang={lang} />
       <DeckGrid lang={lang} />

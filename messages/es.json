@@ -1,9 +1,13 @@
 {
   "nav": {
-    "home": "Inicio",
+    "logo": "Espa\u00f1ol",
+    "back": "\u2190 Atr\u00e1s",
+    "reset": "Reiniciar",
     "backToDecks": "Volver"
   },
   "page": {
+    "title": "Elige un Mazo",
+    "subtitle": "Selecciona una categor\u00eda para empezar",
     "chooseLanguage": "Elige un idioma",
     "chooseDeck": "Elige un mazo"
   },
@@ -16,6 +20,16 @@
     "emergencies": "Emergencias",
     "social": "Vida Social",
     "weather": "El Tiempo"
+  },
+  "deckDescriptions": {
+    "daily": "Frases \u00fatiles para el d\u00eda a d\u00eda.",
+    "restaurant": "Pedir comida y la cuenta.",
+    "travel": "Moverse por la ciudad y pedir direcciones.",
+    "shopping": "Comprar en tiendas y mercados.",
+    "hotel": "Reservas y servicios de hotel.",
+    "emergencies": "Frases importantes para situaciones urgentes.",
+    "social": "Presentarse y hablar con la gente.",
+    "weather": "Hablar del clima y las estaciones."
   },
   "filter": {
     "label": "Nivel",

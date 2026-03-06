@@ -1,21 +1,35 @@
 {
   "nav": {
-    "home": "Home",
+    "logo": "Italiano",
+    "back": "\u2190 Indietro",
+    "reset": "Reset",
     "backToDecks": "Indietro"
   },
   "page": {
+    "title": "Scegli un Mazzo",
+    "subtitle": "Seleziona una categoria per iniziare",
     "chooseLanguage": "Scegli una lingua",
     "chooseDeck": "Scegli un mazzo"
   },
   "decks": {
     "daily": "Vita Quotidiana",
     "restaurant": "Ristorante",
-    "travel": "Viaggio",
-    "shopping": "Shopping",
-    "hotel": "Hotel",
+    "travel": "In Viaggio",
+    "shopping": "Fare Spese",
+    "hotel": "In Albergo",
     "emergencies": "Emergenze",
     "social": "Vita Sociale",
-    "weather": "Meteo"
+    "weather": "Il Tempo"
+  },
+  "deckDescriptions": {
+    "daily": "Frasi utili per la vita di tutti i giorni.",
+    "restaurant": "Ordinare cibo e chiedere il conto.",
+    "travel": "Muoversi in citt\u00e0 e chiedere indicazioni.",
+    "shopping": "Comprare nei negozi e al mercato.",
+    "hotel": "Prenotazioni e servizi in hotel.",
+    "emergencies": "Frasi importanti per situazioni urgenti.",
+    "social": "Presentarsi e parlare con le persone.",
+    "weather": "Parlare del meteo e delle stagioni."
   },
   "filter": {
     "label": "Livello",
