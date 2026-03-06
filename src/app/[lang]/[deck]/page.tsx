@@ -6,7 +6,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { DECK_IDS } from '@/data/decks';
 import type { Card, DeckId, Lang } from '@/types';
-import StudySession from './StudySession';
+import StudySession from './StudySessionNoSSR';
 
 // Italian decks
 import { italianDaily } from '@/data/it';

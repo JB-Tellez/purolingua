@@ -1,29 +1,48 @@
 'use client';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import type { Lang } from '@/types';
+
+interface SpeechRecognitionInstance {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onstart: (() => void) | null;
+  onend: (() => void) | null;
+  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onerror: (() => void) | null;
+  start(): void;
+  stop(): void;
+}
+
+type SpeechRecognitionCtor = new () => SpeechRecognitionInstance;
 
 const LANG_LOCALE: Record<Lang, string> = {
   it: 'it-IT',
   es: 'es-ES',
 };
 
-function getSpeechRecognition(): (new () => SpeechRecognition) | null {
+function getSpeechRecognition(): SpeechRecognitionCtor | null {
   if (typeof window === 'undefined') return null;
   const w = window as Window & {
-    SpeechRecognition?: new () => SpeechRecognition;
-    webkitSpeechRecognition?: new () => SpeechRecognition;
+    SpeechRecognition?: SpeechRecognitionCtor;
+    webkitSpeechRecognition?: SpeechRecognitionCtor;
   };
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
 export function useVoiceRecognition(lang: Lang) {
-  const RecognitionClass = getSpeechRecognition();
-  const isSupported = !!RecognitionClass;
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const [isSupported, setIsSupported] = useState(false);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+
   const [isListening, setIsListening] = useState(false);
+
+  useEffect(() => {
+    setIsSupported(!!getSpeechRecognition());
+  }, []);
 
   const startListening = useCallback(
     (onResult: (transcript: string) => void, onError: () => void) => {
+      const RecognitionClass = getSpeechRecognition();
       if (!RecognitionClass || isListening) return;
       const rec = new RecognitionClass();
       rec.lang = LANG_LOCALE[lang];
@@ -32,7 +51,7 @@ export function useVoiceRecognition(lang: Lang) {
 
       rec.onstart = () => setIsListening(true);
       rec.onend = () => setIsListening(false);
-      rec.onresult = (e: SpeechRecognitionEvent) => {
+      rec.onresult = (e) => {
         const transcript = e.results[0][0].transcript;
         onResult(transcript);
       };
@@ -44,7 +63,7 @@ export function useVoiceRecognition(lang: Lang) {
       recognitionRef.current = rec;
       try { rec.start(); } catch { /* guard against already-started */ }
     },
-    [lang, RecognitionClass, isListening]
+    [lang, isListening]
   );
 
   const stopListening = useCallback(() => {

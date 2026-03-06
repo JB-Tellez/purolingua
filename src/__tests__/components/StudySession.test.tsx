@@ -172,8 +172,10 @@ describe('StudySession voice integration', () => {
     });
 
     // Find which choice texts are rendered in the DOM
+    // textContent includes the audio icon span (🔊) — strip it to get the bare choice text
     const choiceButtons = document.querySelectorAll('.quiz-btn');
-    const targetText = choiceButtons[0].textContent ?? 'Hello';
+    const rawText = choiceButtons[0].textContent ?? 'Hello';
+    const targetText = rawText.replace(/^\p{Emoji}/u, '').trim();
 
     // Fire matching transcript for a choice
     act(() => {

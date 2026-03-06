@@ -66,7 +66,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   // Generate multiple-choice options: 1 correct + up to 3 foils, shuffled
   const choices = generateChoices(currentCard, cards);
 
-  const normalize = (s: string) => s.toLowerCase().trim();
+  const normalize = (s: string) => s.toLowerCase().trim().replace(/[.,!?;:'"¿¡]+$/g, '').trim();
 
   function handleFrontMicPress() {
     if (isListening) return;
@@ -162,55 +162,40 @@ export default function StudySession({ lang, deckId, cards }: Props) {
               )}
             </div>
             <div className="card-face card-back">
-              <p style={{
-                fontFamily: "'Crimson Text', 'Georgia', serif",
-                fontSize: '1.75rem',
-                fontWeight: 600,
-                color: '#2E5B2E',
-                textAlign: 'center',
-                lineHeight: 1.3,
-              }}>
-                {currentCard.back}
-              </p>
               {isSupported && flipped && (
                 <MicButton state={micState} onPress={handleBackMicPress} />
               )}
+              <div className="quiz-options">
+                {choices.map((choice, i) => {
+                  let state: 'idle' | 'correct' | 'incorrect' = 'idle';
+                  if (selectedChoice !== null) {
+                    if (choice.isCorrect) state = 'correct';
+                    else if (i === selectedChoice) state = 'incorrect';
+                  }
+                  return (
+                    <ChoiceButton
+                      key={i}
+                      text={choice.text}
+                      state={state}
+                      onClick={() => handleChoiceClick(i)}
+                      disabled={selectedChoice !== null}
+                    />
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
 
         {flipped && (
-          <>
-            {/* Multiple-choice options */}
-            <div className="quiz-options">
-              {choices.map((choice, i) => {
-                let state: 'idle' | 'correct' | 'incorrect' = 'idle';
-                if (selectedChoice !== null) {
-                  if (choice.isCorrect) state = 'correct';
-                  else if (i === selectedChoice) state = 'incorrect';
-                }
-                return (
-                  <ChoiceButton
-                    key={i}
-                    text={choice.text}
-                    state={state}
-                    onClick={() => handleChoiceClick(i)}
-                    disabled={selectedChoice !== null}
-                  />
-                );
-              })}
-            </div>
-
-            {/* Correct/Incorrect self-grade controls */}
-            <div className="controls">
-              <button className="btn secondary" onClick={() => handleAnswer(false)}>
-                {t('incorrect')}
-              </button>
-              <button className="btn primary" onClick={() => handleAnswer(true)}>
-                {t('correct')}
-              </button>
-            </div>
-          </>
+          <div className="controls">
+            <button className="btn secondary" onClick={() => handleAnswer(false)}>
+              {t('flipButton')}
+            </button>
+            <button className="btn primary" onClick={() => handleAnswer(true)}>
+              {t('nextButton')}
+            </button>
+          </div>
         )}
 
         {!flipped && (

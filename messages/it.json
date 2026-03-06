@@ -44,6 +44,8 @@
     "revealAnswer": "Rivela la risposta",
     "correct": "Corretto",
     "incorrect": "Sbagliato",
+    "flipButton": "Gira",
+    "nextButton": "Prossimo",
     "allDone": "Hai finito per oggi! Torna domani.",
     "backToDecks": "\u2190 Torna ai mazzi",
     "cardCounter": "Scheda {current} di {total}",

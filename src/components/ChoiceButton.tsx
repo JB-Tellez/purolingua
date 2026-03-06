@@ -17,6 +17,7 @@ export default function ChoiceButton({ text, state, onClick, disabled }: Props) 
       disabled={disabled || state !== 'idle'}
       type="button"
     >
+      <span className="quiz-audio-icon" aria-hidden="true">🔊</span>
       {text}
     </button>
   );

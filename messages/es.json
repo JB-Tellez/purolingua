@@ -44,6 +44,8 @@
     "revealAnswer": "Revelar respuesta",
     "correct": "Correcto",
     "incorrect": "Incorrecto",
+    "flipButton": "Girar",
+    "nextButton": "Siguiente",
     "allDone": "\u00a1Terminado por hoy! Vuelve ma\u00f1ana.",
     "backToDecks": "\u2190 Volver a los mazos",
     "cardCounter": "Tarjeta {current} de {total}",
