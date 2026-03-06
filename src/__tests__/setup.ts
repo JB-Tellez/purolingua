@@ -32,7 +32,10 @@ export const mockRecognitionInstance = {
   onerror: null as ((e: { error: string }) => void) | null,
 };
 
-export const MockSpeechRecognition = vi.fn(() => mockRecognitionInstance);
+// Must use a regular function (not arrow) so `new MockSpeechRecognition()` works
+export const MockSpeechRecognition = vi.fn(function () {
+  return mockRecognitionInstance;
+});
 
 Object.defineProperty(window, 'SpeechRecognition', {
   value: MockSpeechRecognition,
