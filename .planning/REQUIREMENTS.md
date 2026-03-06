@@ -56,6 +56,23 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 - [x] **TEST-03**: `lib/generateChoices.ts` unit tested
 - [x] **TEST-04**: `useSRS` and `useLevelFilter` tested via `renderHook`
 
+### Voice Recognition
+
+- [ ] **VOICE-01**: `useVoiceRecognition` returns `isSupported: true` when SpeechRecognition is present on window
+- [ ] **VOICE-02**: `useVoiceRecognition` returns `isSupported: false` when neither SpeechRecognition nor webkitSpeechRecognition is present
+- [ ] **VOICE-03**: `isListening` becomes `true` after `startListening` is called and recognition fires `onstart`
+- [ ] **VOICE-04**: `isListening` resets to `false` when recognition fires `onend`
+- [ ] **VOICE-05**: `onResult` callback fires with the transcript string when recognition returns a result
+- [ ] **VOICE-06**: `onError` callback fires and `isListening` resets when recognition fires `onerror`
+- [ ] **VOICE-07**: Normalization (lowercase + trim) correctly matches transcript to card front or choice text
+- [ ] **VOICE-08**: `MicButton` renders with `listening` visual state when `state='listening'`
+- [ ] **VOICE-09**: `MicButton` renders with `error` visual state when `state='error'`
+- [ ] **VOICE-10**: Mic button is absent from DOM when `isSupported` is `false`
+- [ ] **VOICE-11**: Matching transcript on card front flips the card (sets `flipped: true`)
+- [ ] **VOICE-12**: Non-matching transcript on card front shows error flash on mic button then resets to idle
+- [ ] **VOICE-13**: Matching transcript on card back calls `handleChoiceClick(matchedIndex)` with the correct choice index
+- [ ] **VOICE-14**: Non-matching transcript on card back shows error flash on mic button then resets to idle
+
 ## Deferred (v2.0+)
 
 - A1 phrase linguistic quality verified by native speaker (Italian and Spanish)
@@ -101,12 +118,26 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 | TEST-02 | Phase 11 | Complete |
 | TEST-03 | Phase 11 | Complete |
 | TEST-04 | Phase 11 | Complete |
+| VOICE-01 | Phase 14 | Pending |
+| VOICE-02 | Phase 14 | Pending |
+| VOICE-03 | Phase 14 | Pending |
+| VOICE-04 | Phase 14 | Pending |
+| VOICE-05 | Phase 14 | Pending |
+| VOICE-06 | Phase 14 | Pending |
+| VOICE-07 | Phase 14 | Pending |
+| VOICE-08 | Phase 14 | Pending |
+| VOICE-09 | Phase 14 | Pending |
+| VOICE-10 | Phase 14 | Pending |
+| VOICE-11 | Phase 14 | Pending |
+| VOICE-12 | Phase 14 | Pending |
+| VOICE-13 | Phase 14 | Pending |
+| VOICE-14 | Phase 14 | Pending |
 
 **Coverage:**
-- v1.2 requirements: 25 total
-- Mapped to phases: 25
-- Unmapped: 0 ✓
+- v1.2 requirements: 39 total
+- Mapped to phases: 39
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-04*
-*Last updated: 2026-03-04 — traceability confirmed against v1.2 roadmap (phases 9–13)*
+*Last updated: 2026-03-06 — Phase 14 VOICE-01 through VOICE-14 requirements added*

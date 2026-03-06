@@ -136,6 +136,27 @@ Plans:
 - [ ] 13-02-PLAN.md — Build AudioButton and ChoiceButton, wire into StudySession with full i18n
 - [ ] 13-03-PLAN.md — Final build verification and human visual-parity checkpoint
 
+### Phase 14: Voice Recognition
+**Goal**: Port VoiceRecognitionService to a React hook; add mic button to card front (speak to flip) and card back (speak to match choice and trigger correct/incorrect result)
+**Depends on**: Phase 13
+**Requirements**: VOICE-01, VOICE-02, VOICE-03, VOICE-04, VOICE-05, VOICE-06, VOICE-07, VOICE-08, VOICE-09, VOICE-10, VOICE-11, VOICE-12, VOICE-13, VOICE-14
+**Plans**: 3 plans
+
+Plans:
+- [ ] 14-01-PLAN.md — Wave 0: SpeechRecognition mock in setup.ts + stub test files for all VOICE-* requirements
+- [ ] 14-02-PLAN.md — Implement useVoiceRecognition hook and MicButton component with real tests
+- [ ] 14-03-PLAN.md — Wire hook + MicButton into StudySession; human visual checkpoint
+
+### Phase 15: Study Session UX Polish
+
+**Goal:** Add audio icon per ChoiceButton (speak option text on click), feedback message overlay (correct/incorrect/heard/not-found), and deck-complete/all-done alert modals
+**Requirements**: TBD
+**Depends on:** Phase 14
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 15 to break down)
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -148,23 +169,4 @@ Plans:
 | 11. Logic and Tests | 3/3 | Complete    | 2026-03-05 | - |
 | 12. Routing | 2/2 | Complete    | 2026-03-06 | - |
 | 13. UI, i18n, and Styling | 2/3 | Complete    | 2026-03-06 | - |
-
-### Phase 14: Voice Recognition
-
-**Goal:** Port VoiceRecognitionService to a React hook; add mic button to card front (speak to flip) and card back (speak to match choice and trigger correct/incorrect result)
-**Requirements**: TBD
-**Depends on:** Phase 13
-**Plans:** 0 plans
-
-Plans:
-- [ ] TBD (run /gsd:plan-phase 14 to break down)
-
-### Phase 15: Study Session UX Polish
-
-**Goal:** Add audio icon per ChoiceButton (speak option text on click), feedback message overlay (correct/incorrect/heard/not-found), and deck-complete/all-done alert modals
-**Requirements**: TBD
-**Depends on:** Phase 14
-**Plans:** 0 plans
-
-Plans:
-- [ ] TBD (run /gsd:plan-phase 15 to break down)
+| 14. Voice Recognition | 0/3 | Planned | - | - |
