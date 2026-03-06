@@ -141,5 +141,5 @@ Plans:
 | 9. Scaffold | 2/2 | Complete   | 2026-03-05 | - |
 | 10. Data Migration | 3/3 | Complete    | 2026-03-05 | - |
 | 11. Logic and Tests | 3/3 | Complete    | 2026-03-05 | - |
-| 12. Routing | 2/2 | Complete   | 2026-03-05 | - |
+| 12. Routing | 2/2 | Complete   | 2026-03-06 | - |
 | 13. UI, i18n, and Styling | v1.2 | 0/? | Not started | - |

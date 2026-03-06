@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 12-routing-01-PLAN.md
-last_updated: "2026-03-05T15:33:33.400Z"
+stopped_at: Completed 12-routing-02-PLAN.md
+last_updated: "2026-03-06T03:24:09.772Z"
 last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
 progress:
   total_phases: 5
@@ -92,6 +92,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 12-routing]: StudySession uses isCardDueForDeck + updateCard (actual useSRS API) not getDueCards/markCard (plan pseudocode)
 - [Phase 12-routing]: 'use client' page with useParams() — setRequestLocale delegated to layout.tsx; generateStaticParams cannot coexist with use client in Next.js 16
 - [Phase 12-routing]: Due badge counts ProgressRecord keys by deckId prefix — useSRS has no getDueCount; badges show 0 until Phase 13 wires card data
+- [Phase 12-routing]: style-reference.css imported globally in globals.css so all design system classes are available to both pages without scoped imports
+- [Phase 12-routing]: Deck theme class (theme-teal, theme-red, etc.) sourced directly from deckMetadata[].theme — no mapping layer needed
 
 ### Pending Todos
 
@@ -103,6 +105,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-05T15:33:33.397Z
-Stopped at: Completed 12-routing-01-PLAN.md
+Last session: 2026-03-06T03:24:05.633Z
+Stopped at: Completed 12-routing-02-PLAN.md
 Resume file: None
