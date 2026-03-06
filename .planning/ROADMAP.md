@@ -129,7 +129,12 @@ Plans:
   3. ChoiceButton renders multiple-choice options and indicates correct/incorrect selection
   4. AudioButton triggers Web Speech API TTS playback for the current card's phrase
   5. Switching locale between Italian and Spanish updates all UI labels from next-intl message files — no hardcoded strings visible
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 13-01-PLAN.md — Expand message files, build LevelFilterChips, wire deck grid i18n
+- [ ] 13-02-PLAN.md — Build AudioButton and ChoiceButton, wire into StudySession with full i18n
+- [ ] 13-03-PLAN.md — Final build verification and human visual-parity checkpoint
 
 ## Progress
 
@@ -142,4 +147,4 @@ Plans:
 | 10. Data Migration | 3/3 | Complete    | 2026-03-05 | - |
 | 11. Logic and Tests | 3/3 | Complete    | 2026-03-05 | - |
 | 12. Routing | 2/2 | Complete    | 2026-03-06 | - |
-| 13. UI, i18n, and Styling | v1.2 | 0/? | Not started | - |
+| 13. UI, i18n, and Styling | v1.2 | 0/3 | Not started | - |
