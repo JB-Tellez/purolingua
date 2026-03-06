@@ -31,6 +31,7 @@
     "social": "Presentarsi e parlare con le persone.",
     "weather": "Parlare del meteo e delle stagioni."
   },
+  "deckCardCount": "{count} carte",
   "filter": {
     "label": "Livello",
     "chips": {
