@@ -1,6 +1,11 @@
 {
   "nav": {
-    "home": "Home"
+    "home": "Home",
+    "backToDecks": "Indietro"
+  },
+  "page": {
+    "chooseLanguage": "Scegli una lingua",
+    "chooseDeck": "Scegli un mazzo"
   },
   "decks": {
     "daily": "Vita Quotidiana",
@@ -13,6 +18,20 @@
     "weather": "Meteo"
   },
   "filter": {
-    "label": "Livello"
+    "label": "Livello",
+    "chips": {
+      "A1": "A1",
+      "A2": "A2"
+    }
+  },
+  "study": {
+    "tapToReveal": "Tocca per rivelare",
+    "revealAnswer": "Rivela la risposta",
+    "correct": "Corretto",
+    "incorrect": "Sbagliato",
+    "allDone": "Hai finito per oggi! Torna domani.",
+    "backToDecks": "\u2190 Torna ai mazzi",
+    "cardCounter": "Scheda {current} di {total}",
+    "audio": "Ascolta"
   }
 }

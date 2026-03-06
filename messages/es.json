@@ -1,6 +1,11 @@
 {
   "nav": {
-    "home": "Inicio"
+    "home": "Inicio",
+    "backToDecks": "Volver"
+  },
+  "page": {
+    "chooseLanguage": "Elige un idioma",
+    "chooseDeck": "Elige un mazo"
   },
   "decks": {
     "daily": "Vida Diaria",
@@ -13,6 +18,20 @@
     "weather": "El Tiempo"
   },
   "filter": {
-    "label": "Nivel"
+    "label": "Nivel",
+    "chips": {
+      "A1": "A1",
+      "A2": "A2"
+    }
+  },
+  "study": {
+    "tapToReveal": "Toca para revelar",
+    "revealAnswer": "Revelar respuesta",
+    "correct": "Correcto",
+    "incorrect": "Incorrecto",
+    "allDone": "\u00a1Terminado por hoy! Vuelve ma\u00f1ana.",
+    "backToDecks": "\u2190 Volver a los mazos",
+    "cardCounter": "Tarjeta {current} de {total}",
+    "audio": "Escuchar"
   }
 }
