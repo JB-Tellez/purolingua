@@ -103,6 +103,11 @@ Progress: [░░░░░░░░░░] 0%
 
 - A1 phrase linguistic quality: needs native speaker review (Italian and Spanish) before shipping to learners
 
+### Roadmap Evolution
+
+- Phase 14 added: Voice Recognition — mic button on card front (speak to flip) and card back (speak to match choice)
+- Phase 15 added: Study Session UX Polish — audio icon per ChoiceButton, feedback message overlay, deck-complete/all-done alert modals
+
 ### Blockers/Concerns
 
 None.

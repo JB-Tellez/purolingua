@@ -148,3 +148,23 @@ Plans:
 | 11. Logic and Tests | 3/3 | Complete    | 2026-03-05 | - |
 | 12. Routing | 2/2 | Complete    | 2026-03-06 | - |
 | 13. UI, i18n, and Styling | 2/3 | Complete    | 2026-03-06 | - |
+
+### Phase 14: Voice Recognition
+
+**Goal:** Port VoiceRecognitionService to a React hook; add mic button to card front (speak to flip) and card back (speak to match choice and trigger correct/incorrect result)
+**Requirements**: TBD
+**Depends on:** Phase 13
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 14 to break down)
+
+### Phase 15: Study Session UX Polish
+
+**Goal:** Add audio icon per ChoiceButton (speak option text on click), feedback message overlay (correct/incorrect/heard/not-found), and deck-complete/all-done alert modals
+**Requirements**: TBD
+**Depends on:** Phase 14
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 15 to break down)
