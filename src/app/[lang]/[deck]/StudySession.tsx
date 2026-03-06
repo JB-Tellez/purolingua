@@ -25,18 +25,33 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     );
 
   const [index, setIndex] = useState(0);
-  const [revealed, setRevealed] = useState(false);
+  const [flipped, setFlipped] = useState(false);
   const [done, setDone] = useState(false);
 
   const backLink = `/${lang}`;
 
   if (done || dueCards.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 p-8">
-        <Link href={backLink} className="text-sm text-blue-500 self-start">Back to decks</Link>
-        <p className="text-xl font-semibold">All done for today! Come back tomorrow.</p>
-        <Link href={backLink} className="border rounded px-4 py-2">Back to decks</Link>
-      </div>
+      <main>
+        <div
+          id="flashcard-view"
+          style={{ paddingTop: '2rem' }}
+        >
+          <Link href={backLink} className="nav-back-btn">&larr; Back to decks</Link>
+          <div className="card-container" style={{ height: 'auto', perspective: 'none' }}>
+            <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+              <p style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--color-text)' }}>
+                All done for today! Come back tomorrow.
+              </p>
+              <Link href={backLink}>
+                <button className="btn primary" style={{ maxWidth: '200px', flex: 'none' }}>
+                  Back to decks
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
     );
   }
 
@@ -44,7 +59,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
   function handleAnswer(isCorrect: boolean) {
     updateCard(deckId, originalIndex, isCorrect);
-    setRevealed(false);
+    setFlipped(false);
     if (index + 1 < dueCards.length) {
       setIndex(i => i + 1);
     } else {
@@ -52,42 +67,86 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     }
   }
 
+  const progressPercent = Math.round((index / dueCards.length) * 100);
+
   return (
-    <div className="flex flex-col items-center gap-4 p-8">
-      <Link href={backLink} className="text-sm text-blue-500 self-start">Back to decks</Link>
+    <main>
+      <div id="flashcard-view">
+        <Link href={backLink} className="nav-back-btn">&larr; Back to decks</Link>
 
-      <p className="text-sm text-gray-400">
-        Card {index + 1} of {dueCards.length}
-      </p>
+        {/* Progress bar */}
+        <div className="progress-bar" style={{ width: '100%' }}>
+          <div
+            className="progress-fill"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
 
-      <p className="text-2xl font-bold">{currentCard.front}</p>
+        <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', textAlign: 'center' }}>
+          Card {index + 1} of {dueCards.length}
+        </p>
 
-      {!revealed ? (
-        <button
-          className="border rounded px-4 py-2"
-          onClick={() => setRevealed(true)}
+        {/* Card flip container */}
+        <div
+          className="card-container"
+          onClick={() => { if (!flipped) setFlipped(true); }}
         >
-          Reveal
-        </button>
-      ) : (
-        <>
-          <p className="text-xl text-gray-600">{currentCard.back}</p>
-          <div className="flex gap-4">
+          <div className={`card${flipped ? ' flipped' : ''}`}>
+            {/* Front face */}
+            <div className="card-face card-front">
+              <span id="card-front-text">{currentCard.front}</span>
+              {!flipped && (
+                <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>
+                  Tap to reveal
+                </p>
+              )}
+            </div>
+
+            {/* Back face */}
+            <div className="card-face card-back">
+              <p style={{
+                fontFamily: "'Crimson Text', 'Georgia', serif",
+                fontSize: '1.75rem',
+                fontWeight: 600,
+                color: '#2E5B2E',
+                textAlign: 'center',
+                lineHeight: 1.3,
+              }}>
+                {currentCard.back}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Controls — shown only after flip */}
+        {flipped && (
+          <div className="controls">
             <button
-              className="border rounded px-4 py-2"
-              onClick={() => handleAnswer(true)}
-            >
-              Correct
-            </button>
-            <button
-              className="border rounded px-4 py-2"
+              className="btn secondary"
               onClick={() => handleAnswer(false)}
             >
               Incorrect
             </button>
+            <button
+              className="btn primary"
+              onClick={() => handleAnswer(true)}
+            >
+              Correct
+            </button>
           </div>
-        </>
-      )}
-    </div>
+        )}
+
+        {!flipped && (
+          <div className="controls">
+            <button
+              className="btn primary"
+              onClick={() => setFlipped(true)}
+            >
+              Reveal Answer
+            </button>
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
