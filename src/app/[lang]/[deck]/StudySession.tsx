@@ -70,6 +70,14 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     [] // activeLevels is stable for the session; cards is a prop that won't change
   );
 
+  const currentEntry = dueCards[index];
+
+  // Must be called unconditionally (Rules of Hooks) — safe fallback when no current card
+  const choices = useMemo(
+    () => currentEntry ? generateChoices(currentEntry.card, filteredCards) : [],
+    [currentEntry, filteredCards]
+  );
+
   function resetSession() {
     setIndex(0);
     setFlipped(false);
@@ -126,13 +134,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     );
   }
 
-  const { originalIndex, card: currentCard } = dueCards[index];
-
-  // Generate choices once per card — memoized so mic/state changes don't reshuffle options
-  const choices = useMemo(
-    () => generateChoices(currentCard, filteredCards),
-    [currentCard, filteredCards]
-  );
+  const { originalIndex, card: currentCard } = currentEntry!;
 
   const normalize = (s: string) => s.toLowerCase().trim().replace(/[.,!?;:'"¿¡]+$/g, '').trim();
 
