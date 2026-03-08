@@ -278,7 +278,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
         {flipped && (
           <div className="controls">
-            <button className="btn secondary" onClick={() => handleAnswer(false)}>
+            <button className="btn secondary" onClick={() => setFlipped(false)}>
               {t('flipButton')}
             </button>
             <button className="btn primary" onClick={() => handleAnswer(true)}>
@@ -287,13 +287,6 @@ export default function StudySession({ lang, deckId, cards }: Props) {
           </div>
         )}
 
-        {!flipped && (
-          <div className="controls">
-            <button className="btn primary" onClick={() => setFlipped(true)}>
-              {t('revealAnswer')}
-            </button>
-          </div>
-        )}
       </div>
     </main>
   );
