@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 15-01-PLAN.md
-last_updated: "2026-03-08T07:39:11.305Z"
+stopped_at: Completed 15-03-PLAN.md — awaiting human-verify checkpoint
+last_updated: "2026-03-08T07:42:43.876Z"
 last_activity: 2026-03-07 — Phase 14 complete; session bugs fixed
 progress:
   total_phases: 7
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 19
-  completed_plans: 18
+  completed_plans: 19
   percent: 93
 ---
 
@@ -66,6 +66,7 @@ Progress: [█████████░] 93%
 | Phase 14-voice-recognition P02 | 5 | 2 tasks | 6 files |
 | Phase 15-study-session-ux-polish P02 | 5 | 2 tasks | 2 files |
 | Phase 15-study-session-ux-polish P01 | 8 | 2 tasks | 3 files |
+| Phase 15-study-session-ux-polish P03 | 5 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,9 @@ Progress: [█████████░] 93%
 - [Phase 15-study-session-ux-polish]: aria-live=polite chosen for FeedbackMessage — feedback is informational, not urgent, avoids interrupting screen reader flow
 - [Phase 15-study-session-ux-polish]: Used span[role=button] instead of nested button for ChoiceButton speaker icon — nesting buttons is invalid HTML
 - [Phase 15-study-session-ux-polish]: onSpeak prop is optional (onSpeak?: () => void) so existing ChoiceButton call sites compile without changes
+- [Phase 15-study-session-ux-polish]: FeedbackMessage rendered in two positions: inside card-back for quiz choice feedback, above controls for voice recognition feedback when flipped
+- [Phase 15-study-session-ux-polish]: resetSession() resets all state fields instead of key-prop remount — keeps due cards snapshot frozen for study-again flow
+- [Phase 15-study-session-ux-polish]: allDone state guard checked before done in render path so all-done screen takes priority when both could be true
 
 ### Pending Todos
 
@@ -126,6 +130,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:39:11.301Z
-Stopped at: Completed 15-01-PLAN.md
+Last session: 2026-03-08T07:42:43.872Z
+Stopped at: Completed 15-03-PLAN.md — awaiting human-verify checkpoint
 Resume file: None
