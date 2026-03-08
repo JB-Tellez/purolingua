@@ -152,7 +152,7 @@ Plans:
 **Goal:** Add audio icon per ChoiceButton (speak option text on click), feedback message overlay (correct/incorrect/heard/not-recognized), and deck-complete/all-done end-of-session screens
 **Requirements**: UX-01, UX-02, UX-03, UX-04, UX-05
 **Depends on:** Phase 14
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] 15-01-PLAN.md — Add i18n keys (heard/notRecognized/deckComplete/studyAgain) and wire ChoiceButton audio icon

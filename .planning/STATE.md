@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Phase 15 context gathered
-last_updated: "2026-03-08T07:28:04.087Z"
+stopped_at: Completed 15-02-PLAN.md (FeedbackMessage component)
+last_updated: "2026-03-08T07:38:28.229Z"
 last_activity: 2026-03-07 — Phase 14 complete; session bugs fixed
 progress:
   total_phases: 7
   completed_phases: 6
-  total_plans: 16
-  completed_plans: 16
+  total_plans: 19
+  completed_plans: 17
   percent: 93
 ---
 
@@ -64,6 +64,7 @@ Progress: [█████████░] 93%
 | Phase 13-ui-i18n-and-styling P02 | 2 | 2 tasks | 3 files |
 | Phase 14-voice-recognition P01 | 5 | 2 tasks | 4 files |
 | Phase 14-voice-recognition P02 | 5 | 2 tasks | 6 files |
+| Phase 15-study-session-ux-polish P02 | 5 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,8 @@ Progress: [█████████░] 93%
 - [Phase 14-voice-recognition]: Stub test files avoid importing unimplemented modules — stubs use expect(true).toBe(true) placeholders until Plans 02/03 replace them
 - [Phase 14-voice-recognition]: MockSpeechRecognition uses regular function not arrow function — arrow functions cannot be used as constructors with new()
 - [Phase 14-voice-recognition]: RecognitionClass captured at render time (not in startListening) so isSupported reflects window state at hook mount
+- [Phase 15-study-session-ux-polish]: FeedbackMessage uses static COLOR_CLASS record keyed by Exclude<FeedbackState, null> for exhaustive type-safe state-to-color mapping
+- [Phase 15-study-session-ux-polish]: aria-live=polite chosen for FeedbackMessage — feedback is informational, not urgent, avoids interrupting screen reader flow
 
 ### Pending Todos
 
@@ -120,6 +123,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:28:04.083Z
-Stopped at: Phase 15 context gathered
-Resume file: .planning/phases/15-study-session-ux-polish/15-CONTEXT.md
+Last session: 2026-03-08T07:38:28.225Z
+Stopped at: Completed 15-02-PLAN.md (FeedbackMessage component)
+Resume file: None
