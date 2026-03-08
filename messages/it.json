@@ -49,6 +49,10 @@
     "allDone": "Hai finito per oggi! Torna domani.",
     "backToDecks": "\u2190 Torna ai mazzi",
     "cardCounter": "Scheda {current} di {total}",
-    "audio": "Ascolta"
+    "audio": "Ascolta",
+    "heard": "Sentito",
+    "notRecognized": "Non riconosciuto",
+    "deckComplete": "Mazzo completato!",
+    "studyAgain": "Studia ancora"
   }
 }
