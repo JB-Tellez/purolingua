@@ -8,13 +8,30 @@ import { useLevelFilter } from '@/hooks/useLevelFilter';
 import { generateChoices } from '@/lib/generateChoices';
 import AudioButton from '@/components/AudioButton';
 import ChoiceButton from '@/components/ChoiceButton';
+import FeedbackMessage from '@/components/FeedbackMessage';
 import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
 import MicButton from '@/components/MicButton';
+import { DECK_IDS } from '@/data/decks';
 
 interface Props {
   lang: Lang;
   deckId: DeckId;
   cards: Card[];
+}
+
+const LANG_LOCALE: Record<Lang, string> = { it: 'it-IT', es: 'es-ES' };
+
+function speak(phrase: string, lang: Lang) {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(phrase);
+  utterance.lang = LANG_LOCALE[lang];
+  utterance.rate = 0.9;
+  const voices = window.speechSynthesis.getVoices();
+  const matching = voices.filter((v) => v.lang.startsWith(lang));
+  const exact = matching.find((v) => v.lang === LANG_LOCALE[lang]);
+  utterance.voice = exact ?? matching[0] ?? null;
+  window.speechSynthesis.speak(utterance);
 }
 
 export default function StudySession({ lang, deckId, cards }: Props) {
@@ -38,13 +55,32 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [done, setDone] = useState(false);
+  const [allDone, setAllDone] = useState(false);
   // selectedChoice: null = not answered, index of selected choice once answered
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
+  const [feedbackState, setFeedbackState] = useState<'correct' | 'incorrect' | 'heard' | 'notRecognized' | null>(null);
 
   const backLink = `/${lang}`;
 
-  if (done || dueCards.length === 0) {
+  // Filtered cards pool for choices — stable for the session
+  const filteredCards = useMemo(
+    () => cards.filter(card => activeLevels.includes(card.level)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [] // activeLevels is stable for the session; cards is a prop that won't change
+  );
+
+  function resetSession() {
+    setIndex(0);
+    setFlipped(false);
+    setDone(false);
+    setAllDone(false);
+    setSelectedChoice(null);
+    setMicState('idle');
+    setFeedbackState(null);
+  }
+
+  if (allDone || dueCards.length === 0) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
@@ -54,11 +90,35 @@ export default function StudySession({ lang, deckId, cards }: Props) {
               <p style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--color-text)' }}>
                 {t('allDone')}
               </p>
-              <Link href={backLink}>
-                <button className="btn primary" style={{ maxWidth: '200px', flex: 'none' }}>
-                  {t('backToDecks')}
-                </button>
-              </Link>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Link href={backLink}>
+                  <button className="btn secondary" type="button">{t('backToDecks')}</button>
+                </Link>
+                <button className="btn primary" type="button" onClick={resetSession}>{t('studyAgain')}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (done) {
+    return (
+      <main>
+        <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
+          <Link href={backLink} className="nav-back-btn">{t('backToDecks')}</Link>
+          <div className="card-container" style={{ height: 'auto', perspective: 'none' }}>
+            <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+              <p style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--color-text)' }}>
+                {t('deckComplete')}
+              </p>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Link href={backLink}>
+                  <button className="btn secondary" type="button">{t('backToDecks')}</button>
+                </Link>
+                <button className="btn primary" type="button" onClick={resetSession}>{t('studyAgain')}</button>
+              </div>
             </div>
           </div>
         </div>
@@ -69,11 +129,6 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   const { originalIndex, card: currentCard } = dueCards[index];
 
   // Generate choices once per card — memoized so mic/state changes don't reshuffle options
-  const filteredCards = useMemo(
-    () => cards.filter(card => activeLevels.includes(card.level)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [] // activeLevels is stable for the session; cards is a prop that won't change
-  );
   const choices = useMemo(
     () => generateChoices(currentCard, filteredCards),
     [currentCard, filteredCards]
@@ -88,13 +143,16 @@ export default function StudySession({ lang, deckId, cards }: Props) {
       (transcript) => {
         setMicState('idle');
         if (normalize(transcript) === normalize(currentCard.front)) {
+          setFeedbackState('heard');
           setFlipped(true);
         } else {
+          setFeedbackState('notRecognized');
           setMicState('error');
           setTimeout(() => setMicState('idle'), 800);
         }
       },
       () => {
+        setFeedbackState('notRecognized');
         setMicState('error');
         setTimeout(() => setMicState('idle'), 800);
       }
@@ -111,13 +169,16 @@ export default function StudySession({ lang, deckId, cards }: Props) {
           (c) => normalize(c.text) === normalize(transcript)
         );
         if (matchedIndex !== -1) {
+          setFeedbackState('heard');
           handleChoiceClick(matchedIndex);
         } else {
+          setFeedbackState('notRecognized');
           setMicState('error');
           setTimeout(() => setMicState('idle'), 800);
         }
       },
       () => {
+        setFeedbackState('notRecognized');
         setMicState('error');
         setTimeout(() => setMicState('idle'), 800);
       }
@@ -128,10 +189,18 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     updateCard(deckId, originalIndex, isCorrect);
     setFlipped(false);
     setSelectedChoice(null);
+    setFeedbackState(null);
     if (index + 1 < dueCards.length) {
       setIndex((i) => i + 1);
     } else {
-      setDone(true);
+      const allDecksEmpty = DECK_IDS.every(id =>
+        cards.filter(c => activeLevels.includes(c.level)).every((_, i) => !isCardDueForDeck(id, i))
+      );
+      if (allDecksEmpty) {
+        setAllDone(true);
+      } else {
+        setDone(true);
+      }
     }
   }
 
@@ -139,6 +208,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     if (selectedChoice !== null) return; // already answered
     const isCorrect = choices[choiceIndex].isCorrect;
     setSelectedChoice(choiceIndex);
+    setFeedbackState(isCorrect ? 'correct' : 'incorrect');
     setTimeout(() => handleAnswer(isCorrect), 600);
   }
 
@@ -192,13 +262,17 @@ export default function StudySession({ lang, deckId, cards }: Props) {
                       state={state}
                       onClick={() => handleChoiceClick(i)}
                       disabled={selectedChoice !== null}
+                      onSpeak={() => speak(choice.text, lang)}
                     />
                   );
                 })}
               </div>
+              <FeedbackMessage state={feedbackState} />
             </div>
           </div>
         </div>
+
+        <FeedbackMessage state={feedbackState} />
 
         {flipped && (
           <div className="controls">
