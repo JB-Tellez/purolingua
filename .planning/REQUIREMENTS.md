@@ -79,6 +79,14 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 - Level filter chips hidden during active study session (FLTR-10) — post-port
 - B1/B2 content tiers
 
+### UX Polish
+
+- [x] **UX-01**: Speaker icon on each choice button triggers Web Speech API playback without selecting the choice
+- [x] **UX-02**: Feedback message appears below quiz options after a button answer (correct → green, incorrect → red) and clears on next card
+- [x] **UX-03**: Feedback message appears after a voice answer (heard → blue, not recognized → gray) and clears on next card
+- [x] **UX-04**: Deck-complete screen shown when all due cards in current deck are answered, with "Back to decks" and "Study again" actions
+- [x] **UX-05**: All-done screen shown when no due cards remain across all decks, with "Back to decks" and "Study again" actions
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -132,12 +140,17 @@ Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity o
 | VOICE-12 | Phase 14 | Complete |
 | VOICE-13 | Phase 14 | Complete |
 | VOICE-14 | Phase 14 | Complete |
+| UX-01 | Phase 15 | Complete |
+| UX-02 | Phase 15 | Complete |
+| UX-03 | Phase 15 | Complete |
+| UX-04 | Phase 15 | Complete |
+| UX-05 | Phase 15 | Complete |
 
 **Coverage:**
-- v1.2 requirements: 39 total
-- Mapped to phases: 39
+- v1.2 requirements: 44 total
+- Mapped to phases: 44
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-04*
-*Last updated: 2026-03-06 — Phase 14 VOICE-01 through VOICE-14 requirements added*
+*Last updated: 2026-03-08 — Phase 15 UX-01 through UX-05 requirements added*
