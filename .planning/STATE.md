@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
-status: in_progress
-stopped_at: Completed 14-voice-recognition/14-03-PLAN.md — Phase 14 done
-last_updated: "2026-03-07T00:00:00.000Z"
-last_activity: 2026-03-07 — Phase 14 complete; fixed dueCards snapshot + generateChoices pool bugs
+status: planning
+stopped_at: Phase 15 context gathered
+last_updated: "2026-03-08T07:28:04.087Z"
+last_activity: 2026-03-07 — Phase 14 complete; session bugs fixed
 progress:
   total_phases: 7
   completed_phases: 6
@@ -120,6 +120,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-07
-Stopped at: Completed 14-voice-recognition/14-03-PLAN.md — Phase 14 fully closed
-Resume file: None (.continue-here.md deleted)
+Last session: 2026-03-08T07:28:04.083Z
+Stopped at: Phase 15 context gathered
+Resume file: .planning/phases/15-study-session-ux-polish/15-CONTEXT.md
