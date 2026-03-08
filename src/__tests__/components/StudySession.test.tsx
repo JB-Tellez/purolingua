@@ -155,10 +155,10 @@ describe('StudySession voice integration', () => {
     vi.useFakeTimers();
     renderStudySession();
 
-    // First flip the card by clicking the reveal button
-    const revealBtn = screen.getByRole('button', { name: /revealAnswer/i });
+    // First flip the card by clicking the card container
+    const cardContainer = document.querySelector('.card-container') as HTMLElement;
     act(() => {
-      revealBtn.click();
+      cardContainer.click();
     });
 
     // After flip: both front and back mic buttons are in DOM
@@ -195,10 +195,10 @@ describe('StudySession voice integration', () => {
     vi.useFakeTimers();
     renderStudySession();
 
-    // Flip card first
-    const revealBtn = screen.getByRole('button', { name: /revealAnswer/i });
+    // Flip card first by clicking the card container
+    const cardContainer = document.querySelector('.card-container') as HTMLElement;
     act(() => {
-      revealBtn.click();
+      cardContainer.click();
     });
 
     // After flip: both front and back mic buttons
