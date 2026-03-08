@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 15-02-PLAN.md (FeedbackMessage component)
-last_updated: "2026-03-08T07:38:28.229Z"
+stopped_at: Completed 15-01-PLAN.md
+last_updated: "2026-03-08T07:39:11.305Z"
 last_activity: 2026-03-07 — Phase 14 complete; session bugs fixed
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 19
-  completed_plans: 17
+  completed_plans: 18
   percent: 93
 ---
 
@@ -65,6 +65,7 @@ Progress: [█████████░] 93%
 | Phase 14-voice-recognition P01 | 5 | 2 tasks | 4 files |
 | Phase 14-voice-recognition P02 | 5 | 2 tasks | 6 files |
 | Phase 15-study-session-ux-polish P02 | 5 | 2 tasks | 2 files |
+| Phase 15-study-session-ux-polish P01 | 8 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,8 @@ Progress: [█████████░] 93%
 - [Phase 14-voice-recognition]: RecognitionClass captured at render time (not in startListening) so isSupported reflects window state at hook mount
 - [Phase 15-study-session-ux-polish]: FeedbackMessage uses static COLOR_CLASS record keyed by Exclude<FeedbackState, null> for exhaustive type-safe state-to-color mapping
 - [Phase 15-study-session-ux-polish]: aria-live=polite chosen for FeedbackMessage — feedback is informational, not urgent, avoids interrupting screen reader flow
+- [Phase 15-study-session-ux-polish]: Used span[role=button] instead of nested button for ChoiceButton speaker icon — nesting buttons is invalid HTML
+- [Phase 15-study-session-ux-polish]: onSpeak prop is optional (onSpeak?: () => void) so existing ChoiceButton call sites compile without changes
 
 ### Pending Todos
 
@@ -123,6 +126,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:38:28.225Z
-Stopped at: Completed 15-02-PLAN.md (FeedbackMessage component)
+Last session: 2026-03-08T07:39:11.301Z
+Stopped at: Completed 15-01-PLAN.md
 Resume file: None
