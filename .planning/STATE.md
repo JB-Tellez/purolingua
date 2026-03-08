@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
-status: planning
-stopped_at: Completed 14-voice-recognition/14-02-PLAN.md
-last_updated: "2026-03-06T06:06:03.791Z"
-last_activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
+status: in_progress
+stopped_at: Completed 14-voice-recognition/14-03-PLAN.md — Phase 14 done
+last_updated: "2026-03-07T00:00:00.000Z"
+last_activity: 2026-03-07 — Phase 14 complete; fixed dueCards snapshot + generateChoices pool bugs
 progress:
   total_phases: 7
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 16
-  completed_plans: 15
-  percent: 0
+  completed_plans: 16
+  percent: 93
 ---
 
 # State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-04)
 
 **Core value:** Users can study real conversational vocabulary offline, in any browser, with zero friction — no sign-up, no app install, just open and learn.
-**Current focus:** v1.2 — Phase 9: Scaffold
+**Current focus:** v1.2 — Phase 15: Study Session UX Polish
 
 ## Current Position
 
-Phase: 9 of 13 (Scaffold)
-Plan: —
+Phase: 15 of 15 (Study Session UX Polish)
+Plan: — (needs planning)
 Status: Ready to plan
-Last activity: 2026-03-04 — v1.2 roadmap created, phases 9–13 defined
+Last activity: 2026-03-07 — Phase 14 complete; session bugs fixed
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -120,6 +120,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-06T06:06:03.787Z
-Stopped at: Completed 14-voice-recognition/14-02-PLAN.md
-Resume file: None
+Last session: 2026-03-07
+Stopped at: Completed 14-voice-recognition/14-03-PLAN.md — Phase 14 fully closed
+Resume file: None (.continue-here.md deleted)

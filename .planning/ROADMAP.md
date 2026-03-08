@@ -116,8 +116,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Implement /[lang] deck grid page with 8 deck tiles and due-count badges
-- [ ] 12-02-PLAN.md — Create /[lang]/[deck] study session page with generateStaticParams for all 16 paths
+- [x] 12-01-PLAN.md — Implement /[lang] deck grid page with 8 deck tiles and due-count badges
+- [x] 12-02-PLAN.md — Create /[lang]/[deck] study session page with generateStaticParams for all 16 paths
 
 ### Phase 13: UI, i18n, and Styling
 **Goal**: All UI components are built with Tailwind, next-intl delivers Italian and Spanish UI strings, and the rendered app is visually equivalent to v1.1
@@ -132,9 +132,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 13-01-PLAN.md — Expand message files, build LevelFilterChips, wire deck grid i18n
-- [ ] 13-02-PLAN.md — Build AudioButton and ChoiceButton, wire into StudySession with full i18n
-- [ ] 13-03-PLAN.md — Final build verification and human visual-parity checkpoint
+- [x] 13-01-PLAN.md — Expand message files, build LevelFilterChips, wire deck grid i18n
+- [x] 13-02-PLAN.md — Build AudioButton and ChoiceButton, wire into StudySession with full i18n
+- [x] 13-03-PLAN.md — Final build verification and human visual-parity checkpoint
 
 ### Phase 14: Voice Recognition
 **Goal**: Port VoiceRecognitionService to a React hook; add mic button to card front (speak to flip) and card back (speak to match choice and trigger correct/incorrect result)
@@ -143,9 +143,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 14-01-PLAN.md — Wave 0: SpeechRecognition mock in setup.ts + stub test files for all VOICE-* requirements
-- [ ] 14-02-PLAN.md — Implement useVoiceRecognition hook and MicButton component with real tests
-- [ ] 14-03-PLAN.md — Wire hook + MicButton into StudySession; human visual checkpoint
+- [x] 14-01-PLAN.md — Wave 0: SpeechRecognition mock in setup.ts + stub test files for all VOICE-* requirements
+- [x] 14-02-PLAN.md — Implement useVoiceRecognition hook and MicButton component with real tests
+- [x] 14-03-PLAN.md — Wire hook + MicButton into StudySession; human visual checkpoint
 
 ### Phase 15: Study Session UX Polish
 
