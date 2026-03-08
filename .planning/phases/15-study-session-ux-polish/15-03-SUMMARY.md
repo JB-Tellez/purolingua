@@ -43,7 +43,7 @@ patterns-established:
 requirements-completed: [UX-04, UX-05]
 
 # Metrics
-duration: 5min
+duration: 35min
 completed: "2026-03-08"
 ---
 
@@ -53,10 +53,10 @@ completed: "2026-03-08"
 
 ## Performance
 
-- **Duration:** ~5 min
-- **Started:** 2026-03-08T07:40:18Z
-- **Completed:** 2026-03-08T07:45:00Z
-- **Tasks:** 1 (+ 1 human-verify checkpoint)
+- **Duration:** ~35 min
+- **Started:** 2026-03-07T23:41:32-08:00
+- **Completed:** 2026-03-08T10:15:14-07:00
+- **Tasks:** 1 (+ 2 auto-fixed deviations, 1 human-verify checkpoint approved)
 - **Files modified:** 1
 
 ## Accomplishments
@@ -67,17 +67,20 @@ completed: "2026-03-08"
 - Added DECK_IDS cross-deck check after last card to set allDone vs done
 - Added resetSession() for Study Again; both end screens offer "Back to decks" (secondary) and "Study again" (primary) buttons
 - Build: zero TypeScript errors; tests: 57/57 passed (no regressions)
+- Human visual verification of all 7 behavioral checks passed
 
 ## Task Commits
 
 Each task was committed atomically:
 
 1. **Task 1: Wire audio, FeedbackMessage, and end-of-session screens into StudySession** - `4c7a842` (feat)
+2. **Fix: Move choices useMemo above early returns (hooks violation)** - `ccdffab` (fix)
+3. **Fix: Gira button flips back to card front without advancing** - `753aeee` (fix)
 
-**Plan metadata:** (docs commit — pending checkpoint resolution)
+**Plan metadata:** docs commit follows this summary
 
 ## Files Created/Modified
-- `src/app/[lang]/[deck]/StudySession.tsx` - speak helper, feedbackState, FeedbackMessage, deck-complete/all-done screens, resetSession
+- `src/app/[lang]/[deck]/StudySession.tsx` - speak helper, feedbackState, FeedbackMessage, deck-complete/all-done screens, resetSession, bugfixes for hooks order and Gira button
 
 ## Decisions Made
 - FeedbackMessage is rendered in two positions in the JSX: inside the `.quiz-options` closing/card-back area for quiz choice feedback, and above the `.controls` divs for voice recognition feedback when the card is flipped. This gives feedback visual proximity to its trigger in both interaction modes.
@@ -86,18 +89,39 @@ Each task was committed atomically:
 
 ## Deviations from Plan
 
-None - plan executed exactly as written.
+### Auto-fixed Issues
+
+**1. [Rule 1 - Bug] Fixed React hooks violation — choices useMemo called after early returns**
+- **Found during:** Task 1 (Wire FeedbackMessage, ChoiceButton audio, and end screens)
+- **Issue:** The `choices` useMemo hook was placed after the `allDone`/`done`/`dueCards.length === 0` early returns. React's Rules of Hooks require all hooks to be called unconditionally before any early return. This caused a "Rendered fewer hooks than expected" crash when an end screen was shown.
+- **Fix:** Moved the `choices` useMemo call above all early returns so hook call order is stable on every render.
+- **Files modified:** `src/app/[lang]/[deck]/StudySession.tsx`
+- **Verification:** Build passes, no runtime crash on end screen, all tests pass
+- **Committed in:** `ccdffab`
+
+**2. [Rule 1 - Bug] Fixed Gira button advancing the card instead of flipping back**
+- **Found during:** Human visual verification checkpoint
+- **Issue:** The Gira (flip back) button on the card back was calling `handleAnswer(false)`, which marked the card as incorrect, consumed it from the queue, and advanced to the next card. The intended UX is to let the user flip back to the card front to re-read before deciding.
+- **Fix:** Changed Gira button's `onClick` from `handleAnswer(false)` to `setFlipped(false)` so it simply un-flips the card without advancing.
+- **Files modified:** `src/app/[lang]/[deck]/StudySession.tsx`
+- **Verification:** Human visual check confirmed — Gira flips back to card front, same card shown, no queue advancement
+- **Committed in:** `753aeee`
+
+---
+
+**Total deviations:** 2 auto-fixed (both Rule 1 — bugs)
+**Impact on plan:** Both fixes were required for correct runtime behavior and correct UX intent. No scope creep.
 
 ## Issues Encountered
-None — build and tests passed on first attempt.
+None beyond the two auto-fixed bugs above.
 
 ## User Setup Required
 None - no external service configuration required.
 
 ## Next Phase Readiness
-- Phase 15 implementation complete — all UX polish tasks wired into StudySession
-- Human visual checkpoint remains open pending user verification of all 7 behavioral checks
-- No further code changes expected after checkpoint approval
+- Phase 15 (Study Session UX Polish) is fully complete — all 3 UX features shipped and verified by human review
+- StudySession is production-ready: audio per choice, immediate feedback after each answer, appropriate end screens
+- No further code changes expected for this plan
 
 ---
 *Phase: 15-study-session-ux-polish*

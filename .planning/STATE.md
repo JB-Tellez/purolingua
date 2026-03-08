@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Next.js Port
 status: planning
-stopped_at: Completed 15-03-PLAN.md — awaiting human-verify checkpoint
-last_updated: "2026-03-08T07:42:43.876Z"
+stopped_at: Completed 15-03-PLAN.md
+last_updated: "2026-03-08T17:16:53.069Z"
 last_activity: 2026-03-07 — Phase 14 complete; session bugs fixed
 progress:
   total_phases: 7
@@ -67,6 +67,7 @@ Progress: [█████████░] 93%
 | Phase 15-study-session-ux-polish P02 | 5 | 2 tasks | 2 files |
 | Phase 15-study-session-ux-polish P01 | 8 | 2 tasks | 3 files |
 | Phase 15-study-session-ux-polish P03 | 5 | 1 tasks | 1 files |
+| Phase 15-study-session-ux-polish P03 | 35 | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -114,6 +115,9 @@ Progress: [█████████░] 93%
 - [Phase 15-study-session-ux-polish]: FeedbackMessage rendered in two positions: inside card-back for quiz choice feedback, above controls for voice recognition feedback when flipped
 - [Phase 15-study-session-ux-polish]: resetSession() resets all state fields instead of key-prop remount — keeps due cards snapshot frozen for study-again flow
 - [Phase 15-study-session-ux-polish]: allDone state guard checked before done in render path so all-done screen takes priority when both could be true
+- [Phase 15-study-session-ux-polish]: resetSession() resets all state fields instead of key-prop remount — keeps due cards snapshot frozen for study-again flow
+- [Phase 15-study-session-ux-polish]: allDone state guard checked before done in render path so all-done screen takes priority when both could be true
+- [Phase 15-study-session-ux-polish]: FeedbackMessage rendered in two positions: inside card-back for quiz choice feedback, above controls for voice recognition feedback when flipped
 
 ### Pending Todos
 
@@ -130,6 +134,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:42:43.872Z
-Stopped at: Completed 15-03-PLAN.md — awaiting human-verify checkpoint
+Last session: 2026-03-08T17:16:53.065Z
+Stopped at: Completed 15-03-PLAN.md
 Resume file: None
