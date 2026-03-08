@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { Card, DeckId, Lang } from '@/types';
@@ -22,11 +22,16 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   const { activeLevels } = useLevelFilter(lang, hasProgress);
   const t = useTranslations('study');
 
-  const dueCards: { originalIndex: number; card: Card }[] = cards
-    .map((card, i) => ({ originalIndex: i, card }))
-    .filter(({ card, originalIndex }) =>
-      activeLevels.includes(card.level) && isCardDueForDeck(deckId, originalIndex)
-    );
+  // Snapshot due cards once at session start — prevents re-filtering as SRS state updates
+  // during the session (which would cause cards to be skipped as each answered card
+  // is removed from the due list, shifting indices).
+  const [dueCards] = useState(() =>
+    cards
+      .map((card, i) => ({ originalIndex: i, card }))
+      .filter(({ card, originalIndex }) =>
+        activeLevels.includes(card.level) && isCardDueForDeck(deckId, originalIndex)
+      )
+  );
 
   const { isSupported, isListening, startListening } = useVoiceRecognition(lang);
 
@@ -63,8 +68,16 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
   const { originalIndex, card: currentCard } = dueCards[index];
 
-  // Generate multiple-choice options: 1 correct + up to 3 foils, shuffled
-  const choices = generateChoices(currentCard, cards);
+  // Generate choices once per card — memoized so mic/state changes don't reshuffle options
+  const filteredCards = useMemo(
+    () => cards.filter(card => activeLevels.includes(card.level)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [] // activeLevels is stable for the session; cards is a prop that won't change
+  );
+  const choices = useMemo(
+    () => generateChoices(currentCard, filteredCards),
+    [currentCard, filteredCards]
+  );
 
   const normalize = (s: string) => s.toLowerCase().trim().replace(/[.,!?;:'"¿¡]+$/g, '').trim();
 
