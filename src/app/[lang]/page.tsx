@@ -15,14 +15,13 @@ import type { Card, DeckId, Lang, Level } from '@/types';
 
 interface DeckGridProps {
   lang: Lang;
+  activeLevels: Level[];
+  isCardDueForDeck: (deckId: DeckId, cardIndex: number) => boolean;
 }
 
-function DeckGrid({ lang }: DeckGridProps) {
+function DeckGrid({ lang, activeLevels, isCardDueForDeck }: DeckGridProps) {
   const t = useTranslations('decks');
   const td = useTranslations('deckDescriptions');
-
-  const { isCardDueForDeck, hasProgress } = useSRS(lang);
-  const { activeLevels } = useLevelFilter(lang, hasProgress);
 
   const decks = deckMetadata.filter((d) => d.lang === lang);
 
@@ -64,6 +63,8 @@ export default function LangPage() {
   const params = useParams<{ lang: string }>();
   const lang = params.lang as Lang;
   const t = useTranslations('page');
+  const { isCardDueForDeck, hasProgress } = useSRS(lang);
+  const { activeLevels, setActiveLevels } = useLevelFilter(lang, hasProgress);
 
   return (
     <main>
@@ -71,8 +72,8 @@ export default function LangPage() {
         <h1>{t('title')}</h1>
         <p className="subtitle">{t('subtitle')}</p>
       </div>
-      <LevelFilterChips lang={lang} />
-      <DeckGrid lang={lang} />
+      <LevelFilterChips lang={lang} activeLevels={activeLevels} setActiveLevels={setActiveLevels} />
+      <DeckGrid lang={lang} activeLevels={activeLevels} isCardDueForDeck={isCardDueForDeck} />
     </main>
   );
 }
