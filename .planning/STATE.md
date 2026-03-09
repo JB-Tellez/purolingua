@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Q&A Mode
 status: completed
-stopped_at: Completed 17-01-PLAN.md
-last_updated: "2026-03-09T23:03:19.005Z"
-last_activity: 2026-03-09 — Phase 16 plan 03 complete (filter reactivity gap closure, UAT approved)
+stopped_at: Completed 17-02-PLAN.md
+last_updated: "2026-03-09T23:20:00.000Z"
+last_activity: 2026-03-09 — Phase 17 plan 02 complete (7 bilingual Q&A scenario files authored, 56 cards each language)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-08 after v1.3 milestone start)
 ## Current Position
 
 Phase: 17 — Q&A Data (in progress)
-Plan: 01 of 03 complete
-Status: Phase 17 plan 01 complete (QACard, ScenarioId, Scenario types added to src/types/index.ts); Plans 02 and 03 ready
+Plan: 02 of 03 complete
+Status: Phase 17 plan 02 complete (7 bilingual Q&A scenario files + index barrel in src/data/qa/); Plan 03 ready
 
-[███████░░░] 67% — 4/6 plans complete overall
+[████████░░] 83% — 5/6 plans complete overall
 
-Last activity: 2026-03-09 — Phase 17 plan 01 complete (QA Mode type contract established)
+Last activity: 2026-03-09 — Phase 17 plan 02 complete (7 bilingual Q&A scenario files authored, 56 cards each language)
 
 ## Accumulated Context
 
@@ -56,6 +56,9 @@ Last activity: 2026-03-09 — Phase 17 plan 01 complete (QA Mode type contract e
 - **17-01**: Bilingual fields inline on QACard (questionEs, correctEs, foilsEs) not nested object — simpler access pattern for rendering components
 - **17-01**: Scenario.level field added in Phase 17 so content authors can tag level at creation time (not deferred to Phase 18)
 - **17-01**: Fixed tuple [string, string, string] for QACard.foils and QACard.foilsEs enforces exactly 3 foils at compile time
+- **17-02**: Foil authoring strategy: foils are responses from other scenario contexts (wrong setting, not wrong grammar) — natural A1/A2 distractors
+- **17-02**: A1-before-A2 canonical order in scenarios[] array in index.ts — Phase 18 browser inherits display order
+- **17-02**: index.ts exports both named const exports and scenarios array — named exports enable selective scenario import in Phase 18/19
 
 ### Decisions (Phase 16)
 
@@ -74,6 +77,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-09T23:03:19.000Z
-Stopped at: Completed 17-01-PLAN.md
+Last session: 2026-03-09T23:20:00.000Z
+Stopped at: Completed 17-02-PLAN.md
 Resume file: None
