@@ -120,7 +120,7 @@ Plans:
 | 13. UI, i18n, and Styling | v1.2 | 3/3 | Complete | 2026-03-06 |
 | 14. Voice Recognition | v1.2 | 3/3 | Complete | 2026-03-07 |
 | 15. Study Session UX Polish | v1.2 | 3/3 | Complete | 2026-03-08 |
-| 16. Bug Fixes | 3/3 | Complete   | 2026-03-09 | — |
+| 16. Bug Fixes | 3/3 | Complete    | 2026-03-09 | — |
 | 17. Q&A Data | v1.3 | 0/? | Not started | — |
 | 18. Activity Picker and Scenario Browser | v1.3 | 0/? | Not started | — |
 | 19. Q&A Study Session | v1.3 | 0/? | Not started | — |
