@@ -2,7 +2,7 @@
 
 ## What This Is
 
-PuroLingua is a browser-based language learning app for travelers and conversational learners. It uses flashcard decks and a Leitner spaced repetition system to build practical vocabulary across topic categories like restaurants, travel, and daily life — with CEFR-level filtering so beginners can start with A1 content before advancing. No account, no backend, no frameworks.
+PuroLingua is a browser-based language learning app for travelers and conversational learners. It uses flashcard decks and a Leitner spaced repetition system to build practical vocabulary across topic categories like restaurants, travel, and daily life — with CEFR-level filtering so beginners can start with A1 content before advancing. The v1.1 vanilla JS app lives at purolingua.com; the v1.2 Next.js port (`feat/nextjs-port`) is a TypeScript + React rebuild with proper URL routing, deployable as a static export to a VPS.
 
 ## Core Value
 
@@ -34,37 +34,22 @@ Users can study real conversational vocabulary offline, in any browser, with zer
 - ✓ Due-count badge and study session use identical level filter (no count mismatch) — v1.1
 - ✓ Quiz distractors drawn only from level-filtered card pool — v1.1
 - ✓ Level chip labels defined in i18n system — v1.1
-
-## Current Milestone: v1.2 Next.js Port
-
-**Goal:** Port all existing v1.1 functionality to Next.js + TypeScript + Tailwind as a portfolio piece, on a feature branch.
-
-**Target features:**
-- Next.js 15 static export (deployable to Hostinger VPS)
-- TypeScript throughout (components, hooks, data, types)
-- Tailwind CSS replacing custom CSS
-- next-intl replacing custom i18n system
-- Proper URL routing (`/[lang]/[deck]`)
-- `useSRS` + `useLevelFilter` hooks (no external state library)
-- Full feature parity with v1.1
+- ✓ Next.js 15 static export with TypeScript, Tailwind, next-intl on feature branch — v1.2
+- ✓ All card data ported to typed TypeScript modules (Card, Deck, Progress types) — v1.2
+- ✓ SRS lib + hooks (`useSRS`, `useLevelFilter`) ported to TypeScript with 57 Vitest tests — v1.2
+- ✓ Full URL routing (`/`, `/[lang]`, `/[lang]/[deck]`) with `generateStaticParams` — v1.2
+- ✓ All UI components: FlashCard, ChoiceButton, AudioButton, LevelFilterChips — v1.2
+- ✓ next-intl i18n delivering Italian and Spanish UI strings — v1.2
+- ✓ Voice recognition hook (`useVoiceRecognition` + `MicButton`) — v1.2
+- ✓ Feedback message overlay (correct/incorrect/heard/not-recognized) — v1.2
+- ✓ Deck-complete and all-done end-of-session screens — v1.2
 
 ### Active
 
-<!-- Requirements for the current milestone. -->
+<!-- Requirements for the next milestone. -->
 
-- [ ] Next.js 15 project scaffolded with TypeScript, Tailwind, next-intl on feature branch
-- [ ] TypeScript types defined (Card, Deck, Progress, LevelFilter, Lang, DeckId)
-- [ ] All card data ported to typed TypeScript modules
-- [ ] SRS logic (Leitner math, generateChoices) ported to TypeScript lib functions
-- [ ] useSRS hook with localStorage persistence
-- [ ] useLevelFilter hook with localStorage persistence and FLTR-06 guard
-- [ ] URL routing: /, /[lang], /[lang]/[deck]
-- [ ] All 8 deck pages with DeckCard, due-count badge, LevelFilterChips
-- [ ] StudySession with FlashCard, ChoiceButton, AudioButton (Web Speech API)
-- [ ] next-intl message files for Italian and Spanish UI strings
-- [ ] Tailwind styles matching v1.1 visual design
-- [ ] Vitest + React Testing Library unit tests for SRS lib and hooks
-- [ ] Static export verified, deployable artifact confirmed
+- [ ] Live due-count badges on deck grid tiles (ROUTE-02 gap from v1.2)
+- [ ] Fix `allDecksEmpty` check in A1-only mode (UX-05 gap from v1.2)
 
 ### Out of Scope
 
@@ -77,21 +62,27 @@ Users can study real conversational vocabulary offline, in any browser, with zer
 - Separate SRS track per level — Breaks progress continuity when advancing from A1 to A2
 - Content hash migration for card keys — Positional index keys safe with append-only insertion
 - B1/B2 content tiers — Deferred to v2
+- SSR / API routes — Static export only for portfolio use case
+- React Context / Zustand — State surface small enough for focused hooks
 
 ## Context
 
-Shipped v1.1 with ~2,882 LOC vanilla JS.
-Tech stack: Vite, Vitest + jsdom (unit), Playwright (E2E — Chromium/Firefox/WebKit).
+Two codebases: v1.1 vanilla JS (~2,882 LOC) lives on `main`, ships to purolingua.com. v1.2 Next.js port (2,653 LOC TypeScript/TSX) lives on `feat/nextjs-port`, deployable static export. Both share the same card data structure and localStorage key format.
+
 Deck data: 320 A2 cards + ~320 A1 cards across 8 topic decks per language (Italian + Spanish).
+
 Known: A1 phrase content synthesized from training data — needs native speaker review before recommending to learners.
-Live at purolingua.com; GitHub Pages for staging.
+
+Tech stacks:
+- v1.1 (main): Vite, Vitest + jsdom (unit), Playwright (E2E — Chromium/Firefox/WebKit)
+- v1.2 (feat/nextjs-port): Next.js 15, TypeScript, Tailwind v4, next-intl, Vitest + React Testing Library
 
 ## Constraints
 
-- **Tech stack**: Vanilla JS only — no React, Vue, etc. Keeps it simple and universally compatible
 - **No backend**: All state lives in localStorage; no server round trips
 - **Browser APIs only**: TTS and voice via Web Speech API; no paid services
 - **Card indices**: A1 cards must always be appended to deck arrays — positional indices are SRS keys; inserting before existing cards corrupts progress
+- **Static export only**: Next.js port uses `output: 'export'` — no middleware, no SSR, no API routes
 
 ## Key Decisions
 
@@ -99,7 +90,8 @@ Live at purolingua.com; GitHub Pages for staging.
 |----------|-----------|---------|
 | Leitner 3-box system | Simple, proven SRS for casual learners | ✓ Good |
 | localStorage for persistence | Zero friction, no sign-up | ✓ Good |
-| Vanilla JS, no framework | Portability and simplicity | ✓ Good |
+| Vanilla JS, no framework (v1.1) | Portability and simplicity | ✓ Good |
+| Next.js + TypeScript + Tailwind (v1.2) | Portfolio-grade rewrite with proper routing | ✓ Good |
 | Remove streak tracking | Didn't align with core value | ✓ Good |
 | Web Speech API for audio | No cost, browser-native | ✓ Good |
 | Append-only card insertion | Preserves SRS positional index contract | ✓ Good |
@@ -107,6 +99,13 @@ Live at purolingua.com; GitHub Pages for staging.
 | Coordinator pattern for activeLevels | setActiveLevels doesn't auto-save; initActiveLevels/updateActiveLevels coordinate | ✓ Good |
 | CEFR codes as chip labels (A1/A2) | Language-neutral — same in all locales, no i18n duplication | ✓ Good |
 | resetProgress() does not reset level filter | Filter preference is independent of SRS progress | ⚠️ Revisit |
+| No middleware.ts (v1.2) | Static export incompatible with Next.js middleware; locale routing via generateStaticParams | ✓ Good |
+| useSRS localStorage key format preserved | `${lang}-progress` matches v1.1 for existing user data continuity | ✓ Good |
+| trailingSlash: true (v1.2) | Required for out/{locale}/index.html format on Hostinger static hosting | ✓ Good |
+| Fisher-Yates shuffle in generateChoices | Upgrade from biased sort used in v1.1 | ✓ Good |
+| FeedbackMessage in two positions | Inside card-back for quiz feedback, above controls for voice feedback | ✓ Good |
+| span[role=button] for ChoiceButton speaker icon | Nesting buttons is invalid HTML | ✓ Good |
+| Proceed with ROUTE-02 + UX-05 gaps | Both are non-breaking; deferred to v1.3 | ⚠️ Revisit |
 
 ---
-*Last updated: 2026-03-04 after v2.0 milestone start*
+*Last updated: 2026-03-09 after v1.2 milestone*

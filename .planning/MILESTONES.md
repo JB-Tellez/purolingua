@@ -1,5 +1,29 @@
 # Milestones
 
+## v1.2 — Next.js Port
+
+**Shipped:** 2026-03-09
+**Phases:** 9–15 (7 phases, 19 plans)
+**Files changed:** 323 | **LOC:** 2,653 TypeScript/TSX | **Timeline:** 4 days
+
+### What Shipped
+
+- Next.js 15 + TypeScript + Tailwind + next-intl project scaffolded on `feat/nextjs-port` with static export
+- All 320 A2 + 320 A1 flashcards (16 decks, Italian + Spanish) ported to typed TypeScript modules
+- Leitner SRS math, choice generation, `useSRS`, and `useLevelFilter` hooks ported with 57 Vitest tests
+- Full URL routing (`/`, `/[lang]`, `/[lang]/[deck]`) with `generateStaticParams` covering all 16 paths
+- All UI components built (FlashCard, ChoiceButton, AudioButton, LevelFilterChips) with next-intl i18n
+- Voice recognition hook (`useVoiceRecognition` + `MicButton`), feedback message overlay, and end-of-session screens
+
+### Known Gaps
+
+Proceeded with known gaps from audit — deferred to v1.3:
+
+- **ROUTE-02**: Live due-count badges not implemented — `src/app/[lang]/page.tsx` shows static card count; `useSRS` never called in deck grid
+- **UX-05**: `allDecksEmpty` check defective in A1-only mode — uses current deck's filtered index range for all decks, triggers all-done prematurely
+
+---
+
 ## v1.0 — Initial Release
 
 **Shipped:** 2025 (pre-GSD)
