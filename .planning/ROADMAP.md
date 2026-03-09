@@ -63,7 +63,10 @@ Full archive: `.planning/milestones/v1.2-ROADMAP.md`
   1. Deck grid tiles show a due-count badge that reflects actual SRS state for the active level filter — not a static card count
   2. Selecting A1-only filter and finishing one deck does not trigger the all-done screen when other decks still have due cards
   3. Due-count badge updates immediately when the user changes the level filter chips without a page reload
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 16-01-PLAN.md — Wire useSRS + useLevelFilter into DeckGrid; live badge with zero-state checkmark (BUGFIX-01)
+- [ ] 16-02-PLAN.md — Extract shared DECK_MAP; fix allDecksEmpty lang-scope and per-deck index bug (BUGFIX-02)
 
 ### Phase 17: Q&A Data
 **Goal**: All Q&A content is authored and the SRS hook is ready — no UI yet, but the full data + logic layer can be exercised in tests
@@ -116,7 +119,7 @@ Full archive: `.planning/milestones/v1.2-ROADMAP.md`
 | 13. UI, i18n, and Styling | v1.2 | 3/3 | Complete | 2026-03-06 |
 | 14. Voice Recognition | v1.2 | 3/3 | Complete | 2026-03-07 |
 | 15. Study Session UX Polish | v1.2 | 3/3 | Complete | 2026-03-08 |
-| 16. Bug Fixes | v1.3 | 0/? | Not started | — |
+| 16. Bug Fixes | v1.3 | 0/2 | Not started | — |
 | 17. Q&A Data | v1.3 | 0/? | Not started | — |
 | 18. Activity Picker and Scenario Browser | v1.3 | 0/? | Not started | — |
 | 19. Q&A Study Session | v1.3 | 0/? | Not started | — |
