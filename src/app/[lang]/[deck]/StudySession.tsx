@@ -11,7 +11,8 @@ import ChoiceButton from '@/components/ChoiceButton';
 import FeedbackMessage from '@/components/FeedbackMessage';
 import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
 import MicButton from '@/components/MicButton';
-import { DECK_IDS } from '@/data/decks';
+import { deckMetadata } from '@/data/decks';
+import { DECK_MAP } from '@/data/deckMap';
 
 interface Props {
   lang: Lang;
@@ -195,9 +196,14 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     if (index + 1 < dueCards.length) {
       setIndex((i) => i + 1);
     } else {
-      const allDecksEmpty = DECK_IDS.every(id =>
-        cards.filter(c => activeLevels.includes(c.level)).every((_, i) => !isCardDueForDeck(id, i))
-      );
+      const langDecks = deckMetadata.filter(d => d.lang === lang);
+      const allDecksEmpty = langDecks.every(({ id }) => {
+        const deckCards = DECK_MAP[lang]?.[id] ?? [];
+        return deckCards
+          .map((card, i) => ({ card, i }))
+          .filter(({ card }) => activeLevels.includes(card.level))
+          .every(({ i }) => !isCardDueForDeck(id, i));
+      });
       if (allDecksEmpty) {
         setAllDone(true);
       } else {
