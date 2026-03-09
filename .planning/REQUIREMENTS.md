@@ -28,7 +28,7 @@
 ### Bug Fixes
 
 - [ ] **BUGFIX-01**: User sees live due-count badges on Rephrase deck tiles (not static card count)
-- [ ] **BUGFIX-02**: User is not shown all-done screen prematurely in A1-only mode
+- [x] **BUGFIX-02**: User is not shown all-done screen prematurely in A1-only mode
 
 ## Future Requirements
 
@@ -57,7 +57,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | BUGFIX-01 | Phase 16 | Pending |
-| BUGFIX-02 | Phase 16 | Pending |
+| BUGFIX-02 | Phase 16 | Complete |
 | QADATA-01 | Phase 17 | Pending |
 | QADATA-02 | Phase 17 | Pending |
 | QAFLOW-06 | Phase 17 | Pending |
