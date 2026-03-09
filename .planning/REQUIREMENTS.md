@@ -56,25 +56,25 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ACTPICK-01 | — | Pending |
-| QADATA-01 | — | Pending |
-| QADATA-02 | — | Pending |
-| QAFLOW-01 | — | Pending |
-| QAFLOW-02 | — | Pending |
-| QAFLOW-03 | — | Pending |
-| QAFLOW-04 | — | Pending |
-| QAFLOW-05 | — | Pending |
-| QAFLOW-06 | — | Pending |
-| QAFLOW-07 | — | Pending |
-| QAFLOW-08 | — | Pending |
-| BUGFIX-01 | — | Pending |
-| BUGFIX-02 | — | Pending |
+| BUGFIX-01 | Phase 16 | Pending |
+| BUGFIX-02 | Phase 16 | Pending |
+| QADATA-01 | Phase 17 | Pending |
+| QADATA-02 | Phase 17 | Pending |
+| QAFLOW-06 | Phase 17 | Pending |
+| ACTPICK-01 | Phase 18 | Pending |
+| QAFLOW-01 | Phase 18 | Pending |
+| QAFLOW-02 | Phase 18 | Pending |
+| QAFLOW-03 | Phase 19 | Pending |
+| QAFLOW-04 | Phase 19 | Pending |
+| QAFLOW-05 | Phase 19 | Pending |
+| QAFLOW-07 | Phase 19 | Pending |
+| QAFLOW-08 | Phase 19 | Pending |
 
 **Coverage:**
 - v1.3 requirements: 13 total
-- Mapped to phases: 0
-- Unmapped: 13 ⚠️
+- Mapped to phases: 13
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-08*
-*Last updated: 2026-03-08 after initial definition*
+*Last updated: 2026-03-08 after roadmap creation*
