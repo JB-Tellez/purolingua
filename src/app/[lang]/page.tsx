@@ -5,7 +5,10 @@ import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { deckMetadata } from '@/data/decks';
 import LevelFilterChips from '@/components/LevelFilterChips';
-import type { Lang } from '@/types';
+import { useSRS } from '@/hooks/useSRS';
+import { useLevelFilter } from '@/hooks/useLevelFilter';
+import { DECK_MAP } from '@/data/deckMap';
+import type { Card, DeckId, Lang, Level } from '@/types';
 
 // Note: generateStaticParams for [lang] is in layout.tsx
 // 'use client' and generateStaticParams cannot coexist on a page file.
@@ -17,13 +20,25 @@ interface DeckGridProps {
 function DeckGrid({ lang }: DeckGridProps) {
   const t = useTranslations('decks');
   const td = useTranslations('deckDescriptions');
-  const tc = useTranslations();
+
+  const { isCardDueForDeck, hasProgress } = useSRS(lang);
+  const { activeLevels } = useLevelFilter(lang, hasProgress);
 
   const decks = deckMetadata.filter((d) => d.lang === lang);
+
+  function getDueCount(deckId: DeckId, cards: Card[]): number {
+    return cards
+      .map((card, i) => ({ card, i }))
+      .filter(({ card }) => (activeLevels as Level[]).includes(card.level))
+      .filter(({ i }) => isCardDueForDeck(deckId, i))
+      .length;
+  }
 
   return (
     <div className="deck-grid">
       {decks.map((deck) => {
+        const deckCards = DECK_MAP[lang]?.[deck.id] ?? [];
+        const due = getDueCount(deck.id, deckCards);
         return (
           <Link
             key={deck.id}
@@ -34,7 +49,9 @@ function DeckGrid({ lang }: DeckGridProps) {
               <div className="deck-icon-circle">{deck.icon}</div>
               <h3>{t(deck.i18nKey)}</h3>
               <p>{td(deck.i18nKey)}</p>
-              <span className="deck-card-badge">{tc('deckCardCount', { count: deck.cardCount })}</span>
+              <span className={`deck-card-badge${due === 0 ? ' deck-card-badge--done' : ''}`}>
+                {due === 0 ? '✓' : due}
+              </span>
             </div>
           </Link>
         );
