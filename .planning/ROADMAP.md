@@ -79,7 +79,11 @@ Plans:
   3. useQASRS hook returns due cards for a scenario using prefixed keys (`qa_{scenarioId}_{cardId}`) that do not collide with Rephrase progress keys
   4. Vitest tests confirm Leitner SRS math (advance/retreat box) works correctly for Q&A cards
   5. Level filter (A1/A2) applied by useQASRS correctly narrows scenario card pools
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 17-01-PLAN.md — Add QACard, ScenarioId, Scenario types to src/types/index.ts (QADATA-01, QADATA-02, QAFLOW-06)
+- [ ] 17-02-PLAN.md — Author 7 Italian scenario files + index barrel (QADATA-01, QADATA-02)
+- [ ] 17-03-PLAN.md — Implement useQASRS hook with TDD (QAFLOW-06)
 
 ### Phase 18: Activity Picker and Scenario Browser
 **Goal**: Users can navigate from language selection to either Rephrase or Q&A, and can browse and enter Q&A scenarios
@@ -121,6 +125,6 @@ Plans:
 | 14. Voice Recognition | v1.2 | 3/3 | Complete | 2026-03-07 |
 | 15. Study Session UX Polish | v1.2 | 3/3 | Complete | 2026-03-08 |
 | 16. Bug Fixes | 3/3 | Complete    | 2026-03-09 | — |
-| 17. Q&A Data | v1.3 | 0/? | Not started | — |
+| 17. Q&A Data | v1.3 | 0/3 | Not started | — |
 | 18. Activity Picker and Scenario Browser | v1.3 | 0/? | Not started | — |
 | 19. Q&A Study Session | v1.3 | 0/? | Not started | — |
