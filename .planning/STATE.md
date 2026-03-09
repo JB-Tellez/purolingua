@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Q&A Mode
 status: completed
-stopped_at: Phase 17 context gathered
-last_updated: "2026-03-09T13:11:14.779Z"
+stopped_at: Completed 17-01-PLAN.md
+last_updated: "2026-03-09T23:03:19.005Z"
 last_activity: 2026-03-09 — Phase 16 plan 03 complete (filter reactivity gap closure, UAT approved)
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 6
+  completed_plans: 4
 ---
 
 # State
@@ -24,13 +24,13 @@ See: .planning/PROJECT.md (updated 2026-03-08 after v1.3 milestone start)
 
 ## Current Position
 
-Phase: 16 — Bug Fixes (complete)
-Plan: 01 + 02 + 03 of 03 complete
-Status: Phase 16 fully complete (BUGFIX-01 live badge, BUGFIX-02 allDecksEmpty, 16-03 filter reactivity); ready for phase 17
+Phase: 17 — Q&A Data (in progress)
+Plan: 01 of 03 complete
+Status: Phase 17 plan 01 complete (QACard, ScenarioId, Scenario types added to src/types/index.ts); Plans 02 and 03 ready
 
-[██████████] 100% — 3/3 plans in phase 16 done; 0/4 phases complete overall
+[███████░░░] 67% — 4/6 plans complete overall
 
-Last activity: 2026-03-09 — Phase 16 plan 03 complete (filter reactivity gap closure, UAT approved)
+Last activity: 2026-03-09 — Phase 17 plan 01 complete (QA Mode type contract established)
 
 ## Accumulated Context
 
@@ -51,6 +51,12 @@ Last activity: 2026-03-09 — Phase 16 plan 03 complete (filter reactivity gap c
 
 - A1 phrase linguistic quality: needs native speaker review (Italian and Spanish) before shipping to learners
 
+### Decisions (Phase 17)
+
+- **17-01**: Bilingual fields inline on QACard (questionEs, correctEs, foilsEs) not nested object — simpler access pattern for rendering components
+- **17-01**: Scenario.level field added in Phase 17 so content authors can tag level at creation time (not deferred to Phase 18)
+- **17-01**: Fixed tuple [string, string, string] for QACard.foils and QACard.foilsEs enforces exactly 3 foils at compile time
+
 ### Decisions (Phase 16)
 
 - **16-01**: Compute due count inline in DeckGrid render (no useState) — reactive hooks propagate badge changes automatically
@@ -68,6 +74,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-09T13:11:14.775Z
-Stopped at: Phase 17 context gathered
-Resume file: .planning/phases/17-qa-data/17-CONTEXT.md
+Last session: 2026-03-09T23:03:19.000Z
+Stopped at: Completed 17-01-PLAN.md
+Resume file: None

@@ -11,8 +11,8 @@
 
 ### Q&A Data
 
-- [ ] **QADATA-01**: User can access 7 Italian Q&A scenarios with target-language questions and 4-option responses
-- [ ] **QADATA-02**: User can access 7 Spanish Q&A scenarios with target-language questions and 4-option responses (parallel to Italian)
+- [x] **QADATA-01**: User can access 7 Italian Q&A scenarios with target-language questions and 4-option responses
+- [x] **QADATA-02**: User can access 7 Spanish Q&A scenarios with target-language questions and 4-option responses (parallel to Italian)
 
 ### Q&A Flow
 
@@ -21,7 +21,7 @@
 - [ ] **QAFLOW-03**: User sees a target-language question with an audio button on the card front
 - [ ] **QAFLOW-04**: User selects the correct response from 4 target-language options — no native language shown
 - [ ] **QAFLOW-05**: User can speak an answer via voice recognition in Q&A sessions
-- [ ] **QAFLOW-06**: User's Q&A progress persists via Leitner SRS with prefixed localStorage keys (`qa_{scenarioId}_{cardId}`)
+- [x] **QAFLOW-06**: User's Q&A progress persists via Leitner SRS with prefixed localStorage keys (`qa_{scenarioId}_{cardId}`)
 - [ ] **QAFLOW-07**: User sees correct/incorrect feedback overlay consistent with Rephrase mode
 - [ ] **QAFLOW-08**: User sees scenario-complete and all-done end screens after finishing a session
 
@@ -58,9 +58,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | BUGFIX-01 | Phase 16 | Complete |
 | BUGFIX-02 | Phase 16 | Complete |
-| QADATA-01 | Phase 17 | Pending |
-| QADATA-02 | Phase 17 | Pending |
-| QAFLOW-06 | Phase 17 | Pending |
+| QADATA-01 | Phase 17 | Complete |
+| QADATA-02 | Phase 17 | Complete |
+| QAFLOW-06 | Phase 17 | Complete |
 | ACTPICK-01 | Phase 18 | Pending |
 | QAFLOW-01 | Phase 18 | Pending |
 | QAFLOW-02 | Phase 18 | Pending |
