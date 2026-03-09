@@ -38,3 +38,34 @@ export interface Progress {
 }
 
 export type ProgressRecord = Record<string, Progress>;
+
+// Q&A Mode types — added Phase 17
+
+export type ScenarioId =
+  | 'caffe'
+  | 'albergo'
+  | 'ristorante'
+  | 'strada'
+  | 'presentazioni'
+  | 'negozio'
+  | 'treno';
+
+export interface QACard {
+  id: string;                        // e.g. "caffe_01"
+  question: string;                  // Italian question
+  correct: string;                   // Italian correct response
+  foils: [string, string, string];   // Italian foils, fixed tuple
+  questionEs: string;                // Spanish question (parallel translation)
+  correctEs: string;                 // Spanish correct response (parallel translation)
+  foilsEs: [string, string, string]; // Spanish foils, fixed tuple (parallel translations)
+  level: Level;
+}
+
+export interface Scenario {
+  id: ScenarioId;
+  icon: string;      // emoji
+  titleIt: string;   // e.g. "Al Caffè"
+  titleEs: string;   // e.g. "En el Café"
+  level: Level;      // scenario-level tag for Phase 18 filter
+  cards: QACard[];
+}
