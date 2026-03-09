@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Q&A Mode
 status: completed
-stopped_at: Completed 17-02-PLAN.md
-last_updated: "2026-03-09T23:20:00.000Z"
-last_activity: 2026-03-09 — Phase 17 plan 02 complete (7 bilingual Q&A scenario files authored, 56 cards each language)
+stopped_at: Completed 17-03-PLAN.md
+last_updated: "2026-03-09T23:12:00.000Z"
+last_activity: 2026-03-09 — Phase 17 plan 03 complete (useQASRS hook + 12 Vitest tests)
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # State
@@ -24,13 +24,13 @@ See: .planning/PROJECT.md (updated 2026-03-08 after v1.3 milestone start)
 
 ## Current Position
 
-Phase: 17 — Q&A Data (in progress)
-Plan: 02 of 03 complete
-Status: Phase 17 plan 02 complete (7 bilingual Q&A scenario files + index barrel in src/data/qa/); Plan 03 ready
+Phase: 17 — Q&A Data (complete)
+Plan: 03 of 03 complete
+Status: Phase 17 complete — all 3 plans done (types, bilingual card data, useQASRS hook + tests)
 
-[████████░░] 83% — 5/6 plans complete overall
+[██████████] 100% — 6/6 plans complete overall
 
-Last activity: 2026-03-09 — Phase 17 plan 02 complete (7 bilingual Q&A scenario files authored, 56 cards each language)
+Last activity: 2026-03-09 — Phase 17 plan 03 complete (useQASRS hook with 12 Vitest tests; Q&A SRS layer ready for Phase 18)
 
 ## Accumulated Context
 
@@ -59,6 +59,9 @@ Last activity: 2026-03-09 — Phase 17 plan 02 complete (7 bilingual Q&A scenari
 - **17-02**: Foil authoring strategy: foils are responses from other scenario contexts (wrong setting, not wrong grammar) — natural A1/A2 distractors
 - **17-02**: A1-before-A2 canonical order in scenarios[] array in index.ts — Phase 18 browser inherits display order
 - **17-02**: index.ts exports both named const exports and scenarios array — named exports enable selective scenario import in Phase 18/19
+- **17-03**: Hook signature includes scenarioId at hook call (not just updateCard) — useMemo for dueCards needs it to build Q&A keys at filter time
+- **17-03**: Q&A key format `qa_{scenarioId}_{cardId}` coexists in shared {lang}-progress record — 'qa_' prefix is the namespace separator
+- **17-03**: updateCard(cardId, isCorrect) — scenarioId captured from hook closure, not passed per-call, for clean ergonomics at Phase 18 call sites
 
 ### Decisions (Phase 16)
 
@@ -77,6 +80,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-09T23:20:00.000Z
-Stopped at: Completed 17-02-PLAN.md
+Last session: 2026-03-09T23:12:00.000Z
+Stopped at: Completed 17-03-PLAN.md
 Resume file: None
