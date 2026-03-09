@@ -1,156 +1,80 @@
 # Requirements: PuroLingua
 
-**Defined:** 2026-03-04
+**Defined:** 2026-03-08
 **Core Value:** Users can study real conversational vocabulary offline, in any browser, with zero friction — no sign-up, no app install, just open and learn.
 
-## v1.2 Requirements
+## v1.3 Requirements
 
-Port all v1.1 functionality to Next.js + TypeScript + Tailwind. Feature parity only. Delivers proper URL routing as new user-facing API surface.
+### Activity Picker
 
-### Infrastructure
+- [ ] **ACTPICK-01**: User can choose between Rephrase and Q&A activities after selecting a language
 
-- [x] **INFRA-01**: Feature branch `feat/nextjs-port` initialized with Next.js 15, TypeScript, Tailwind, and next-intl
-- [x] **INFRA-02**: Static export configured (`output: 'export'`) and build verified
+### Q&A Data
 
-### Data & Types
+- [ ] **QADATA-01**: User can access 7 Italian Q&A scenarios with target-language questions and 4-option responses
+- [ ] **QADATA-02**: User can access 7 Spanish Q&A scenarios with target-language questions and 4-option responses (parallel to Italian)
 
-- [x] **DATA-01**: Core TypeScript types defined (Card, Deck, Progress, Lang, DeckId, Level)
-- [x] **DATA-02**: Italian card arrays (all 8 decks) ported to typed TypeScript modules
-- [x] **DATA-03**: Spanish card arrays (all 8 decks) ported to typed TypeScript modules
-- [x] **DATA-04**: Deck metadata module created (id, i18n key per deck)
+### Q&A Flow
 
-### SRS Logic
+- [ ] **QAFLOW-01**: User can browse Q&A scenarios in a grid with icon, title, and live due-count badge
+- [ ] **QAFLOW-02**: User can filter Q&A scenarios by level (A1/A2 chips, same FLTR-06 guard)
+- [ ] **QAFLOW-03**: User sees a target-language question with an audio button on the card front
+- [ ] **QAFLOW-04**: User selects the correct response from 4 target-language options — no native language shown
+- [ ] **QAFLOW-05**: User can speak an answer via voice recognition in Q&A sessions
+- [ ] **QAFLOW-06**: User's Q&A progress persists via Leitner SRS with prefixed localStorage keys (`qa_{scenarioId}_{cardId}`)
+- [ ] **QAFLOW-07**: User sees correct/incorrect feedback overlay consistent with Rephrase mode
+- [ ] **QAFLOW-08**: User sees scenario-complete and all-done end screens after finishing a session
 
-- [x] **SRS-01**: Leitner box math in `lib/srs.ts` as pure TypeScript functions
-- [x] **SRS-02**: Distractor generation in `lib/generateChoices.ts`
-- [x] **SRS-03**: `useSRS(lang)` hook with localStorage persistence, same key format as v1.1
-- [x] **SRS-04**: `useLevelFilter()` hook with localStorage persistence and FLTR-06 guard (cannot deselect all)
+### Bug Fixes
 
-### Routing
+- [ ] **BUGFIX-01**: User sees live due-count badges on Rephrase deck tiles (not static card count)
+- [ ] **BUGFIX-02**: User is not shown all-done screen prematurely in A1-only mode
 
-- [x] **ROUTE-01**: Home page (`/`) with language picker
-- [x] **ROUTE-02**: Deck grid page (`/[lang]`) with deck tiles and due-count badges
-- [x] **ROUTE-03**: Study session page (`/[lang]/[deck]`) with full quiz flow
-- [x] **ROUTE-04**: `generateStaticParams` covers all lang + deck combinations
+## Future Requirements
 
-### Components
+### Tech Debt
 
-- [x] **UI-01**: LevelFilterChips on deck grid, hidden during active study session
-- [x] **UI-02**: FlashCard with front/back reveal
-- [x] **UI-03**: ChoiceButton for multiple-choice quiz
-- [x] **UI-04**: AudioButton using Web Speech API TTS
+- **DEBT-01**: Extract duplicated `speak()` helper from AudioButton.tsx and StudySession.tsx into `src/lib/speak.ts`
+- **DEBT-02**: Remove unused `src/i18n/navigation.ts` locale helpers
 
-### i18n
+### Content Quality
 
-- [x] **I18N-01**: next-intl message files for Italian and Spanish UI strings
-- [x] **I18N-02**: All UI strings (deck names, button labels, chip labels) in message files
-
-### Styling
-
-- [x] **STYLE-01**: Tailwind CSS applied throughout with visual parity to v1.1
-
-### Tests
-
-- [x] **TEST-01**: Vitest + React Testing Library configured
-- [x] **TEST-02**: `lib/srs.ts` unit tested
-- [x] **TEST-03**: `lib/generateChoices.ts` unit tested
-- [x] **TEST-04**: `useSRS` and `useLevelFilter` tested via `renderHook`
-
-### Voice Recognition
-
-- [x] **VOICE-01**: `useVoiceRecognition` returns `isSupported: true` when SpeechRecognition is present on window
-- [x] **VOICE-02**: `useVoiceRecognition` returns `isSupported: false` when neither SpeechRecognition nor webkitSpeechRecognition is present
-- [x] **VOICE-03**: `isListening` becomes `true` after `startListening` is called and recognition fires `onstart`
-- [x] **VOICE-04**: `isListening` resets to `false` when recognition fires `onend`
-- [x] **VOICE-05**: `onResult` callback fires with the transcript string when recognition returns a result
-- [x] **VOICE-06**: `onError` callback fires and `isListening` resets when recognition fires `onerror`
-- [x] **VOICE-07**: Normalization (lowercase + trim) correctly matches transcript to card front or choice text
-- [x] **VOICE-08**: `MicButton` renders with `listening` visual state when `state='listening'`
-- [x] **VOICE-09**: `MicButton` renders with `error` visual state when `state='error'`
-- [x] **VOICE-10**: Mic button is absent from DOM when `isSupported` is `false`
-- [x] **VOICE-11**: Matching transcript on card front flips the card (sets `flipped: true`)
-- [x] **VOICE-12**: Non-matching transcript on card front shows error flash on mic button then resets to idle
-- [x] **VOICE-13**: Matching transcript on card back calls `handleChoiceClick(matchedIndex)` with the correct choice index
-- [x] **VOICE-14**: Non-matching transcript on card back shows error flash on mic button then resets to idle
-
-## Deferred (v2.0+)
-
-- A1 phrase linguistic quality verified by native speaker (Italian and Spanish)
-- Level filter chips hidden during active study session (FLTR-10) — post-port
-- B1/B2 content tiers
-
-### UX Polish
-
-- [x] **UX-01**: Speaker icon on each choice button triggers Web Speech API playback without selecting the choice
-- [x] **UX-02**: Feedback message appears below quiz options after a button answer (correct → green, incorrect → red) and clears on next card
-- [x] **UX-03**: Feedback message appears after a voice answer (heard → blue, not recognized → gray) and clears on next card
-- [x] **UX-04**: Deck-complete screen shown when all due cards in current deck are answered, with "Back to decks" and "Study again" actions
-- [x] **UX-05**: All-done screen shown when no due cards remain across all decks, with "Back to decks" and "Study again" actions
+- **CONTENT-01**: A1 phrase linguistic quality reviewed by native speaker (Italian and Spanish)
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| New features | Strict feature parity — v1.2 is a tech migration only |
-| SSR / API routes | Static export only for now |
-| React Context / Zustand | State surface small enough for focused hooks |
-| Playwright E2E tests | Already removed in quick task 1 |
-| User accounts / backend | Core value is zero-friction, localStorage-first |
+| Mixed Rephrase + Q&A decks | Activity types stay fully separate |
+| English context hints in Q&A | No native language once activity begins — by design |
+| B1/B2 scenario content | Deferred to v2 |
+| New Rephrase deck content | v1.3 focused on Q&A mode addition |
 
 ## Traceability
 
+Which phases cover which requirements. Updated during roadmap creation.
+
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 9 | Complete |
-| INFRA-02 | Phase 9 | Complete |
-| DATA-01 | Phase 9 | Complete |
-| DATA-02 | Phase 10 | Complete |
-| DATA-03 | Phase 10 | Complete |
-| DATA-04 | Phase 10 | Complete |
-| SRS-01 | Phase 11 | Complete |
-| SRS-02 | Phase 11 | Complete |
-| SRS-03 | Phase 11 | Complete |
-| SRS-04 | Phase 11 | Complete |
-| ROUTE-01 | Phase 12 | Complete |
-| ROUTE-02 | Phase 12 | Complete |
-| ROUTE-03 | Phase 12 | Complete |
-| ROUTE-04 | Phase 12 | Complete |
-| UI-01 | Phase 13 | Complete |
-| UI-02 | Phase 13 | Complete |
-| UI-03 | Phase 13 | Complete |
-| UI-04 | Phase 13 | Complete |
-| I18N-01 | Phase 13 | Complete |
-| I18N-02 | Phase 13 | Complete |
-| STYLE-01 | Phase 13 | Complete |
-| TEST-01 | Phase 11 | Complete |
-| TEST-02 | Phase 11 | Complete |
-| TEST-03 | Phase 11 | Complete |
-| TEST-04 | Phase 11 | Complete |
-| VOICE-01 | Phase 14 | Complete |
-| VOICE-02 | Phase 14 | Complete |
-| VOICE-03 | Phase 14 | Complete |
-| VOICE-04 | Phase 14 | Complete |
-| VOICE-05 | Phase 14 | Complete |
-| VOICE-06 | Phase 14 | Complete |
-| VOICE-07 | Phase 14 | Complete |
-| VOICE-08 | Phase 14 | Complete |
-| VOICE-09 | Phase 14 | Complete |
-| VOICE-10 | Phase 14 | Complete |
-| VOICE-11 | Phase 14 | Complete |
-| VOICE-12 | Phase 14 | Complete |
-| VOICE-13 | Phase 14 | Complete |
-| VOICE-14 | Phase 14 | Complete |
-| UX-01 | Phase 15 | Complete |
-| UX-02 | Phase 15 | Complete |
-| UX-03 | Phase 15 | Complete |
-| UX-04 | Phase 15 | Complete |
-| UX-05 | Phase 15 | Complete |
+| ACTPICK-01 | — | Pending |
+| QADATA-01 | — | Pending |
+| QADATA-02 | — | Pending |
+| QAFLOW-01 | — | Pending |
+| QAFLOW-02 | — | Pending |
+| QAFLOW-03 | — | Pending |
+| QAFLOW-04 | — | Pending |
+| QAFLOW-05 | — | Pending |
+| QAFLOW-06 | — | Pending |
+| QAFLOW-07 | — | Pending |
+| QAFLOW-08 | — | Pending |
+| BUGFIX-01 | — | Pending |
+| BUGFIX-02 | — | Pending |
 
 **Coverage:**
-- v1.2 requirements: 44 total
-- Mapped to phases: 44
-- Unmapped: 0
+- v1.3 requirements: 13 total
+- Mapped to phases: 0
+- Unmapped: 13 ⚠️
 
 ---
-*Requirements defined: 2026-03-04*
-*Last updated: 2026-03-08 — Phase 15 UX-01 through UX-05 requirements added*
+*Requirements defined: 2026-03-08*
+*Last updated: 2026-03-08 after initial definition*
