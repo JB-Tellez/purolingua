@@ -1,5 +1,16 @@
 # PuroLingua
 
+## Current Milestone: v1.3 Q&A Mode
+
+**Goal:** Add a Q&A conversation activity where users answer target-language questions by selecting from 4 target-language responses, alongside the existing Rephrase flashcard mode.
+
+**Target features:**
+- Activity Picker screen (Rephrase / Q&A) between language picker and content
+- Q&A scenario browser (`/[lang]/qa`) with 7 scenarios per language
+- QACard data + useQASRS hook (same localStorage, prefixed keys)
+- QAStudySession — target-language-only, same SRS + level filter
+- Fix deferred v1.2 gaps: ROUTE-02 (live due counts) and UX-05 (allDecksEmpty defect)
+
 ## What This Is
 
 PuroLingua is a browser-based language learning app for travelers and conversational learners. It uses flashcard decks and a Leitner spaced repetition system to build practical vocabulary across topic categories like restaurants, travel, and daily life — with CEFR-level filtering so beginners can start with A1 content before advancing. The v1.1 vanilla JS app lives at purolingua.com; the v1.2 Next.js port (`feat/nextjs-port`) is a TypeScript + React rebuild with proper URL routing, deployable as a static export to a VPS.
@@ -48,6 +59,11 @@ Users can study real conversational vocabulary offline, in any browser, with zer
 
 <!-- Requirements for the next milestone. -->
 
+- [ ] Activity Picker screen between language picker and deck/scenario content
+- [ ] Q&A scenario browser at `/[lang]/qa` with 7 scenarios per language
+- [ ] QACard + Scenario types and Italian/Spanish card data
+- [ ] useQASRS hook (Leitner SRS, level filter, prefixed localStorage keys)
+- [ ] QAStudySession component (target-language-only, audio, voice, feedback)
 - [ ] Live due-count badges on deck grid tiles (ROUTE-02 gap from v1.2)
 - [ ] Fix `allDecksEmpty` check in A1-only mode (UX-05 gap from v1.2)
 
@@ -108,4 +124,4 @@ Tech stacks:
 | Proceed with ROUTE-02 + UX-05 gaps | Both are non-breaking; deferred to v1.3 | ⚠️ Revisit |
 
 ---
-*Last updated: 2026-03-09 after v1.2 milestone*
+*Last updated: 2026-03-08 after v1.3 milestone start*
