@@ -48,7 +48,7 @@ Full archive: `.planning/milestones/v1.2-ROADMAP.md`
 
 ### v1.3 Q&A Mode
 
-- [ ] **Phase 16: Bug Fixes** — Fix the two deferred v1.2 regressions before adding new features
+- [x] **Phase 16: Bug Fixes** — Fix the two deferred v1.2 regressions before adding new features (completed 2026-03-09)
 - [ ] **Phase 17: Q&A Data** — Author all typed QACard/Scenario data and the useQASRS hook
 - [ ] **Phase 18: Activity Picker and Scenario Browser** — Wire the navigation shell between language, activity, and scenarios
 - [ ] **Phase 19: Q&A Study Session** — Build the full target-language Q&A session with audio, voice, and end screens
@@ -119,7 +119,7 @@ Plans:
 | 13. UI, i18n, and Styling | v1.2 | 3/3 | Complete | 2026-03-06 |
 | 14. Voice Recognition | v1.2 | 3/3 | Complete | 2026-03-07 |
 | 15. Study Session UX Polish | v1.2 | 3/3 | Complete | 2026-03-08 |
-| 16. Bug Fixes | 1/2 | In Progress|  | — |
+| 16. Bug Fixes | 2/2 | Complete   | 2026-03-09 | — |
 | 17. Q&A Data | v1.3 | 0/? | Not started | — |
 | 18. Activity Picker and Scenario Browser | v1.3 | 0/? | Not started | — |
 | 19. Q&A Study Session | v1.3 | 0/? | Not started | — |
