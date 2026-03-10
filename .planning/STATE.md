@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Q&A Mode
 status: completed
-stopped_at: Completed 19-q-a-study-session-02-PLAN.md
-last_updated: "2026-03-10T06:40:00Z"
-last_activity: 2026-03-10 — Phase 19 plan 02 complete (QAStudySession component + 11 tests pass, 97 total)
+stopped_at: Completed 19-q-a-study-session-03-PLAN.md
+last_updated: "2026-03-10T22:40:54Z"
+last_activity: 2026-03-10 — Phase 19 plan 03 complete (QA session page wired end-to-end, human verified, v1.3 milestone complete)
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 12
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # State
@@ -24,13 +24,13 @@ See: .planning/PROJECT.md (updated 2026-03-08 after v1.3 milestone start)
 
 ## Current Position
 
-Phase: 19 — Q&A Study Session (in progress)
-Plan: 02 of 03 complete
-Status: Phase 19 plan 02 done — QAStudySession component built (388 lines), 11 tests all pass, 97 total tests pass
+Phase: 19 — Q&A Study Session (complete)
+Plan: 03 of 03 complete
+Status: Phase 19 plan 03 done — QA session page wired end-to-end, human verified. v1.3 Q&A Mode milestone complete.
 
-[█████████░] 92% — 11/12 plans complete overall
+[██████████] 100% — 12/12 plans complete overall
 
-Last activity: 2026-03-10 — Phase 19 plan 02 complete (QAStudySession component + 11 tests pass, 97 total)
+Last activity: 2026-03-10 — Phase 19 plan 03 complete (QA session page wired end-to-end, human verified, v1.3 milestone complete)
 
 ## Accumulated Context
 
@@ -53,6 +53,9 @@ Last activity: 2026-03-10 — Phase 19 plan 02 complete (QAStudySession componen
 
 ### Decisions (Phase 19)
 
+- **19-03**: QAStudySessionNoSSR wrapper uses next/dynamic ssr:false to bypass hydration for localStorage and Web Speech API dependencies
+- **19-03**: generateStaticParams added to qa/[scenario]/page.tsx alongside layout.tsx — Next.js static export requires it at page level too
+- **19-03**: Scenario IDs renamed to English for language-neutral URLs — same slug works for /it/ and /es/ routes
 - **19-02**: bootstrapHasProgress reads localStorage directly at mount to break useLevelFilter/useQASRS circular dependency
 - **19-02**: isScenarioHasDue is a local helper iterating allScenarios with raw progress — avoids calling useQASRS 7 times
 - **19-02**: Voice non-match resets feedbackState to null after 800ms (plus micState) — per plan spec
@@ -104,6 +107,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-10T06:40:00Z
-Stopped at: Completed 19-q-a-study-session-02-PLAN.md
-Resume file: .planning/phases/19-q-a-study-session/19-03-PLAN.md
+Last session: 2026-03-10T22:40:54Z
+Stopped at: Completed 19-q-a-study-session-03-PLAN.md
+Resume file: None — v1.3 milestone complete
