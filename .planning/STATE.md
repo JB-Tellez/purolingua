@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Q&A Mode
 status: completed
-stopped_at: Phase 19 context gathered
-last_updated: "2026-03-10T06:20:51.980Z"
-last_activity: 2026-03-09 — Phase 18 plan 03 complete (ScenarioGrid with live due badges, /[lang]/qa page with LevelFilterChips, qa/layout.tsx generateStaticParams, Phase 19 placeholder route)
+stopped_at: "Completed 19-q-a-study-session-01-PLAN.md"
+last_updated: "2026-03-10T06:37:00Z"
+last_activity: 2026-03-10 — Phase 19 plan 01 complete (Q&A i18n keys in it.json/es.json, QAStudySession test scaffold with 11 todo stubs)
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 12
+  completed_plans: 10
 ---
 
 # State
@@ -24,13 +24,13 @@ See: .planning/PROJECT.md (updated 2026-03-08 after v1.3 milestone start)
 
 ## Current Position
 
-Phase: 18 — Activity Picker and Scenario Browser (complete)
-Plan: 03 of 03 complete
-Status: Phase 18 plan 03 done — ScenarioGrid component, QA browser page, layout, placeholder session route, 86 tests pass
+Phase: 19 — Q&A Study Session (in progress)
+Plan: 01 of 03 complete
+Status: Phase 19 plan 01 done — Q&A i18n keys added to both language files, QAStudySession test scaffold with 11 todo stubs, 86 tests pass
 
-[██████████] 100% — 9/9 plans complete overall
+[████████░░] 83% — 10/12 plans complete overall
 
-Last activity: 2026-03-09 — Phase 18 plan 03 complete (ScenarioGrid with live due badges, /[lang]/qa page with LevelFilterChips, qa/layout.tsx generateStaticParams, Phase 19 placeholder route)
+Last activity: 2026-03-10 — Phase 19 plan 01 complete (Q&A i18n keys in it.json/es.json, QAStudySession test scaffold with 11 todo stubs)
 
 ## Accumulated Context
 
@@ -50,6 +50,12 @@ Last activity: 2026-03-09 — Phase 18 plan 03 complete (ScenarioGrid with live 
 ### Pending Todos
 
 - A1 phrase linguistic quality: needs native speaker review (Italian and Spanish) before shipping to learners
+
+### Decisions (Phase 19)
+
+- **19-01**: Q&A keys appended after studyAgain in study namespace — no reordering of existing keys
+- **19-01**: Test scaffold uses it.todo() (not it.skip()) — pending tests surface clearly in vitest output, signaling work remaining for Plan 02
+- **19-01**: vi.fn() stubs for useQASRS and useVoiceRecognition left unconfigured — Plan 02 configures return values per test
 
 ### Decisions (Phase 18)
 
@@ -94,6 +100,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-10T06:20:51.976Z
-Stopped at: Phase 19 context gathered
-Resume file: .planning/phases/19-q-a-study-session/19-CONTEXT.md
+Last session: 2026-03-10T06:37:00Z
+Stopped at: Completed 19-q-a-study-session-01-PLAN.md
+Resume file: .planning/phases/19-q-a-study-session/19-02-PLAN.md

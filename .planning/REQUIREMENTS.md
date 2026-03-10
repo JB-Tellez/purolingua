@@ -18,12 +18,12 @@
 
 - [x] **QAFLOW-01**: User can browse Q&A scenarios in a grid with icon, title, and live due-count badge
 - [x] **QAFLOW-02**: User can filter Q&A scenarios by level (A1/A2 chips, same FLTR-06 guard)
-- [ ] **QAFLOW-03**: User sees a target-language question with an audio button on the card front
-- [ ] **QAFLOW-04**: User selects the correct response from 4 target-language options — no native language shown
+- [x] **QAFLOW-03**: User sees a target-language question with an audio button on the card front
+- [x] **QAFLOW-04**: User selects the correct response from 4 target-language options — no native language shown
 - [ ] **QAFLOW-05**: User can speak an answer via voice recognition in Q&A sessions
 - [x] **QAFLOW-06**: User's Q&A progress persists via Leitner SRS with prefixed localStorage keys (`qa_{scenarioId}_{cardId}`)
-- [ ] **QAFLOW-07**: User sees correct/incorrect feedback overlay consistent with Rephrase mode
-- [ ] **QAFLOW-08**: User sees scenario-complete and all-done end screens after finishing a session
+- [x] **QAFLOW-07**: User sees correct/incorrect feedback overlay consistent with Rephrase mode
+- [x] **QAFLOW-08**: User sees scenario-complete and all-done end screens after finishing a session
 
 ### Bug Fixes
 
@@ -64,11 +64,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ACTPICK-01 | Phase 18 | Complete |
 | QAFLOW-01 | Phase 18 | Complete |
 | QAFLOW-02 | Phase 18 | Complete |
-| QAFLOW-03 | Phase 19 | Pending |
-| QAFLOW-04 | Phase 19 | Pending |
+| QAFLOW-03 | Phase 19 | Complete |
+| QAFLOW-04 | Phase 19 | Complete |
 | QAFLOW-05 | Phase 19 | Pending |
-| QAFLOW-07 | Phase 19 | Pending |
-| QAFLOW-08 | Phase 19 | Pending |
+| QAFLOW-07 | Phase 19 | Complete |
+| QAFLOW-08 | Phase 19 | Complete |
 
 **Coverage:**
 - v1.3 requirements: 13 total

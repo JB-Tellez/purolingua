@@ -135,4 +135,4 @@ Plans:
 | 16. Bug Fixes | 3/3 | Complete    | 2026-03-09 | — |
 | 17. Q&A Data | 3/3 | Complete    | 2026-03-09 | — |
 | 18. Activity Picker and Scenario Browser | 3/3 | Complete    | 2026-03-10 | — |
-| 19. Q&A Study Session | v1.3 | 0/3 | Not started | — |
+| 19. Q&A Study Session | 1/3 | In Progress|  | — |
