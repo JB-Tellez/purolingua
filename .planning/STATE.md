@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Q&A Mode
 status: verifying
-stopped_at: Completed 19-q-a-study-session-03-PLAN.md
-last_updated: "2026-03-10T22:47:07.752Z"
+stopped_at: Completed 19-q-a-study-session-04-PLAN.md
+last_updated: "2026-03-10T23:15:04.958Z"
 last_activity: 2026-03-10 — Phase 19 plan 03 complete (QA session page wired end-to-end, human verified, v1.3 milestone complete)
 progress:
   total_phases: 4
   completed_phases: 4
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 13
+  completed_plans: 13
 ---
 
 # State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-08 after v1.3 milestone start)
 ## Current Position
 
 Phase: 19 — Q&A Study Session (complete)
-Plan: 03 of 03 complete
-Status: Phase 19 plan 03 done — QA session page wired end-to-end, human verified. v1.3 Q&A Mode milestone complete.
+Plan: 04 of 04 complete (gap closure)
+Status: Phase 19 plan 04 done — wrong-answer auto-advance bug fixed; UAT Test 3 now passes. v1.3 Q&A Mode milestone complete.
 
-[██████████] 100% — 12/12 plans complete overall
+[██████████] 100% — 13/13 plans complete overall
 
-Last activity: 2026-03-10 — Phase 19 plan 03 complete (QA session page wired end-to-end, human verified, v1.3 milestone complete)
+Last activity: 2026-03-10 — Phase 19 plan 04 complete (wrong-answer auto-advance bug fixed, 98/98 tests pass)
 
 ## Accumulated Context
 
@@ -53,6 +53,8 @@ Last activity: 2026-03-10 — Phase 19 plan 03 complete (QA session page wired e
 
 ### Decisions (Phase 19)
 
+- **19-04**: handleChoiceClick branches on isCorrect — correct fires handleAnswer(true) after 600ms; wrong resets selectedChoice/feedbackState after 800ms with no SRS update (mirrors voice non-match reset pattern)
+- **19-04**: Tests updated to find correct-answer button by textContent, not positional index — shuffle-safe assertion pattern
 - **19-03**: QAStudySessionNoSSR wrapper uses next/dynamic ssr:false to bypass hydration for localStorage and Web Speech API dependencies
 - **19-03**: generateStaticParams added to qa/[scenario]/page.tsx alongside layout.tsx — Next.js static export requires it at page level too
 - **19-03**: Scenario IDs renamed to English for language-neutral URLs — same slug works for /it/ and /es/ routes
@@ -107,6 +109,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-10T22:40:54Z
-Stopped at: Completed 19-q-a-study-session-03-PLAN.md
-Resume file: None — v1.3 milestone complete
+Last session: 2026-03-10T23:15:04.954Z
+Stopped at: Completed 19-q-a-study-session-04-PLAN.md
+Resume file: None
