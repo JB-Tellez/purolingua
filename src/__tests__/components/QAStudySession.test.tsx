@@ -240,11 +240,16 @@ describe('QAStudySession', () => {
     // Question text before click
     expect(screen.getByText('Che cosa prendi?')).toBeInTheDocument();
 
+    // Explicitly click the correct answer button (not choiceButtons[0] which may be a foil after shuffle)
     const choiceButtons = document.querySelectorAll('.quiz-btn');
-    const anyBtn = choiceButtons[0] as HTMLElement;
+    const correctBtn = Array.from(choiceButtons).find(
+      (btn) => btn.textContent?.includes('Un caffè, grazie.')
+    ) as HTMLElement;
+
+    expect(correctBtn).toBeTruthy();
 
     act(() => {
-      anyBtn.click();
+      correctBtn.click();
     });
 
     // Before timer: still on first card
@@ -257,6 +262,48 @@ describe('QAStudySession', () => {
 
     // Should now show second card's question
     expect(screen.getByText('Vorrebbe altro?')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
+
+  it('wrong answer does not auto-advance — buttons reset after 800ms', () => {
+    vi.useFakeTimers();
+    renderQAStudySession('it');
+
+    // First card question is shown
+    expect(screen.getByText('Che cosa prendi?')).toBeInTheDocument();
+
+    // Click a foil button
+    const choiceButtons = document.querySelectorAll('.quiz-btn');
+    const foilBtn = Array.from(choiceButtons).find(
+      (btn) => btn.textContent?.includes('Il conto, per favore.')
+    ) as HTMLElement;
+
+    expect(foilBtn).toBeTruthy();
+
+    act(() => {
+      foilBtn.click();
+    });
+
+    // After 599ms: still on the first card (no advance)
+    act(() => {
+      vi.advanceTimersByTime(599);
+    });
+    expect(screen.getByText('Che cosa prendi?')).toBeInTheDocument();
+
+    // After 800ms total (another 201ms): buttons should be interactive again (selectedChoice reset)
+    act(() => {
+      vi.advanceTimersByTime(201);
+    });
+
+    // Buttons are no longer disabled — selectedChoice was reset to null
+    const buttonsAfterReset = document.querySelectorAll('.quiz-btn');
+    buttonsAfterReset.forEach((btn) => {
+      expect(btn).not.toBeDisabled();
+    });
+
+    // updateCard was NOT called — wrong answer does not trigger SRS update
+    expect(mockUpdateCard).not.toHaveBeenCalled();
 
     vi.useRealTimers();
   });
@@ -353,10 +400,14 @@ describe('QAStudySession', () => {
 
     renderQAStudySession('it');
 
-    // Click any choice to answer the only card
+    // Click the correct answer to trigger handleAnswer (foil clicks no longer advance)
     const choiceButtons = document.querySelectorAll('.quiz-btn');
+    const correctBtn = Array.from(choiceButtons).find(
+      (btn) => btn.textContent?.includes('Un caffè, grazie.')
+    ) as HTMLElement;
+    expect(correctBtn).toBeTruthy();
     act(() => {
-      (choiceButtons[0] as HTMLElement).click();
+      correctBtn.click();
     });
 
     // Advance timer to trigger handleAnswer
@@ -393,10 +444,14 @@ describe('QAStudySession', () => {
 
     renderQAStudySession('it');
 
-    // Click a choice to answer the only due card
+    // Click the correct answer to trigger handleAnswer (foil clicks no longer advance)
     const choiceButtons = document.querySelectorAll('.quiz-btn');
+    const correctBtn = Array.from(choiceButtons).find(
+      (btn) => btn.textContent?.includes('Un caffè, grazie.')
+    ) as HTMLElement;
+    expect(correctBtn).toBeTruthy();
     act(() => {
-      (choiceButtons[0] as HTMLElement).click();
+      correctBtn.click();
     });
 
     act(() => {
@@ -446,10 +501,14 @@ describe('QAStudySession', () => {
 
     renderQAStudySession('it');
 
-    // Answer the only card
+    // Answer the only card by clicking the correct answer (foil clicks no longer advance)
     const choiceButtons = document.querySelectorAll('.quiz-btn');
+    const correctBtn = Array.from(choiceButtons).find(
+      (btn) => btn.textContent?.includes('Un caffè, grazie.')
+    ) as HTMLElement;
+    expect(correctBtn).toBeTruthy();
     act(() => {
-      (choiceButtons[0] as HTMLElement).click();
+      correctBtn.click();
     });
     act(() => {
       vi.advanceTimersByTime(600);

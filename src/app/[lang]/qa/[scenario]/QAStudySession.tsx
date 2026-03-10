@@ -180,7 +180,15 @@ export default function QAStudySession({ lang, scenario }: Props) {
     const isCorrect = choices[choiceIndex].isCorrect;
     setSelectedChoice(choiceIndex);
     setFeedbackState(isCorrect ? 'correct' : 'incorrect');
-    setTimeout(() => handleAnswer(isCorrect), 600);
+    if (isCorrect) {
+      setTimeout(() => handleAnswer(true), 600);
+    } else {
+      // Wrong answer — show red/green feedback, then reset so user can retry
+      setTimeout(() => {
+        setSelectedChoice(null);
+        setFeedbackState(null);
+      }, 800);
+    }
   }
 
   function handleMicPress() {
