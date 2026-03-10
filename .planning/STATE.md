@@ -4,8 +4,8 @@ milestone: v1.3
 milestone_name: Q&A Mode
 status: completed
 stopped_at: Completed 18-activity-picker-and-scenario-browser/18-03-PLAN.md
-last_updated: "2026-03-10T03:58:43.716Z"
-last_activity: 2026-03-09 — Phase 18 plan 02 complete (ActivityPicker built, /[lang]/page.tsx updated, DeckGrid.tsx extracted, .activity-grid CSS, 5 ActivityPicker tests passing)
+last_updated: "2026-03-10T04:02:42.219Z"
+last_activity: 2026-03-09 — Phase 18 plan 03 complete (ScenarioGrid with live due badges, /[lang]/qa page with LevelFilterChips, qa/layout.tsx generateStaticParams, Phase 19 placeholder route)
 progress:
   total_phases: 4
   completed_phases: 3
