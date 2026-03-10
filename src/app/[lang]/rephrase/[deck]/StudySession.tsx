@@ -62,7 +62,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
   const [feedbackState, setFeedbackState] = useState<'correct' | 'incorrect' | 'heard' | 'notRecognized' | null>(null);
 
-  const backLink = `/${lang}`;
+  const backLink = `/${lang}/rephrase`;
 
   // Filtered cards pool for choices — stable for the session
   const filteredCards = useMemo(

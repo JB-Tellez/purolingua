@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
-import StudySession from '@/app/[lang]/[deck]/StudySession';
+import StudySession from '@/app/[lang]/rephrase/[deck]/StudySession';
 import { mockRecognitionInstance, MockSpeechRecognition } from '../setup';
 import type { Card } from '@/types';
 

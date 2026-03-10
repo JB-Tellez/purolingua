@@ -1,4 +1,4 @@
-// src/app/[lang]/[deck]/page.tsx
+// src/app/[lang]/rephrase/[deck]/page.tsx
 // Server component: validates route params, loads deck cards, renders StudySession.
 // generateStaticParams covers all 16 lang×deck paths for static export.
 import { notFound } from 'next/navigation';
