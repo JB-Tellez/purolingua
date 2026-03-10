@@ -7,7 +7,7 @@
 
 ### Activity Picker
 
-- [ ] **ACTPICK-01**: User can choose between Rephrase and Q&A activities after selecting a language
+- [x] **ACTPICK-01**: User can choose between Rephrase and Q&A activities after selecting a language
 
 ### Q&A Data
 
@@ -16,8 +16,8 @@
 
 ### Q&A Flow
 
-- [ ] **QAFLOW-01**: User can browse Q&A scenarios in a grid with icon, title, and live due-count badge
-- [ ] **QAFLOW-02**: User can filter Q&A scenarios by level (A1/A2 chips, same FLTR-06 guard)
+- [x] **QAFLOW-01**: User can browse Q&A scenarios in a grid with icon, title, and live due-count badge
+- [x] **QAFLOW-02**: User can filter Q&A scenarios by level (A1/A2 chips, same FLTR-06 guard)
 - [ ] **QAFLOW-03**: User sees a target-language question with an audio button on the card front
 - [ ] **QAFLOW-04**: User selects the correct response from 4 target-language options — no native language shown
 - [ ] **QAFLOW-05**: User can speak an answer via voice recognition in Q&A sessions
@@ -61,9 +61,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QADATA-01 | Phase 17 | Complete |
 | QADATA-02 | Phase 17 | Complete |
 | QAFLOW-06 | Phase 17 | Complete |
-| ACTPICK-01 | Phase 18 | Pending |
-| QAFLOW-01 | Phase 18 | Pending |
-| QAFLOW-02 | Phase 18 | Pending |
+| ACTPICK-01 | Phase 18 | Complete |
+| QAFLOW-01 | Phase 18 | Complete |
+| QAFLOW-02 | Phase 18 | Complete |
 | QAFLOW-03 | Phase 19 | Pending |
 | QAFLOW-04 | Phase 19 | Pending |
 | QAFLOW-05 | Phase 19 | Pending |
