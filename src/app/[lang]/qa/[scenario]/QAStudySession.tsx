@@ -338,26 +338,26 @@ export default function QAStudySession({ lang, scenario }: Props) {
                   fontSize: '1.25rem',
                   fontWeight: 600,
                   textAlign: 'center',
-                  marginBottom: '1rem',
                   color: 'var(--color-text)',
                 }}
                 id="question-text"
               >
                 {questionText}
               </p>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  gap: '0.75rem',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                <AudioButton phrase={questionText} lang={lang} />
-                {isSupported && <MicButton state={micState} onPress={handleMicPress} />}
-              </div>
             </div>
           </div>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '0.75rem',
+            margin: '0.75rem 0',
+          }}
+        >
+          <AudioButton phrase={questionText} lang={lang} />
+          {isSupported && <MicButton state={micState} onPress={handleMicPress} />}
         </div>
 
         <div className="quiz-options">
