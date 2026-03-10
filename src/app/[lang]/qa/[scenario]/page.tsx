@@ -1,11 +1,17 @@
 // src/app/[lang]/qa/[scenario]/page.tsx
 // Server component: validates route params, loads scenario data, renders QAStudySession.
-// generateStaticParams is in qa/layout.tsx (cannot coexist with 'use client' in QAStudySession).
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
+import { routing } from '@/i18n/routing';
 import { scenarios } from '@/data/qa';
 import type { Lang } from '@/types';
 import QAStudySession from './QAStudySession';
+
+export function generateStaticParams() {
+  return routing.locales.flatMap((lang) =>
+    scenarios.map((s) => ({ lang, scenario: s.id }))
+  );
+}
 
 type Props = {
   params: Promise<{ lang: string; scenario: string }>;
