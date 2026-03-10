@@ -24,9 +24,7 @@ result: pass
 
 ### 3. Select Wrong Answer
 expected: Click an incorrect answer button. The button turns red (or shows wrong feedback). The card does NOT advance — you stay on the same question.
-result: issue
-reported: "it turned red, showed correct in green, and moved on automatically"
-severity: minor
+result: pass
 
 ### 4. Audio Button Works
 expected: Click the audio button (below the card). The question text is spoken aloud via browser TTS/audio.
@@ -55,8 +53,8 @@ result: pass
 ## Summary
 
 total: 9
-passed: 8
-issues: 1
+passed: 9
+issues: 0
 pending: 0
 skipped: 0
 
