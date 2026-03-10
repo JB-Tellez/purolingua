@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import LangPage from '@/app/[lang]/page';
+import DeckGrid from '@/components/DeckGrid';
 
 // ---------------------------------------------------------------------------
 // Module mocks
@@ -17,10 +17,6 @@ vi.mock('next/link', () => ({
   default: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
-}));
-
-vi.mock('next/navigation', () => ({
-  useParams: () => ({ lang: 'it' }),
 }));
 
 // Minimal deckMetadata: one Italian deck with 2 cards (cardCount=2)
@@ -93,7 +89,7 @@ describe('DeckGrid badge', () => {
     isDueImpl = (_id: string, i: number) => i === 0; // only index 0 is due
     activeLevelsImpl = ['A1'];
 
-    render(<LangPage />);
+    render(<DeckGrid lang="it" />);
 
     // Badge must show the number 1 (live count), not 2 (static)
     expect(screen.getByText('1')).toBeTruthy();
@@ -107,7 +103,7 @@ describe('DeckGrid badge', () => {
     isDueImpl = () => true; // all cards due
     activeLevelsImpl = ['A1'];
 
-    render(<LangPage />);
+    render(<DeckGrid lang="it" />);
 
     expect(screen.getByText('2')).toBeTruthy();
   });
@@ -119,7 +115,7 @@ describe('DeckGrid badge', () => {
     isDueImpl = () => false; // no cards due
     activeLevelsImpl = ['A1'];
 
-    render(<LangPage />);
+    render(<DeckGrid lang="it" />);
 
     expect(screen.getByText('✓')).toBeTruthy();
     expect(screen.queryByText('0')).toBeNull();
@@ -162,13 +158,13 @@ describe('DeckGrid badge', () => {
 
     // First render: ['A1'] only → 2 due cards (indices 0 and 1 are A1)
     activeLevelsImpl = ['A1'];
-    const { unmount } = render(<LangPage />);
+    const { unmount } = render(<DeckGrid lang="it" />);
     expect(screen.getByText('2')).toBeTruthy();
     unmount();
 
     // Second render: ['A1', 'A2'] → 3 due cards (all 3 levels included)
     activeLevelsImpl = ['A1', 'A2'];
-    render(<LangPage />);
+    render(<DeckGrid lang="it" />);
     // With the module-level DECK_MAP mock (2 A1 cards), this will still show 2
     // because vi.doMock doesn't apply to already-imported modules in the same test run.
     // This test documents that the badge IS reactive to activeLevels changes —
@@ -188,7 +184,7 @@ describe('DeckGrid badge', () => {
 
     // First render: A1 only → 2 due (2 A1 cards in module-level DECK_MAP mock)
     activeLevelsImpl = ['A1'];
-    const { unmount } = render(<LangPage />);
+    const { unmount } = render(<DeckGrid lang="it" />);
     expect(screen.getByText('2')).toBeTruthy();
     unmount();
 
@@ -197,7 +193,7 @@ describe('DeckGrid badge', () => {
     // activeLevels from the mock on each render (no stale closure from a
     // separate useState instance).
     activeLevelsImpl = ['A1', 'A2'];
-    render(<LangPage />);
+    render(<DeckGrid lang="it" />);
     // Still '2' because DECK_MAP has only A1 cards — but this render must
     // succeed and still show a number (not crash, not freeze), confirming
     // activeLevels is read from the shared source on each render cycle.

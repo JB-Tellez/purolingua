@@ -1116,3 +1116,17 @@ h1 {
     background: #009688;
     border-color: #009688;
 }
+
+/* Activity Picker grid — two columns on desktop, one on mobile */
+.activity-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .activity-grid {
+        grid-template-columns: 1fr;
+    }
+}
