@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Q&A Mode
-status: in-progress
-stopped_at: Completed 18-activity-picker-and-scenario-browser/18-02-PLAN.md
-last_updated: "2026-03-09T21:05:00.000Z"
-last_activity: 2026-03-09 — Phase 18 plan 02 complete (ActivityPicker component, lang page updated, DeckGrid extracted, 81 tests pass)
+status: completed
+stopped_at: Completed 18-activity-picker-and-scenario-browser/18-03-PLAN.md
+last_updated: "2026-03-10T03:58:43.716Z"
+last_activity: 2026-03-09 — Phase 18 plan 02 complete (ActivityPicker built, /[lang]/page.tsx updated, DeckGrid.tsx extracted, .activity-grid CSS, 5 ActivityPicker tests passing)
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # State
@@ -24,13 +24,13 @@ See: .planning/PROJECT.md (updated 2026-03-08 after v1.3 milestone start)
 
 ## Current Position
 
-Phase: 18 — Activity Picker and Scenario Browser (in progress)
-Plan: 02 of 03 complete
-Status: Phase 18 plan 02 done — ActivityPicker component, lang page updated, DeckGrid extracted, 81 tests pass
+Phase: 18 — Activity Picker and Scenario Browser (complete)
+Plan: 03 of 03 complete
+Status: Phase 18 plan 03 done — ScenarioGrid component, QA browser page, layout, placeholder session route, 86 tests pass
 
-[█████████░] 89% — 8/9 plans complete overall
+[██████████] 100% — 9/9 plans complete overall
 
-Last activity: 2026-03-09 — Phase 18 plan 02 complete (ActivityPicker built, /[lang]/page.tsx updated, DeckGrid.tsx extracted, .activity-grid CSS, 5 ActivityPicker tests passing)
+Last activity: 2026-03-09 — Phase 18 plan 03 complete (ScenarioGrid with live due badges, /[lang]/qa page with LevelFilterChips, qa/layout.tsx generateStaticParams, Phase 19 placeholder route)
 
 ## Accumulated Context
 
@@ -53,6 +53,10 @@ Last activity: 2026-03-09 — Phase 18 plan 02 complete (ActivityPicker built, /
 
 ### Decisions (Phase 18)
 
+- **18-03**: ScenarioTile calls useQASRS per tile — each tile is independently reactive to level changes
+- **18-03**: qa/layout.tsx owns generateStaticParams — qa/page.tsx is 'use client' so cannot export it directly
+- **18-03**: useSRS(lang).hasProgress used in QABrowserPage — correct returning-user signal for level filter guard (not useQASRS)
+- **18-03**: QA placeholder route returns minimal "Coming soon." — Phase 19 implements full study session UI
 - **18-02**: DeckGrid extracted to src/components/DeckGrid.tsx because DeckGrid.test.tsx imported LangPage — after LangPage was replaced with ActivityPicker, 5 tests broke; extraction restores clean import
 - **18-02**: DeckGrid wrapper takes lang prop and owns useSRS + useLevelFilter — maintains Phase 16-03 hook ownership pattern
 - **18-02**: ActivityPicker reuses .deck-card CSS without .deck-card-badge span — activity tiles don't need due counts
@@ -90,6 +94,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-09T21:05:00.000Z
-Stopped at: Completed 18-activity-picker-and-scenario-browser/18-02-PLAN.md
-Resume file: .planning/phases/18-activity-picker-and-scenario-browser/18-03-PLAN.md
+Last session: 2026-03-10T03:58:43.713Z
+Stopped at: Completed 18-activity-picker-and-scenario-browser/18-03-PLAN.md
+Resume file: None
