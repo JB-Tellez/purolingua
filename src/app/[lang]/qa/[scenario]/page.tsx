@@ -5,7 +5,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { scenarios } from '@/data/qa';
 import type { Lang } from '@/types';
-import QAStudySession from './QAStudySession';
+import QAStudySessionNoSSR from './QAStudySessionNoSSR';
 
 export function generateStaticParams() {
   return routing.locales.flatMap((lang) =>
@@ -33,5 +33,5 @@ export default async function QAStudyPage({ params }: Props) {
 
   setRequestLocale(lang);
 
-  return <QAStudySession lang={lang as Lang} scenario={matchedScenario} />;
+  return <QAStudySessionNoSSR lang={lang as Lang} scenario={matchedScenario} />;
 }

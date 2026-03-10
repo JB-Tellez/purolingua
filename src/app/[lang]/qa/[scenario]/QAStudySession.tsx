@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { Lang, Level, Scenario, ScenarioId, ProgressRecord } from '@/types';
@@ -69,20 +69,16 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // Since useLevelFilter's hasProgress param only sets the DEFAULT levels (localStorage wins),
   // we bootstrap with hasProgress=false and let useQASRS's returned hasProgress update on rerender.
   // For the first render this means new users get A1 (correct), returning users get their saved filter.
-  const [bootstrapHasProgress, setBootstrapHasProgress] = useState(false);
-  useEffect(() => {
+  const [bootstrapHasProgress] = useState(() => {
     try {
       const saved = localStorage.getItem(`${lang}-progress`);
-      if (!saved) return;
+      if (!saved) return false;
       const parsed = JSON.parse(saved) as Record<string, unknown>;
-      if (Object.keys(parsed).some((k) => k.startsWith('qa_'))) {
-        setBootstrapHasProgress(true);
-      }
+      return Object.keys(parsed).some((k) => k.startsWith('qa_'));
     } catch {
-      // no-op
+      return false;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const { activeLevels } = useLevelFilter(lang, bootstrapHasProgress);
 
@@ -130,16 +126,15 @@ export default function QAStudySession({ lang, scenario }: Props) {
       : [...currentCard.foilsEs]
     : [];
 
-  // Shuffled choices — computed client-side only to avoid SSR/client mismatch with Math.random()
-  const [choices, setChoices] = useState<{ text: string; isCorrect: boolean }[]>([]);
-  useEffect(() => {
-    if (!currentCard) { setChoices([]); return; }
+  // Stable shuffled choices for the current card — recomputes when card changes
+  const choices = useMemo(() => {
+    if (!currentCard) return [];
     const options: { text: string; isCorrect: boolean }[] = [
       { text: correctText, isCorrect: true },
       ...foilTexts.map((f) => ({ text: f, isCorrect: false })),
     ];
-    setChoices(shuffle(options));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return shuffle(options);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCard]);
 
   function resetSession() {
