@@ -3,14 +3,14 @@
 import type { Scenario } from '@/types';
 
 export const caffe: Scenario = {
-  id: 'caffe',
+  id: 'coffee',
   icon: '☕',
   titleIt: 'Al Caffè',
   titleEs: 'En el Café',
   level: 'A1',
   cards: [
     {
-      id: 'caffe_01',
+      id: 'coffee_01',
       question: 'Buongiorno! Cosa desidera?',
       correct: 'Un cappuccino, per favore.',
       foils: ['Ha una prenotazione?', 'Mi chiamo Luca.', 'Il treno parte alle nove.'],
@@ -20,7 +20,7 @@ export const caffe: Scenario = {
       level: 'A1',
     },
     {
-      id: 'caffe_02',
+      id: 'coffee_02',
       question: 'Vuole qualcosa da mangiare?',
       correct: 'Sì, un cornetto, grazie.',
       foils: ['Cerco una camera singola.', 'Vorrei un biglietto per Milano.', 'Il conto, per favore.'],
@@ -30,7 +30,7 @@ export const caffe: Scenario = {
       level: 'A1',
     },
     {
-      id: 'caffe_03',
+      id: 'coffee_03',
       question: 'Come vuole il caffè — macchiato o lungo?',
       correct: 'Macchiato, grazie.',
       foils: ['Dov\'è la fermata dell\'autobus?', 'Ho una prenotazione a nome Rossi.', 'Cerco la stazione.'],
@@ -40,7 +40,7 @@ export const caffe: Scenario = {
       level: 'A1',
     },
     {
-      id: 'caffe_04',
+      id: 'coffee_04',
       question: 'Vuole lo zucchero?',
       correct: 'No, grazie, lo prendo amaro.',
       foils: ['Scusi, c\'è un posto libero?', 'Parto domani mattina.', 'Mi può portare il menu?'],
@@ -50,7 +50,7 @@ export const caffe: Scenario = {
       level: 'A1',
     },
     {
-      id: 'caffe_05',
+      id: 'coffee_05',
       question: 'Si accomodi pure, c\'è un tavolo libero in fondo.',
       correct: 'Grazie mille, molto gentile.',
       foils: ['Pago con carta di credito.', 'Vorrei un tavolo per due.', 'Il volo è in ritardo.'],
@@ -60,7 +60,7 @@ export const caffe: Scenario = {
       level: 'A1',
     },
     {
-      id: 'caffe_06',
+      id: 'coffee_06',
       question: 'Desidera altro?',
       correct: 'No, grazie. Quant\'è?',
       foils: ['Ho perso il passaporto.', 'Il treno è sul binario tre.', 'Cerco un supermercato.'],
@@ -70,7 +70,7 @@ export const caffe: Scenario = {
       level: 'A1',
     },
     {
-      id: 'caffe_07',
+      id: 'coffee_07',
       question: 'Paga alla cassa o vuole pagare qui?',
       correct: 'Pago qui, grazie.',
       foils: ['La camera è al secondo piano.', 'Gira a destra al semaforo.', 'Arrivo domani sera.'],
@@ -80,7 +80,7 @@ export const caffe: Scenario = {
       level: 'A1',
     },
     {
-      id: 'caffe_08',
+      id: 'coffee_08',
       question: 'Arrivederci e buona giornata!',
       correct: 'Grazie, altrettanto!',
       foils: ['Devo fare il check-out entro le undici.', 'Può chiamarmi un taxi?', 'C\'è la colazione inclusa?'],

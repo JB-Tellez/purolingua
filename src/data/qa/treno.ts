@@ -3,14 +3,14 @@
 import type { Scenario } from '@/types';
 
 export const treno: Scenario = {
-  id: 'treno',
+  id: 'train',
   icon: '🚄',
   titleIt: 'In Treno',
   titleEs: 'En el Tren',
   level: 'A2',
   cards: [
     {
-      id: 'treno_01',
+      id: 'train_01',
       question: 'È libero questo posto?',
       correct: 'Sì, prego, si accomodi.',
       foils: ['Un cappuccino e un cornetto, grazie.', 'Ha una camera con vista?', 'Giri a destra dopo il semaforo.'],
@@ -20,7 +20,7 @@ export const treno: Scenario = {
       level: 'A2',
     },
     {
-      id: 'treno_02',
+      id: 'train_02',
       question: 'Il treno è in orario?',
       correct: 'No, ha un ritardo di quindici minuti per traffico sulla linea.',
       foils: ['Cerco una taglia più grande.', 'La colazione è al primo piano.', 'Vorrei un tavolo vicino alla finestra.'],
@@ -30,7 +30,7 @@ export const treno: Scenario = {
       level: 'A2',
     },
     {
-      id: 'treno_03',
+      id: 'train_03',
       question: 'Dove devo cambiare per andare a Venezia?',
       correct: 'Deve cambiare a Padova. Il prossimo treno parte alle quattordici e venti.',
       foils: ['Pago con bancomat.', 'Ha questo modello in un\'altra taglia?', 'Il menù del giorno include il dolce?'],
@@ -40,7 +40,7 @@ export const treno: Scenario = {
       level: 'A2',
     },
     {
-      id: 'treno_04',
+      id: 'train_04',
       question: 'Ho il biglietto prenotato ma non riesco a trovare il posto.',
       correct: 'Mi fa vedere il biglietto? Il suo posto è in carrozza sei, numero trentadue.',
       foils: ['Il ristorante è aperto a pranzo?', 'Dov\'è il bancomat più vicino?', 'La stanza è già pronta?'],
@@ -50,7 +50,7 @@ export const treno: Scenario = {
       level: 'A2',
     },
     {
-      id: 'treno_05',
+      id: 'train_05',
       question: 'Posso mettere il bagaglio qui sopra?',
       correct: 'Certo, ma faccia attenzione perché il ripiano è quasi pieno.',
       foils: ['La giacca costa troppo, grazie lo stesso.', 'È inclusa la prima colazione?', 'Cerco un posto tranquillo per cenare.'],
@@ -60,7 +60,7 @@ export const treno: Scenario = {
       level: 'A2',
     },
     {
-      id: 'treno_06',
+      id: 'train_06',
       question: 'C\'è il vagone ristorante su questo treno?',
       correct: 'Sì, è in carrozza otto, ma il servizio termina alle sedici.',
       foils: ['Vorrei fare il check-in anticipato.', 'È a duecento metri a piedi.', 'Il tiramisù è fatto in casa?'],
@@ -70,7 +70,7 @@ export const treno: Scenario = {
       level: 'A2',
     },
     {
-      id: 'treno_07',
+      id: 'train_07',
       question: 'Siamo in ritardo — perderò la coincidenza?',
       correct: 'Il treno successivo parte tra trenta minuti, quindi ce la fa.',
       foils: ['Ha un tavolo per questa sera?', 'Il Wi-Fi funziona in tutta la struttura?', 'Quanto costa il servizio di lavanderia?'],
@@ -80,7 +80,7 @@ export const treno: Scenario = {
       level: 'A2',
     },
     {
-      id: 'treno_08',
+      id: 'train_08',
       question: 'Questa è la fermata giusta per il centro storico?',
       correct: 'Sì, scenda qui e cammini per cinque minuti verso sinistra.',
       foils: ['Il camerino è in fondo a destra.', 'Posso pagare con carta anche al bar?', 'Ha ancora posto per la cena delle otto?'],

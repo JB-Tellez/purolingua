@@ -3,14 +3,14 @@
 import type { Scenario } from '@/types';
 
 export const presentazioni: Scenario = {
-  id: 'presentazioni',
+  id: 'introductions',
   icon: '👋',
   titleIt: 'Presentazioni',
   titleEs: 'Presentaciones',
   level: 'A1',
   cards: [
     {
-      id: 'presentazioni_01',
+      id: 'introductions_01',
       question: 'Come ti chiami?',
       correct: 'Mi chiamo Sara. E tu?',
       foils: ['Un cappuccino, per favore.', 'Gira a destra al semaforo.', 'Ho una prenotazione.'],
@@ -20,7 +20,7 @@ export const presentazioni: Scenario = {
       level: 'A1',
     },
     {
-      id: 'presentazioni_02',
+      id: 'introductions_02',
       question: 'Di dove sei?',
       correct: 'Sono di Roma. E tu, di dove sei?',
       foils: ['Il treno parte alle dieci.', 'Vorrei il conto, grazie.', 'La camera è prenotata a nome mio.'],
@@ -30,7 +30,7 @@ export const presentazioni: Scenario = {
       level: 'A1',
     },
     {
-      id: 'presentazioni_03',
+      id: 'introductions_03',
       question: 'Quanti anni hai?',
       correct: 'Ho ventitré anni. E tu?',
       foils: ['Cerco la stazione centrale.', 'Un tavolo per due, per favore.', 'Il Wi-Fi è gratuito?'],
@@ -40,7 +40,7 @@ export const presentazioni: Scenario = {
       level: 'A1',
     },
     {
-      id: 'presentazioni_04',
+      id: 'introductions_04',
       question: 'Che lavoro fai?',
       correct: 'Faccio l\'insegnante. E tu?',
       foils: ['Vorrei una camera doppia.', 'Pago con carta di credito.', 'Dov\'è la fermata dell\'autobus?'],
@@ -50,7 +50,7 @@ export const presentazioni: Scenario = {
       level: 'A1',
     },
     {
-      id: 'presentazioni_05',
+      id: 'introductions_05',
       question: 'Parli italiano bene! Dove hai imparato?',
       correct: 'Ho studiato all\'università e poi ho vissuto a Firenze.',
       foils: ['Il check-out è prima delle undici.', 'Gli spaghetti al pomodoro, grazie.', 'È a cinque minuti a piedi.'],
@@ -60,7 +60,7 @@ export const presentazioni: Scenario = {
       level: 'A1',
     },
     {
-      id: 'presentazioni_06',
+      id: 'introductions_06',
       question: 'Cosa fai nel tempo libero?',
       correct: 'Mi piace leggere e fare sport. E a te?',
       foils: ['Ha una prenotazione per questa sera?', 'Il binario è sulla destra.', 'Una camera con vista mare, per favore.'],
@@ -70,7 +70,7 @@ export const presentazioni: Scenario = {
       level: 'A1',
     },
     {
-      id: 'presentazioni_07',
+      id: 'introductions_07',
       question: 'Sei qui in vacanza o per lavoro?',
       correct: 'Sono qui in vacanza per una settimana.',
       foils: ['Vorrei un posto vicino al finestrino.', 'Il dessert è incluso nel menù?', 'Pago in contanti.'],
@@ -80,7 +80,7 @@ export const presentazioni: Scenario = {
       level: 'A1',
     },
     {
-      id: 'presentazioni_08',
+      id: 'introductions_08',
       question: 'È stato un piacere conoscerti!',
       correct: 'Anche per me! A presto!',
       foils: ['La colazione è alle otto.', 'Gira sempre dritto per trecento metri.', 'Vorrei prenotare un tavolo per domani.'],

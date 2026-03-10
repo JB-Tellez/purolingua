@@ -3,14 +3,14 @@
 import type { Scenario } from '@/types';
 
 export const albergo: Scenario = {
-  id: 'albergo',
+  id: 'hotel',
   icon: '🏨',
   titleIt: 'In Albergo',
   titleEs: 'En el Hotel',
   level: 'A1',
   cards: [
     {
-      id: 'albergo_01',
+      id: 'hotel_01',
       question: 'Ha una prenotazione?',
       correct: 'Sì, a nome Johnson.',
       foils: ['Un caffè macchiato, per favore.', 'Giro a sinistra al semaforo.', 'Cerco il binario cinque.'],
@@ -20,7 +20,7 @@ export const albergo: Scenario = {
       level: 'A1',
     },
     {
-      id: 'albergo_02',
+      id: 'hotel_02',
       question: 'Per quante notti?',
       correct: 'Per tre notti, dal dieci al tredici.',
       foils: ['Prendo gli spaghetti al pomodoro.', 'Il treno parte tra dieci minuti.', 'Cerco una giacca taglia M.'],
@@ -30,7 +30,7 @@ export const albergo: Scenario = {
       level: 'A1',
     },
     {
-      id: 'albergo_03',
+      id: 'hotel_03',
       question: 'Camera singola o matrimoniale?',
       correct: 'Una camera doppia, per favore.',
       foils: ['Vorrei un cappuccino e un cornetto.', 'È in ritardo di venti minuti.', 'Gira sempre dritto.'],
@@ -40,7 +40,7 @@ export const albergo: Scenario = {
       level: 'A1',
     },
     {
-      id: 'albergo_04',
+      id: 'hotel_04',
       question: 'La colazione è inclusa nel prezzo?',
       correct: 'Sì, è compresa nel prezzo della camera.',
       foils: ['Il museo chiude alle diciotto.', 'Pago con carta.', 'Mi scusi, dove sono i bagni?'],
@@ -50,7 +50,7 @@ export const albergo: Scenario = {
       level: 'A1',
     },
     {
-      id: 'albergo_05',
+      id: 'hotel_05',
       question: 'Mi può dare la chiave della camera, per favore?',
       correct: 'Certo, ecco la sua chiave. Camera duecento cinque.',
       foils: ['Il volo è alle sette di mattina.', 'Prendo un tavolo per due.', 'Cerco la farmacia più vicina.'],
@@ -60,7 +60,7 @@ export const albergo: Scenario = {
       level: 'A1',
     },
     {
-      id: 'albergo_06',
+      id: 'hotel_06',
       question: 'C\'è il Wi-Fi in camera?',
       correct: 'Sì, la password è sul bigliettino sul comodino.',
       foils: ['Il binario tre è a destra.', 'Vorrei il conto, grazie.', 'La giacca costa cinquanta euro.'],
@@ -70,7 +70,7 @@ export const albergo: Scenario = {
       level: 'A1',
     },
     {
-      id: 'albergo_07',
+      id: 'hotel_07',
       question: 'A che ora è il check-out?',
       correct: 'Il check-out è entro le undici di mattina.',
       foils: ['Posso avere il menù, per favore?', 'Il treno è sul binario sette.', 'Continui dritto per due isolati.'],
@@ -80,7 +80,7 @@ export const albergo: Scenario = {
       level: 'A1',
     },
     {
-      id: 'albergo_08',
+      id: 'hotel_08',
       question: 'Arrivederci e buon viaggio!',
       correct: 'Grazie. L\'albergo era ottimo.',
       foils: ['Vorrei ordinare la cena in camera.', 'È a due fermate in metropolitana.', 'Cerco un tavolo vicino alla finestra.'],

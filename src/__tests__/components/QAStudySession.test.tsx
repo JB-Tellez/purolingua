@@ -30,14 +30,14 @@ vi.mock('next/link', () => ({
 vi.mock('@/data/qa', () => ({
   scenarios: [
     {
-      id: 'caffe',
+      id: 'coffee',
       icon: '☕',
       titleIt: 'Al Caffè',
       titleEs: 'En el Café',
       level: 'A1',
       cards: [
         {
-          id: 'caffe_01',
+          id: 'coffee_01',
           question: 'Che cosa prendi?',
           correct: 'Un caffè, grazie.',
           foils: ['Il conto, per favore.', 'No, grazie.', 'Vorrei dell\'acqua.'],
@@ -49,14 +49,14 @@ vi.mock('@/data/qa', () => ({
       ],
     },
     {
-      id: 'albergo',
+      id: 'hotel',
       icon: '🏨',
       titleIt: 'All\'Albergo',
       titleEs: 'En el Hotel',
       level: 'A1',
       cards: [
         {
-          id: 'albergo_01',
+          id: 'hotel_01',
           question: 'Avete una camera libera?',
           correct: 'Sì, abbiamo una camera singola.',
           foils: ['No, siamo al completo.', 'Buonasera.', 'Il bagno è in fondo.'],
@@ -92,14 +92,14 @@ let mockStartListening: ReturnType<typeof vi.fn>;
 // ---------------------------------------------------------------------------
 
 const mockScenario: Scenario = {
-  id: 'caffe',
+  id: 'coffee',
   icon: '☕',
   titleIt: 'Al Caffè',
   titleEs: 'En el Café',
   level: 'A1',
   cards: [
     {
-      id: 'caffe_01',
+      id: 'coffee_01',
       question: 'Che cosa prendi?',
       correct: 'Un caffè, grazie.',
       foils: ['Il conto, per favore.', 'No, grazie.', 'Vorrei dell\'acqua.'],
@@ -109,7 +109,7 @@ const mockScenario: Scenario = {
       level: 'A1',
     },
     {
-      id: 'caffe_02',
+      id: 'coffee_02',
       question: 'Vorrebbe altro?',
       correct: 'No, grazie.',
       foils: ['Sì, un\'altra pasta.', 'Il conto, per favore.', 'Un caffè, grazie.'],
@@ -292,7 +292,7 @@ describe('QAStudySession', () => {
     act(() => {
       vi.advanceTimersByTime(600);
     });
-    expect(mockUpdateCard).toHaveBeenCalledWith('caffe_01', true);
+    expect(mockUpdateCard).toHaveBeenCalledWith('coffee_01', true);
 
     vi.useRealTimers();
   });
@@ -376,8 +376,8 @@ describe('QAStudySession', () => {
 
     // 1 due card, with progress that marks all cards as not due
     const progressWithAllDone = {
-      'qa_caffe_caffe_01': { box: 3, nextReview: '2099-01-01' },
-      'qa_albergo_albergo_01': { box: 3, nextReview: '2099-01-01' },
+      'qa_coffee_coffee_01': { box: 3, nextReview: '2099-01-01' },
+      'qa_hotel_albergo_01': { box: 3, nextReview: '2099-01-01' },
     };
 
     (useQASRS as ReturnType<typeof vi.fn>).mockReturnValue({

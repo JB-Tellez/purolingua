@@ -3,14 +3,14 @@
 import type { Scenario } from '@/types';
 
 export const negozio: Scenario = {
-  id: 'negozio',
+  id: 'shop',
   icon: '🛍️',
   titleIt: 'Al Negozio',
   titleEs: 'En la Tienda',
   level: 'A2',
   cards: [
     {
-      id: 'negozio_01',
+      id: 'shop_01',
       question: 'Posso aiutarla?',
       correct: 'Sì, cerco una giacca per l\'autunno.',
       foils: ['Il treno è in ritardo di venti minuti.', 'Ha una camera libera per stanotte?', 'Vorrei un caffè macchiato, grazie.'],
@@ -20,7 +20,7 @@ export const negozio: Scenario = {
       level: 'A2',
     },
     {
-      id: 'negozio_02',
+      id: 'shop_02',
       question: 'Che taglia porta?',
       correct: 'Di solito porto la taglia M, ma dipende dalla marca.',
       foils: ['Scusi, dov\'è la stazione dei treni?', 'A che ora serve la colazione?', 'Il primo è incluso nel menù fisso?'],
@@ -30,7 +30,7 @@ export const negozio: Scenario = {
       level: 'A2',
     },
     {
-      id: 'negozio_03',
+      id: 'shop_03',
       question: 'Vuole provarla?',
       correct: 'Sì, volentieri. Dov\'è il camerino?',
       foils: ['È libero questo posto sul treno?', 'Giri a sinistra dopo la chiesa.', 'Ci porta il dessert, per favore?'],
@@ -40,7 +40,7 @@ export const negozio: Scenario = {
       level: 'A2',
     },
     {
-      id: 'negozio_04',
+      id: 'shop_04',
       question: 'Come va la taglia?',
       correct: 'È un po\' stretta alle spalle. Avete la L?',
       foils: ['Il volo è alle sei di mattina.', 'Abbiamo prenotato per quattro persone.', 'La password del Wi-Fi, per cortesia.'],
@@ -50,7 +50,7 @@ export const negozio: Scenario = {
       level: 'A2',
     },
     {
-      id: 'negozio_05',
+      id: 'shop_05',
       question: 'Questo modello è disponibile in altri colori?',
       correct: 'Sì, ce l\'abbiamo in blu, grigio e nero.',
       foils: ['Il check-out è entro le undici.', 'Prenda la seconda a destra poi vada dritto.', 'È un ristorante tipico della zona?'],
@@ -60,7 +60,7 @@ export const negozio: Scenario = {
       level: 'A2',
     },
     {
-      id: 'negozio_06',
+      id: 'shop_06',
       question: 'Quanto costa questa giacca?',
       correct: 'Costa centoventi euro, ma è in offerta del trenta per cento.',
       foils: ['Il menù fisso include il vino?', 'Scusi, c\'è un bagno pubblico qui vicino?', 'Arrivo a Roma alle quindici e trenta.'],
@@ -70,7 +70,7 @@ export const negozio: Scenario = {
       level: 'A2',
     },
     {
-      id: 'negozio_07',
+      id: 'shop_07',
       question: 'Come vuole pagare — contanti o carta?',
       correct: 'Con carta di credito, se possibile.',
       foils: ['Mi chiamo Andrea Bianchi, piacere.', 'Il treno per Venezia è diretto?', 'Potrei avere un tavolo fuori?'],
@@ -80,7 +80,7 @@ export const negozio: Scenario = {
       level: 'A2',
     },
     {
-      id: 'negozio_08',
+      id: 'shop_08',
       question: 'Si può cambiare il prodotto se non va bene?',
       correct: 'Sì, entro trenta giorni con lo scontrino.',
       foils: ['La camera ha la vasca o solo la doccia?', 'È lontano da qui a piedi?', 'Un secondo piatto di carne, per favore.'],

@@ -42,16 +42,16 @@ export type ProgressRecord = Record<string, Progress>;
 // Q&A Mode types — added Phase 17
 
 export type ScenarioId =
-  | 'caffe'
-  | 'albergo'
-  | 'ristorante'
-  | 'strada'
-  | 'presentazioni'
-  | 'negozio'
-  | 'treno';
+  | 'coffee'
+  | 'hotel'
+  | 'restaurant'
+  | 'street'
+  | 'introductions'
+  | 'shop'
+  | 'train';
 
 export interface QACard {
-  id: string;                        // e.g. "caffe_01"
+  id: string;                        // e.g. "coffee_01"
   question: string;                  // Italian question
   correct: string;                   // Italian correct response
   foils: [string, string, string];   // Italian foils, fixed tuple

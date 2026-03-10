@@ -3,14 +3,14 @@
 import type { Scenario } from '@/types';
 
 export const strada: Scenario = {
-  id: 'strada',
+  id: 'street',
   icon: '🗺️',
   titleIt: 'Per Strada',
   titleEs: 'En la Calle',
   level: 'A1',
   cards: [
     {
-      id: 'strada_01',
+      id: 'street_01',
       question: 'Scusi, dov\'è la stazione?',
       correct: 'È sempre dritto, poi gira a sinistra.',
       foils: ['Un cappuccino, per favore.', 'Ha una prenotazione?', 'Mi chiamo Maria.'],
@@ -20,7 +20,7 @@ export const strada: Scenario = {
       level: 'A1',
     },
     {
-      id: 'strada_02',
+      id: 'street_02',
       question: 'È lontano da qui?',
       correct: 'No, è a cinque minuti a piedi.',
       foils: ['La camera è al terzo piano.', 'Prendo il menù fisso.', 'Il treno è in ritardo.'],
@@ -30,7 +30,7 @@ export const strada: Scenario = {
       level: 'A1',
     },
     {
-      id: 'strada_03',
+      id: 'street_03',
       question: 'Mi può indicare la fermata dell\'autobus?',
       correct: 'Certo, è girato l\'angolo, sulla destra.',
       foils: ['Vorrei un tavolo per quattro.', 'La password del Wi-Fi?', 'Pago con carta di credito.'],
@@ -40,7 +40,7 @@ export const strada: Scenario = {
       level: 'A1',
     },
     {
-      id: 'strada_04',
+      id: 'street_04',
       question: 'C\'è un supermercato qui vicino?',
       correct: 'Sì, ce n\'è uno in piazza, vicino alla banca.',
       foils: ['Vorrei il conto, grazie.', 'Il check-in è dalle due del pomeriggio.', 'Cerco un posto libero.'],
@@ -50,7 +50,7 @@ export const strada: Scenario = {
       level: 'A1',
     },
     {
-      id: 'strada_05',
+      id: 'street_05',
       question: 'Scusi, come si arriva al museo?',
       correct: 'Prenda la prima a destra, poi continui dritto per duecento metri.',
       foils: ['Una bottiglia d\'acqua, grazie.', 'Ho prenotato per tre notti.', 'Il caffè è incluso?'],
@@ -60,7 +60,7 @@ export const strada: Scenario = {
       level: 'A1',
     },
     {
-      id: 'strada_06',
+      id: 'street_06',
       question: 'Dov\'è la farmacia più vicina?',
       correct: 'Attraversi la piazza e la troverà di fronte alla chiesa.',
       foils: ['Arrivo alle sette di sera.', 'Vorrei la carne ben cotta.', 'Il biglietto costa tre euro.'],
@@ -70,7 +70,7 @@ export const strada: Scenario = {
       level: 'A1',
     },
     {
-      id: 'strada_07',
+      id: 'street_07',
       question: 'Posso andare a piedi o è meglio prendere l\'autobus?',
       correct: 'È un po\' lontano. Le consiglio l\'autobus, linea dodici.',
       foils: ['Pago in contanti.', 'C\'è la colazione inclusa?', 'Un espresso dopo cena, grazie.'],
@@ -80,7 +80,7 @@ export const strada: Scenario = {
       level: 'A1',
     },
     {
-      id: 'strada_08',
+      id: 'street_08',
       question: 'Grazie dell\'aiuto!',
       correct: 'Prego! Buona visita!',
       foils: ['Il ristorante chiude alle due.', 'Vorrei cambiare la camera.', 'La giacca è in saldo.'],

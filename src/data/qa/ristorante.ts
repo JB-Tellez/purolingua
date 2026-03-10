@@ -3,14 +3,14 @@
 import type { Scenario } from '@/types';
 
 export const ristorante: Scenario = {
-  id: 'ristorante',
+  id: 'restaurant',
   icon: '🍝',
   titleIt: 'Al Ristorante',
   titleEs: 'En el Restaurante',
   level: 'A1',
   cards: [
     {
-      id: 'ristorante_01',
+      id: 'restaurant_01',
       question: 'Buonasera! Ha una prenotazione?',
       correct: 'Sì, per due persone, alle otto.',
       foils: ['Un cappuccino e un cornetto.', 'Il treno è sul binario due.', 'Mi chiamo Marco.'],
@@ -20,7 +20,7 @@ export const ristorante: Scenario = {
       level: 'A1',
     },
     {
-      id: 'ristorante_02',
+      id: 'restaurant_02',
       question: 'Cosa prende come primo?',
       correct: 'Per me gli spaghetti al pomodoro.',
       foils: ['Ha una camera libera?', 'Dov\'è la stazione più vicina?', 'Pago in contanti.'],
@@ -30,7 +30,7 @@ export const ristorante: Scenario = {
       level: 'A1',
     },
     {
-      id: 'ristorante_03',
+      id: 'restaurant_03',
       question: 'E come secondo?',
       correct: 'Il pollo alla griglia con contorno di verdure.',
       foils: ['Cerco via Roma numero dieci.', 'Vorrei fare il check-in.', 'Un macchiato caldo, grazie.'],
@@ -40,7 +40,7 @@ export const ristorante: Scenario = {
       level: 'A1',
     },
     {
-      id: 'ristorante_04',
+      id: 'restaurant_04',
       question: 'Vuole ordinare qualcosa da bere?',
       correct: 'Sì, una bottiglia d\'acqua naturale e del vino rosso della casa.',
       foils: ['Il check-out è alle undici.', 'Continui dritto e poi giri a destra.', 'Il volo parte alle sei.'],
@@ -50,7 +50,7 @@ export const ristorante: Scenario = {
       level: 'A1',
     },
     {
-      id: 'ristorante_05',
+      id: 'restaurant_05',
       question: 'Come è la bistecca — al sangue, media o ben cotta?',
       correct: 'Media, per favore.',
       foils: ['Ho perso il portafoglio.', 'È libero questo posto?', 'La camera ha il bagno privato?'],
@@ -60,7 +60,7 @@ export const ristorante: Scenario = {
       level: 'A1',
     },
     {
-      id: 'ristorante_06',
+      id: 'restaurant_06',
       question: 'Posso portarle il dolce? Abbiamo tiramisù e panna cotta.',
       correct: 'Il tiramisù, grazie. È buonissimo qui.',
       foils: ['Biglietto di sola andata, per favore.', 'Cerco una giacca impermeabile.', 'Paga alla cassa.'],
@@ -70,7 +70,7 @@ export const ristorante: Scenario = {
       level: 'A1',
     },
     {
-      id: 'ristorante_07',
+      id: 'restaurant_07',
       question: 'Desidera un caffè al termine del pasto?',
       correct: 'Sì, un espresso, grazie.',
       foils: ['Vorrei cambiare la camera.', 'C\'è un autobus per il centro?', 'Costa troppo, grazie lo stesso.'],
@@ -80,7 +80,7 @@ export const ristorante: Scenario = {
       level: 'A1',
     },
     {
-      id: 'ristorante_08',
+      id: 'restaurant_08',
       question: 'Ci porta il conto, per favore?',
       correct: 'Certo, subito. Pagano insieme o separati?',
       foils: ['Buon viaggio e arrivederci!', 'Il passaporto è scaduto.', 'Scusi, dov\'è la metropolitana?'],
