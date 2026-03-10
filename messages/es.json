@@ -63,6 +63,9 @@
     "heard": "Escuchado",
     "notRecognized": "No reconocido",
     "deckComplete": "¡Mazo completado!",
-    "studyAgain": "Estudiar de nuevo"
+    "studyAgain": "Estudiar de nuevo",
+    "backToScenarios": "← Volver a los escenarios",
+    "scenarioDone": "¡Escenario completado!",
+    "allScenariosDone": "¡Todos los escenarios completados!"
   }
 }
