@@ -1,9 +1,9 @@
 ---
-status: complete
+status: resolved
 phase: 19-q-a-study-session
 source: 19-01-SUMMARY.md, 19-02-SUMMARY.md, 19-03-SUMMARY.md
 started: 2026-03-10T23:00:00Z
-updated: 2026-03-10T23:30:00Z
+updated: 2026-03-10T23:50:00Z
 ---
 
 ## Current Test
@@ -63,9 +63,16 @@ skipped: 0
 ## Gaps
 
 - truth: "Wrong answer shows red feedback and card stays — user must try again"
-  status: failed
+  status: resolved
   reason: "User reported: it turned red, showed correct in green, and moved on automatically"
   severity: minor
   test: 3
-  artifacts: []
-  missing: []
+  root_cause: "handleChoiceClick calls setTimeout(() => handleAnswer(isCorrect), 600) unconditionally for both correct and incorrect answers — wrong answers auto-advance identically to correct ones"
+  artifacts:
+    - path: "src/app/[lang]/qa/[scenario]/QAStudySession.tsx"
+      issue: "handleChoiceClick (line 183) schedules handleAnswer via setTimeout for both correct and incorrect choices"
+  missing:
+    - "Block auto-advance on wrong answer — only call handleAnswer when isCorrect === true"
+    - "After wrong-answer feedback delay (~800ms), reset selectedChoice and feedbackState to null so buttons become interactive again"
+    - "Skip SRS recording on wrong answer — updateCard should only be called on correct answers"
+  debug_session: ""
