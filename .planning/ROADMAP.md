@@ -111,7 +111,11 @@ Plans:
   3. Selecting the correct response shows a correct feedback overlay; selecting a foil shows an incorrect overlay — consistent with Rephrase mode
   4. User can tap the mic button and speak an answer; recognized speech is matched against the correct response and triggers appropriate feedback
   5. After all due cards in a scenario are exhausted, the scenario-complete screen appears; after all scenarios are done, the all-done screen appears
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 19-01-PLAN.md — Add Q&A i18n keys + test scaffold (QAFLOW-03, QAFLOW-04, QAFLOW-07, QAFLOW-08)
+- [ ] 19-02-PLAN.md — QAStudySession component + full test suite (QAFLOW-03, QAFLOW-04, QAFLOW-05, QAFLOW-07, QAFLOW-08)
+- [ ] 19-03-PLAN.md — Wire route page.tsx + human verification checkpoint (QAFLOW-03, QAFLOW-04, QAFLOW-07, QAFLOW-08)
 
 ## Progress
 
@@ -131,4 +135,4 @@ Plans:
 | 16. Bug Fixes | 3/3 | Complete    | 2026-03-09 | — |
 | 17. Q&A Data | 3/3 | Complete    | 2026-03-09 | — |
 | 18. Activity Picker and Scenario Browser | 3/3 | Complete    | 2026-03-10 | — |
-| 19. Q&A Study Session | v1.3 | 0/? | Not started | — |
+| 19. Q&A Study Session | v1.3 | 0/3 | Not started | — |
