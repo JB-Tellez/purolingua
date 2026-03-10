@@ -95,7 +95,11 @@ Plans:
   3. Selecting Q&A from the picker navigates to the scenario browser at `/[lang]/qa`
   4. Each scenario tile on the browser shows an icon, a title, and a live due-count badge
   5. A1/A2 level filter chips appear on the scenario browser and obey the FLTR-06 guard (cannot deselect all)
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 18-01-PLAN.md — Test scaffolds + route restructure (rephrase subtree) + SiteHeader back nav fix + i18n keys (ACTPICK-01, QAFLOW-01, QAFLOW-02)
+- [ ] 18-02-PLAN.md — ActivityPicker component + update lang page to show picker (ACTPICK-01)
+- [ ] 18-03-PLAN.md — ScenarioGrid component + QA browser page + placeholder scenario session route (QAFLOW-01, QAFLOW-02)
 
 ### Phase 19: Q&A Study Session
 **Goal**: Users can complete a full Q&A session — question displayed, answer chosen from 4 target-language options, feedback shown, progress saved
@@ -126,5 +130,5 @@ Plans:
 | 15. Study Session UX Polish | v1.2 | 3/3 | Complete | 2026-03-08 |
 | 16. Bug Fixes | 3/3 | Complete    | 2026-03-09 | — |
 | 17. Q&A Data | 3/3 | Complete    | 2026-03-09 | — |
-| 18. Activity Picker and Scenario Browser | v1.3 | 0/? | Not started | — |
+| 18. Activity Picker and Scenario Browser | v1.3 | 0/3 | Not started | — |
 | 19. Q&A Study Session | v1.3 | 0/? | Not started | — |
