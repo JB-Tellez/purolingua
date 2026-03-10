@@ -39,6 +39,16 @@
       "A2": "A2"
     }
   },
+  "activities": {
+    "rephrase": {
+      "title": "Rephrase",
+      "description": "Practica frases con tarjetas"
+    },
+    "qa": {
+      "title": "Di\u00e1logo",
+      "description": "Responde preguntas en situaciones reales"
+    }
+  },
   "study": {
     "tapToReveal": "Toca para revelar",
     "revealAnswer": "Revelar respuesta",

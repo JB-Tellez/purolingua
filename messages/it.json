@@ -39,6 +39,16 @@
       "A2": "A2"
     }
   },
+  "activities": {
+    "rephrase": {
+      "title": "Rephrase",
+      "description": "Pratica frasi con le flashcard"
+    },
+    "qa": {
+      "title": "Dialogo",
+      "description": "Rispondi a domande in situazioni reali"
+    }
+  },
   "study": {
     "tapToReveal": "Tocca per rivelare",
     "revealAnswer": "Rivela la risposta",

@@ -26,7 +26,7 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
   // Show back button only when on a deck/study page (path has 3+ segments: /lang/deck)
   const segments = pathname.split('/').filter(Boolean);
   const onDeckPage = segments.length >= 2;
-  const backHref = `/${lang}`;
+  const backHref = '/' + segments.slice(0, -1).join('/');
 
   function handleReset() {
     if (typeof window !== 'undefined') {
