@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 16-bug-fixes
 source: 16-01-SUMMARY.md, 16-02-SUMMARY.md
 started: 2026-03-09T12:00:00Z
@@ -51,5 +51,14 @@ skipped: 1
   reason: "User reported: not seeing any change in due counts"
   severity: major
   test: 3
-  artifacts: []
-  missing: []
+  root_cause: "useLevelFilter is called independently in both LevelFilterChips and DeckGrid — React useState is scoped per component instance, so they hold separate state. Chip toggle updates LevelFilterChips state only; DeckGrid never receives it, so getDueCount always filters against the stale initial activeLevels."
+  artifacts:
+    - path: "src/components/LevelFilterChips.tsx"
+      issue: "calls useLevelFilter independently, creating isolated state"
+    - path: "src/app/[lang]/page.tsx"
+      issue: "DeckGrid calls useLevelFilter independently, never receives chip toggle updates"
+  missing:
+    - "Lift useSRS and useLevelFilter into parent LangPage component"
+    - "Pass activeLevels as prop to DeckGrid (remove internal hook call)"
+    - "Pass activeLevels + setActiveLevels as props to LevelFilterChips (remove internal hook calls)"
+  debug_session: ".planning/debug/badge-filter-not-reactive.md"
