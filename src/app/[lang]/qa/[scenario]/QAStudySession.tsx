@@ -357,6 +357,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
         </div>
 
         <div
+          className="card-audio-controls"
           style={{
             display: 'flex',
             justifyContent: 'center',

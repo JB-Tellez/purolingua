@@ -537,6 +537,15 @@ h1 {
     50% { box-shadow: 0 0 0 8px rgba(0, 168, 150, 0); }
 }
 
+/* Q&A audio controls row — buttons flow inline, not absolutely positioned */
+.card-audio-controls .audio-btn,
+.card-audio-controls .mic-btn {
+    position: static;
+    top: auto;
+    right: auto;
+    left: auto;
+}
+
 /* Progress Bar */
 .progress-bar {
     width: 100%;
