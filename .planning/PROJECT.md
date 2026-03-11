@@ -1,15 +1,10 @@
 # PuroLingua
 
-## Current Milestone: v1.3 Q&A Mode
+## Current State: v1.3 Shipped
 
-**Goal:** Add a Q&A conversation activity where users answer target-language questions by selecting from 4 target-language responses, alongside the existing Rephrase flashcard mode.
+**Shipped:** 2026-03-10
 
-**Target features:**
-- Activity Picker screen (Rephrase / Q&A) between language picker and content
-- Q&A scenario browser (`/[lang]/qa`) with 7 scenarios per language
-- QACard data + useQASRS hook (same localStorage, prefixed keys)
-- QAStudySession — target-language-only, same SRS + level filter
-- Fix deferred v1.2 gaps: ROUTE-02 (live due counts) and UX-05 (allDecksEmpty defect)
+Q&A Mode complete. The Next.js port (`feat/nextjs-port`) now has two distinct study activities: Rephrase (flashcard SRS) and Q&A (target-language conversation scenarios). All v1.2 regressions fixed. 98 unit tests pass.
 
 ## What This Is
 
@@ -54,18 +49,19 @@ Users can study real conversational vocabulary offline, in any browser, with zer
 - ✓ Voice recognition hook (`useVoiceRecognition` + `MicButton`) — v1.2
 - ✓ Feedback message overlay (correct/incorrect/heard/not-recognized) — v1.2
 - ✓ Deck-complete and all-done end-of-session screens — v1.2
+- ✓ Live due-count badges on Rephrase deck tiles reactive to level filter — v1.3
+- ✓ `allDecksEmpty` fix: language-scoped, per-deck, index-preserving — v1.3
+- ✓ 7 Italian + 7 Spanish Q&A scenarios (56 + 56 bilingual QACards, A1/A2) — v1.3
+- ✓ `useQASRS` hook with `qa_`-prefixed Leitner keys, level filtering — v1.3
+- ✓ Activity Picker screen (Rephrase / Q&A) at `/[lang]` — v1.3
+- ✓ Scenario browser at `/[lang]/qa` with live due-count badges and level filter — v1.3
+- ✓ `QAStudySession` — target-language-only, 4-choice, TTS audio, voice recognition, feedback, end screens — v1.3
 
 ### Active
 
 <!-- Requirements for the next milestone. -->
 
-- [ ] Activity Picker screen between language picker and deck/scenario content
-- [ ] Q&A scenario browser at `/[lang]/qa` with 7 scenarios per language
-- [ ] QACard + Scenario types and Italian/Spanish card data
-- [ ] useQASRS hook (Leitner SRS, level filter, prefixed localStorage keys)
-- [ ] QAStudySession component (target-language-only, audio, voice, feedback)
-- [ ] Live due-count badges on deck grid tiles (ROUTE-02 gap from v1.2)
-- [ ] Fix `allDecksEmpty` check in A1-only mode (UX-05 gap from v1.2)
+(None yet — run `/gsd:new-milestone` to define v1.4 requirements)
 
 ### Out of Scope
 
@@ -121,7 +117,11 @@ Tech stacks:
 | Fisher-Yates shuffle in generateChoices | Upgrade from biased sort used in v1.1 | ✓ Good |
 | FeedbackMessage in two positions | Inside card-back for quiz feedback, above controls for voice feedback | ✓ Good |
 | span[role=button] for ChoiceButton speaker icon | Nesting buttons is invalid HTML | ✓ Good |
-| Proceed with ROUTE-02 + UX-05 gaps | Both are non-breaking; deferred to v1.3 | ⚠️ Revisit |
+| Proceed with ROUTE-02 + UX-05 gaps | Both are non-breaking; deferred to v1.3 | ✓ Good — fixed in v1.3 |
+| `useSRS`+`useLevelFilter` lifted into `LangPage` | Single hook ownership; chip toggle propagates to badge in one React cycle | ✓ Good |
+| `qa_` prefix for Q&A SRS keys | Namespaces Q&A progress without breaking Rephrase key format | ✓ Good |
+| `QAStudySession` SSR bypassed via `next/dynamic ssr:false` | localStorage + Web Speech API unavailable during SSR | ✓ Good |
+| Scenario IDs as English slugs | Language-neutral URLs — same slug for `/it/qa/caffe` and `/es/qa/caffe` | ✓ Good |
 
 ---
-*Last updated: 2026-03-08 after v1.3 milestone start*
+*Last updated: 2026-03-10 after v1.3 milestone*

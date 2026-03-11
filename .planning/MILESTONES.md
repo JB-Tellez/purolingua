@@ -1,5 +1,28 @@
 # Milestones
 
+## v1.3 — Q&A Mode
+
+**Shipped:** 2026-03-10
+**Phases:** 16–19 (4 phases, 13 plans)
+**Files changed:** 75 | **LOC:** 5,275 TypeScript/TSX | **Timeline:** 2 days
+
+### What Shipped
+
+- Fixed live SRS due-count badges on Rephrase deck tiles — lifted `useSRS` + `useLevelFilter` into `LangPage`; badges now react to level chip toggles
+- Fixed premature all-done screen in A1-only mode — extracted shared `DECK_MAP` with language scoping and index-preserving filter pattern
+- Authored 56 Italian + 56 Spanish Q&A cards across 7 bilingual scenarios (5 A1 + 2 A2 conversational settings)
+- Built `useQASRS` hook with `qa_`-prefixed Leitner SRS keys, level filtering, and 12 passing Vitest tests
+- Shipped Activity Picker screen (Rephrase / Q&A) between language selector and content; scenario browser at `/[lang]/qa` with live due-count badges per tile
+- Built full `QAStudySession` — target-language-only, 4-choice interaction, TTS audio, voice recognition, correct/incorrect feedback, scenario-done and all-done screens; 9/9 UAT passed and 98 total tests green
+
+### Tech Debt Carried Forward
+
+- **DEBT-01**: `speak()` helper duplicated in `AudioButton.tsx` and `StudySession.tsx` — candidate for `src/lib/speak.ts`
+- **DEBT-02**: `src/i18n/navigation.ts` locale helpers unused — all nav uses `next/link` directly
+- **CONTENT-01**: A1 phrase linguistic quality needs native speaker review (Italian and Spanish)
+
+---
+
 ## v1.2 — Next.js Port
 
 **Shipped:** 2026-03-09
