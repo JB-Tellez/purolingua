@@ -9,8 +9,8 @@ const DECK_IDS = [
 ] as const
 
 const SCENARIO_IDS = [
-  'coffee', 'hotel', 'restaurant', 'street',
-  'introductions', 'shop', 'train',
+  'caffe', 'albergo', 'ristorante', 'strada',
+  'presentazioni', 'negozio', 'treno',
 ] as const
 
 const LOCALES = ['it', 'es'] as const
