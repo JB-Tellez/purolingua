@@ -170,7 +170,7 @@ Plans:
 | 17. Q&A Data | v1.3 | 3/3 | Complete | 2026-03-09 |
 | 18. Activity Picker and Scenario Browser | v1.3 | 3/3 | Complete | 2026-03-10 |
 | 19. Q&A Study Session | v1.3 | 4/4 | Complete | 2026-03-10 |
-| 20. Scaffold | 2/2 | Complete   | 2026-03-12 | — |
+| 20. Scaffold | 2/2 | Complete    | 2026-03-12 | — |
 | 21. Pure Logic and Routing Skeleton | v2.0 | 0/? | Not started | — |
 | 22. Composables | v2.0 | 0/? | Not started | — |
 | 23. i18n Messages and Leaf Components | v2.0 | 0/? | Not started | — |
