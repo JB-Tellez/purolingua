@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+// @testing-library/jest-dom removed — no longer in devDependencies after Nuxt migration
 import { beforeEach, vi } from 'vitest';
 
 const localStorageMock = (() => {
