@@ -1,383 +1,528 @@
-# Architecture Research
+# Architecture Patterns
 
-**Domain:** CEFR level filtering integration into vanilla JS language learning app
-**Researched:** 2026-02-22
-**Confidence:** HIGH — based on direct source inspection of all existing modules
+**Domain:** Nuxt 3 port of a Next.js 15 language learning SPA
+**Researched:** 2026-03-12
 
-## Standard Architecture
+---
 
-### System Overview (Existing + CEFR Changes)
+## Recommended Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                          index.html                              │
-│   deck-selection view          flashcard-view                   │
-│   ┌──────────────────────┐                                      │
-│   │  [NEW] Level Chips   │  A1  A2                              │
-│   │  deck-grid           │  <-- rendered by renderDecks()       │
-│   └──────────────────────┘                                      │
-├─────────────────────────────────────────────────────────────────┤
-│                       src/js/core/app.js                         │
-│   renderDecks()    startDeck()    renderCard()                  │
-│   [MOD]            [no change]    [no change]                   │
-├──────────────┬──────────────────────────────────────────────────┤
-│  core/       │  features/              utils/                   │
-│  state.js    │  progress.js            deck-utils.js            │
-│  [MOD]       │  [no change]            [MOD] filterByLevel()   │
-│              │                                                   │
-│  i18n.js     │  ui.js  audio.js                                 │
-│  [no change] │  [no change]                                     │
-├──────────────┴──────────────────────────────────────────────────┤
-│                     localStorage                                 │
-│   it-progress   es-progress   [NEW] purolingua-level-pref      │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### Component Responsibilities
-
-| Component | Responsibility | Change for v1.1 |
-|-----------|----------------|-----------------|
-| `core/state.js` | In-session card/deck state | Add `activeLevels` set (`['A1']` default) + getter/setter |
-| `core/app.js` | Orchestration, render, events | Render level chips, pass level filter into renderDecks/startDeck |
-| `utils/deck-utils.js` | Shuffle, choice generation | Add `filterDeckByLevels(deck, levels)` function |
-| `features/progress.js` | Leitner SRS, localStorage | No change — card keys are stable index-based |
-| `locales/*/decks.js` | Card data arrays | Add `level: 'A1'` or `level: 'A2'` to every card object |
-| `locales/*/ui.js` | UI strings | Add level chip label strings |
-| `index.html` | DOM structure | Add level filter chip container in deck-selection section |
-
-## Recommended Project Structure
-
-No new files are required. All changes are additive modifications to existing files.
+This is a static-export SPA with locale-prefixed URL routing. All state lives in localStorage. No server is involved at runtime. The architecture maps 1:1 from Next.js App Router conventions to Nuxt 3 conventions with well-understood substitutions.
 
 ```
-src/
-├── js/
-│   ├── core/
-│   │   ├── app.js          # MOD: level chip render + event handler + pass filter to renderDecks
-│   │   ├── state.js        # MOD: add activeLevels state + getActiveLevels/setActiveLevels
-│   │   ├── i18n.js         # no change
-│   │   └── views.js        # no change
-│   ├── features/
-│   │   ├── progress.js     # no change — SRS tracks all cards regardless of level
-│   │   ├── audio.js        # no change
-│   │   ├── ui.js           # no change
-│   │   └── voice.js        # no change
-│   └── utils/
-│       └── deck-utils.js   # MOD: add filterDeckByLevels() export
-├── locales/
-│   ├── it/
-│   │   ├── decks.js        # MOD: add level: 'A1'|'A2' to every card object
-│   │   └── ui.js           # MOD: add deckSelection.levelFilter strings
-│   └── es/
-│       ├── decks.js        # MOD: add level: 'A1'|'A2' to every card object
-│       └── ui.js           # MOD: add deckSelection.levelFilter strings
-├── css/
-│   └── style.css           # MOD: add .level-filter, .level-chip, .level-chip.active styles
-└── index.html              # MOD: add level chip container in #deck-selection
+pages/
+  index.vue                            <- language picker (was app/page.tsx)
+  [lang]/
+    index.vue                          <- activity picker (was app/[lang]/page.tsx)
+    rephrase/
+      index.vue                        <- deck browser (was app/[lang]/rephrase/page.tsx)
+      [deck].vue                       <- study session host (was app/[lang]/rephrase/[deck]/page.tsx)
+    qa/
+      index.vue                        <- scenario browser (was app/[lang]/qa/page.tsx)
+      [scenario].vue                   <- Q&A session host (was app/[lang]/qa/[scenario]/page.tsx)
+
+layouts/
+  default.vue                          <- SiteHeader wrap (was app/[lang]/layout.tsx)
+
+composables/
+  useSRS.ts                            <- MODIFIED from hooks/useSRS.ts
+  useLevelFilter.ts                    <- MODIFIED from hooks/useLevelFilter.ts
+  useQASRS.ts                          <- MODIFIED from hooks/useQASRS.ts
+  useVoiceRecognition.ts               <- MODIFIED from hooks/useVoiceRecognition.ts
+
+components/
+  SiteHeader.vue                       <- MODIFIED from components/SiteHeader.tsx
+  ActivityPicker.vue                   <- MODIFIED from components/ActivityPicker.tsx
+  DeckGrid.vue                         <- MODIFIED (was inline in rephrase/page.tsx)
+  ScenarioGrid.vue                     <- MODIFIED from components/ScenarioGrid.tsx
+  StudySession.vue                     <- MODIFIED from app/[lang]/rephrase/[deck]/StudySession.tsx
+  QAStudySession.vue                   <- MODIFIED from app/[lang]/qa/[scenario]/QAStudySession.tsx
+  ChoiceButton.vue                     <- MODIFIED from components/ChoiceButton.tsx
+  AudioButton.vue                      <- MODIFIED from components/AudioButton.tsx
+  LevelFilterChips.vue                 <- MODIFIED from components/LevelFilterChips.tsx
+  FeedbackMessage.vue                  <- MODIFIED from components/FeedbackMessage.tsx
+  MicButton.vue                        <- MODIFIED from components/MicButton.tsx
+
+lib/                                   <- REUSED AS-IS (pure TS, framework-agnostic)
+  srs.ts
+  generateChoices.ts
+
+types/
+  index.ts                             <- REUSED AS-IS
+
+data/                                  <- REUSED AS-IS
+  it/  es/  qa/  decks.ts  deckMap.ts
+
+i18n/
+  locales/
+    it.json                            <- REUSED (content unchanged; path moves from messages/)
+    es.json                            <- REUSED (content unchanged; path moves from messages/)
+
+nuxt.config.ts                         <- NEW (replaces next.config.ts)
+app.vue                                <- NEW (Nuxt root: <NuxtLayout><NuxtPage /></NuxtLayout>)
+i18n.config.ts                         <- NEW (vue-i18n options)
 ```
 
-### Structure Rationale
+---
 
-- **No new files:** The existing module boundaries cleanly absorb all new concerns. Creating a new `levels.js` module would be over-engineering for a two-value filter.
-- **`deck-utils.js` for filtering:** Deck manipulation already lives here (shuffle, choices). Level filtering is deck manipulation.
-- **`state.js` for activeLevels:** Session-level filter state belongs alongside `currentDeck`, `dueCardIndices`. It is not progress (doesn't belong in `progress.js`) and not locale (doesn't belong in `i18n.js`).
-- **`localStorage` with separate key:** Level preference is global (not per-language), so a single key `purolingua-level-pref` avoids duplicating the preference for each locale. This is separate from `it-progress` and `es-progress` which are language-scoped SRS data.
+## Component Boundaries
 
-## Architectural Patterns
+| Component | Responsibility | Communicates With |
+|-----------|---------------|-------------------|
+| `pages/index.vue` | Language picker, links to /it and /es | NuxtLink |
+| `pages/[lang]/index.vue` | Activity picker screen | ActivityPicker.vue |
+| `pages/[lang]/rephrase/index.vue` | Deck browser, level filter, live due-count badges | DeckGrid.vue, LevelFilterChips.vue, useSRS, useLevelFilter |
+| `pages/[lang]/rephrase/[deck].vue` | Rephrase study session host | `<ClientOnly>` + StudySession.vue |
+| `pages/[lang]/qa/index.vue` | Scenario browser, level filter, live due-count badges | ScenarioGrid.vue, LevelFilterChips.vue, useSRS, useLevelFilter |
+| `pages/[lang]/qa/[scenario].vue` | Q&A study session host | `<ClientOnly>` + QAStudySession.vue |
+| `layouts/default.vue` | SiteHeader wrap around all pages | SiteHeader.vue, `<slot />` |
+| `StudySession.vue` | Full Rephrase session logic — card flip, choices, voice, feedback | useSRS, useLevelFilter, useVoiceRecognition, AudioButton, ChoiceButton, MicButton, FeedbackMessage |
+| `QAStudySession.vue` | Full Q&A session logic — 4-choice, TTS, voice, feedback | useQASRS, useVoiceRecognition, AudioButton, ChoiceButton, MicButton, FeedbackMessage |
+| `SiteHeader.vue` | Logo, language switcher dropdown, back button, progress reset | useRoute, useRouter, useI18n |
+| `DeckGrid.vue` | Deck tiles with live due-count badges | useSRS, useLevelFilter (via props), NuxtLink |
+| `ScenarioGrid.vue` | Scenario tiles with live due-count badges | useQASRS, NuxtLink |
+| `LevelFilterChips.vue` | A1/A2 toggle chips — FLTR-06 guard in parent | Props in, emit out |
+| `useSRS.ts` | Leitner SRS state for Rephrase decks | localStorage, lib/srs.ts |
+| `useLevelFilter.ts` | Active level array + FLTR-06 guard | localStorage |
+| `useQASRS.ts` | Leitner SRS state for Q&A scenarios | localStorage, lib/srs.ts |
+| `useVoiceRecognition.ts` | Web Speech API wrapper | Browser SpeechRecognition API |
 
-### Pattern 1: Filtered Deck View — Derive, Don't Mutate
+---
 
-**What:** When a user changes the level filter, do NOT modify the source deck data. Re-derive a filtered view of the deck at render time.
+## Next.js to Nuxt 3 Mapping
 
-**When to use:** Every time `renderDecks()` is called and every time `startDeck()` runs.
+### Pages and Routing
 
-**Trade-offs:** Slightly more computation on each render; zero data integrity risk. Source decks stay authoritative. Worth it.
+| Next.js App Router | Nuxt 3 pages/ | Notes |
+|---|---|---|
+| `app/page.tsx` | `pages/index.vue` | Root language picker |
+| `app/[lang]/page.tsx` | `pages/[lang]/index.vue` | Activity picker |
+| `app/[lang]/rephrase/page.tsx` | `pages/[lang]/rephrase/index.vue` | Deck browser |
+| `app/[lang]/rephrase/[deck]/page.tsx` | `pages/[lang]/rephrase/[deck].vue` | Study session host |
+| `app/[lang]/qa/page.tsx` | `pages/[lang]/qa/index.vue` | Scenario browser |
+| `app/[lang]/qa/[scenario]/page.tsx` | `pages/[lang]/qa/[scenario].vue` | Q&A session host |
+| `app/layout.tsx` | `app.vue` | Root HTML shell |
+| `app/[lang]/layout.tsx` | `layouts/default.vue` | SiteHeader wrapper |
+| `generateStaticParams()` in each layout | `nitro.prerender.crawlLinks: true` | Nitro crawler discovers all NuxtLink hrefs automatically |
 
-**Example:**
+Dynamic route params: Next.js uses `useParams<{ lang: string }>()`. Nuxt 3 uses `useRoute().params.lang`. The value is identical — a string — and the cast `as Lang` is unchanged.
 
-```javascript
-// In deck-utils.js — NEW function
-function filterDeckByLevels(deck, activeLevels) {
-    // activeLevels is an array like ['A1'] or ['A1', 'A2']
-    if (!activeLevels || activeLevels.length === 0) return deck;
-    return {
-        ...deck,
-        cards: deck.cards.filter(card => activeLevels.includes(card.level))
-    };
+### Static Export
+
+**Next.js (next.config.ts):**
+```ts
+output: 'export'
+trailingSlash: true
+```
+
+**Nuxt 3 (nuxt.config.ts):**
+```ts
+nitro: {
+  prerender: {
+    routes: ['/'],
+    crawlLinks: true,
+  },
+},
+routeRules: {
+  '/**': { prerender: true },
+},
+router: {
+  trailingSlash: true,
+},
+```
+
+Run `nuxt generate` instead of `next build`. Output lands in `.output/public/` instead of `out/`. Deploy to Hostinger identically to the current Next.js export.
+
+**Critical constraint:** Do not set `ssr: false` globally in `nuxt.config.ts`. This disables `nuxt generate` prerendering and produces a bare SPA that requires a server to serve. Use `<ClientOnly>` per-component for browser-only content (see SSR bypass section).
+
+### React Hooks to Vue Composables
+
+| Next.js / React | Nuxt 3 / Vue | Notes |
+|---|---|---|
+| `useState<T>(init)` | `ref<T>(init)` | Replace `from 'react'` import |
+| `useCallback(fn, deps)` | Plain function | No dependency array; Vue reactivity tracks automatically |
+| `useMemo(fn, deps)` | `computed(() => fn())` | Reactive computed property |
+| `useEffect(() => {}, [])` | `onMounted(() => {})` | One-time on-mount side effect |
+| `useEffect(() => {}, [dep])` | `watch(dep, () => {})` | Reactive side effect |
+| `useRef<T>(null)` | `ref<T>(null)` | Same name, same purpose in Vue |
+| `useParams<{ lang: string }>()` | `useRoute().params.lang` | Nuxt auto-imports `useRoute` |
+| `useRouter()` + `router.refresh()` | `useRouter()` + `reloadNuxtApp()` | Different refresh API |
+| `usePathname()` | `useRoute().path` | |
+| `Link href="..."` | `NuxtLink to="..."` | |
+
+The composable function signatures stay identical — same arguments, same return shapes. Only the internals change from React primitives to Vue primitives.
+
+There is no React Context in this codebase. The Next.js port already uses focused hooks with no Context/Provider pattern. Each composable is self-contained and reads its own localStorage slice. This maps directly to Vue composables without modification to the ownership model.
+
+**Concrete example — useSRS internals:**
+```ts
+// Before (React hooks/useSRS.ts)
+const [progress, setProgress] = useState<ProgressRecord>(() => loadFromStorage(lang));
+const updateCard = useCallback((deckId, cardIndex, isCorrect) => {
+  setProgress(prev => {
+    const updated = { ...prev, [key]: advanceBox(prev[key], isCorrect) };
+    saveToStorage(lang, updated);
+    return updated;
+  });
+}, [lang]);
+
+// After (Vue composables/useSRS.ts)
+const progress = ref<ProgressRecord>({});
+onMounted(() => {
+  progress.value = loadFromStorage(lang);
+});
+function updateCard(deckId: DeckId, cardIndex: number, isCorrect: boolean) {
+  const key = getCardKey(deckId, cardIndex);
+  progress.value = { ...progress.value, [key]: advanceBox(progress.value[key], isCorrect) };
+  saveToStorage(lang, progress.value);
 }
+const hasProgress = computed(() => Object.keys(progress.value).length > 0);
+```
 
-// In app.js — renderDecks() modification
-function renderDecks() {
-    deckGrid.innerHTML = '';
-    const levels = getActiveLevels(); // from state.js
-    getDecks().forEach(deck => {
-        if (!deck.theme) return;
-        const filteredDeck = filterDeckByLevels(deck, levels); // new
-        const dueCount = getDueCount(filteredDeck);             // pass filtered deck
-        // ... render card using filteredDeck ...
-        card.addEventListener('click', () => startDeck(filteredDeck)); // pass filtered deck
-    });
+`isCardDueForDeck` becomes a plain function that reads `progress.value`. Vue components calling it inside a `computed` or template reactive expression re-evaluate automatically when `progress.value` changes.
+
+### i18n: next-intl to @nuxtjs/i18n
+
+| next-intl | @nuxtjs/i18n | Notes |
+|---|---|---|
+| `useTranslations('page')` then `t('title')` | `const { t } = useI18n()` then `t('page.title')` | Key path is dot-notation flat string in @nuxtjs/i18n |
+| `NextIntlClientProvider messages={messages}` | No component needed | Module handles message injection automatically |
+| `getRequestConfig()` in `src/i18n/request.ts` | `i18n.locales` + JSON files in nuxt.config | Module replaces the request config entirely |
+| `setRequestLocale(lang)` | Not needed | @nuxtjs/i18n handles locale context |
+| `routing.locales` array | `i18n.locales` in nuxt.config | Same `['it', 'es']` values |
+| `generateStaticParams()` for locale paths | `i18n.locales` drives static generation | Module generates locale routes at build time |
+
+**Message file format:** next-intl uses `useTranslations('nav').t('logo')` — namespace is passed to the hook. @nuxtjs/i18n uses a single `t()` with the full dotted path: `t('nav.logo')`. The existing `messages/it.json` and `messages/es.json` are structurally compatible — no content changes are needed. Only the call sites in components change.
+
+**Recommended strategy: `prefix_except_default`** with `defaultLocale: 'it'`. This matches the current Next.js behavior where all locale paths are explicit (e.g., `/it`, `/es`).
+
+Note: The current Next.js static export generates paths like `/it/index.html` and `/es/index.html`. If the Hostinger deployment requires all paths to be locale-prefixed, use `strategy: 'prefix'` instead to ensure `/it/` prefix is always present. Verify against actual deployed URL structure before choosing.
+
+**nuxt.config.ts i18n block:**
+```ts
+i18n: {
+  locales: ['it', 'es'],
+  defaultLocale: 'it',
+  strategy: 'prefix',
+  langDir: 'i18n/locales/',
+  vueI18n: './i18n.config.ts',
+},
+```
+
+**useLocalePath:** @nuxtjs/i18n provides `useLocalePath()`. Use this in templates when building `href`/`to` values instead of manually interpolating the lang param. Example: `const localePath = useLocalePath(); localePath('/rephrase/daily')` resolves to the correct locale-prefixed path. This replaces the current `/${lang}/rephrase/${deck.id}` string interpolation pattern throughout components.
+
+### SSR Bypass: next/dynamic ssr:false to Nuxt ClientOnly
+
+**The problem:** `StudySession` and `QAStudySession` read from localStorage and use the Web Speech API. Both are unavailable during server-side rendering.
+
+**Next.js solution (StudySessionNoSSR.tsx):**
+```ts
+const StudySession = dynamic(() => import('./StudySession'), { ssr: false });
+export default function StudySessionNoSSR(props) {
+  return <StudySession {...props} />;
 }
 ```
 
-### Pattern 2: Level State in `state.js` with localStorage Initialization
-
-**What:** `activeLevels` is a module-level variable in `state.js`, initialized from localStorage on module load. A `setActiveLevels()` setter writes back to localStorage immediately.
-
-**When to use:** This matches how `i18n.js` handles locale preference — module-level variable, localStorage-backed, initialized at import time.
-
-**Trade-offs:** Initialization happens at module load, not `DOMContentLoaded`. Acceptable because localStorage is synchronous.
-
-**Example:**
-
-```javascript
-// In state.js — additions
-
-const LEVEL_PREF_KEY = 'purolingua-level-pref';
-
-function loadActiveLevels() {
-    try {
-        const saved = localStorage.getItem(LEVEL_PREF_KEY);
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            // Validate: must be array containing 'A1' and/or 'A2'
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        }
-    } catch (e) {
-        // ignore
-    }
-    return ['A1']; // default: A1 only
-}
-
-let activeLevels = loadActiveLevels();
-
-function getActiveLevels() {
-    return activeLevels;
-}
-
-function setActiveLevels(levels) {
-    activeLevels = levels;
-    try {
-        localStorage.setItem(LEVEL_PREF_KEY, JSON.stringify(levels));
-    } catch (e) {
-        console.warn('Failed to save level preference:', e);
-    }
-}
+**Nuxt 3 solution — `<ClientOnly>` in the page component:**
+```vue
+<!-- pages/[lang]/rephrase/[deck].vue -->
+<template>
+  <ClientOnly>
+    <StudySession :lang="lang" :deck-id="deckId" :cards="cards" />
+    <template #fallback>
+      <div>Loading...</div>
+    </template>
+  </ClientOnly>
+</template>
 ```
 
-### Pattern 3: Level Chip UI — Inline DOM, No Framework
+`<ClientOnly>` is built into Nuxt. It requires no import, tree-shakes the wrapped component from the server build, and is the direct equivalent of `dynamic(..., { ssr: false })`. The `StudySessionNoSSR.tsx` and `QAStudySessionNoSSR.tsx` wrapper files have no equivalent in Nuxt — `<ClientOnly>` in the page replaces both.
 
-**What:** Level filter chips are rendered once in `initializeApp()` (not in `renderDecks()`, which runs repeatedly). Chip click handlers call `setActiveLevels()` then `renderDecks()`.
+The `typeof window === 'undefined'` guards already present in the composables' `loadFromStorage` functions are valid and should be kept as secondary defense, but `onMounted` is the primary pattern for localStorage initialization.
 
-**When to use:** This matches how the language selector is wired — built once during init, triggers re-render.
-
-**Trade-offs:** Chip DOM must be built before `renderDecks()` first runs. Ordering in `initializeApp()` matters.
-
-**Example:**
-
-```javascript
-// In app.js
-
-function renderLevelChips() {
-    const container = document.getElementById('level-filter');
-    if (!container) return;
-    container.innerHTML = '';
-    const levels = ['A1', 'A2'];
-    levels.forEach(level => {
-        const chip = document.createElement('button');
-        chip.className = 'level-chip' + (getActiveLevels().includes(level) ? ' active' : '');
-        chip.textContent = level;
-        chip.addEventListener('click', () => toggleLevel(level));
-        container.appendChild(chip);
-    });
-}
-
-function toggleLevel(level) {
-    const current = getActiveLevels();
-    let next;
-    if (current.includes(level)) {
-        // Don't allow deselecting both — always keep at least one
-        if (current.length === 1) return;
-        next = current.filter(l => l !== level);
-    } else {
-        next = [...current, level];
-    }
-    setActiveLevels(next);
-    renderLevelChips(); // update active class
-    renderDecks();      // re-render deck list with new filter
-}
-```
+---
 
 ## Data Flow
 
-### Level Filter Change Flow
-
 ```
-User clicks level chip (A1 or A2)
-    ↓
-toggleLevel(level) in app.js
-    ↓
-setActiveLevels(next) in state.js
-    → writes 'purolingua-level-pref' to localStorage
-    ↓
-renderLevelChips() — updates .active class on chips
-    ↓
-renderDecks()
-    ↓
-  for each deck:
-    filterDeckByLevels(deck, activeLevels) in deck-utils.js
-        → returns { ...deck, cards: [only matching level cards] }
-    getDueCount(filteredDeck) in progress.js
-        → unchanged: still iterates card indices, checks SRS dates
-    startDeck(filteredDeck) on click
-        → unchanged: iterates filteredDeck.cards for due indices
+localStorage (${lang}-progress, ${lang}-level-filter)
+    |
+    | onMounted read
+    v
+useSRS(lang) ---------> progress ref, updateCard fn, isCardDueForDeck fn, hasProgress computed
+useLevelFilter(lang, hasProgress) -> activeLevels ref, setActiveLevels fn
+    |
+    | props
+    v
+pages/[lang]/rephrase/index.vue
+    |                     |
+    | props               | props + isCardDueForDeck
+    v                     v
+LevelFilterChips      DeckGrid -> renders due-count badges
+  (emits update)
+    |
+    | setActiveLevels call
+    v
+localStorage write + activeLevels ref update
+    -> DeckGrid re-renders (computed due counts react to progress ref)
+
+pages/[lang]/rephrase/[deck].vue
+    |
+    | <ClientOnly>
+    v
+StudySession.vue
+    | onMounted: snapshot dueCards into ref (frozen for session)
+    | updateCard call per answer
+    v
+useSRS.updateCard -> progress.value update -> localStorage write
 ```
 
-### SRS Index Stability Problem and Solution
+**Session snapshot pattern preserved:** `StudySession` must snapshot `dueCards` once on mount to prevent mid-session re-filtering. In Vue, this is `const dueCards = ref<...[]>([])` initialized in `onMounted`, not a `computed`. The value is set once and never recomputed. This is the exact equivalent of the React `useState(() => computeDueCards())` pattern.
 
-This is the critical architectural constraint. Card indices in `progress.js` are stored as `{deckId}_{cardIndex}` where `cardIndex` is position in the original `deck.cards` array. Filtering before passing to `startDeck()` would break this — index 0 of the filtered deck is NOT the same card as index 0 of the source deck.
+---
 
-**Solution:** `filterDeckByLevels()` must preserve original indices. Do not use `Array.filter()` directly to produce `filteredDeck.cards`. Instead, produce a "filtered indices" list and use that within `startDeck()`.
+## Patterns to Follow
 
-The actual fix: `startDeck()` already computes due indices by iterating `deck.cards` and calling `isCardDue(deck.id, index)`. To apply level filtering here, add a level check:
+### Pattern 1: Composable with ref + onMounted for localStorage
 
-```javascript
-// In app.js — startDeck() modification
-function startDeck(deck) {
-    setCurrentDeck(deck);
-    const levels = getActiveLevels();
-    const tempDueIndices = [];
-    deck.cards.forEach((card, index) => {
-        // Level filter applied here, on original indices
-        const levelMatch = !card.level || levels.includes(card.level);
-        if (levelMatch && isCardDue(deck.id, index)) {
-            tempDueIndices.push(index);
-        }
-    });
-    // ... rest unchanged
+```ts
+// composables/useSRS.ts
+import { ref, computed, onMounted } from 'vue';
+import type { DeckId, Lang, ProgressRecord } from '~/types';
+import { getCardKey, advanceBox, isCardDue } from '~/lib/srs';
+
+export function useSRS(lang: Lang) {
+  const progress = ref<ProgressRecord>({});
+
+  onMounted(() => {
+    try {
+      const saved = localStorage.getItem(`${lang}-progress`);
+      if (saved) progress.value = JSON.parse(saved) as ProgressRecord;
+    } catch { /* silent */ }
+  });
+
+  function updateCard(deckId: DeckId, cardIndex: number, isCorrect: boolean) {
+    const key = getCardKey(deckId, cardIndex);
+    progress.value = {
+      ...progress.value,
+      [key]: advanceBox(progress.value[key], isCorrect),
+    };
+    try {
+      localStorage.setItem(`${lang}-progress`, JSON.stringify(progress.value));
+    } catch { /* silent */ }
+  }
+
+  function isCardDueForDeck(deckId: DeckId, cardIndex: number): boolean {
+    return isCardDue(progress.value[getCardKey(deckId, cardIndex)]);
+  }
+
+  const hasProgress = computed(() => Object.keys(progress.value).length > 0);
+
+  return { progress, updateCard, isCardDueForDeck, hasProgress };
 }
 ```
 
-This way `getDueCount()` and `renderDecks()` also need the same pattern — pass the full original deck but filter on `card.level` during iteration. The `filteredDeck` spread approach in `renderDecks()` is fine for display purposes (badge count), but `startDeck()` must operate on original card indices.
+`onMounted` is the correct guard for localStorage access — cleaner than `typeof window === 'undefined'` checks and idiomatic in Vue/Nuxt.
 
-**Revised data flow for `getDueCount()`:**
+### Pattern 2: Vue SFC with defineProps and defineEmits
 
-```javascript
-// Wrapper in app.js (or a new deck-utils function)
-function getDueCountForLevels(deck, levels) {
-    let count = 0;
-    deck.cards.forEach((card, index) => {
-        const levelMatch = !card.level || levels.includes(card.level);
-        if (levelMatch && isCardDue(deck.id, index)) count++;
-    });
-    return count;
+```vue
+<!-- components/LevelFilterChips.vue -->
+<script setup lang="ts">
+import type { Level } from '~/types';
+const { t } = useI18n();
+
+const props = defineProps<{ activeLevels: Level[] }>();
+const emit = defineEmits<{
+  'update:activeLevels': [levels: Level[] | null];
+}>();
+
+const LEVELS: Level[] = ['A1', 'A2'];
+
+function toggle(level: Level) {
+  if (props.activeLevels.includes(level)) {
+    emit('update:activeLevels', props.activeLevels.filter(l => l !== level));
+  } else {
+    emit('update:activeLevels', [...props.activeLevels, level]);
+  }
 }
+</script>
 ```
 
-This avoids touching `progress.js` at all — SRS keys remain `{deckId}_{originalIndex}` throughout the lifetime of the app.
+React's callback prop (`setActiveLevels`) becomes a Vue emit. The FLTR-06 guard (reject empty arrays) lives in the parent composable `useLevelFilter`, which is unchanged from the React version's placement.
 
-### Key Data Flows
+### Pattern 3: Page-level route params via useRoute
 
-1. **App init:** `loadActiveLevels()` runs when `state.js` is imported → `activeLevels` set from localStorage before `renderDecks()` is called.
-2. **Language switch:** `switchLanguage()` calls `renderDecks()` which already reads `getActiveLevels()` — level filter persists across language switches with zero extra code.
-3. **Progress reset:** `resetAllProgress()` clears `{locale}-progress` keys — it does NOT touch `purolingua-level-pref`. Level preference survives a progress reset. This is the correct behavior.
+```vue
+<!-- pages/[lang]/rephrase/[deck].vue -->
+<script setup lang="ts">
+import type { Lang, DeckId } from '~/types';
+import { DECK_MAP } from '~/data/deckMap';
+import { DECK_IDS } from '~/data/decks';
 
-## Scaling Considerations
+const route = useRoute();
+const lang = route.params.lang as Lang;
+const deckId = route.params.deck as DeckId;
+const cards = DECK_MAP[lang]?.[deckId] ?? [];
+</script>
+```
 
-This is a client-only app — traditional backend scaling does not apply.
+No `generateStaticParams` needed in page files. Nuxt's Nitro crawler discovers all routes automatically via `crawlLinks: true` when pages contain `<NuxtLink>` elements pointing to all deck paths. The locale routing is handled by @nuxtjs/i18n.
 
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| 2 levels (A1/A2) | Current approach: chip array, array filter — trivially adequate |
-| 4+ levels (B1, B2...) | Same approach still works up to ~6 levels with no changes |
-| Level-specific SRS tracks | Would require changing progress key scheme from `{deckId}_{index}` to `{deckId}_{level}_{index}` — migration logic needed; out of scope for v1.1 |
+---
 
-### Scaling Priorities
+## Anti-Patterns to Avoid
 
-1. **First concern (now):** Index stability — solved by filtering at iteration time, not by slicing the array.
-2. **Future concern:** If levels proliferate and users want separate SRS tracks per level, the progress key scheme would need versioned migration. Not needed for v1.1.
+### Anti-Pattern 1: Global ssr: false
 
-## Anti-Patterns
+**What goes wrong:** Setting `ssr: false` in `nuxt.config.ts` at the app level.
 
-### Anti-Pattern 1: Filtering the Cards Array Before SRS Operations
+**Why it happens:** Developers familiar with Next.js `output: 'export'` assume disabling SSR is the equivalent setting.
 
-**What people do:** `deck.cards = deck.cards.filter(c => levels.includes(c.level))` then pass the mutated deck to `isCardDue()` and `updateCardProgress()`.
+**Consequences:** `nuxt generate` stops producing pre-rendered HTML. The output becomes a bare SPA with a single `index.html` shell and no locale-specific pages. Breaks static hosting on Hostinger.
 
-**Why it's wrong:** `progress.js` uses `cardIndex` (array position) as part of the storage key (`daily_0`, `daily_4`, etc.). After filtering, card at index 0 is no longer the same card. SRS data is now attributed to the wrong card permanently.
+**Prevention:** Use `<ClientOnly>` per component for browser-only content. Leave SSR enabled globally for `nuxt generate` to work correctly.
 
-**Do this instead:** Filter at the iteration level inside `startDeck()` and `getDueCountForLevels()`. Keep `deck.cards` arrays immutable and in original order.
+### Anti-Pattern 2: Nuxt useState for SRS progress
 
-### Anti-Pattern 2: Storing Level Preference Inside the Language Progress Key
+**What goes wrong:** Using Nuxt's built-in `useState()` composable (not Vue's `ref`) for SRS progress state.
 
-**What people do:** Add `activeLevels` to the `it-progress` or `es-progress` localStorage objects alongside SRS card data.
+**Why it happens:** Nuxt's `useState` looks like the React `useState` it replaces.
 
-**Why it's wrong:** Level preference is language-agnostic (the user wants A1 regardless of whether they are studying Italian or Spanish). Storing it per-language means switching languages resets or fragments the level preference.
+**Consequences:** Nuxt's `useState` serializes state for SSR hydration and shares the keyed state across all component instances app-wide. Two simultaneously open sessions (different tabs, different languages) would corrupt each other's progress state. Also adds unnecessary overhead for state that is never server-rendered.
 
-**Do this instead:** Single `purolingua-level-pref` key — language-independent, app-global.
+**Prevention:** Use `ref` + `onMounted`. SRS progress is instance-local, localStorage-only, and never server-rendered.
 
-### Anti-Pattern 3: Re-rendering Level Chips Inside `renderDecks()`
+### Anti-Pattern 3: computed for dueCards inside StudySession
 
-**What people do:** Build level chip DOM elements inside the `renderDecks()` loop or call it on every deck render.
+**What goes wrong:** Deriving `dueCards` as a Vue `computed` property rather than a frozen ref snapshot.
 
-**Why it's wrong:** `renderDecks()` is called on every language switch, progress reset, and navigation home. This would re-attach event listeners on every call, leaking listeners and degrading performance.
+**Why it happens:** Reactive computed feels natural for a derived list.
 
-**Do this instead:** Build chips once in `renderLevelChips()`, called from `initializeApp()`. Chips only need to be re-rendered when `activeLevels` changes (inside `toggleLevel()`).
+**Consequences:** As cards are answered during a session, `progress.value` updates. If `dueCards` is a `computed`, it re-filters and the current card index points to a different card. Cards are skipped or sessions end prematurely.
 
-## Integration Points
+**Prevention:** Snapshot `dueCards` once in `onMounted` using `ref(computeDueCards())`. Never recompute it reactively during the session. This is identical to the React `useState(() => computeDueCards())` pattern it replaces.
 
-### Modified Files Summary
+### Anti-Pattern 4: Hardcoded /${lang}/ href strings
 
-| File | Type | Change |
-|------|------|--------|
-| `src/js/core/state.js` | Modify | Add `activeLevels`, `loadActiveLevels()`, `getActiveLevels()`, `setActiveLevels()` + export |
-| `src/js/core/app.js` | Modify | Add `renderLevelChips()`, `toggleLevel()`, `getDueCountForLevels()`, modify `renderDecks()` and `startDeck()` |
-| `src/js/utils/deck-utils.js` | Modify | Add `filterDeckByLevels()` export (used only for display counts if needed) |
-| `src/locales/it/decks.js` | Modify | Add `level: 'A1'` or `level: 'A2'` to every card; add new A1 cards |
-| `src/locales/es/decks.js` | Modify | Same as Italian decks |
-| `src/locales/it/ui.js` | Modify | Add `deckSelection.levelFilterLabel`, `deckSelection.levelA1`, `deckSelection.levelA2` |
-| `src/locales/es/ui.js` | Modify | Same UI strings in Spanish |
-| `src/css/style.css` | Modify | Add `.level-filter`, `.level-chip`, `.level-chip.active` styles |
-| `index.html` | Modify | Add `<div id="level-filter" class="level-filter"></div>` inside `#deck-selection` |
+**What goes wrong:** Building `href`/`to` values by interpolating the lang param: `` `/${lang}/rephrase/${deck.id}` ``.
 
-### Internal Module Boundaries After v1.1
+**Why it happens:** Direct port from Next.js where `/${lang}/...` worked correctly.
 
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| `app.js` → `state.js` | Direct import call | `getActiveLevels()` / `setActiveLevels()` added to existing import list |
-| `app.js` → `deck-utils.js` | Direct import call | `filterDeckByLevels()` added to existing import |
-| `state.js` → `localStorage` | Synchronous read/write | `purolingua-level-pref` key — separate from all `{locale}-progress` keys |
-| `progress.js` | Unchanged | No new dependencies; SRS key scheme unchanged |
-| `i18n.js` | Unchanged | Level chip labels come from `t()` using new ui.js keys |
+**Consequences:** @nuxtjs/i18n routing inserts locale prefixes according to the configured `strategy`. With `strategy: 'prefix'`, all routes are prefixed — but manually prepending `/${lang}` may double-prefix or produce incorrect paths depending on how the router resolves them.
 
-## Suggested Build Order
+**Prevention:** Use `useLocalePath()` from @nuxtjs/i18n for all navigation. `const localePath = useLocalePath(); localePath('/rephrase/daily')` resolves the locale-prefixed path correctly regardless of strategy.
 
-1. **Card data first:** Add `level` property to all existing cards in `it/decks.js` and `es/decks.js`. Tag all current cards as `A2`. Verify no existing tests break — `generateChoices()` tests use mock decks without `level` fields and will still pass because level is opt-in.
+### Anti-Pattern 5: Importing VueUse useStorage by name
 
-2. **State layer:** Add `activeLevels` variable, `loadActiveLevels()`, `getActiveLevels()`, `setActiveLevels()` to `state.js`. No UI impact yet — verifiable in isolation.
+**What goes wrong:** `import { useStorage } from '@vueuse/core'` without aliasing.
 
-3. **Utility layer:** Add `filterDeckByLevels()` to `deck-utils.js`. Write unit tests for it (filter by single level, filter by multiple levels, handle cards without `level` field gracefully).
+**Why it happens:** VueUse's `useStorage` is a well-known reactive localStorage utility.
 
-4. **Progress counting:** Add `getDueCountForLevels()` in `app.js` (or `deck-utils.js`). This gates the correct deck badge counts.
+**Consequences:** Nuxt 3 auto-imports Nitro's server-side `useStorage()` which has the same name. The auto-import shadows the VueUse import, causing a collision or unexpected behavior.
 
-5. **startDeck() filter:** Modify `startDeck()` to skip cards not matching `activeLevels`. This is the core SRS-safe integration point — existing E2E tests should still pass since existing cards are now tagged A2 and the default filter is A1 (which would show 0 cards). **Test this carefully** — temporarily set default to `['A1', 'A2']` for smoke testing existing flows, then restore to `['A1']`.
+**Prevention:** Write a thin custom composable using `ref` + `onMounted` (Pattern 1 above). Or import with explicit alias: `import { useStorage as useVueStorage } from '@vueuse/core'`. The custom composable approach is preferred — it keeps dependencies minimal and the pattern is already established by the existing hooks.
 
-6. **HTML + CSS:** Add level chip container to `index.html`, add styles to `style.css`.
+---
 
-7. **Chip rendering + toggle:** Add `renderLevelChips()` and `toggleLevel()` to `app.js`, wire into `initializeApp()`. Call `renderLevelChips()` before first `renderDecks()` call.
+## New vs Modified vs Reused
 
-8. **A1 content:** Add A1 phrase cards to all 8 decks for both languages. These are tagged `level: 'A1'` and immediately appear for new users (default filter).
+### Reused As-Is (zero changes)
 
-9. **UI strings:** Add level label strings to `it/ui.js` and `es/ui.js`.
+| File | Reason |
+|------|--------|
+| `src/lib/srs.ts` | Pure TypeScript functions, no framework imports |
+| `src/lib/generateChoices.ts` | Pure TypeScript, no framework imports |
+| `src/types/index.ts` | Type definitions only |
+| `src/data/**` (all card data and deck metadata) | Data modules, no framework imports |
+| `messages/it.json` | Message content unchanged; path moves to `i18n/locales/it.json` |
+| `messages/es.json` | Message content unchanged; path moves to `i18n/locales/es.json` |
+
+### Modified (framework swap, logic preserved)
+
+| Source | Target | What Changes |
+|--------|--------|-------------|
+| `hooks/useSRS.ts` | `composables/useSRS.ts` | `useState`/`useCallback` → `ref`/`computed`/`onMounted`; `typeof window` guards → `onMounted` |
+| `hooks/useLevelFilter.ts` | `composables/useLevelFilter.ts` | Same React → Vue primitive swap |
+| `hooks/useQASRS.ts` | `composables/useQASRS.ts` | `useMemo` → `computed`; `useState` → `ref` |
+| `hooks/useVoiceRecognition.ts` | `composables/useVoiceRecognition.ts` | `useRef`/`useEffect` → `ref`/`onMounted` |
+| `components/SiteHeader.tsx` | `components/SiteHeader.vue` | TSX → SFC; `usePathname` → `useRoute().path`; `useTranslations('nav').t('back')` → `t('nav.back')`; `useState` dropdown → `ref` |
+| `components/ActivityPicker.tsx` | `components/ActivityPicker.vue` | TSX → SFC; `Link` → `NuxtLink`; `useLocalePath()` for hrefs |
+| `components/*.tsx` (all others) | `components/*.vue` | TSX → SFC; callback props → emits; `useTranslations(ns).t(key)` → `t('ns.key')` |
+| `app/[lang]/rephrase/page.tsx` | `pages/[lang]/rephrase/index.vue` | Hook calls lifted to page; `useParams` → `useRoute().params` |
+| `app/[lang]/qa/page.tsx` | `pages/[lang]/qa/index.vue` | Same |
+| `app/[lang]/rephrase/[deck]/StudySession.tsx` | `components/StudySession.vue` | React → Vue; `useState` snapshot → `ref` in `onMounted`; all logic preserved |
+| `app/[lang]/qa/[scenario]/QAStudySession.tsx` | `components/QAStudySession.vue` | Same |
+| `app/[lang]/layout.tsx` | `layouts/default.vue` | `NextIntlClientProvider` removed; `{children}` → `<slot />`; `getMessages()` removed |
+
+### New (no Next.js equivalent)
+
+| File | Purpose |
+|------|---------|
+| `nuxt.config.ts` | Framework config: i18n module, Nitro prerender, Tailwind v4, TypeScript strict |
+| `app.vue` | Nuxt root: `<NuxtLayout><NuxtPage /></NuxtLayout>` |
+| `i18n.config.ts` | vue-i18n runtime options passed to @nuxtjs/i18n |
+
+### Deleted (no Nuxt equivalent needed)
+
+| File | Why Deleted |
+|------|-------------|
+| `app/[lang]/rephrase/[deck]/StudySessionNoSSR.tsx` | `<ClientOnly>` in page component replaces this |
+| `app/[lang]/qa/[scenario]/QAStudySessionNoSSR.tsx` | Same |
+| `src/i18n/request.ts` | @nuxtjs/i18n module handles message loading |
+| `src/i18n/routing.ts` | Locale config moves to `nuxt.config.ts` i18n block |
+| `src/i18n/navigation.ts` | `useLocalePath()` from @nuxtjs/i18n replaces this |
+| `app/[lang]/rephrase/layout.tsx` | No sub-layout needed; `layouts/default.vue` covers all pages |
+| `app/[lang]/qa/layout.tsx` | Same |
+
+---
+
+## Suggested Build Order for Phases
+
+Dependency chain: pure logic first, then framework scaffolding, then composables, then pages/components leaf-to-root, finally integration validation.
+
+| Phase | Deliverable | Depends On |
+|-------|-------------|-----------|
+| 1 | Nuxt 3 scaffold — `nuxt.config.ts`, `app.vue`, Tailwind v4 wired, @nuxtjs/i18n configured, `nuxt generate` produces `.output/public/` | Nothing |
+| 2 | Copy `src/lib/` and `src/types/` and `src/data/` verbatim; verify existing Vitest tests still pass | Phase 1 |
+| 3 | Port composables: `useSRS`, `useLevelFilter`, `useQASRS`, `useVoiceRecognition` — unit tests updated for Vue | Phase 2 |
+| 4 | Routing skeleton — all `pages/**/*.vue` with placeholder templates; verify all routes prerender via `nuxt generate` | Phase 1, 3 |
+| 5 | Primitive UI components: `ChoiceButton`, `AudioButton`, `MicButton`, `FeedbackMessage`, `LevelFilterChips` | Phase 1 |
+| 6 | `SiteHeader.vue` + `layouts/default.vue` — i18n strings, back-button logic, language switcher, progress reset | Phase 4, 5 |
+| 7 | `DeckGrid.vue`, `ScenarioGrid.vue`, `ActivityPicker.vue` — composite browser components with live due-count badges | Phase 3, 5, 6 |
+| 8 | `StudySession.vue` (Rephrase) — full session logic, all composables wired, `<ClientOnly>` in page | Phase 3, 5, 7 |
+| 9 | `QAStudySession.vue` (Q&A) — identical structure to Phase 8 | Phase 8 |
+| 10 | Static export validation — `nuxt generate`, verify `.output/public/` structure matches Hostinger requirements, deploy to staging | Phase 9 |
+
+---
+
+## Scalability Considerations
+
+This is a statically-hosted client-side app. Scalability is not a runtime concern. The only scalability surface is build-time route count and bundle size.
+
+| Concern | Current (14 decks + 7 scenarios) | Adding a language (e.g. French) | Doubling decks |
+|---------|-----------------------------------|----------------------------------|-----------------|
+| Static routes | ~30 prerendered pages | +~15 pages per language | Linear growth |
+| Card data bundle | ~640 cards (~60KB gzipped) | Linear increase | Linear increase |
+| localStorage | Two keys per language | One additional key set | No impact |
+| Build time | Seconds | Seconds | Seconds |
+
+No architectural changes are needed for moderate growth. If card count reaches thousands, lazy-loading per-deck data files would reduce initial bundle size — not a current concern.
+
+---
 
 ## Sources
 
-- Direct source inspection: `/Users/jbtellez/genies/purolingua/src/js/core/state.js` — confirmed module-level variable pattern
-- Direct source inspection: `/Users/jbtellez/genies/purolingua/src/js/features/progress.js` — confirmed `{deckId}_{cardIndex}` key scheme; identified index-stability constraint
-- Direct source inspection: `/Users/jbtellez/genies/purolingua/src/js/core/app.js` — confirmed `renderDecks()`, `startDeck()` call sites and data flow
-- Direct source inspection: `/Users/jbtellez/genies/purolingua/src/js/core/i18n.js` — confirmed localStorage preference pattern used as template for level pref
-- Direct source inspection: `/Users/jbtellez/genies/purolingua/src/locales/it/decks.js` — confirmed current card schema (no `level` field yet)
-- Direct source inspection: `/Users/jbtellez/genies/purolingua/tests/deck-utils.test.js` — confirmed test mock decks don't use `level`, so adding opt-in `level` field won't break existing tests
+Confidence levels:
+- File structure mapping: HIGH — derived from direct source inspection of all existing `.tsx` files and Nuxt 3 documentation patterns
+- Composable conversion: HIGH — direct mechanical mapping from React to Vue primitives
+- @nuxtjs/i18n strategy recommendation: MEDIUM — documented behavior, unverified against actual deployed URL format
+- `nitro.prerender` + `crawlLinks` approach: MEDIUM — documented Nuxt 3 pattern, community-confirmed for static export
 
----
-*Architecture research for: CEFR level filtering in PuroLingua v1.1*
-*Researched: 2026-02-22*
+- [@nuxtjs/i18n Routing Strategies](https://i18n.nuxtjs.org/docs/guide)
+- [@nuxtjs/i18n Usage](https://i18n.nuxtjs.org/docs/getting-started/usage)
+- [Nuxt 3 Prerendering](https://nuxt.com/docs/3.x/getting-started/prerendering)
+- [Nuxt 3 composables directory](https://nuxt.com/docs/3.x/guide/directory-structure/composables)
+- [Nuxt ClientOnly component](https://nuxt.com/docs/4.x/api/components/client-only)
+- [Nuxt state management — why not useState for localStorage](https://nuxt.com/docs/getting-started/state-management/)
+- Direct source inspection: all files under `src/app/`, `src/hooks/`, `src/components/` on branch `vue-port`

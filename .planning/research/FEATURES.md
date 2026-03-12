@@ -1,369 +1,244 @@
-# Feature Research
+# Feature Landscape: Nuxt 3 Port (v2.0)
 
-**Domain:** CEFR difficulty levels (A1/A2) for a browser-based language learning flashcard app
-**Researched:** 2026-02-22
-**Confidence:** HIGH (CEFR spec is a stable international standard; existing codebase reviewed directly)
-
-## Context: This Is a Milestone, Not a Greenfield Project
-
-This research covers only what is new for v1.1. The existing system (spaced repetition, audio, voice, quiz, localStorage, multi-language) is already shipped and working. New features must integrate without breaking or redesigning existing behavior.
-
-**Existing codebase constraints that shape every feature below:**
-- Cards are plain objects `{ front, back }` — adding `level` requires touching card data in both locale files
-- Progress is keyed by `deckId_cardIndex` (e.g. `daily_0`) — index-based, not ID-based
-- `renderDecks()` in `app.js` uses `getDecks()` → locale decks array directly, no filtering layer exists
-- `startDeck(deck)` passes the whole deck object; due-card filtering is inside that function
-- localStorage key is `${locale}-progress` — one SRS track per language, shared across levels (correct per PROJECT.md)
-- No global filter state object exists yet — must be added
+**Domain:** Nuxt 3 port of a Next.js 15 language learning SPA — full feature parity migration
+**Researched:** 2026-03-12
+**Confidence:** HIGH (codebase read directly; Nuxt 3 patterns confirmed via official docs + community sources)
 
 ---
 
-## Scope Analysis: What the Existing Cards Actually Are
+## Context: This Is a Port, Not a Greenfield Build
 
-Reviewing the existing Spanish and Italian decks reveals consistent A2 characteristics:
+Every feature below already exists in the v1.3 Next.js codebase (`vue-port` branch baseline from `feat/nextjs-port`). The question is not "what to build" but "how each feature translates to Nuxt 3 patterns." Complexity ratings reflect migration effort, not initial build effort.
 
-- Multi-clause sentences: "Estoy muerto de cansancio" / "Sono stanco morto"
-- Conditional/subjunctive mood implied: "¿Crees que nevará?" / "Pensi che nevicherà?"
-- Social media / modern idioms: "¿Estás en Instagram?"
-- Complex transactions: "¿Hay un error en la cuenta?"
-- Idiomatic phrasing: "Solo estoy mirando", "Ha sido un placer"
+**Existing modules that carry over unchanged (pure TypeScript, no React/Next imports):**
+- `src/lib/srs.ts` — `advanceBox`, `isCardDue`, `getCardKey` (pure functions, zero framework dependency)
+- `src/lib/generateChoices.ts` — Fisher-Yates distractor generation (pure function)
+- `src/data/**` — all card/scenario TypeScript data modules (zero framework dependency)
+- `src/types/index.ts` — `Card`, `Deck`, `QACard`, `Scenario`, `ProgressRecord`, `Lang`, `Level` types
 
-**Conclusion (HIGH confidence):** All 160 existing cards (20 per deck × 8 decks) should be tagged A2. None qualify as A1 by CEFR definition.
-
----
-
-## CEFR A1 Characteristics (HIGH confidence — CEFR is an established international standard)
-
-A1 is the entry level. Learners can:
-- Understand and use familiar everyday expressions
-- Introduce themselves and ask basic questions
-- Interact if the other person speaks slowly and clearly
-
-**A1 language markers:**
-- Single clause, present tense preferred
-- High-frequency vocabulary only (top ~500-1000 words)
-- Concrete, immediate needs (not abstract or hypothetical)
-- Fixed phrases and formulaic expressions
-- No complex verb moods, no idiomatic metaphors
-
-**A2 language markers (what current cards already are):**
-- Two-clause sentences
-- Past tense, hypothetical, conditional
-- Register awareness ("¿Me puede hacer un descuento?" is polite/formal)
-- Idiomatic expressions that require inferring meaning
-- Nuanced requests (extending a hotel stay, reporting a billing error)
+These files can be copied into the Nuxt project with no modifications. All migration effort is in hooks → composables, routing, i18n wiring, and SSR-bypass patterns.
 
 ---
 
-## Feature Landscape
+## Table Stakes
 
-### Table Stakes (Users Expect These)
+Features that must reach full parity for the port to be shippable. Each is already working in Next.js; migration complexity is the only variable.
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| `level` property on every card (A1 or A2) | Without tags, filtering is impossible; foundational data requirement | LOW | Add `"level": "A2"` to all 160 existing cards, `"level": "A1"` to new content. Pure data edit, no logic change. |
-| A1 phrase content for all 8 decks (both languages) | Without content there is nothing to filter to; the feature is meaningless | HIGH | 20 cards × 8 decks × 2 languages = 320 new cards. This is the bulk of the milestone's effort. Must be linguistically correct native-level phrasing. |
-| Level filter UI on deck screen (A1 / A2 chips, multi-select) | Users need a way to activate the feature; no UI = feature does not exist | MEDIUM | Chips above the deck grid. Multi-select allows A1 only, A2 only, or both. Default: A1 selected only. |
-| Default level: A1 selected on first visit | Per PROJECT.md spec; beginners land at the simpler content | LOW | Requires reading a default from localStorage or falling back to `["A1"]` |
-| Level preference persists across sessions | Returning users expect their setting to be remembered (same pattern as language preference) | LOW | One new localStorage key: `level-filter` → JSON array e.g. `["A1"]` or `["A1","A2"]` |
-| Deck grid filters in real-time when chips change | Standard filter UX; any delay or page reload feels broken | LOW | `renderDecks()` already re-renders from scratch; call it on chip toggle with active filter passed in |
-| "Due count" badge on deck cards reflects only visible-level cards | If A1 is selected but badge counts all cards including A2, it misleads the user | MEDIUM | `getDueCount(deck)` must filter cards by active level(s) before counting. Requires passing active levels into that function. |
-| At least one level always selected | Deselecting all levels would show no cards in any deck — confusing dead end | LOW | When toggling a chip off, check if it would leave zero selected levels; if so, prevent or auto-select the other |
-
-### Differentiators (Competitive Advantage)
-
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| One SRS track regardless of level | Beginners who unlock A2 keep their A1 progress; no penalty for advancing. Other apps often create separate tracks. | LOW | Already resolved in PROJECT.md; `deckId_cardIndex` keys are unique per card across both levels so no collision |
-| A1 content written as isolated learnable phrases, not translations of A2 | A1 phrases should be simpler constructions, not just shorter A2 phrases. Duolingo-style: "Hola, me llamo..." not "Yo me llamo..." | MEDIUM | Content authorship discipline; must be applied during content creation phase |
-| Chips visible above deck grid (persistent, contextual) | Inline on deck screen = zero friction to change; no settings screen required | LOW | Better UX than burying in settings; consistent with app's zero-friction philosophy |
-| Level badge on each deck card showing currently-visible count | "3 due (A1)" signals which level the card counts from; reassures user their filter is applied | LOW | Extend badge text to show active level(s) if desired, though even without label the count accuracy is sufficient |
-
-### Anti-Features (Commonly Requested, Often Problematic)
-
-| Feature | Why Requested | Why Problematic | Alternative |
-|---------|---------------|-----------------|-------------|
-| Separate SRS progress tracks per level | "A1 and A2 are different learning goals, I want to reset one independently" | Doubles state complexity; index-based key system would need redesign; users advancing from A1 to A2 lose their A1 progress; violates PROJECT.md decision | One shared SRS track. The card's `deckId_cardIndex` key is unique per card regardless of level. Progress resets cleanly via the existing reset button. |
-| Level progress bar / "X of Y A1 cards mastered" | Seems motivating | Requires defining what "mastered" means (Box 3? All due in next 7 days?); scope creep; streak was already removed for similar reasons | Due-count badge already shows remaining work. Keep that. |
-| Auto-advance to A2 when A1 is complete | "Intelligent" progression | Requires defining completion threshold; breaks user agency; beginners may want more A1 repetition | User manually selects A2 chip when ready |
-| A1/A2 badge displayed on individual flashcards during study | "Good to know what level I'm studying" | Disrupts the clean card face; adds cognitive load during active learning; level is a browsing/selection concept, not a study concept | Filter at the deck screen; no level label needed inside the study flow |
-| B1/B2/C1/C2 levels | Natural request after A1/A2 | Out of scope for this milestone; massive content effort; requires new vocabulary domains beyond traveler use case | Defer. Architecture should make it easy (just add more level values), but don't build content now. |
-| Separate decks per level (e.g., "Daily Life A1" and "Daily Life A2" as two deck cards) | Cleaner mental model | Doubles deck grid from 8 to 16 cards; breaks existing deck ID system; progress keys would need migration; filtering chips are the simpler approach | Level filter chips on the existing 8 deck cards. Each deck stays one unit. |
+| Feature | Next.js Pattern | Nuxt 3 Equivalent | Migration Complexity | Notes |
+|---------|----------------|-------------------|---------------------|-------|
+| Leitner SRS composable (`useSRS`) | `useState` + `useCallback` React hook, `'use client'` guard | `ref` + plain function inside `composables/useSRS.ts`; `onMounted` for localStorage init | LOW | `useState` → `ref`, `useCallback` → plain function (Vue reactivity tracks dependencies automatically), `typeof window === 'undefined'` guard → `onMounted` or `import.meta.client` |
+| Level filter composable (`useLevelFilter`) | `useState` + `useCallback` React hook, `'use client'` guard | `ref` + plain functions inside `composables/useLevelFilter.ts` | LOW | Same hook-to-composable pattern as `useSRS`; FLTR-06 guard logic is framework-agnostic and carries over verbatim |
+| Q&A SRS composable (`useQASRS`) | `useState` + `useCallback` + `useMemo` React hook | `ref` + `computed` inside `composables/useQASRS.ts` | LOW | `useMemo` → `computed()`; all other patterns same as `useSRS` migration |
+| Voice recognition composable (`useVoiceRecognition`) | `useState` + `useRef` + `useCallback` + `useEffect` | `ref` + `readonly ref` + plain functions + `onMounted` inside `composables/useVoiceRecognition.ts` | LOW | `useRef` → `ref` (Vue refs work for both DOM and mutable values); `useEffect(fn, [])` → `onMounted(fn)`; Web Speech API check on `onMounted` |
+| localStorage persistence (SRS + level filter) | `typeof window === 'undefined'` guard in hook init; `'use client'` prevents SSR | `onMounted` or `import.meta.client` guard; no `'use client'` needed in Nuxt composables | LOW | Vue composables do not have a `'use client'` concept; instead guard localStorage calls with `import.meta.client` or defer to `onMounted` |
+| i18n: Italian + Spanish UI strings | `next-intl`: `useTranslations('page')` → `t('title')`; `NextIntlClientProvider` in layout; `getMessages()` + `setRequestLocale()` server-side | `@nuxtjs/i18n`: `const { t } = useI18n()` → `t('page.title')`; module auto-provides locale in all components; no provider wrapper needed | MEDIUM | Key path syntax differs: next-intl uses scoped `useTranslations('namespace')` per component; @nuxtjs/i18n uses flat `t('namespace.key')` from a single `useI18n()` call. Message JSON files need key path adjustments. |
+| i18n: locale routing | `next-intl` `defineRouting({ locales, defaultLocale })`; `generateStaticParams` for `[lang]` in `layout.tsx` | `@nuxtjs/i18n` `strategy: 'prefix'` in `nuxt.config.ts`; module auto-generates locale-prefixed routes | MEDIUM | The `[lang]` dynamic segment in `pages/` is replaced by i18n module's built-in prefix routing. Route files become `pages/index.vue`, `pages/rephrase/index.vue`, etc. — the module injects `/it/` and `/es/` prefixes automatically. |
+| File routing: Activity Picker at `/[lang]` | `src/app/[lang]/page.tsx` — client component with `useParams()` | `pages/index.vue` — `useI18n().locale` provides current lang; no route param needed | LOW | With `strategy: 'prefix'`, the locale is available via `useI18n().locale` rather than a route param. |
+| File routing: Rephrase deck browser at `/[lang]/rephrase` | `src/app/[lang]/rephrase/page.tsx` | `pages/rephrase/index.vue` | LOW | Direct mapping; i18n module prefixes the URL automatically |
+| File routing: Rephrase study session at `/[lang]/rephrase/[deck]` | `src/app/[lang]/rephrase/[deck]/page.tsx` server component + `StudySessionNoSSR` client wrapper | `pages/rephrase/[deck].vue` with `<ClientOnly>` wrapper for localStorage/audio content | MEDIUM | The server-component + NoSSR-wrapper two-file pattern in Next.js collapses to one `.vue` file with `<ClientOnly>` in Nuxt |
+| File routing: Q&A scenario browser at `/[lang]/qa` | `src/app/[lang]/qa/page.tsx` | `pages/qa/index.vue` | LOW | Direct mapping |
+| File routing: Q&A study session at `/[lang]/qa/[scenario]` | `src/app/[lang]/qa/[scenario]/page.tsx` server component + `QAStudySessionNoSSR` client wrapper | `pages/qa/[scenario].vue` with `<ClientOnly>` | MEDIUM | Same two-file collapse as rephrase session |
+| SSR bypass for Web Speech API + localStorage components | `next/dynamic(() => import('./Component'), { ssr: false })` wrapping study sessions | `<ClientOnly>` component wrapping session content in `.vue` page file | LOW | `<ClientOnly>` is Nuxt's built-in equivalent; no dynamic import boilerplate needed |
+| Static prerender: all lang × deck routes | `generateStaticParams()` exported from `[deck]/page.tsx` returning all lang×deck combos | `nitro.prerender.routes` array in `nuxt.config.ts` listing all `/it/rephrase/daily`, `/es/rephrase/daily`, etc. | MEDIUM | Next.js uses per-file `generateStaticParams()`; Nuxt centralizes prerender routes in config. With `@nuxtjs/i18n` + `strategy: 'prefix'`, the i18n module can auto-generate locale-prefixed routes — verify with current module docs before relying on this. |
+| Static prerender: all lang × scenario routes | `generateStaticParams()` from `[scenario]/page.tsx` | Same `nitro.prerender.routes` approach, listing all `/it/qa/caffe`, `/es/qa/caffe`, etc. | MEDIUM | Same as deck route prerendering |
+| Static export for Hostinger deployment | `output: 'export'` + `trailingSlash: true` in `next.config.ts` | `nuxt generate` command; `nitro.prerender.autoSubfolderIndex: true` (default) for `index.html` subfolder format | LOW | `nuxt generate` produces `.output/public/` as a fully static directory; Hostinger serves it the same way as Next.js static export |
+| Due-count badges reactive to level filter | `getDueCount()` computed inline in `DeckGrid` component using `isCardDueForDeck` + `activeLevels` props | `computed(() => getDueCount(...))` in `<script setup>` of `DeckGrid.vue` using composable-returned values | LOW | Vue `computed` is the direct equivalent of React's inline memoized calculations; reactivity is automatic |
+| Rephrase flashcard SRS interaction (flip, grade, advance) | `StudySession.tsx` client component | `StudySession.vue` with `<script setup>` + `useSRS` composable | LOW | Component logic is nearly 1:1; event handlers become Vue `@click` handlers |
+| Q&A 4-choice interaction with TTS + voice | `QAStudySession.tsx` client component using `useQASRS`, `useVoiceRecognition`, Web Speech API | `QAStudySession.vue` with `<script setup>` + `useQASRS` + `useVoiceRecognition` composables | LOW | Same interaction model; Vue template replaces JSX |
+| Language switcher / SiteHeader | `SiteHeader.tsx` using next-intl `useRouter` + `usePathname` for locale switching | `SiteHeader.vue` using `useI18n().setLocale()` or `useLocalePath()` from `@nuxtjs/i18n` | MEDIUM | Locale switching API differs significantly: next-intl uses `router.replace(pathname, { locale })` while @nuxtjs/i18n uses `setLocale(code)` or locale-aware `<NuxtLink>` |
+| Level filter chips (A1/A2, FLTR-06 guard) | `LevelFilterChips.tsx` receiving `activeLevels` + `setActiveLevels` as props | `LevelFilterChips.vue` with same prop interface via `defineProps` + `defineEmits` | LOW | Component logic is framework-agnostic; replace JSX with Vue template, React props with `defineProps` |
+| Activity Picker screen | `ActivityPicker.tsx` with navigation links | `ActivityPicker.vue` with `<NuxtLink>` replacing `<Link>` from next/link | LOW | Structural 1:1 replacement |
+| Scenario browser with due-count badges | `ScenarioGrid.tsx` computing due counts per scenario | `ScenarioGrid.vue` with `computed` due counts | LOW | Same pattern as DeckGrid migration |
 
 ---
 
-## A1 Content Specification Per Topic Category
+## Differentiators
 
-**Confidence: MEDIUM** — CEFR A1 definition is HIGH confidence (established standard), specific phrase selections are synthesized from my training knowledge of CEFR word lists and standard phrasebooks. Linguistic review recommended before shipping.
+Nuxt 3 patterns that improve on or simplify the Next.js implementation.
 
-**Rule for A1 content:** Single clause, present tense or fixed phrase, top-500 vocabulary, no idiomatic metaphor, concrete immediate need. Front = the target-language phrase. Back = a simpler paraphrase in the target language (same pattern as existing A2 cards).
+| Feature | Next.js Limitation | Nuxt 3 Improvement | Complexity | Notes |
+|---------|-------------------|--------------------|------------|-------|
+| Auto-import composables | Hooks must be explicitly imported in every component | Composables in `composables/` directory are auto-imported by Nuxt | LOW (benefit) | No import statements needed for `useSRS`, `useLevelFilter`, etc. in `.vue` files |
+| Single-file components | JSX mixes template + logic; server/client split requires separate files (e.g., `StudySessionNoSSR.tsx`) | `.vue` SFC collapses server/client split into one file using `<ClientOnly>` | LOW (benefit) | Eliminates the `*NoSSR.tsx` wrapper file pattern entirely |
+| `useI18n().locale` replaces `useParams()` | Locale must be read from route params and threaded as prop through component tree | `useI18n().locale` is globally available in any component; no prop drilling | LOW (benefit) | Simplifies `lang` prop passing throughout the component tree |
+| VueUse `useLocalStorage` composable (optional) | localStorage guards (`typeof window`, `'use client'`) must be hand-rolled | VueUse's `useLocalStorage` with `initOnMounted: true` handles SSR hydration automatically | LOW (optional) | MEDIUM confidence — VueUse is a well-known library but verify hydration behavior matches project requirements before adopting |
+| Nuxt DevTools | No built-in DevTools in Next.js for composable state inspection | Nuxt DevTools provides composable state visualization in browser | LOW (benefit) | Debugging `useSRS` progress state and `useLevelFilter` becomes easier |
 
-### Daily Life (Vita Quotidiana / Vida Cotidiana)
+---
 
-A1 focus: greetings, time, basic needs, simple daily actions.
+## Anti-Features
 
-Representative A1 phrases (Spanish examples):
-- "Buenos días." / "Buenas noches." / "Buenas tardes."
-- "¿Cómo estás?" / "Bien, gracias."
-- "Tengo hambre." / "Tengo sed."
-- "Estoy cansado/a." / "Estoy bien."
-- "¿Qué hora es?" / "Son las tres."
-- "Por favor." / "Gracias." / "De nada."
-- "Perdona." / "Lo siento."
-- "No entiendo." / "¿Puede repetir?"
-- "¿Dónde está el baño?"
-- "Necesito agua."
+Patterns from Next.js that do NOT have a direct equivalent in Nuxt 3 and should not be replicated.
 
-Contrast with existing A2: Existing "Me desperté tarde" (past reflexive), "¿Tienes ganas de salir?" (idiom) are correctly A2.
-
-### Restaurant (Al Ristorante / En el Restaurante)
-
-A1 focus: ordering one item, asking price, simple dietary needs.
-
-Representative A1 phrases:
-- "Una mesa para dos, por favor."
-- "La carta, por favor."
-- "Quiero esto." (pointing)
-- "Un café, por favor."
-- "Agua, por favor."
-- "Sin carne."
-- "La cuenta, por favor."
-- "¿Cuánto es?"
-- "¡Está bueno!"
-- "¿Tiene…?" + simple noun
-
-Contrast with existing A2: "¿El servicio está incluido?", "¿La pasta es casera?" are A2 (presuppose cultural knowledge and complex syntax).
-
-### Travel (In Viaggio / De Viaje)
-
-A1 focus: asking location, simple directions, buying a ticket.
-
-Representative A1 phrases:
-- "¿Dónde está [el hotel / la estación / el aeropuerto]?"
-- "A la derecha." / "A la izquierda." / "Todo recto."
-- "Un billete, por favor."
-- "¿Cuánto cuesta?"
-- "¿Hay un autobús?"
-- "Quiero ir a [place]."
-- "¿Está lejos?"
-- "¿Cuántos minutos?"
-- "No entiendo."
-- "Más despacio, por favor."
-
-Contrast with existing A2: "¿Tengo que hacer transbordo?" (conditional + specialized vocab), "Perdí la conexión" (past + compound noun) are A2.
-
-### Shopping (Fare Spese / De Compras)
-
-A1 focus: asking price, saying yes/no to a purchase, basic size.
-
-Representative A1 phrases:
-- "¿Cuánto cuesta?"
-- "Lo quiero." / "No, gracias."
-- "¿Tiene una talla más grande / pequeña?"
-- "En efectivo." / "Con tarjeta."
-- "¿Dónde está la caja?"
-- "Un kilo de [item], por favor."
-- "Esto está bien."
-- "Es para mí."
-- "¿Hay más?"
-- "Dame dos, por favor."
-
-Contrast with existing A2: "¿Me puede hacer un descuento?" (formal conditional), "¿Tiene garantía?" (specialized concept) are A2.
-
-### Hotel (In Albergo / En el Hotel)
-
-A1 focus: check-in basics, asking for essentials, locating amenities.
-
-Representative A1 phrases:
-- "Tengo una reserva."
-- "Mi nombre es [name]."
-- "Una habitación, por favor."
-- "¿Cuánto cuesta la noche?"
-- "¿Dónde está el ascensor?"
-- "La llave, por favor."
-- "¿Hay desayuno?"
-- "Necesito más toallas."
-- "¿Hay WiFi?"
-- "¿A qué hora es el check-out?"
-
-Note: "¿A qué hora es el check-out?" straddles A1/A2 but "check-out" is loan vocabulary so common in hotel contexts it qualifies.
-
-Contrast with existing A2: "¿Puedo tener una habitación con vistas?" (conditional + complex request), "Quisiera prolongar mi estancia" (formal conditional + noun phrase) are A2.
-
-### Emergencies (Emergenze / Emergencias)
-
-A1 focus: critical survival phrases — must be learned even at A1.
-
-Note: This category has the most overlap between A1 and A2, because emergency phrases must be simple by necessity. Several existing cards are already near A1 simplicity. However, A1 should be even shorter, shout-able phrases.
-
-Representative A1 phrases:
-- "¡Ayuda!"
-- "¡Llame a la policía!"
-- "¡Un médico!"
-- "Estoy enfermo/a."
-- "Me duele aquí." (while pointing)
-- "He perdido mi pasaporte."
-- "¿Dónde está el hospital?"
-- "¿Dónde está la farmacia?"
-- "Soy alérgico/a a [item]."
-- "No estoy bien."
-
-Contrast with existing A2: "Alguien me está siguiendo" (present progressive + pronoun), "¿Dónde está la salida de emergencia?" (compound noun phrase) are A2 but barely.
-
-### Social (Conversazioni Sociali / Conversaciones Sociales)
-
-A1 focus: introductions, basic personal information, goodbyes.
-
-Representative A1 phrases:
-- "Hola." / "Adiós."
-- "Me llamo [name]."
-- "¿Cómo te llamas?"
-- "Mucho gusto."
-- "Soy de [country]."
-- "¿De dónde eres?"
-- "Tengo [number] años."
-- "Hasta luego."
-- "¿Hablas español/italiano?"
-- "Un poco."
-
-Note: Several existing cards are close to A1 ("¿Cómo te llamas?", "¿De dónde eres?") but carry A2 back-text complexity. The A1 version uses simpler paraphrases.
-
-### Weather (Il Tempo / El Tiempo)
-
-A1 focus: basic weather observations, simple adjectives.
-
-Representative A1 phrases:
-- "Hace calor." / "Hace frío."
-- "Llueve." / "Está lloviendo." (both common enough for A1)
-- "Hace sol."
-- "¿Qué tiempo hace?"
-- "Está nublado."
-- "Hace viento."
-- "¡Qué calor!" / "¡Qué frío!"
-- "Hoy hace buen tiempo."
-- "Hoy hace mal tiempo."
-- "¿Necesitas un paraguas?"
-
-Contrast with existing A2: "¿Crees que nevará?" (future + subjunctive), "Debería aclarar por la tarde" (conditional + time clause) are A2.
+| Anti-Feature | Why It Exists in Next.js | Why Not in Nuxt 3 | What to Do Instead |
+|--------------|--------------------------|-------------------|-------------------|
+| `'use client'` directive on composable files | React Server Components require explicit opt-in to client execution | Vue composables run on client by default; no directive exists or is needed | Simply omit the directive; composable files in `composables/` are always client-capable |
+| `*NoSSR.tsx` wrapper files (`StudySessionNoSSR.tsx`, `QAStudySessionNoSSR.tsx`) | Next.js dynamic import with `ssr: false` requires a separate wrapper component to avoid circular imports | Nuxt `<ClientOnly>` wraps content inline in the same `.vue` file | Use `<ClientOnly>` tag in `pages/rephrase/[deck].vue` directly; delete the wrapper file pattern |
+| `generateStaticParams()` export per page file | Next.js App Router requires per-file static param declarations | Nuxt centralizes route prerendering in `nuxt.config.ts` `nitro.prerender.routes` | List all prerender paths in `nuxt.config.ts` once; do not recreate per-file param exports |
+| `NextIntlClientProvider` in layout | next-intl requires explicit message hydration via a provider component | `@nuxtjs/i18n` injects i18n globally via the Nuxt module system | Do not add a provider component; the module handles everything |
+| `setRequestLocale(lang)` in every server component | next-intl requires manual locale context injection in RSC | `@nuxtjs/i18n` with `strategy: 'prefix'` sets locale context automatically from the URL | Do not replicate `setRequestLocale` calls; the module handles it |
+| `getMessages()` server-side message loading | next-intl's server/client message hydration bridge | @nuxtjs/i18n loads messages automatically per locale | Do not replicate; messages are available in all components automatically |
+| React `useParams()` for locale extraction | Next.js App Router exposes params via hook | Locale is available via `useI18n().locale.value` | Use `useI18n().locale.value` cast to `Lang` type; never read `[lang]` as a dynamic route param |
+| `'use client'` at top of page files | Required for any React hook usage in Next.js App Router pages | Vue pages always run in browser context; `<script setup>` composables are browser-safe | No equivalent needed in Nuxt pages |
 
 ---
 
 ## Feature Dependencies
 
 ```
-[level property on all cards]
-    └──required by──> [level filter UI chips]
-                          └──required by──> [filtered renderDecks()]
-                                                └──required by──> [filtered getDueCount()]
+[Pure TS libs: srs.ts, generateChoices.ts, types]
+    └──required by──> [useSRS composable]
+    └──required by──> [useQASRS composable]
+    └──required by──> [useLevelFilter composable]
+                           └──required by──> [LevelFilterChips.vue]
+                           └──required by──> [DeckGrid.vue due-count badges]
+                           └──required by──> [ScenarioGrid.vue due-count badges]
 
-[level filter persists in localStorage]
-    └──enhances──> [level filter UI chips]
+[Web Speech API (browser-native)]
+    └──required by──> [useVoiceRecognition composable]
+    └──required by──> [AudioButton.vue TTS]
+    Both require: <ClientOnly> wrapper or import.meta.client guard
 
-[A1 content created (320 new cards)]
-    └──required for──> [level filter to show A1 cards]
+[@nuxtjs/i18n module setup]
+    └──required by──> [locale routing (/it/, /es/ prefixes)]
+    └──required by──> [useI18n() in all components]
+    └──required by──> [SiteHeader locale switcher]
 
-[existing A2 content tagged]
-    └──required for──> [A2 filter chip to work correctly]
+[nitro.prerender.routes in nuxt.config.ts]
+    └──required by──> [static export of /it/rephrase/daily, /es/qa/caffe, etc.]
+    └──depends on──> [DECK_IDS list from src/data/decks.ts]
+    └──depends on──> [scenario IDs list from src/data/qa/index.ts]
+
+[useSRS composable]
+    └──required by──> [StudySession.vue (rephrase)]
+    └──required by──> [DeckGrid.vue due-count computation]
+
+[useQASRS composable]
+    └──required by──> [QAStudySession.vue]
+    └──required by──> [ScenarioGrid.vue due-count computation]
+
+[useVoiceRecognition composable]
+    └──required by──> [MicButton.vue]
+    └──used by──> [StudySession.vue, QAStudySession.vue]
 ```
 
 ### Dependency Notes
 
-- **`level` property on cards required by everything:** No filter logic can work until all cards carry a `level` field. This must be done first.
-- **A1 content required for user value:** The filter UI can be built independently, but there is nothing to show until A1 content exists. These can be developed in parallel but must both ship together.
-- **`getDueCount()` filtering must match `startDeck()` filtering:** If the badge shows 5 cards due but the deck starts with 3 (because level filter wasn't applied to `getDueCount()`), the UX is broken. Both must use the same filter logic.
-- **Level preference persistence enhances chips:** Chips work without persistence (defaulting to A1 on every load), but the experience degrades for returning users. Persistence is low complexity and should ship with the chips.
-- **One SRS track (no conflict):** The existing `deckId_cardIndex` keying system already accommodates multi-level cards without conflict. A1 cards added after A2 cards in the array will have indices like `daily_20`, `daily_21`, etc. Progress is never lost.
+- **Pure TS libs first:** `srs.ts`, `generateChoices.ts`, and `types/index.ts` can be copied verbatim and tested before any Vue component work begins.
+- **Composables before components:** All four composables (`useSRS`, `useLevelFilter`, `useQASRS`, `useVoiceRecognition`) should be migrated and unit-tested before building components that depend on them.
+- **i18n module before routing:** `@nuxtjs/i18n` must be configured before page routes are built, because locale-aware `<NuxtLink>` hrefs and `useI18n().locale` depend on it.
+- **`<ClientOnly>` required for study sessions:** Both `StudySession.vue` and `QAStudySession.vue` access localStorage (via `useSRS`/`useQASRS`) and Web Speech API (via `useVoiceRecognition`). These must be wrapped in `<ClientOnly>` or the page component must guard with `import.meta.client`.
+- **Prerender routes depend on data:** The `nitro.prerender.routes` list must be generated from `DECK_IDS` and scenario IDs — ideally as a computed array in `nuxt.config.ts` rather than a hand-typed list, to stay in sync with data changes.
+- **`qa_` prefix SRS key contract:** `useQASRS` uses `qa_{scenarioId}_{cardId}` keys in the same `{lang}-progress` localStorage entry as `useSRS`. This must be preserved exactly to avoid progress collisions between Rephrase and Q&A.
+
+---
+
+## Next.js → Nuxt 3 Pattern Mapping Reference
+
+### React Hooks → Vue Composables
+
+| React Pattern | Vue/Nuxt Equivalent | Notes |
+|--------------|---------------------|-------|
+| `useState<T>(initialValue)` | `ref<T>(initialValue)` | Access value with `.value` in `<script setup>` |
+| `useState<T>(() => expensiveInit())` | `const x = ref<T>(expensiveInit())` (called once at composable creation) | Vue composables are called once; no lazy init function needed |
+| `useCallback(fn, [deps])` | Plain function; Vue tracks reactive deps automatically | No memoization needed for simple state mutators |
+| `useMemo(() => compute(), [deps])` | `computed(() => compute())` | Deps are inferred automatically from reactive refs accessed inside |
+| `useEffect(fn, [])` (run once on mount) | `onMounted(fn)` | Exact equivalent |
+| `useEffect(fn, [dep])` (watch a dep) | `watch(dep, fn)` or `watchEffect(fn)` | `watchEffect` auto-tracks; `watch` for explicit source |
+| `useRef<T>(null)` (mutable container) | `ref<T>(null)` | Same; access via `.value` |
+| `useParams<{ lang: string }>()` | `useI18n().locale.value` (for locale) or `useRoute().params.deck` (for other params) | Locale param specifically should use i18n composable |
+
+### next-intl → @nuxtjs/i18n
+
+| next-intl Pattern | @nuxtjs/i18n Equivalent | Notes |
+|-------------------|------------------------|-------|
+| `import { useTranslations } from 'next-intl'` | Auto-imported; no import needed | `useI18n` is globally available |
+| `const t = useTranslations('page')` | `const { t } = useI18n()` | Namespace is part of the key path |
+| `t('title')` (scoped to 'page') | `t('page.title')` | Full dotted key path in @nuxtjs/i18n |
+| `NextIntlClientProvider messages={messages}` in layout | Not needed — module handles hydration | Delete the provider component entirely |
+| `setRequestLocale(lang)` in server component | Not needed — module sets locale from URL automatically | Delete these calls |
+| `getMessages()` in server layout | Not needed | Module loads messages automatically |
+| `defineRouting({ locales, defaultLocale })` | `i18n: { locales: ['it','es'], defaultLocale: 'it', strategy: 'prefix' }` in `nuxt.config.ts` | Centralized in config, not a separate routing file |
+| `hasLocale(locales, requested)` locale validation | Module validates locale and redirects automatically | No manual validation needed in pages |
+| `messages/it.json`, `messages/es.json` | Same file structure — @nuxtjs/i18n reads from same paths | KEY PATH FORMAT may need adjustment: verify flat vs nested structure |
+
+### Next.js App Router → Nuxt pages/
+
+| Next.js Path | Nuxt Path | Notes |
+|-------------|-----------|-------|
+| `src/app/page.tsx` (root redirect) | `pages/index.vue` | Redirect to default locale |
+| `src/app/[lang]/layout.tsx` | Not needed — i18n module handles locale layout | Delete; use `layouts/default.vue` for shared layout |
+| `src/app/[lang]/page.tsx` | `pages/index.vue` | Locale prefix added by i18n module |
+| `src/app/[lang]/rephrase/page.tsx` | `pages/rephrase/index.vue` | |
+| `src/app/[lang]/rephrase/[deck]/page.tsx` | `pages/rephrase/[deck].vue` | |
+| `src/app/[lang]/qa/page.tsx` | `pages/qa/index.vue` | |
+| `src/app/[lang]/qa/[scenario]/page.tsx` | `pages/qa/[scenario].vue` | |
+| `src/app/[lang]/*/layout.tsx` | `layouts/default.vue` or named layouts | Nuxt layouts are separate from pages |
+
+### SSR Bypass Equivalents
+
+| Next.js Pattern | Nuxt 3 Equivalent | Confidence |
+|----------------|-------------------|------------|
+| `dynamic(() => import('./Component'), { ssr: false })` | `<ClientOnly>` component wrapping the content | HIGH |
+| `if (typeof window === 'undefined') return {}` | `if (!import.meta.client) return {}` or defer to `onMounted` | HIGH |
+| `'use client'` directive | Not needed in Nuxt; Vue composables run on client | HIGH |
+
+### Static Route Generation
+
+| Next.js Pattern | Nuxt 3 Equivalent | Confidence |
+|----------------|-------------------|------------|
+| `export function generateStaticParams()` in page file | `nitro: { prerender: { routes: [...] } }` in `nuxt.config.ts` | HIGH |
+| Called per-file, returning array of param objects | Called once globally, listing full URL strings | HIGH |
+| `routing.locales.flatMap(lang => DECK_IDS.map(deck => ({ lang, deck })))` | `['it','es'].flatMap(lang => DECK_IDS.map(deck => \`/${lang}/rephrase/${deck}\`))` | HIGH |
+| `output: 'export'` in `next.config.ts` | `nuxt generate` command (no config equivalent needed) | HIGH |
+| `trailingSlash: true` in `next.config.ts` | `nitro.prerender.autoSubfolderIndex: true` (this is the default) | MEDIUM |
 
 ---
 
 ## MVP Definition
 
-### Launch With (v1.1)
+### Required for Feature Parity (all phases)
 
-These features form a coherent, usable milestone. Missing any one of them breaks the user experience.
+All features in the Table Stakes table are required. The port is not shippable until every existing v1.3 feature works. Priority order for implementation:
 
-- [ ] `level` property on all existing 160 cards (tag as `"A2"`) — enables filter to work on existing content
-- [ ] A1 phrase content for 8 decks × 2 languages (~320 cards, ~20 per deck per language) — provides content to filter to
-- [ ] Level filter chips in deck-selection view, default A1 selected — user-facing access to the feature
-- [ ] `renderDecks()` filters deck's card pool by active levels before computing due count — accurate badge
-- [ ] `startDeck()` filters card pool by active levels before SRS due check — accurate study session
-- [ ] Level preference saved to and loaded from localStorage — returning users not reset to A1 on every visit
-- [ ] Prevent deselecting all levels (always at least one chip active) — prevents broken empty state
+1. **Project scaffold** — Nuxt 3 + TypeScript + Tailwind v4 + @nuxtjs/i18n configured, static export working, dev server running
+2. **Pure TS lib copies** — `srs.ts`, `generateChoices.ts`, `types/index.ts`, all data modules copied verbatim; unit tests pass
+3. **Composables** — `useSRS`, `useLevelFilter`, `useQASRS`, `useVoiceRecognition` migrated to Vue; unit tests pass
+4. **i18n messages** — `messages/it.json`, `messages/es.json` adjusted for @nuxtjs/i18n key path format; verified in browser
+5. **Routing + pages** — All six page routes created; navigation works; locale prefix applied
+6. **Leaf components** — `FlashCard`, `ChoiceButton`, `AudioButton`, `LevelFilterChips`, `MicButton`, `FeedbackMessage`
+7. **Screen components** — `DeckGrid`, `ScenarioGrid`, `ActivityPicker`, `StudySession`, `QAStudySession`
+8. **Static prerender** — `nitro.prerender.routes` covering all 16 rephrase paths + 14 QA paths + locale roots
+9. **Deployment** — `nuxt generate`, verify `.output/public/` structure, deploy to Hostinger
 
-### Add After Validation (v1.x)
+### Defer
 
-- [ ] Level indicator in deck card badge text ("5 due · A1") — only if user feedback indicates confusion about which level is active
-- [ ] B1 content — only after A1 content quality is validated by actual learners
-
-### Future Consideration (v2+)
-
-- [ ] B2/C1/C2 levels — requires domain expansion beyond traveler vocabulary
-- [ ] Level-based onboarding quiz ("What level are you?") — only if data shows users are selecting wrong level
-- [ ] Cross-device sync — blocked by no-backend constraint, would require major architecture change
+- VueUse `useLocalStorage` adoption (optional DX improvement; only if hydration issues arise)
+- Nuxt Content or CMS integration (out of scope per PROJECT.md)
+- B1/B2 content (out of scope per PROJECT.md)
 
 ---
 
-## Feature Prioritization Matrix
+## Open Questions / Confidence Gaps
 
-| Feature | User Value | Implementation Cost | Priority |
-|---------|------------|---------------------|----------|
-| A1 content (320 new cards, both languages) | HIGH | HIGH (authorship time) | P1 |
-| `level` tag on all existing cards | HIGH | LOW (data edit) | P1 |
-| Level filter chips (UI) | HIGH | MEDIUM | P1 |
-| `renderDecks()` + `getDueCount()` level-aware filtering | HIGH | MEDIUM | P1 |
-| `startDeck()` level-aware filtering | HIGH | LOW (small change) | P1 |
-| Level preference persistence (localStorage) | MEDIUM | LOW | P1 |
-| At-least-one-chip-active guard | MEDIUM | LOW | P1 |
-| Level badge text in deck card | LOW | LOW | P2 |
-| B1 content | LOW (future) | HIGH | P3 |
+| Question | Confidence | Why It Matters |
+|----------|------------|----------------|
+| Does `@nuxtjs/i18n` with `strategy: 'prefix'` auto-generate prerender routes for dynamic `[deck]` and `[scenario]` segments, or must they be listed in `nitro.prerender.routes` manually? | MEDIUM | If auto-generation works, the prerender config is minimal; if not, all 30 paths must be listed explicitly |
+| Does `@nuxtjs/i18n` v9 use flat key paths (`t('page.title')`) or scoped namespaces compatible with existing `messages/it.json` structure? | MEDIUM | Message JSON may need restructuring before i18n works |
+| Does `nuxt generate` + `nitro.prerender.autoSubfolderIndex: true` produce `/{lang}/rephrase/{deck}/index.html` format that Hostinger serves correctly? | MEDIUM | Trailing slash behavior on Hostinger determined `trailingSlash: true` in Next.js; Nuxt equivalent must be verified |
+| Can `useVoiceRecognition` work inside `<ClientOnly>` without hydration mismatch on `isSupported` state? | MEDIUM | `isSupported` starts `false` on server (no window), becomes `true` on client — ensure UI doesn't flash wrong state |
 
 ---
-
-## Competitor Feature Analysis
-
-| Feature | Duolingo | Babbel | PuroLingua (planned) |
-|---------|----------|--------|----------------------|
-| CEFR level display | Labels content A1-C2 but doesn't let users filter by it | Courses structured by CEFR level | User-selectable multi-level filter chips |
-| Level selection UX | App places user into level via placement test | User picks course level at signup | User picks level at deck-selection screen, can change anytime |
-| SRS + levels interaction | Separate courses = separate SRS tracks | Separate courses = separate progress | Shared SRS track across levels (no progress loss) |
-| Default for beginners | Placement test or "start from scratch" | Beginner course default | A1 default, explicit opt-in to A2 |
-| Level persistence | Account-based | Account-based | localStorage per language |
-
-**Observation:** Major apps gate level behind accounts or placement tests. PuroLingua's zero-friction chip approach is genuinely simpler and more suitable for the app's "open and learn" philosophy.
-
----
-
-## Implementation Notes for Roadmap
-
-**Phase 1 should be: Content + Data Layer**
-- Tag all 160 existing cards as A2
-- Create 320 A1 cards (20 per deck × 8 decks × 2 languages)
-- No code changes required; pure data work
-- Can be done by a non-developer if structure is documented
-- Validate content quality before building UI (so UI testing is against real content)
-
-**Phase 2 should be: Filter Logic**
-- Add global `activeLevels` state (array, default `["A1"]`)
-- Persist to/from localStorage
-- Update `getDueCount()` to accept level filter
-- Update `startDeck()` to filter card pool by level
-- Update `renderDecks()` to pass active levels into due-count calculation
-
-**Phase 3 should be: Filter UI**
-- Add chip row above deck grid in HTML
-- Wire chip toggles to state + re-render
-- Handle always-one-selected guard
-- Load persisted preference on init
-
-**Card index stability:** When A1 cards are appended after A2 cards in each deck array, existing progress keys (`daily_0` through `daily_19`) remain valid. No migration needed.
 
 ## Sources
 
-- CEFR (Common European Framework of Reference for Languages) — established international standard, Council of Europe. Level descriptors are stable and well-documented.
-- Existing PuroLingua codebase reviewed directly: `src/locales/es/decks.js`, `src/locales/it/decks.js`, `src/js/core/app.js`, `src/js/features/progress.js`, `src/js/utils/deck-utils.js`
-- PROJECT.md milestone specification reviewed directly
-- Competitor patterns (Duolingo, Babbel) based on training knowledge — MEDIUM confidence, verify against current product state if needed
+- PuroLingua v1.3 source (`vue-port` branch baseline): `src/hooks/`, `src/app/`, `src/i18n/`, `src/components/` — read directly (HIGH confidence)
+- `PROJECT.md` — v2.0 active requirements read directly (HIGH confidence)
+- Nuxt 3 official docs — `useRoute`, prerendering, `<ClientOnly>` via WebSearch (MEDIUM confidence — WebFetch unavailable, verified from multiple concordant sources)
+- `@nuxtjs/i18n` docs — `useI18n`, routing strategies, composables via WebSearch (MEDIUM confidence — multiple concordant sources)
+- Vue 3 Composition API — `ref`, `computed`, `onMounted`, `watch` patterns via WebSearch (HIGH confidence — stable, well-documented)
+- "Vue Composition API and React Hooks comparison" — DEV Community article (MEDIUM confidence — corroborates training knowledge)
 
 ---
-*Feature research for: CEFR difficulty levels in a language learning flashcard app*
-*Researched: 2026-02-22*
+*Feature research for: Nuxt 3 port of PuroLingua v1.3 Next.js app*
+*Researched: 2026-03-12*

@@ -1,65 +1,243 @@
-# Stack Research
+# Technology Stack
 
-**Domain:** CEFR level filtering for vanilla JS language learning app (milestone v1.1)
-**Researched:** 2026-02-22
-**Confidence:** HIGH
-
-## Summary Verdict
-
-No new libraries or tools are needed. The CEFR A1/A2 level feature is achievable entirely within the existing stack. Every required capability — data tagging, UI filter rendering, state management, and localStorage persistence — already exists in the codebase and needs only extension, not replacement.
+**Project:** PuroLingua v2.0 — Nuxt 4 Vue Port
+**Researched:** 2026-03-12
+**Overall confidence:** HIGH (all recommendations verified against official docs and npm)
 
 ---
 
-## Existing Stack (Do Not Change)
+## Context
 
-These are confirmed and already in use. Recorded here as integration context for the new feature.
-
-| Technology | Current Version | Role in Project |
-|------------|-----------------|-----------------|
-| Vanilla JS (ES Modules) | ES2022 (browser-native) | All application logic; no transpilation needed |
-| Vite | ^6.0.0 | Dev server and build; static asset bundling |
-| Vitest | ^4.0.15 | Unit tests (jsdom environment) |
-| Playwright | ^1.58.2 | E2E tests (Chromium, Firefox, WebKit) |
-| localStorage | Browser-native | Per-language progress persistence |
-| Web Speech API | Browser-native | TTS and voice recognition |
+This is a port of an existing Next.js 15 + TypeScript + Tailwind v4 + next-intl application. The card
+data, SRS logic (Leitner 3-box), localStorage key contract, and Web Speech API usage are all
+**preserved unchanged**. Only the framework layer changes. Research scope: what's new or different
+in the Nuxt 4 ecosystem vs the existing Next.js 15 setup.
 
 ---
 
-## Stack Additions for v1.1
+## Recommended Stack
 
-**None required.** The following is an explicit no-op list — each capability was investigated and confirmed to already exist.
+### Core Framework
 
-### Level Tagging on Cards
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| nuxt | ^4.4.2 | App framework + routing + SSG | v4 is current stable (released 2025, 4.4.0 out 2026-03-12); v3 EOL July 2026; v4 is an incremental upgrade with same module ecosystem and minimal migration cost |
+| vue | ^3.5.x | Component model | Bundled with Nuxt 4; no separate install needed |
+| typescript | ~5.x | Type safety | Zero-config in Nuxt 4 — `nuxt.config.ts` + auto-generated `.nuxt/tsconfig.json`; no separate `tsconfig` bootstrapping required |
 
-**Capability needed:** Add a `level` field (`"A1"` or `"A2"`) to each card object in the locale deck files.
+**Why Nuxt 4 over Nuxt 3:** Nuxt 3 reaches EOL 2026-07-31. Starting a new port on v3 would require
+migration within months. Nuxt 4 is a soft upgrade — same module ecosystem, same composable API,
+same `nuxi generate` static output. The primary structural change is an `app/` directory convention,
+which is a clean starting point for a new codebase, not a migration burden.
 
-**Where it lives:** `/src/locales/it/decks.js` and `/src/locales/es/decks.js` — plain JS array exports. Add `"level": "A1"` or `"level": "A2"` to each card object literal.
+### i18n
 
-**No library needed.** Card data is a static JS object. Adding a property requires no tooling.
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| @nuxtjs/i18n | ^10.2.3 | Locale routing, UI string translation | Official Nuxt module; wraps vue-i18n v11; provides auto-generated locale routes (`/it/*`, `/es/*`), lazy-loaded translation files, typed `useI18n()` composable. Direct equivalent of `next-intl` in the Next.js stack. |
 
-### Level Filter State
+**Why @nuxtjs/i18n over raw vue-i18n:** Raw vue-i18n requires manual route generation for each
+locale. @nuxtjs/i18n generates `/[lang]/...` routes automatically and integrates with `nuxi generate`
+to prerender all locale variants — exactly what static export to Hostinger needs. This is the
+same relationship as next-intl to Next.js.
 
-**Capability needed:** Track which levels are active (A1, A2, or both). Persist across sessions.
+**Why not vue-i18n directly:** The Nuxt docs explicitly describe direct vue-i18n integration as
+"intended for demonstration purposes" and lacking routing/SEO features. For a multi-locale static
+site, the module is the correct choice.
 
-**Where it lives:** `features/progress.js` already has the localStorage read/write pattern using `getStorageKey()` per-language keys. The level preference is a separate concern from SRS progress — use a new key (e.g., `it-level-filter`) rather than mixing it into the existing `it-progress` object.
+**vue-i18n v11 note:** @nuxtjs/i18n v10 uses vue-i18n v11 internally. v11 removes `tc()` / `$tc()`.
+Use `t()` with plural count parameter instead. The existing Next.js translation strings use standard
+`t()` calls and are fully compatible.
 
-**No library needed.** The existing `localStorage.getItem` / `localStorage.setItem` pattern from `progress.js` is the right template. Copy it into a new small module (e.g., `features/level-filter.js`) or extend state.js.
+### CSS
 
-### Level Filter UI (Chip/Toggle)
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| tailwindcss | ^4.1.x | Utility CSS | Matches existing Next.js v1.3 stack exactly; v4 uses CSS-native `@import "tailwindcss"` rather than PostCSS config |
+| @tailwindcss/vite | ^4.1.x | Vite plugin integration | Nuxt 4 uses Vite internally; the Vite plugin is the official Tailwind v4 integration path for Vite-based frameworks. No `@nuxtjs/tailwindcss` module needed. |
 
-**Capability needed:** Render A1/A2 filter chips on the deck screen, handle multi-select, re-render decks on change.
+**Integration:** Add `@tailwindcss/vite` as a Vite plugin in `nuxt.config.ts`. Create
+`app/assets/css/main.css` with `@import "tailwindcss"`. Register in `nuxt.config.ts` `css` array.
+No `tailwind.config.js` file — Tailwind v4 is configured entirely in CSS using `@theme`.
 
-**Where it lives:** `renderDecks()` in `app.js` already builds DOM dynamically from `getDecks()`. The filter chips follow the exact same pattern as the language dropdown (create element, add class, addEventListener click). The `index.html` deck-selection section has a placeholder `<h1>` + `<p>` above `#deck-grid` — chips slot in naturally between subtitle and grid.
+**Why not @nuxtjs/tailwindcss module:** The official Tailwind v4 guide for Nuxt recommends the Vite
+plugin path, not the Nuxt module. The module has a tracked GitHub issue for v4 support (#820) with
+conflicting reports on stability. The Vite plugin is the canonical v4 path.
 
-**No library needed.** The existing DOM manipulation pattern (createElement / classList / addEventListener) handles this fully.
+### Static Export
 
-### Deck Filtering Logic
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| nitro (built-in) | Bundled with Nuxt 4 | Static site generation | `nuxi generate` prerenders all routes to `.output/public/` — equivalent to Next.js `output: 'export'` + `next build`. Nitro handles the static preset automatically. |
 
-**Capability needed:** Filter `deck.cards` to only cards matching the active level(s) before passing to quiz or due-count functions.
+**Configuration pattern:**
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  nitro: {
+    prerender: {
+      routes: ['/', '/it', '/es', '/it/rephrase', '/es/rephrase', '/it/qa', '/es/qa'],
+      crawlLinks: true,
+    },
+  },
+  routeRules: {
+    '/**': { prerender: true },
+  },
+})
+```
 
-**Where it lives:** `getDueCount(deck)` in `progress.js` iterates `deck.cards`. `startDeck(deck)` in `app.js` also iterates `deck.cards` to find due indices. Both need a pre-filter step: `deck.cards.filter(card => activelevels.includes(card.level))`.
+**Dynamic route prerendering:** Unlike Next.js `generateStaticParams`, Nuxt 4 uses `nitro.prerender.routes`
+or the crawler to discover routes. For deck and scenario routes (`/it/rephrase/[deck]`), add entries
+to `nitro.prerender.routes` or use the `<NuxtLink>` crawler via `crawlLinks: true`.
 
-**No library needed.** Plain `Array.filter()`.
+**Output:** `.output/public/` — upload this directory to Hostinger. Same deploy target as the
+Next.js `out/` directory.
+
+**trailingSlash:** Set `trailingSlash: true` in the router config if Hostinger requires
+`/it/rephrase/index.html` format (same constraint that existed in Next.js config).
+
+### Testing
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| vitest | ^3.x | Unit test runner | Existing test infrastructure; Nuxt 4 uses Vite so Vitest integrates natively |
+| @nuxt/test-utils | ^4.0.0 | Nuxt-aware test environment | Official Nuxt testing package; wraps `@vue/test-utils`; provides `mountSuspended()` for components using Nuxt composables (useI18n, useRoute, etc.); `mockNuxtImport()` for mocking auto-imports |
+| @vue/test-utils | ^2.x | Component mounting | Peer dependency of @nuxt/test-utils; provides `mount()`, `shallowMount()` |
+
+**Why @nuxt/test-utils over Vue Testing Library:** The existing Next.js tests use React Testing
+Library. Vue Testing Library exists but @nuxt/test-utils is the officially maintained Nuxt-specific
+solution and handles auto-imports, composables, and Nuxt plugins correctly during test runs. The
+`mountSuspended()` API is the direct equivalent of RTL's `render()` for Nuxt components.
+
+**@nuxt/test-utils v4 breaking change:** Nuxt environment setup moved to `beforeAll` hook. Composables
+called at the top of `describe()` blocks will throw `[nuxt] instance unavailable`. Move composable
+calls inside `beforeAll()`. Pure logic (SRS functions, data transforms) does not need `@nuxt/test-utils`
+— test with plain `vitest` directly.
+
+**Strategy:** SRS lib, card data, progress functions → plain Vitest (no DOM, no Nuxt runtime needed,
+exactly as in v1.3). Vue components and composables using Nuxt context → `mountSuspended` from
+`@nuxt/test-utils`.
+
+### Supporting Libraries
+
+| Library | Version | Purpose | When to Use |
+|---------|---------|---------|-------------|
+| vue-tsc | ^2.x | TypeScript type-check for Vue SFCs | Run in CI; `nuxt typecheck` wraps it |
+
+**No additional libraries needed.** Web Speech API, localStorage, and all browser APIs are used
+directly. No adapter libraries required.
+
+---
+
+## Alternatives Considered
+
+| Category | Recommended | Alternative | Why Not |
+|----------|-------------|-------------|---------|
+| Framework version | Nuxt 4 | Nuxt 3 | Nuxt 3 EOL 2026-07-31; starting on EOL version for a new port is wasteful |
+| i18n | @nuxtjs/i18n v10 | vue-i18n direct | No locale routing, no static route generation; requires manual plumbing that the module provides |
+| i18n | @nuxtjs/i18n v10 | intlify/nuxt3 | Unmaintained; the official module supersedes it |
+| CSS integration | @tailwindcss/vite plugin | @nuxtjs/tailwindcss module | Module has open v4 compatibility issue; Vite plugin is the official Tailwind v4 path |
+| Testing | @nuxt/test-utils | Vue Testing Library | @nuxt/test-utils handles Nuxt auto-imports and composable context; VTL works but requires more manual setup for Nuxt-specific features |
+| Testing | @nuxt/test-utils | Playwright E2E only | Unit tests for SRS/composable logic are faster and more precise; both layers are useful |
+
+---
+
+## Installation
+
+```bash
+# Create new Nuxt 4 project
+bunx nuxi@latest init purolingua-vue --template v4
+
+# i18n
+bun add @nuxtjs/i18n
+
+# Tailwind v4 (Vite plugin path)
+bun add tailwindcss @tailwindcss/vite
+
+# Testing
+bun add -D vitest @nuxt/test-utils @vue/test-utils vue-tsc
+```
+
+---
+
+## nuxt.config.ts Skeleton
+
+```ts
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineNuxtConfig({
+  compatibilityDate: '2025-07-15',
+
+  // TypeScript — zero config; Nuxt generates .nuxt/tsconfig.json
+  typescript: {
+    strict: true,
+    typeCheck: false, // run separately via 'nuxt typecheck'
+  },
+
+  // Tailwind v4 via Vite plugin
+  css: ['~/assets/css/main.css'],
+  vite: {
+    plugins: [tailwindcss()],
+  },
+
+  // i18n
+  modules: ['@nuxtjs/i18n'],
+  i18n: {
+    locales: ['it', 'es'],
+    defaultLocale: 'it',
+    strategy: 'prefix',              // routes: /it/..., /es/...
+    lazy: true,                      // load translation files on demand
+    langDir: 'i18n/',
+  },
+
+  // Static export
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ['/it', '/es'],
+    },
+  },
+  routeRules: {
+    '/**': { prerender: true },
+  },
+})
+```
+
+---
+
+## TypeScript Notes
+
+Nuxt 4 generates `.nuxt/tsconfig.json` automatically on `nuxi dev` or `nuxi build`. The project
+`tsconfig.json` should extend it:
+
+```json
+{
+  "extends": "./.nuxt/tsconfig.json"
+}
+```
+
+Auto-imports are fully typed — `useI18n()`, `useRoute()`, `useState()`, and all composables are
+available without explicit imports in `.vue` files. Custom composables in `composables/` are
+auto-imported and typed the same way.
+
+---
+
+## Preserved from Next.js Stack (No Change Needed)
+
+These capabilities exist unchanged in the new stack. No additional packages required.
+
+| Capability | How It Works in Nuxt 4 |
+|------------|----------------------|
+| Card data TypeScript types | Same `.ts` modules; no framework coupling |
+| SRS logic (Leitner 3-box) | Same pure TypeScript functions; import directly into composables |
+| localStorage persistence | Browser-native; same `useSRS`/`useLevelFilter` composable contract |
+| Web Speech API (TTS + voice recognition) | Browser-native; wrap in `onMounted` or `<ClientOnly>` to avoid SSR |
+| `qa_`-prefixed SRS keys | Same key format; composable carries over directly |
+| Append-only card index contract | Data format unchanged; no migration needed |
+
+**SSR caveat for Web Speech API:** `speechSynthesis` and `SpeechRecognition` are browser-only.
+Wrap any component that accesses these in `<ClientOnly>` or guard with `if (process.client)`.
+This replaces the `next/dynamic ssr:false` pattern used in the Next.js stack.
 
 ---
 
@@ -67,97 +245,29 @@ These are confirmed and already in use. Recorded here as integration context for
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| Any state management library (Redux, Zustand, Signals) | Adds framework coupling; the project deliberately uses vanilla JS module-level variables | Extend `state.js` with `currentLevelFilter` getter/setter following the existing pattern |
-| React / Vue component for filter chips | Violates the explicit "vanilla JS only" constraint; introduces build complexity | `document.createElement` + classList, same as language dropdown implementation |
-| A CSS framework or component library | Overkill for 2 chip buttons; adds dead weight to a static app | Extend the existing CSS custom properties in `style.css`; the design system (CSS variables, theme classes) already handles button and badge patterns |
-| A schema validation library (zod, yup) | Card data is static, authored by the developer, not user input | Document the `level` field in a comment in the deck file; validate in tests |
-| i18n keys for "A1" / "A2" labels | CEFR level names are internationally standardized proper nouns — they do not translate | Hardcode "A1" and "A2" as string literals in the filter chip UI |
-
----
-
-## Integration Points (Where to Touch Existing Code)
-
-These are the exact files that need modification. No new dependencies required.
-
-| File | Change Type | What Changes |
-|------|-------------|--------------|
-| `src/locales/it/decks.js` | Data | Add `"level": "A2"` to all existing card objects (all existing cards are A2 per PROJECT.md) |
-| `src/locales/es/decks.js` | Data | Same as above |
-| `src/locales/it/decks.js` | Data | Add new A1 card objects with `"level": "A1"` for all 8 topics |
-| `src/locales/es/decks.js` | Data | Same as above |
-| `src/locales/it/ui.js` | i18n | Add `deckSelection.levelFilter` key for filter section label if needed |
-| `src/locales/es/ui.js` | i18n | Same as above |
-| `src/js/features/progress.js` | Logic | `getDueCount` must accept a cards array (already filtered by level) rather than full deck |
-| `src/js/core/app.js` | Logic + UI | Add `renderLevelFilter()`, update `renderDecks()` to pre-filter cards by active level, wire up filter state |
-| `src/js/core/state.js` | State | Add `currentLevelFilter` (default `['A1']`), getter/setter |
-| `src/css/style.css` | CSS | Add `.level-filter`, `.level-chip`, `.level-chip.active` classes |
-
----
-
-## localStorage Key Design
-
-The level preference must be scoped per language (matching existing pattern) and separate from SRS progress.
-
-```
-// Existing keys (do not change):
-it-progress    → { "deckId_cardIndex": { box, nextReview } }
-es-progress    → same
-
-// New keys to add:
-it-level-filter  → ["A1"]          (default: A1 only)
-es-level-filter  → ["A1"]          (default: A1 only)
-```
-
-This mirrors `getStorageKey()` in `progress.js` — use `${locale}-level-filter` as the key pattern.
-
----
-
-## Card Data Schema (After v1.1)
-
-Current card shape:
-```js
-{ "front": "...", "back": "..." }
-```
-
-Required card shape after v1.1:
-```js
-{ "front": "...", "back": "...", "level": "A1" }
-// or
-{ "front": "...", "back": "...", "level": "A2" }
-```
-
-All existing cards tagged `"A2"`. New A1 content tagged `"A1"`. The `level` field is a required string on all cards post-migration.
-
----
-
-## Alternatives Considered
-
-| Recommendation | Alternative | Why Not |
-|----------------|-------------|---------|
-| Add `level` property to existing card objects in place | Separate A1/A2 into parallel arrays or separate deck files | Splitting decks breaks the single-SRS-track-per-language requirement; progress is keyed by `deckId_cardIndex` so card positions must stay stable across levels |
-| Single filter state stored as JSON array in localStorage | Store as comma-separated string or bitmask | JSON array is consistent with how `it-progress` is stored; `JSON.parse`/`JSON.stringify` already in use |
-| Pre-filter cards before passing to existing functions | Modify `isCardDue` and `updateCardProgress` to be level-aware | Keeping level concern at the deck-display layer keeps SRS functions pure and unchanged; avoids breaking existing tests |
-
----
-
-## Version Compatibility
-
-No new packages means no new compatibility surface. Existing versions are self-consistent:
-
-| Package | Version | Notes |
-|---------|---------|-------|
-| vite | ^6.0.0 | No config changes needed for this feature |
-| vitest | ^4.0.15 | jsdom environment handles localStorage mock; no setup changes needed |
-| @playwright/test | ^1.58.2 | `addInitScript` for localStorage seeding already in use in E2E tests; level filter tests follow same pattern |
+| Pinia | State surface is per-session and scoped to composables; no cross-component global store needed | Vue composables with `useState()` for SSR-safe reactive state if needed |
+| @nuxtjs/tailwindcss module | Has open v4 compatibility issue; adds unnecessary abstraction layer | `@tailwindcss/vite` plugin directly in `nuxt.config.ts` |
+| nuxt-content | No markdown content; all card data is TypeScript modules | Plain TS imports |
+| Separate vue-i18n install | @nuxtjs/i18n bundles and configures vue-i18n v11 automatically | @nuxtjs/i18n only |
+| Playwright (new setup) | Out of scope for this port milestone; unit tests sufficient for logic verification | Add E2E layer after feature parity confirmed |
+| Axios / ofetch for data fetching | No API calls; all data is static TypeScript imports | Native imports |
 
 ---
 
 ## Sources
 
-- Codebase inspection (HIGH confidence): `/src/js/core/app.js`, `/src/js/features/progress.js`, `/src/js/core/state.js`, `/src/js/core/i18n.js`, `/src/locales/it/decks.js`, `index.html`
-- `.planning/PROJECT.md` (HIGH confidence): Confirmed constraint "vanilla JS only — no React, Vue, etc." and v1.1 feature scope
-- E2E test pattern review (HIGH confidence): `/e2e/deck-selection.spec.js` — confirmed `addInitScript` + localStorage seeding pattern for level filter tests
+- [Nuxt 4.0 Announcement](https://nuxt.com/blog/v4) — MEDIUM confidence (official blog)
+- [Nuxt 4.3 Blog](https://nuxt.com/blog/v4-3) — MEDIUM confidence (official blog)
+- [@nuxtjs/i18n Installation Docs](https://i18n.nuxtjs.org/docs/getting-started) — HIGH confidence (official docs)
+- [Tailwind CSS with Nuxt — Official Guide](https://tailwindcss.com/docs/installation/framework-guides/nuxt) — HIGH confidence (official Tailwind docs)
+- [Nuxt Testing Docs v4](https://nuxt.com/docs/4.x/getting-started/testing) — HIGH confidence (official Nuxt docs)
+- [Nuxt TypeScript Concepts v4](https://nuxt.com/docs/4.x/guide/concepts/typescript) — HIGH confidence (official Nuxt docs)
+- [Nuxt Prerendering v4](https://nuxt.com/docs/4.x/getting-started/prerendering) — HIGH confidence (official Nuxt docs)
+- [Nuxt EOL Timeline](https://endoflife.date/nuxt) — MEDIUM confidence (endoflife.date)
+- [@nuxt/test-utils npm](https://www.npmjs.com/package/@nuxt/test-utils) — MEDIUM confidence (npm registry)
+- WebSearch: @nuxtjs/i18n v10.2.3 current version — MEDIUM confidence (multiple search results agree)
 
 ---
-*Stack research for: CEFR level filtering (A1/A2) in PuroLingua v1.1*
-*Researched: 2026-02-22*
+
+*Stack research for: PuroLingua v2.0 Nuxt 4 Vue Port*
+*Researched: 2026-03-12*
