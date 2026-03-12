@@ -1,54 +1,69 @@
-# Requirements: PuroLingua
+# Requirements: PuroLingua v2.0 — Vue Port
 
-**Defined:** 2026-03-08
+**Defined:** 2026-03-12
 **Core Value:** Users can study real conversational vocabulary offline, in any browser, with zero friction — no sign-up, no app install, just open and learn.
 
-## v1.3 Requirements
+## v2.0 Requirements
 
-### Activity Picker
+Full feature parity with v1.3 in Nuxt 4 + Vue 3. No new features — the migration scope is strictly the framework layer.
 
-- [x] **ACTPICK-01**: User can choose between Rephrase and Q&A activities after selecting a language
+### Scaffold
 
-### Q&A Data
+- [ ] **SCAF-01**: Nuxt 4 project initialized with TypeScript zero-config (`tsconfig.json` extends `.nuxt/tsconfig.json` only; no `compilerOptions.paths` override)
+- [ ] **SCAF-02**: Tailwind v4 integrated via `@tailwindcss/vite` Vite plugin (`@nuxtjs/tailwindcss` module never added; `@import "tailwindcss"` in global CSS)
+- [ ] **SCAF-03**: @nuxtjs/i18n configured with `strategy: 'prefix'`, Italian and Spanish locales, no `[lang]` page segments in `pages/` directory
+- [ ] **SCAF-04**: `nuxi generate` produces `.output/public/` with `nitro.prerender.routes` explicitly covering all locale × deck + locale × scenario route combinations (~46 routes)
+- [ ] **SCAF-05**: Vitest + @nuxt/test-utils configured; `mountSuspended` available for Vue composable testing; existing pure-logic tests passing unchanged
 
-- [x] **QADATA-01**: User can access 7 Italian Q&A scenarios with target-language questions and 4-option responses
-- [x] **QADATA-02**: User can access 7 Spanish Q&A scenarios with target-language questions and 4-option responses (parallel to Italian)
+### Data and Routing
 
-### Q&A Flow
+- [ ] **DATA-01**: `srs.ts`, `generateChoices.ts`, all `data/` card modules, and `types/` copied verbatim from `feat/nextjs-port` with existing Vitest tests passing unchanged
+- [ ] **DATA-02**: All 6 page routes (`/`, `/rephrase`, `/rephrase/[deck]`, `/qa`, `/qa/[scenario]`, plus locale-prefixed equivalents) defined with placeholder templates before any component work begins
 
-- [x] **QAFLOW-01**: User can browse Q&A scenarios in a grid with icon, title, and live due-count badge
-- [x] **QAFLOW-02**: User can filter Q&A scenarios by level (A1/A2 chips, same FLTR-06 guard)
-- [x] **QAFLOW-03**: User sees a target-language question with an audio button on the card front
-- [x] **QAFLOW-04**: User selects the correct response from 4 target-language options — no native language shown
-- [x] **QAFLOW-05**: User can speak an answer via voice recognition in Q&A sessions
-- [x] **QAFLOW-06**: User's Q&A progress persists via Leitner SRS with prefixed localStorage keys (`qa_{scenarioId}_{cardId}`)
-- [x] **QAFLOW-07**: User sees correct/incorrect feedback overlay consistent with Rephrase mode
-- [x] **QAFLOW-08**: User sees scenario-complete and all-done end screens after finishing a session
+### Composables
 
-### Bug Fixes
+- [ ] **COMP-01**: `useSRS` composable ported to Vue — all localStorage reads inside `onMounted`, `import.meta.client` guards, existing test contract and `${lang}-progress` key format preserved
+- [ ] **COMP-02**: `useLevelFilter` composable ported to Vue — A1/A2 filter state, new/returning user defaults, FLTR-06 guard (cannot deselect all chips), localStorage persistence
+- [ ] **COMP-03**: `useQASRS` composable ported to Vue — `qa_`-prefixed SRS keys, level filtering, Leitner intervals, `onMounted` guards
+- [ ] **COMP-04**: `useVoiceRecognition` composable ported to Vue — `SpeechRecognition` instantiation inside `onMounted`; used inside `<ClientOnly>` contexts only
 
-- [x] **BUGFIX-01**: User sees live due-count badges on Rephrase deck tiles (not static card count)
-- [x] **BUGFIX-02**: User is not shown all-done screen prematurely in A1-only mode
+### UI Components
+
+- [ ] **UI-01**: Leaf components ported as Vue SFCs: ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips (callback props become `defineEmits`)
+- [ ] **UI-02**: i18n messages (`it.json`, `es.json`) adjusted for @nuxtjs/i18n dotted key path format; SiteHeader locale switcher verified working in static output
+- [ ] **UI-03**: ActivityPicker screen with Rephrase/Q&A navigation tiles using `<NuxtLinkLocale>`
+- [ ] **UI-04**: DeckGrid screen with reactive live due-count badges (computed from `useSRS`) and level filter chips; A1/A2 toggle updates badge counts in one render cycle
+- [ ] **UI-05**: ScenarioGrid (Q&A browser) with reactive live due-count badges per scenario tile and level filter chips
+- [ ] **UI-06**: Rephrase StudySession — full Leitner flip/grade/advance, `dueCards` snapshotted as `ref` in `onMounted` (not `computed`), voice recognition, TTS audio, deck-done and all-done end screens; wrapped in `<ClientOnly>`
+- [ ] **UI-07**: Q&A StudySession — 4-choice interaction, `useQASRS`, TTS audio, voice recognition, correct/incorrect feedback, scenario-done and all-done screens; wrapped in `<ClientOnly>`
+
+### Deployment
+
+- [ ] **DEPLOY-01**: `nuxi generate` output verified against full checklist served over HTTP: all ~46 routes present, locale messages loading (no 404s), localStorage persisting across reloads, no hydration warnings in browser console
+- [ ] **DEPLOY-02**: Static export deployed to Hostinger; live site verified: locale routing, locale switching, SRS progress persistence, voice recognition, TTS audio
 
 ## Future Requirements
 
-### Tech Debt
-
-- **DEBT-01**: Extract duplicated `speak()` helper from AudioButton.tsx and StudySession.tsx into `src/lib/speak.ts`
-- **DEBT-02**: Remove unused `src/i18n/navigation.ts` locale helpers
-
 ### Content Quality
 
-- **CONTENT-01**: A1 phrase linguistic quality reviewed by native speaker (Italian and Spanish)
+- **CONTENT-01**: A1 phrase linguistic quality reviewed by native Italian and Spanish speakers before recommending to learners (carried from v1.3)
+
+### Tech Debt
+
+- **DEBT-01**: `speak()` helper extracted to `src/lib/speak.ts` (currently duplicated in AudioButton and StudySession in v1.3)
+- **DEBT-02**: `src/i18n/navigation.ts` locale helpers removed (unused in v1.3)
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Mixed Rephrase + Q&A decks | Activity types stay fully separate |
-| English context hints in Q&A | No native language once activity begins — by design |
-| B1/B2 scenario content | Deferred to v2 |
-| New Rephrase deck content | v1.3 focused on Q&A mode addition |
+| New content (B1/B2 levels) | v2.0 is a port, not a content expansion |
+| New study activity types | Full parity target; new activities are v2.1+ |
+| User accounts / backend | Core value is zero-friction, localStorage-first |
+| Mobile app | Web-first; browser works on mobile |
+| SSR / API routes | Static export only for Hostinger hosting |
+| Pinia / VueUse adoption | State surface small enough for focused composables |
+| VueUse useLocalStorage | Only adopt if onMounted pattern proves insufficient |
 
 ## Traceability
 
@@ -56,25 +71,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BUGFIX-01 | Phase 16 | Complete |
-| BUGFIX-02 | Phase 16 | Complete |
-| QADATA-01 | Phase 17 | Complete |
-| QADATA-02 | Phase 17 | Complete |
-| QAFLOW-06 | Phase 17 | Complete |
-| ACTPICK-01 | Phase 18 | Complete |
-| QAFLOW-01 | Phase 18 | Complete |
-| QAFLOW-02 | Phase 18 | Complete |
-| QAFLOW-03 | Phase 19 | Complete |
-| QAFLOW-04 | Phase 19 | Complete |
-| QAFLOW-05 | Phase 19 | Complete |
-| QAFLOW-07 | Phase 19 | Complete |
-| QAFLOW-08 | Phase 19 | Complete |
+| SCAF-01 | — | Pending |
+| SCAF-02 | — | Pending |
+| SCAF-03 | — | Pending |
+| SCAF-04 | — | Pending |
+| SCAF-05 | — | Pending |
+| DATA-01 | — | Pending |
+| DATA-02 | — | Pending |
+| COMP-01 | — | Pending |
+| COMP-02 | — | Pending |
+| COMP-03 | — | Pending |
+| COMP-04 | — | Pending |
+| UI-01 | — | Pending |
+| UI-02 | — | Pending |
+| UI-03 | — | Pending |
+| UI-04 | — | Pending |
+| UI-05 | — | Pending |
+| UI-06 | — | Pending |
+| UI-07 | — | Pending |
+| DEPLOY-01 | — | Pending |
+| DEPLOY-02 | — | Pending |
 
 **Coverage:**
-- v1.3 requirements: 13 total
-- Mapped to phases: 13
-- Unmapped: 0 ✓
+- v2.0 requirements: 20 total
+- Mapped to phases: 0
+- Unmapped: 20 ⚠️ (roadmap not yet created)
 
 ---
-*Requirements defined: 2026-03-08*
-*Last updated: 2026-03-08 after roadmap creation*
+*Requirements defined: 2026-03-12*
+*Last updated: 2026-03-12 after initial definition*
