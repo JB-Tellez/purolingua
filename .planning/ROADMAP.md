@@ -94,7 +94,9 @@ Plans:
   1. All existing Vitest tests for `srs.ts`, `generateChoices.ts`, and data modules pass without modification
   2. Navigating to `/it/rephrase/restaurant`, `/es/qa/caffe`, and all other locale × deck/scenario URLs in the generated static output returns a 200 (not 404)
   3. `nitro.prerender.routes` covers every locale × deck and locale × scenario combination; `.output/public/` tree is verifiable against an expected route list
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 21-01-PLAN.md — Create route verification script and confirm DATA-01 + DATA-02 complete
 
 ### Phase 22: Composables
 **Goal**: All four composables — useSRS, useLevelFilter, useQASRS, useVoiceRecognition — are ported to Vue with correct onMounted guards so no SSR hydration crash occurs and the existing localStorage key contracts are preserved
@@ -170,8 +172,8 @@ Plans:
 | 17. Q&A Data | v1.3 | 3/3 | Complete | 2026-03-09 |
 | 18. Activity Picker and Scenario Browser | v1.3 | 3/3 | Complete | 2026-03-10 |
 | 19. Q&A Study Session | v1.3 | 4/4 | Complete | 2026-03-10 |
-| 20. Scaffold | 2/2 | Complete    | 2026-03-12 | — |
-| 21. Pure Logic and Routing Skeleton | v2.0 | 0/? | Not started | — |
+| 20. Scaffold | v2.0 | 2/2 | Complete | 2026-03-12 |
+| 21. Pure Logic and Routing Skeleton | v2.0 | 0/1 | Not started | — |
 | 22. Composables | v2.0 | 0/? | Not started | — |
 | 23. i18n Messages and Leaf Components | v2.0 | 0/? | Not started | — |
 | 24. Browser Screens | v2.0 | 0/? | Not started | — |
