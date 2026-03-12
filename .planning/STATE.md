@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-12T23:22:19.386Z"
+last_updated: "2026-03-12T23:38:06.481Z"
 last_activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerendered routes, full test suite 22/22, human verify approved)
 progress:
   total_phases: 7
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 2
+  total_plans: 3
+  completed_plans: 3
 ---
 
 # State
@@ -81,6 +81,9 @@ Last activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerend
 - [Phase 20]: SCENARIO_IDS must use Italian IDs (caffe/albergo/...) matching src/data/qa/ barrel — English names from Plan 01 were incorrect
 - [Phase 20]: happy-dom must be installed separately — @nuxt/test-utils nuxt environment requires it but does not auto-install
 - [Phase 20]: Human verify approved: dev server loads, Tailwind applies, no 404s, no double-prefix in static output
+| Phase 21-pure-logic-and-routing-skeleton P01 | 5 | 2 tasks | 1 files |
+- [Phase 21-pure-logic-and-routing-skeleton]: Constants inlined in specs/verify-routes.ts — nuxt.config.ts uses TypeScript as const syntax not eval-safe in plain Bun scripts
+- [Phase 21-pure-logic-and-routing-skeleton]: Content check applied to all 36 routes (not just 3) in verify-routes.ts to catch silent SSR error pages
 
 ## Session Continuity
 

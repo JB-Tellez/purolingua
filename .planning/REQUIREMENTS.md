@@ -17,8 +17,8 @@ Full feature parity with v1.3 in Nuxt 4 + Vue 3. No new features — the migrati
 
 ### Data and Routing
 
-- [ ] **DATA-01**: `srs.ts`, `generateChoices.ts`, all `data/` card modules, and `types/` copied verbatim from `feat/nextjs-port` with existing Vitest tests passing unchanged
-- [ ] **DATA-02**: All 6 page routes (`/`, `/rephrase`, `/rephrase/[deck]`, `/qa`, `/qa/[scenario]`, plus locale-prefixed equivalents) defined with placeholder templates before any component work begins
+- [x] **DATA-01**: `srs.ts`, `generateChoices.ts`, all `data/` card modules, and `types/` copied verbatim from `feat/nextjs-port` with existing Vitest tests passing unchanged
+- [x] **DATA-02**: All 6 page routes (`/`, `/rephrase`, `/rephrase/[deck]`, `/qa`, `/qa/[scenario]`, plus locale-prefixed equivalents) defined with placeholder templates before any component work begins
 
 ### Composables
 
@@ -76,8 +76,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCAF-03 | Phase 20 | Complete |
 | SCAF-04 | Phase 20 | Complete |
 | SCAF-05 | Phase 20 | Complete |
-| DATA-01 | Phase 21 | Pending |
-| DATA-02 | Phase 21 | Pending |
+| DATA-01 | Phase 21 | Complete |
+| DATA-02 | Phase 21 | Complete |
 | COMP-01 | Phase 22 | Pending |
 | COMP-02 | Phase 22 | Pending |
 | COMP-03 | Phase 22 | Pending |
