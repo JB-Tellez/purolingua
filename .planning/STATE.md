@@ -2,15 +2,14 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
-status: roadmap_created
-stopped_at: Phase 20 — not started
-last_updated: "2026-03-12T00:00:00.000Z"
+status: planning
+last_updated: "2026-03-12T23:07:27.693Z"
 last_activity: 2026-03-12 — Roadmap created for v2.0 Vue Port
 progress:
   total_phases: 7
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # State
@@ -24,21 +23,22 @@ See: .planning/PROJECT.md (updated 2026-03-12 after v2.0 milestone started)
 
 ## Current Position
 
-Phase: 20 — Scaffold (not started)
-Plan: —
-Status: Ready to plan
+Phase: 20 — Scaffold (in progress, plan 01 complete)
+Plan: 01 done; Plan 02 next
+Status: In Progress
 
 ```
-v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0/7 phases
+v2.0 Progress: [█████░░░░░] 50% (plan 01/02 in phase 20)
 ```
 
-Last activity: 2026-03-12 — Roadmap created for v2.0 Vue Port
+Last activity: 2026-03-12 — Completed 20-01 (Nuxt 4 scaffold: toolchain installed, configs written, 21 unit tests passing)
 
 ## Performance Metrics
 
 - Phases complete: 0/7
-- Plans complete: 0/TBD
+- Plans complete: 1/TBD (phase 20: 1/2)
 - Requirements mapped: 20/20
+- Requirements completed: SCAF-01, SCAF-02, SCAF-03, SCAF-05
 
 ## Accumulated Context
 
@@ -74,7 +74,11 @@ Last activity: 2026-03-12 — Roadmap created for v2.0 Vue Port
 | No Pinia, no VueUse | State surface covered by focused composables |
 | onMounted guards for all localStorage access | Prevents SSR hydration crash |
 | nitro.prerender.routes explicit enumeration | Crawler does not discover programmatically-navigated deck/scenario routes |
+| Inlined DECK_IDS/SCENARIO_IDs in nuxt.config.ts | src/data/*.ts use @/types alias unavailable at config eval time |
+| langDir set to '../messages' (relative from srcDir app/) | absolute path breaks @nuxtjs/i18n v10 in production |
+| Unit Vitest project uses jsdom environment | setup.ts sets window globals, incompatible with node environment |
 
 ## Session Continuity
 
-Next action: Run `/gsd:plan-phase 20` to plan the scaffold phase.
+Last stopped: Completed 20-01 (Nuxt 4 scaffold toolchain)
+Next action: Run plan 02 — create app/pages/ placeholder routes (index, rephrase/index, rephrase/[deck], qa/index, qa/[scenario]) and verify smoke test passes with --project nuxt.

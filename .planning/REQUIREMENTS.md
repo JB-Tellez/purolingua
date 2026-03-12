@@ -9,11 +9,11 @@ Full feature parity with v1.3 in Nuxt 4 + Vue 3. No new features — the migrati
 
 ### Scaffold
 
-- [ ] **SCAF-01**: Nuxt 4 project initialized with TypeScript zero-config (`tsconfig.json` extends `.nuxt/tsconfig.json` only; no `compilerOptions.paths` override)
-- [ ] **SCAF-02**: Tailwind v4 integrated via `@tailwindcss/vite` Vite plugin (`@nuxtjs/tailwindcss` module never added; `@import "tailwindcss"` in global CSS)
-- [ ] **SCAF-03**: @nuxtjs/i18n configured with `strategy: 'prefix'`, Italian and Spanish locales, no `[lang]` page segments in `pages/` directory
+- [x] **SCAF-01**: Nuxt 4 project initialized with TypeScript zero-config (`tsconfig.json` extends `.nuxt/tsconfig.json` only; no `compilerOptions.paths` override)
+- [x] **SCAF-02**: Tailwind v4 integrated via `@tailwindcss/vite` Vite plugin (`@nuxtjs/tailwindcss` module never added; `@import "tailwindcss"` in global CSS)
+- [x] **SCAF-03**: @nuxtjs/i18n configured with `strategy: 'prefix'`, Italian and Spanish locales, no `[lang]` page segments in `pages/` directory
 - [ ] **SCAF-04**: `nuxi generate` produces `.output/public/` with `nitro.prerender.routes` explicitly covering all locale × deck + locale × scenario route combinations (~46 routes)
-- [ ] **SCAF-05**: Vitest + @nuxt/test-utils configured; `mountSuspended` available for Vue composable testing; existing pure-logic tests passing unchanged
+- [x] **SCAF-05**: Vitest + @nuxt/test-utils configured; `mountSuspended` available for Vue composable testing; existing pure-logic tests passing unchanged
 
 ### Data and Routing
 
@@ -71,11 +71,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCAF-01 | Phase 20 | Pending |
-| SCAF-02 | Phase 20 | Pending |
-| SCAF-03 | Phase 20 | Pending |
+| SCAF-01 | Phase 20 | Complete |
+| SCAF-02 | Phase 20 | Complete |
+| SCAF-03 | Phase 20 | Complete |
 | SCAF-04 | Phase 20 | Pending |
-| SCAF-05 | Phase 20 | Pending |
+| SCAF-05 | Phase 20 | Complete |
 | DATA-01 | Phase 21 | Pending |
 | DATA-02 | Phase 21 | Pending |
 | COMP-01 | Phase 22 | Pending |
