@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
-status: planning
-last_updated: "2026-03-12T23:07:27.693Z"
-last_activity: 2026-03-12 — Roadmap created for v2.0 Vue Port
+status: executing
+last_updated: "2026-03-12T23:12:45.066Z"
+last_activity: "2026-03-12 — Completed 20-01 (Nuxt 4 scaffold: toolchain installed, configs written, 21 unit tests passing)"
 progress:
   total_phases: 7
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # State
@@ -77,6 +77,9 @@ Last activity: 2026-03-12 — Completed 20-01 (Nuxt 4 scaffold: toolchain instal
 | Inlined DECK_IDS/SCENARIO_IDs in nuxt.config.ts | src/data/*.ts use @/types alias unavailable at config eval time |
 | langDir set to '../messages' (relative from srcDir app/) | absolute path breaks @nuxtjs/i18n v10 in production |
 | Unit Vitest project uses jsdom environment | setup.ts sets window globals, incompatible with node environment |
+- [Phase 20]: crawlLinks:false in nitro.prerender prevents Nitro crawler from following bare NuxtLinks that 404 under i18n prefix strategy
+- [Phase 20]: SCENARIO_IDS must use Italian IDs (caffe/albergo/...) matching src/data/qa/ barrel — English names from Plan 01 were incorrect
+- [Phase 20]: happy-dom must be installed separately — @nuxt/test-utils nuxt environment requires it but does not auto-install
 
 ## Session Continuity
 

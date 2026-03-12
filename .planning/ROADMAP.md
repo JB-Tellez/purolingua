@@ -61,7 +61,7 @@ Full archive: `.planning/milestones/v1.3-ROADMAP.md`
 
 ### v2.0 Vue Port (Phases 20–26)
 
-- [ ] **Phase 20: Scaffold** — Nuxt 4 project with TypeScript, Tailwind v4, @nuxtjs/i18n, and static export verified working
+- [x] **Phase 20: Scaffold** — Nuxt 4 project with TypeScript, Tailwind v4, @nuxtjs/i18n, and static export verified working (completed 2026-03-12)
 - [ ] **Phase 21: Pure Logic and Routing Skeleton** — All TypeScript libs copied verbatim with tests passing; all 6 page routes defined as placeholder templates
 - [ ] **Phase 22: Composables** — All four Vue composables ported with onMounted guards and existing test contracts preserved
 - [ ] **Phase 23: i18n Messages and Leaf Components** — i18n key paths adjusted for @nuxtjs/i18n; all atomic Vue SFCs built and locale switcher verified in static output
@@ -170,7 +170,7 @@ Plans:
 | 17. Q&A Data | v1.3 | 3/3 | Complete | 2026-03-09 |
 | 18. Activity Picker and Scenario Browser | v1.3 | 3/3 | Complete | 2026-03-10 |
 | 19. Q&A Study Session | v1.3 | 4/4 | Complete | 2026-03-10 |
-| 20. Scaffold | 1/2 | In Progress|  | — |
+| 20. Scaffold | 2/2 | Complete   | 2026-03-12 | — |
 | 21. Pure Logic and Routing Skeleton | v2.0 | 0/? | Not started | — |
 | 22. Composables | v2.0 | 0/? | Not started | — |
 | 23. i18n Messages and Leaf Components | v2.0 | 0/? | Not started | — |
