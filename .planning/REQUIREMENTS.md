@@ -71,32 +71,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCAF-01 | — | Pending |
-| SCAF-02 | — | Pending |
-| SCAF-03 | — | Pending |
-| SCAF-04 | — | Pending |
-| SCAF-05 | — | Pending |
-| DATA-01 | — | Pending |
-| DATA-02 | — | Pending |
-| COMP-01 | — | Pending |
-| COMP-02 | — | Pending |
-| COMP-03 | — | Pending |
-| COMP-04 | — | Pending |
-| UI-01 | — | Pending |
-| UI-02 | — | Pending |
-| UI-03 | — | Pending |
-| UI-04 | — | Pending |
-| UI-05 | — | Pending |
-| UI-06 | — | Pending |
-| UI-07 | — | Pending |
-| DEPLOY-01 | — | Pending |
-| DEPLOY-02 | — | Pending |
+| SCAF-01 | Phase 20 | Pending |
+| SCAF-02 | Phase 20 | Pending |
+| SCAF-03 | Phase 20 | Pending |
+| SCAF-04 | Phase 20 | Pending |
+| SCAF-05 | Phase 20 | Pending |
+| DATA-01 | Phase 21 | Pending |
+| DATA-02 | Phase 21 | Pending |
+| COMP-01 | Phase 22 | Pending |
+| COMP-02 | Phase 22 | Pending |
+| COMP-03 | Phase 22 | Pending |
+| COMP-04 | Phase 22 | Pending |
+| UI-01 | Phase 23 | Pending |
+| UI-02 | Phase 23 | Pending |
+| UI-03 | Phase 24 | Pending |
+| UI-04 | Phase 24 | Pending |
+| UI-05 | Phase 24 | Pending |
+| UI-06 | Phase 25 | Pending |
+| UI-07 | Phase 25 | Pending |
+| DEPLOY-01 | Phase 26 | Pending |
+| DEPLOY-02 | Phase 26 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 20 total
-- Mapped to phases: 0
-- Unmapped: 20 ⚠️ (roadmap not yet created)
+- Mapped to phases: 20
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-12*
-*Last updated: 2026-03-12 after initial definition*
+*Last updated: 2026-03-12 after roadmap creation*
