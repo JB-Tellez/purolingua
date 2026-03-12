@@ -1,6 +1,17 @@
 # PuroLingua
 
-## Current State: v1.3 Shipped
+## Current Milestone: v2.0 Vue Port
+
+**Goal:** Port the full-featured v1.3 Next.js app to Nuxt 3 with TypeScript and static export, achieving complete feature parity.
+
+**Target features:**
+- Nuxt 3 + TypeScript + Tailwind + nuxt-i18n (vue-i18n)
+- Rephrase activity: flashcard SRS, level filter, voice recognition, TTS audio
+- Q&A activity: scenario browser + QAStudySession with full interaction model
+- Static export deployable to Hostinger (same constraint as Next.js port)
+- All card data, SRS logic, and localStorage contract preserved
+
+## Previous State: v1.3 Shipped
 
 **Shipped:** 2026-03-10
 
@@ -59,9 +70,18 @@ Users can study real conversational vocabulary offline, in any browser, with zer
 
 ### Active
 
-<!-- Requirements for the next milestone. -->
+<!-- Requirements for v2.0 Vue Port. -->
 
-(None yet — run `/gsd:new-milestone` to define v1.4 requirements)
+- [ ] Nuxt 3 project with TypeScript, Tailwind v4, nuxt-i18n, static export
+- [ ] All card data ported to typed TypeScript modules (Card, Deck, Progress types)
+- [ ] SRS lib + composables (`useSRS`, `useLevelFilter`, `useQASRS`) ported to Vue/Nuxt
+- [ ] Full URL routing (`/`, `/[lang]`, `/[lang]/rephrase`, `/[lang]/rephrase/[deck]`, `/[lang]/qa`, `/[lang]/qa/[scenario]`)
+- [ ] All UI components: FlashCard, ChoiceButton, AudioButton, LevelFilterChips, ActivityPicker, ScenarioBrowser
+- [ ] nuxt-i18n delivering Italian and Spanish UI strings
+- [ ] Voice recognition composable (`useVoiceRecognition`)
+- [ ] Q&A study session: 4-choice, TTS audio, voice recognition, feedback, end screens
+- [ ] Live due-count badges on Rephrase deck tiles and Q&A scenario tiles
+- [ ] Level filter (A1/A2 chips) with new/returning user defaults and localStorage persistence
 
 ### Out of Scope
 
@@ -124,4 +144,4 @@ Tech stacks:
 | Scenario IDs as English slugs | Language-neutral URLs — same slug for `/it/qa/caffe` and `/es/qa/caffe` | ✓ Good |
 
 ---
-*Last updated: 2026-03-10 after v1.3 milestone*
+*Last updated: 2026-03-12 after v2.0 milestone started*
