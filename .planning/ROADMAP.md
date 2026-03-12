@@ -81,7 +81,10 @@ Full archive: `.planning/milestones/v1.3-ROADMAP.md`
   3. Tailwind v4 utility classes apply correctly in the browser (no PostCSS/module conflict errors)
   4. `@nuxtjs/i18n` with `strategy: 'prefix'` serves `/it/` and `/es/` locale prefixes; no `[lang]` page segments exist in `pages/`
   5. Vitest runs with `@nuxt/test-utils` and `mountSuspended` available; a smoke-test passes
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 20-01-PLAN.md — Install Nuxt 4, swap configs, create app shell + smoke test
+- [ ] 20-02-PLAN.md — Create placeholder pages and verify full static output
 
 ### Phase 21: Pure Logic and Routing Skeleton
 **Goal**: All TypeScript logic from the Next.js port is available in the Nuxt project with zero modifications, and all page routes return a response (even if placeholder) so prerender gaps surface early
@@ -167,7 +170,7 @@ Full archive: `.planning/milestones/v1.3-ROADMAP.md`
 | 17. Q&A Data | v1.3 | 3/3 | Complete | 2026-03-09 |
 | 18. Activity Picker and Scenario Browser | v1.3 | 3/3 | Complete | 2026-03-10 |
 | 19. Q&A Study Session | v1.3 | 4/4 | Complete | 2026-03-10 |
-| 20. Scaffold | v2.0 | 0/? | Not started | — |
+| 20. Scaffold | v2.0 | 0/2 | In planning | — |
 | 21. Pure Logic and Routing Skeleton | v2.0 | 0/? | Not started | — |
 | 22. Composables | v2.0 | 0/? | Not started | — |
 | 23. i18n Messages and Leaf Components | v2.0 | 0/? | Not started | — |
