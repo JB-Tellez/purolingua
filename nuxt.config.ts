@@ -39,6 +39,9 @@ export default defineNuxtConfig({
 
   nitro: {
     prerender: {
+      // Explicit routes only — crawler disabled to prevent 404s from bare /rephrase
+      // and /qa links in i18n prefix strategy (prefix strategy has no un-prefixed routes)
+      crawlLinks: false,
       routes: [
         '/',
         ...LOCALES.map(lang => `/${lang}`),
