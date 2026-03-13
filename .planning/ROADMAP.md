@@ -139,7 +139,12 @@ Plans:
   2. The rephrase deck grid shows a due-count badge per deck that updates in the same render cycle when a level chip is toggled
   3. The Q&A scenario grid shows a due-count badge per scenario tile and level filter chips that work the same as the rephrase grid
   4. A1/A2 chip toggle on either grid prevents deselecting all chips (FLTR-06 guard active in the UI)
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 24-01-PLAN.md — Write failing test stubs for all 3 screens (Wave 0)
+- [ ] 24-02-PLAN.md — Implement ActivityPicker page (UI-03)
+- [ ] 24-03-PLAN.md — Implement DeckGrid page with reactive badges (UI-04)
+- [ ] 24-04-PLAN.md — Implement ScenarioGrid page with reactive badges (UI-05)
 
 ### Phase 25: Study Sessions
 **Goal**: Users can complete a full Rephrase study session and a full Q&A study session — including TTS audio, voice recognition, card grading, and end screens — with no mid-session card skipping or SSR crashes
