@@ -243,8 +243,8 @@ function handleMicPress() {
         </p>
 
         <!-- Question text -->
-        <div class="card-container" style="margin: 1.5rem 0;">
-          <p style="font-size: 1.25rem; font-weight: 600; text-align: center; margin-bottom: 1rem;">
+        <div class="qa-question-bubble">
+          <p class="qa-question-text">
             {{ lang === 'it' ? currentCard?.question : currentCard?.questionEs }}
           </p>
           <AudioButton

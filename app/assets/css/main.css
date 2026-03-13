@@ -682,6 +682,37 @@ h1 {
     transform: translateX(-4px);
 }
 
+/* QA Question Bubble */
+.qa-question-bubble {
+    background: linear-gradient(135deg, #FFF9F0 0%, #F5EDE0 100%);
+    border: 2px solid rgba(139, 107, 74, 0.15);
+    border-radius: 20px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0 1.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    position: relative;
+    text-align: center;
+}
+
+.qa-question-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid #F5EDE0;
+}
+
+.qa-question-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #3E2723;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
 /* Quiz Options */
 .quiz-options {
     display: flex;
