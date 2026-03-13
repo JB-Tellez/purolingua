@@ -43,7 +43,7 @@ const deckDueCounts = computed(() =>
       <NuxtLinkLocale
         v-for="deck in decks"
         :key="deck.id"
-        :to="'/' + deck.id"
+        :to="'/rephrase/' + deck.id"
       >
         <div :class="['deck-card', 'theme-' + deck.theme]">
           <div class="deck-icon-circle">{{ deck.icon }}</div>

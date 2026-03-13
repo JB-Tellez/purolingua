@@ -12,22 +12,23 @@ const LANG_LOCALE: Record<string, string> = {
 }
 
 function speak() {
-  if (!import.meta.client) return
-  window.speechSynthesis.cancel()
+  console.log('[AudioButton] speak called', { phrase: props.phrase, lang: props.lang, isClient: import.meta.client, hasSynth: !!window?.speechSynthesis })
+  if (!import.meta.client || !window.speechSynthesis) return
+  const synth = window.speechSynthesis
+  synth.cancel()
+  synth.resume()
   const utter = new SpeechSynthesisUtterance(props.phrase)
   utter.lang = LANG_LOCALE[props.lang]
   utter.rate = 0.9
-  const voices = window.speechSynthesis.getVoices()
-  const best = voices.find(v => v.lang.startsWith(LANG_LOCALE[props.lang].slice(0, 2)))
-  if (best) utter.voice = best
-  window.speechSynthesis.speak(utter)
+  synth.speak(utter)
 }
 </script>
 
 <template>
   <button
     type="button"
+    class="audio-btn"
     :aria-label="t('study.audio')"
-    @click="speak()"
+    @click.stop="speak()"
   >🔊</button>
 </template>

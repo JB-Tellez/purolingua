@@ -9,6 +9,8 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const dropdownOpen = ref(false)
 
+const FLAGS: Record<string, string> = { it: '🇮🇹', es: '🇪🇸' }
+
 const segments = computed(() => route.path.split('/').filter(Boolean))
 const onDeckPage = computed(() => segments.value.length >= 2)
 const backHref = computed(() => '/' + segments.value.slice(0, -1).join('/'))
@@ -29,7 +31,7 @@ function handleReset() {
       data-back
     >{{ t('nav.back') }}</NuxtLink>
     <div class="locale-switcher" data-locale-switcher>
-      <button @click="dropdownOpen = !dropdownOpen">{{ locale }}</button>
+      <button @click="dropdownOpen = !dropdownOpen">{{ FLAGS[locale] ?? locale }}</button>
       <div v-if="dropdownOpen" @click="dropdownOpen = false">
         <NuxtLinkLocale to="/" :locale="'it'" :class="{ active: locale === 'it' }">
           Italiano
