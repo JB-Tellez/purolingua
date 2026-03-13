@@ -259,66 +259,68 @@ function choiceState(i: number): 'idle' | 'correct' | 'incorrect' {
         </p>
 
         <!-- Card container -->
-        <div
-          class="card-container"
-          :class="{ flipped }"
-          @click="() => { if (!flipped) flipped = true }"
-        >
-          <!-- Front face -->
-          <div v-if="!flipped" class="card-face card-front">
-            <AudioButton
-              v-if="currentEntry"
-              :phrase="currentEntry.card.front"
-              :lang="lang"
-            />
-            <MicButton
-              v-if="isSupported"
-              :state="micState"
-              @press="handleFrontMicPress"
-            />
-            <span id="card-front-text">{{ currentEntry?.card.front }}</span>
-            <p style="margin-top: 1.5rem; font-size: 0.85rem;">
-              {{ t('study.tapToReveal') }}
-            </p>
-            <FeedbackMessage :state="feedbackState" />
-          </div>
-
-          <!-- Back face (choices) -->
-          <div v-else class="card-face card-back" style="padding-top: 4rem;">
-            <MicButton
-              v-if="isSupported"
-              :state="micState"
-              @press="handleBackMicPress"
-            />
-            <div class="quiz-options">
-              <ChoiceButton
-                v-for="(choice, i) in choices"
-                :key="i"
-                :text="choice.text"
-                :state="choiceState(i)"
-                :disabled="selectedChoice !== null"
-                data-choice
-                @click="handleChoiceClick(i)"
-                @speak="speak(choice.text, lang)"
+        <div class="card-container">
+          <div
+            class="card"
+            :class="{ flipped }"
+            @click="() => { if (!flipped) flipped = true }"
+          >
+            <!-- Front face -->
+            <div class="card-face card-front">
+              <AudioButton
+                v-if="currentEntry"
+                :phrase="currentEntry.card.front"
+                :lang="lang"
               />
+              <MicButton
+                v-if="isSupported"
+                :state="micState"
+                @press="handleFrontMicPress"
+              />
+              <span id="card-front-text">{{ currentEntry?.card.front }}</span>
+              <p style="margin-top: 1.5rem; font-size: 0.85rem;">
+                {{ t('study.tapToReveal') }}
+              </p>
+              <FeedbackMessage :state="feedbackState" />
             </div>
-            <FeedbackMessage :state="feedbackState" />
 
-            <div v-if="selectedChoice === null" class="controls">
-              <button
-                type="button"
-                class="btn secondary"
-                @click="flipped = false"
-              >
-                {{ t('study.flipButton') }}
-              </button>
-              <button
-                type="button"
-                class="btn primary"
-                @click="handleAnswer(true)"
-              >
-                {{ t('study.nextButton') }}
-              </button>
+            <!-- Back face (choices) -->
+            <div class="card-face card-back" style="padding-top: 4rem;">
+              <MicButton
+                v-if="isSupported"
+                :state="micState"
+                @press="handleBackMicPress"
+              />
+              <div class="quiz-options">
+                <ChoiceButton
+                  v-for="(choice, i) in choices"
+                  :key="i"
+                  :text="choice.text"
+                  :state="choiceState(i)"
+                  :disabled="selectedChoice !== null"
+                  data-choice
+                  @click="handleChoiceClick(i)"
+                  @speak="speak(choice.text, lang)"
+                />
+              </div>
+              <FeedbackMessage :state="feedbackState" />
+
+              <div v-if="selectedChoice === null" class="controls">
+                <button
+                  type="button"
+                  class="btn secondary"
+                  @click.stop="flipped = false"
+                >
+                  {{ t('study.flipButton') }}
+                </button>
+                <button
+                  type="button"
+                  class="btn primary"
+                  @click="handleAnswer(true)"
+                >
+                  {{ t('study.nextButton') }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
