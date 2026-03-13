@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T00:23:50Z"
-last_activity: 2026-03-13 — Completed 22-03 (useLevelFilter Vue composable, 9/9 COMP-02 tests GREEN)
+last_updated: "2026-03-13T00:25:59.861Z"
+last_activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerendered routes, full test suite 22/22, human verify approved)
 progress:
   total_phases: 7
   completed_phases: 2
-  total_plans: 9
-  completed_plans: 6
+  total_plans: 8
+  completed_plans: 7
 ---
 
 # State
@@ -93,6 +93,9 @@ Last activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerend
 | Phase 22-composables P03 | 3 | 2 tasks | 1 files |
 - [Phase 22-composables]: useLevelFilter activeLevels null until onMounted — SSR-safe initial state
 - [Phase 22-composables]: FLTR-06 guard blocks empty/null setActiveLevels before state mutation and localStorage write
+| Phase 22-composables P04 | 1 | 2 tasks | 1 files |
+- [Phase 22-composables]: activeLevels plain Level[] (not Ref) — session pages pass .value and snapshot at onMounted
+- [Phase 22-composables]: qa_ prefix key format isolates Q&A progress from rephrase keys in shared lang-progress storage
 
 ## Session Continuity
 
