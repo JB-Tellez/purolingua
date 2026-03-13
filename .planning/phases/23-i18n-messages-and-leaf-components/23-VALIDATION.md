@@ -38,18 +38,18 @@ created: 2026-03-12
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 23-01-01 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/components/SiteHeader.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-01-02 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/components/ChoiceButton.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-01-03 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/components/AudioButton.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-01-04 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/components/MicButton.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-01-05 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/components/FeedbackMessage.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-01-06 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/components/LevelFilterChips.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-02-01 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/components/SiteHeader.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-02-02 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/components/ChoiceButton.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-02-03 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/components/AudioButton.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-02-04 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/components/MicButton.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-02-05 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/components/FeedbackMessage.nuxt.test.ts` | ❌ W0 | ⬜ pending |
-| 23-02-06 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/components/LevelFilterChips.nuxt.test.ts` | ❌ W0 | ⬜ pending |
+| 23-01-01 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/SiteHeader.test.ts` | ❌ W0 | ⬜ pending |
+| 23-01-02 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/ChoiceButton.test.ts` | ❌ W0 | ⬜ pending |
+| 23-01-03 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/AudioButton.test.ts` | ❌ W0 | ⬜ pending |
+| 23-01-04 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/MicButton.test.ts` | ❌ W0 | ⬜ pending |
+| 23-01-05 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/FeedbackMessage.test.ts` | ❌ W0 | ⬜ pending |
+| 23-01-06 | 01 | 0 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/LevelFilterChips.test.ts` | ❌ W0 | ⬜ pending |
+| 23-02-01 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/SiteHeader.test.ts` | ❌ W0 | ⬜ pending |
+| 23-02-02 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/ChoiceButton.test.ts` | ❌ W0 | ⬜ pending |
+| 23-02-03 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/AudioButton.test.ts` | ❌ W0 | ⬜ pending |
+| 23-02-04 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/MicButton.test.ts` | ❌ W0 | ⬜ pending |
+| 23-02-05 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/FeedbackMessage.test.ts` | ❌ W0 | ⬜ pending |
+| 23-02-06 | 02 | 1 | UI-01 | unit | `bun run test --project nuxt tests/nuxt/LevelFilterChips.test.ts` | ❌ W0 | ⬜ pending |
 | 23-03-01 | 03 | 2 | UI-02 | build | `bun run generate && ls dist/it/index.html dist/es/index.html` | ✅ | ⬜ pending |
 | 23-03-02 | 03 | 2 | UI-02 | manual | See Manual-Only below | n/a | ⬜ pending |
 
@@ -59,12 +59,12 @@ created: 2026-03-12
 
 ## Wave 0 Requirements
 
-- [ ] `tests/components/SiteHeader.nuxt.test.ts` — stubs for locale switcher, back button, reset (UI-01)
-- [ ] `tests/components/ChoiceButton.nuxt.test.ts` — stubs for click/speak emits (UI-01)
-- [ ] `tests/components/AudioButton.nuxt.test.ts` — stubs for SSR safety, speak() guard (UI-01)
-- [ ] `tests/components/MicButton.nuxt.test.ts` — stubs for press emit (UI-01)
-- [ ] `tests/components/FeedbackMessage.nuxt.test.ts` — stubs for display-only prop rendering (UI-01)
-- [ ] `tests/components/LevelFilterChips.nuxt.test.ts` — stubs for update:activeLevels emit (UI-01)
+- [ ] `tests/nuxt/SiteHeader.test.ts` — stubs for locale switcher, back button, reset (UI-01)
+- [ ] `tests/nuxt/ChoiceButton.test.ts` — stubs for click/speak emits (UI-01)
+- [ ] `tests/nuxt/AudioButton.test.ts` — stubs for SSR safety, speak() guard (UI-01)
+- [ ] `tests/nuxt/MicButton.test.ts` — stubs for press emit (UI-01)
+- [ ] `tests/nuxt/FeedbackMessage.test.ts` — stubs for display-only prop rendering (UI-01)
+- [ ] `tests/nuxt/LevelFilterChips.test.ts` — stubs for update:activeLevels emit (UI-01)
 
 *All six test files are new — components don't exist yet.*
 
