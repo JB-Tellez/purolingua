@@ -155,7 +155,11 @@ Plans:
   2. A Q&A session presents 4-choice questions in the target language, plays TTS audio on request, accepts voice recognition input, and shows correct/incorrect feedback before advancing
   3. SRS progress (box assignment and next-due date) is written to localStorage after each card grade and persists across a page reload
   4. Both session pages are wrapped in `<ClientOnly>`; `nuxi generate` produces no hydration mismatch warnings for these routes
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 25-01-PLAN.md — Write failing test stubs for both session pages (Wave 0)
+- [ ] 25-02-PLAN.md — Implement Rephrase StudySession page (UI-06)
+- [ ] 25-03-PLAN.md — Implement Q&A StudySession page (UI-07)
 
 ### Phase 26: Deployment
 **Goal**: The generated static output is verified as fully functional over HTTP — matching the v1.3 feature set exactly — and the live Hostinger site is confirmed working end-to-end
@@ -192,5 +196,5 @@ Plans:
 | 22. Composables | 5/5 | Complete    | 2026-03-13 | — |
 | 23. i18n Messages and Leaf Components | 3/3 | Complete    | 2026-03-13 | — |
 | 24. Browser Screens | 4/4 | Complete    | 2026-03-13 | — |
-| 25. Study Sessions | v2.0 | 0/? | Not started | — |
+| 25. Study Sessions | v2.0 | 0/3 | Not started | — |
 | 26. Deployment | v2.0 | 0/? | Not started | — |
