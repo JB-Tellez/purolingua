@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T01:15:00Z"
-last_activity: 2026-03-13 — Completed 23-01 (6 RED TDD test stubs for leaf components and SiteHeader)
+last_updated: "2026-03-13T01:17:15.852Z"
+last_activity: 2026-03-13 — Completed 23-02 (5 leaf Vue components GREEN: ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips)
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 11
+  completed_plans: 10
 ---
 
 # State
@@ -24,14 +24,14 @@ See: .planning/PROJECT.md (updated 2026-03-12 after v2.0 milestone started)
 ## Current Position
 
 Phase: 23 — i18n Messages and Leaf Components (in progress)
-Plan: 01 done; next: 23-02 (implement leaf components)
+Plan: 02 done; next: 23-03 (SiteHeader component)
 Status: In Progress
 
 ```
-v2.0 Progress: [████░░░░░░] 40% (plan 23-01 complete, 23-02 and 23-03 pending)
+v2.0 Progress: [█████████░] 91% (plans 23-01 and 23-02 complete, 23-03 pending)
 ```
 
-Last activity: 2026-03-13 — Completed 23-01 (6 RED TDD test stubs for leaf components and SiteHeader)
+Last activity: 2026-03-13 — Completed 23-02 (5 leaf Vue components GREEN: ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips)
 
 ## Performance Metrics
 
@@ -101,8 +101,11 @@ Last activity: 2026-03-13 — Completed 23-01 (6 RED TDD test stubs for leaf com
 - [Phase 22-composables]: vi.fn mock constructor requires regular function (not arrow) to support new operator
 - [Phase 23-i18n-messages-and-leaf-components]: data-* attribute selectors (data-speaker, data-back, data-locale-switcher, data-reset) used in test stubs — Plan 02 implementations must add these attributes
 - [Phase 23-i18n-messages-and-leaf-components]: Per-test dynamic import inside each it() block follows smoke.test.ts established pattern
+| Phase 23-i18n-messages-and-leaf-components P02 | 4 | 2 tasks | 5 files |
+- [Phase 23-i18n-messages-and-leaf-components]: LANG_LOCALE inlined in AudioButton.vue — single consumer, no shared module needed
+- [Phase 23-i18n-messages-and-leaf-components]: LevelFilterChips omits FLTR-06 guard — guard belongs in useLevelFilter (Phase 22)
 
 ## Session Continuity
 
-Last stopped: Completed 23-01 (6 RED TDD test stubs for leaf components and SiteHeader)
-Next action: Phase 23-02 — implement leaf components (ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips)
+Last stopped: Completed 23-02 (5 leaf Vue components GREEN)
+Next action: Phase 23-03 — implement SiteHeader component
