@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-12T23:41:02.896Z"
+last_updated: "2026-03-13T00:16:52.836Z"
 last_activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerendered routes, full test suite 22/22, human verify approved)
 progress:
   total_phases: 7
   completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 8
+  completed_plans: 4
 ---
 
 # State
@@ -84,6 +84,9 @@ Last activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerend
 | Phase 21-pure-logic-and-routing-skeleton P01 | 5 | 2 tasks | 1 files |
 - [Phase 21-pure-logic-and-routing-skeleton]: Constants inlined in specs/verify-routes.ts — nuxt.config.ts uses TypeScript as const syntax not eval-safe in plain Bun scripts
 - [Phase 21-pure-logic-and-routing-skeleton]: Content check applied to all 36 routes (not just 3) in verify-routes.ts to catch silent SSR error pages
+| Phase 22-composables P01 | 12 | 2 tasks | 7 files |
+- [Phase 22-composables]: app/lib/ holds copies of src/lib/ files — composables import from ~/lib/ only, never from src/
+- [Phase 22-composables]: Test wrapper uses defineComponent + setup() returning composable, mounted with mountSuspended from @nuxt/test-utils
 
 ## Session Continuity
 

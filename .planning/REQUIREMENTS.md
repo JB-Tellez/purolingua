@@ -22,10 +22,10 @@ Full feature parity with v1.3 in Nuxt 4 + Vue 3. No new features — the migrati
 
 ### Composables
 
-- [ ] **COMP-01**: `useSRS` composable ported to Vue — all localStorage reads inside `onMounted`, `import.meta.client` guards, existing test contract and `${lang}-progress` key format preserved
-- [ ] **COMP-02**: `useLevelFilter` composable ported to Vue — A1/A2 filter state, new/returning user defaults, FLTR-06 guard (cannot deselect all chips), localStorage persistence
-- [ ] **COMP-03**: `useQASRS` composable ported to Vue — `qa_`-prefixed SRS keys, level filtering, Leitner intervals, `onMounted` guards
-- [ ] **COMP-04**: `useVoiceRecognition` composable ported to Vue — `SpeechRecognition` instantiation inside `onMounted`; used inside `<ClientOnly>` contexts only
+- [x] **COMP-01**: `useSRS` composable ported to Vue — all localStorage reads inside `onMounted`, `import.meta.client` guards, existing test contract and `${lang}-progress` key format preserved
+- [x] **COMP-02**: `useLevelFilter` composable ported to Vue — A1/A2 filter state, new/returning user defaults, FLTR-06 guard (cannot deselect all chips), localStorage persistence
+- [x] **COMP-03**: `useQASRS` composable ported to Vue — `qa_`-prefixed SRS keys, level filtering, Leitner intervals, `onMounted` guards
+- [x] **COMP-04**: `useVoiceRecognition` composable ported to Vue — `SpeechRecognition` instantiation inside `onMounted`; used inside `<ClientOnly>` contexts only
 
 ### UI Components
 
@@ -78,10 +78,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCAF-05 | Phase 20 | Complete |
 | DATA-01 | Phase 21 | Complete |
 | DATA-02 | Phase 21 | Complete |
-| COMP-01 | Phase 22 | Pending |
-| COMP-02 | Phase 22 | Pending |
-| COMP-03 | Phase 22 | Pending |
-| COMP-04 | Phase 22 | Pending |
+| COMP-01 | Phase 22 | Complete |
+| COMP-02 | Phase 22 | Complete |
+| COMP-03 | Phase 22 | Complete |
+| COMP-04 | Phase 22 | Complete |
 | UI-01 | Phase 23 | Pending |
 | UI-02 | Phase 23 | Pending |
 | UI-03 | Phase 24 | Pending |
