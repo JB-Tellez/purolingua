@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T02:41:46.667Z"
-last_activity: 2026-03-13 — Completed 24-01 (browser screen test stubs — RED phase, 9/11 tests failing correctly)
+last_updated: "2026-03-13T02:45:29.965Z"
+last_activity: 2026-03-13 — Completed 24-04 (ScenarioGrid implementation — all 4 tests GREEN)
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # State
@@ -24,14 +24,14 @@ See: .planning/PROJECT.md (updated 2026-03-12 after v2.0 milestone started)
 ## Current Position
 
 Phase: 24 — Browser Screens (In Progress)
-Plan: 24-01 done; next: 24-02 (ActivityPicker implementation)
+Plan: 24-04 done; next: 24-03 (DeckGrid implementation — pending)
 Status: Phase 24 in progress
 
 ```
-v2.0 Progress: [████████░░] 80% (12/15 plans complete)
+v2.0 Progress: [█████████░] 93% (14/15 plans complete)
 ```
 
-Last activity: 2026-03-13 — Completed 24-01 (browser screen test stubs — RED phase, 9/11 tests failing correctly)
+Last activity: 2026-03-13 — Completed 24-04 (ScenarioGrid implementation — all 4 tests GREEN)
 
 ## Performance Metrics
 
@@ -112,6 +112,8 @@ Last activity: 2026-03-13 — Completed 24-01 (browser screen test stubs — RED
 - [Phase 24-browser-screens]: Badge text accepts digit string or checkmark to cover both due-count and all-complete states
 | Phase 24-browser-screens P02 | 3 | 1 tasks | 1 files |
 - [Phase 24-browser-screens]: NuxtLinkLocale used (not NuxtLink) in ActivityPicker — auto-prefixes locale; no hardcoded /it/ or /es/ prefix
+- [Phase 24-browser-screens]: Import path is ../../../src/data/qa not ../../src/data/qa — app/pages/qa/ is 3 levels from project root
+- [Phase 24-browser-screens]: useQASRS not used in ScenarioGrid — due counts computed at page level with useSRS.progress + isCardDue for full chip-toggle reactivity
 
 ## Session Continuity
 
