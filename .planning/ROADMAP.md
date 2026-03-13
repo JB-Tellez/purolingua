@@ -180,7 +180,7 @@ Plans:
 | 19. Q&A Study Session | v1.3 | 4/4 | Complete | 2026-03-10 |
 | 20. Scaffold | v2.0 | 2/2 | Complete | 2026-03-12 |
 | 21. Pure Logic and Routing Skeleton | 1/1 | Complete    | 2026-03-12 | — |
-| 22. Composables | 2/5 | In Progress|  | — |
+| 22. Composables | 3/5 | In Progress|  | — |
 | 23. i18n Messages and Leaf Components | v2.0 | 0/? | Not started | — |
 | 24. Browser Screens | v2.0 | 0/? | Not started | — |
 | 25. Study Sessions | v2.0 | 0/? | Not started | — |
