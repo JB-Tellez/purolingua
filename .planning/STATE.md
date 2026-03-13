@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T02:45:29.965Z"
+last_updated: "2026-03-13T02:46:52.574Z"
 last_activity: 2026-03-13 — Completed 24-04 (ScenarioGrid implementation — all 4 tests GREEN)
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-12 after v2.0 milestone started)
 ## Current Position
 
 Phase: 24 — Browser Screens (In Progress)
-Plan: 24-04 done; next: 24-03 (DeckGrid implementation — pending)
+Plan: 24-03 done; 24-04 done; Phase 24 complete
 Status: Phase 24 in progress
 
 ```
@@ -114,6 +114,8 @@ Last activity: 2026-03-13 — Completed 24-04 (ScenarioGrid implementation — a
 - [Phase 24-browser-screens]: NuxtLinkLocale used (not NuxtLink) in ActivityPicker — auto-prefixes locale; no hardcoded /it/ or /es/ prefix
 - [Phase 24-browser-screens]: Import path is ../../../src/data/qa not ../../src/data/qa — app/pages/qa/ is 3 levels from project root
 - [Phase 24-browser-screens]: useQASRS not used in ScenarioGrid — due counts computed at page level with useSRS.progress + isCardDue for full chip-toggle reactivity
+| Phase 24-browser-screens P03 | 3 | 1 tasks | 3 files |
+- [Phase 24-browser-screens]: app/data/ mirror created for src/data/ — @-alias maps to app/ in Nuxt context causing src/data/deckMap.ts @/data/* imports to fail; mirrors use relative paths to individual deck files
 
 ## Session Continuity
 
