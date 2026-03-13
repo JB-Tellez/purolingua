@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T04:54:23Z"
-last_activity: 2026-03-13 — Completed 25-02 (Rephrase StudySession page — 5 tests GREEN, UI-06 complete)
+last_updated: "2026-03-13T05:00:05.070Z"
+last_activity: 2026-03-13 — Completed 25-03 (Q&A StudySession page — 5 tests GREEN, UI-07 complete)
 progress:
   total_phases: 7
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 18
-  completed_plans: 17
+  completed_plans: 18
 ---
 
 # State
@@ -23,15 +23,15 @@ See: .planning/PROJECT.md (updated 2026-03-12 after v2.0 milestone started)
 
 ## Current Position
 
-Phase: 25 — Study Sessions (In Progress)
-Plan: 25-01 done; 25-02 done
-Status: Phase 25 in progress
+Phase: 25 — Study Sessions (Complete)
+Plan: 25-01 done; 25-02 done; 25-03 done
+Status: Phase 25 complete
 
 ```
-v2.0 Progress: [█████████░] 94% (17/18 plans complete)
+v2.0 Progress: [██████████] 100% (18/18 plans complete)
 ```
 
-Last activity: 2026-03-13 — Completed 25-02 (Rephrase StudySession page — 5 tests GREEN, UI-06 complete)
+Last activity: 2026-03-13 — Completed 25-03 (Q&A StudySession page — 5 tests GREEN, UI-07 complete)
 
 ## Performance Metrics
 
@@ -123,6 +123,9 @@ Last activity: 2026-03-13 — Completed 25-02 (Rephrase StudySession page — 5 
 - [Phase 25-study-sessions]: dueCards as ref not computed — snapshot in onMounted preserves session stability as SRS updates during study
 - [Phase 25-study-sessions]: mountSuspended(Page, { route: '/it/rephrase/daily' }) pattern — route option resolves params via router, enabling real deck data in tests
 - [Phase 25-study-sessions]: speak() helper inlined in page — DEBT-01 extraction deferred per plan
+| Phase 25-study-sessions P03 | 2 | 1 tasks | 2 files |
+- [Phase 25-study-sessions]: ScenarioId 'coffee' not 'caffe' — caffe.ts exports id:'coffee'; tests use /it/qa/coffee route
+- [Phase 25-study-sessions]: updateCard called only with true (correct answers only) — wrong answers retry without SRS update
 
 ## Session Continuity
 

@@ -66,7 +66,7 @@ Full archive: `.planning/milestones/v1.3-ROADMAP.md`
 - [x] **Phase 22: Composables** — All four Vue composables ported with onMounted guards and existing test contracts preserved (completed 2026-03-13)
 - [x] **Phase 23: i18n Messages and Leaf Components** — i18n key paths adjusted for @nuxtjs/i18n; all atomic Vue SFCs built and locale switcher verified in static output (completed 2026-03-13)
 - [x] **Phase 24: Browser Screens** — ActivityPicker, DeckGrid, and ScenarioGrid assembled with reactive due-count badges and level filter chips (completed 2026-03-13)
-- [ ] **Phase 25: Study Sessions** — Rephrase and Q&A study sessions built with ClientOnly wrapping, dueCards snapshot pattern, and full interaction model
+- [x] **Phase 25: Study Sessions** — Rephrase and Q&A study sessions built with ClientOnly wrapping, dueCards snapshot pattern, and full interaction model (completed 2026-03-13)
 - [ ] **Phase 26: Deployment** — Static export validated over HTTP and live site verified on Hostinger
 
 ## Phase Details
@@ -196,5 +196,5 @@ Plans:
 | 22. Composables | 5/5 | Complete    | 2026-03-13 | — |
 | 23. i18n Messages and Leaf Components | 3/3 | Complete    | 2026-03-13 | — |
 | 24. Browser Screens | 4/4 | Complete    | 2026-03-13 | — |
-| 25. Study Sessions | 2/3 | In Progress|  | — |
+| 25. Study Sessions | 3/3 | Complete   | 2026-03-13 | — |
 | 26. Deployment | v2.0 | 0/? | Not started | — |
