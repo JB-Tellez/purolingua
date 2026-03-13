@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T02:50:28.752Z"
+last_updated: "2026-03-13T04:49:37.618Z"
 last_activity: 2026-03-13 — Completed 24-04 (ScenarioGrid implementation — all 4 tests GREEN)
 progress:
   total_phases: 7
   completed_phases: 5
-  total_plans: 15
-  completed_plans: 15
+  total_plans: 18
+  completed_plans: 16
 ---
 
 # State
@@ -116,6 +116,9 @@ Last activity: 2026-03-13 — Completed 24-04 (ScenarioGrid implementation — a
 - [Phase 24-browser-screens]: useQASRS not used in ScenarioGrid — due counts computed at page level with useSRS.progress + isCardDue for full chip-toggle reactivity
 | Phase 24-browser-screens P03 | 3 | 1 tasks | 3 files |
 - [Phase 24-browser-screens]: app/data/ mirror created for src/data/ — @-alias maps to app/ in Nuxt context causing src/data/deckMap.ts @/data/* imports to fail; mirrors use relative paths to individual deck files
+| Phase 25-study-sessions P01 | 74 | 2 tasks | 2 files |
+- [Phase 25-study-sessions]: it.skip used for SRS-seeded tests (Tests 2 and 3) — pre-seeding SRS state requires the key format established in Plans 02/03; full interaction tests written during implementation
+- [Phase 25-study-sessions]: data-* selector contracts established as authoritative — Plans 02 and 03 must implement: data-session-done, data-session-card, data-card-counter, data-progress-bar, data-deck-done, data-choice
 
 ## Session Continuity
 

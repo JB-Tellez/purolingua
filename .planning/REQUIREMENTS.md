@@ -34,8 +34,8 @@ Full feature parity with v1.3 in Nuxt 4 + Vue 3. No new features — the migrati
 - [x] **UI-03**: ActivityPicker screen with Rephrase/Q&A navigation tiles using `<NuxtLinkLocale>`
 - [x] **UI-04**: DeckGrid screen with reactive live due-count badges (computed from `useSRS`) and level filter chips; A1/A2 toggle updates badge counts in one render cycle
 - [x] **UI-05**: ScenarioGrid (Q&A browser) with reactive live due-count badges per scenario tile and level filter chips
-- [ ] **UI-06**: Rephrase StudySession — full Leitner flip/grade/advance, `dueCards` snapshotted as `ref` in `onMounted` (not `computed`), voice recognition, TTS audio, deck-done and all-done end screens; wrapped in `<ClientOnly>`
-- [ ] **UI-07**: Q&A StudySession — 4-choice interaction, `useQASRS`, TTS audio, voice recognition, correct/incorrect feedback, scenario-done and all-done screens; wrapped in `<ClientOnly>`
+- [x] **UI-06**: Rephrase StudySession — full Leitner flip/grade/advance, `dueCards` snapshotted as `ref` in `onMounted` (not `computed`), voice recognition, TTS audio, deck-done and all-done end screens; wrapped in `<ClientOnly>`
+- [x] **UI-07**: Q&A StudySession — 4-choice interaction, `useQASRS`, TTS audio, voice recognition, correct/incorrect feedback, scenario-done and all-done screens; wrapped in `<ClientOnly>`
 
 ### Deployment
 
@@ -87,8 +87,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-03 | Phase 24 | Complete |
 | UI-04 | Phase 24 | Complete |
 | UI-05 | Phase 24 | Complete |
-| UI-06 | Phase 25 | Pending |
-| UI-07 | Phase 25 | Pending |
+| UI-06 | Phase 25 | Complete |
+| UI-07 | Phase 25 | Complete |
 | DEPLOY-01 | Phase 26 | Pending |
 | DEPLOY-02 | Phase 26 | Pending |
 

@@ -196,5 +196,5 @@ Plans:
 | 22. Composables | 5/5 | Complete    | 2026-03-13 | — |
 | 23. i18n Messages and Leaf Components | 3/3 | Complete    | 2026-03-13 | — |
 | 24. Browser Screens | 4/4 | Complete    | 2026-03-13 | — |
-| 25. Study Sessions | v2.0 | 0/3 | Not started | — |
+| 25. Study Sessions | 1/3 | In Progress|  | — |
 | 26. Deployment | v2.0 | 0/? | Not started | — |
