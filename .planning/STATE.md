@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T00:25:59.861Z"
+last_updated: "2026-03-13T00:29:44.690Z"
 last_activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerendered routes, full test suite 22/22, human verify approved)
 progress:
   total_phases: 7
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # State
@@ -96,6 +96,9 @@ Last activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerend
 | Phase 22-composables P04 | 1 | 2 tasks | 1 files |
 - [Phase 22-composables]: activeLevels plain Level[] (not Ref) — session pages pass .value and snapshot at onMounted
 - [Phase 22-composables]: qa_ prefix key format isolates Q&A progress from rephrase keys in shared lang-progress storage
+| Phase 22-composables P05 | 5 | 2 tasks | 2 files |
+- [Phase 22-composables]: getSpeechRecognition() accesses window without import.meta.client — safe because all call sites are client-only (onMounted or user-triggered)
+- [Phase 22-composables]: vi.fn mock constructor requires regular function (not arrow) to support new operator
 
 ## Session Continuity
 
