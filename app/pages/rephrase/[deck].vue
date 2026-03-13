@@ -142,8 +142,8 @@ function handleFrontMicPress() {
     (transcript) => {
       micState.value = 'idle'
       if (normalize(transcript) === normalize(currentEntry.value!.card.front)) {
-        feedbackState.value = 'heard'
         flipped.value = true
+        feedbackState.value = null
       } else {
         feedbackState.value = 'notRecognized'
         micState.value = 'error'
@@ -284,7 +284,7 @@ function choiceState(i: number): 'idle' | 'correct' | 'incorrect' {
           </div>
 
           <!-- Back face (choices) -->
-          <div v-else class="card-face card-back">
+          <div v-else class="card-face card-back" style="padding-top: 4rem;">
             <MicButton
               v-if="isSupported"
               :state="micState"
