@@ -17,11 +17,11 @@ describe('ChoiceButton', () => {
     const wrapper = await mountSuspended(ChoiceButton, {
       props: { text: 'Option A', state: 'idle' },
     })
-    await wrapper.find('button').trigger('click')
+    await wrapper.find('.quiz-btn').trigger('click')
     expect(wrapper.emitted('click')).toBeTruthy()
   })
 
-  it('emits speak when the speaker span is clicked', async () => {
+  it('emits speak when the speaker button is clicked', async () => {
     const { default: ChoiceButton } = await import('../../app/components/ChoiceButton.vue')
     const wrapper = await mountSuspended(ChoiceButton, {
       props: { text: 'Option A', state: 'idle' },
@@ -30,12 +30,22 @@ describe('ChoiceButton', () => {
     expect(wrapper.emitted('speak')).toBeTruthy()
   })
 
+  it('clicking speaker button does NOT emit click (audio does not trigger answer)', async () => {
+    const { default: ChoiceButton } = await import('../../app/components/ChoiceButton.vue')
+    const wrapper = await mountSuspended(ChoiceButton, {
+      props: { text: 'Option A', state: 'idle' },
+    })
+    await wrapper.find('[data-speaker]').trigger('click')
+    expect(wrapper.emitted('speak')).toBeTruthy()
+    expect(wrapper.emitted('click')).toBeFalsy()
+  })
+
   it('button is disabled when disabled prop is true', async () => {
     const { default: ChoiceButton } = await import('../../app/components/ChoiceButton.vue')
     const wrapper = await mountSuspended(ChoiceButton, {
       props: { text: 'Option A', state: 'idle', disabled: true },
     })
-    expect(wrapper.find('button').attributes('disabled')).toBeDefined()
+    expect(wrapper.find('.quiz-btn').attributes('disabled')).toBeDefined()
   })
 
   it('button is disabled when state is correct', async () => {
@@ -43,7 +53,7 @@ describe('ChoiceButton', () => {
     const wrapper = await mountSuspended(ChoiceButton, {
       props: { text: 'Option A', state: 'correct' },
     })
-    expect(wrapper.find('button').attributes('disabled')).toBeDefined()
+    expect(wrapper.find('.quiz-btn').attributes('disabled')).toBeDefined()
   })
 
   it('button is disabled when state is incorrect', async () => {
@@ -51,7 +61,7 @@ describe('ChoiceButton', () => {
     const wrapper = await mountSuspended(ChoiceButton, {
       props: { text: 'Option A', state: 'incorrect' },
     })
-    expect(wrapper.find('button').attributes('disabled')).toBeDefined()
+    expect(wrapper.find('.quiz-btn').attributes('disabled')).toBeDefined()
   })
 
   it('speaker span emits speak on Enter keydown', async () => {

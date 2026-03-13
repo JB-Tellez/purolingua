@@ -12,21 +12,24 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <button
-    type="button"
-    :disabled="disabled || state !== 'idle'"
-    :class="['quiz-btn', { [state]: state !== 'idle' }]"
-    @click="emit('click')"
-  >
-    <span
-      role="button"
-      class="quiz-audio-icon"
+  <div class="choice-btn-group">
+    <button
+      type="button"
+      :disabled="disabled || state !== 'idle'"
+      :class="['quiz-btn', { [state]: state !== 'idle' }]"
+      @click="emit('click')"
+    >
+      {{ text }}
+    </button>
+    <button
+      type="button"
+      class="quiz-audio-btn"
+      :disabled="disabled || state !== 'idle'"
       data-speaker
-      :tabindex="0"
+      :aria-label="text + ' audio'"
       @click.stop="emit('speak')"
       @keydown.enter.stop="emit('speak')"
       @keydown.space.stop="emit('speak')"
-    >🔊</span>
-    {{ text }}
-  </button>
+    >🔊</button>
+  </div>
 </template>
