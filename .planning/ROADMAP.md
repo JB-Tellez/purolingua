@@ -108,7 +108,13 @@ Plans:
   3. `useQASRS` reads and writes `qa_`-prefixed SRS keys; level filtering and Leitner intervals behave identically to the hook in v1.3
   4. `useLevelFilter` enforces the FLTR-06 guard (cannot deselect all chips) and persists level preference across page reloads
   5. Unit tests for all four composables pass using `mountSuspended`
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 22-01-PLAN.md — Copy app/lib + app/types; write failing test stubs (Wave 1)
+- [ ] 22-02-PLAN.md — Implement useSRS composable (COMP-01)
+- [ ] 22-03-PLAN.md — Implement useLevelFilter composable (COMP-02)
+- [ ] 22-04-PLAN.md — Implement useQASRS composable (COMP-03)
+- [ ] 22-05-PLAN.md — Implement useVoiceRecognition composable + full suite gate (COMP-04)
 
 ### Phase 23: i18n Messages and Leaf Components
 **Goal**: Italian and Spanish UI strings load correctly in the static output and all atomic UI components are available as Vue SFCs for screen assembly in the next phase
