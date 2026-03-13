@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T00:16:52.836Z"
+last_updated: "2026-03-13T00:20:04.565Z"
 last_activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerendered routes, full test suite 22/22, human verify approved)
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 8
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # State
@@ -87,6 +87,9 @@ Last activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerend
 | Phase 22-composables P01 | 12 | 2 tasks | 7 files |
 - [Phase 22-composables]: app/lib/ holds copies of src/lib/ files — composables import from ~/lib/ only, never from src/
 - [Phase 22-composables]: Test wrapper uses defineComponent + setup() returning composable, mounted with mountSuspended from @nuxt/test-utils
+| Phase 22-composables P02 | 2 | 2 tasks | 1 files |
+- [Phase 22-composables]: progress initialized as ref({}) not ref(loadFromStorage()) — SSR safety, no ReferenceError on server
+- [Phase 22-composables]: hasProgress is computed ref — useLevelFilter receives reactive value without explicit watching
 
 ## Session Continuity
 
