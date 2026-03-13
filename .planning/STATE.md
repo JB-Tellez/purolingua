@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T01:17:15.852Z"
-last_activity: 2026-03-13 — Completed 23-02 (5 leaf Vue components GREEN: ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips)
+last_updated: "2026-03-13T01:20:50.188Z"
+last_activity: "2026-03-13 — Completed 23-02 (5 leaf Vue components GREEN: ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips)"
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 11
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # State
@@ -104,6 +104,9 @@ Last activity: 2026-03-13 — Completed 23-02 (5 leaf Vue components GREEN: Choi
 | Phase 23-i18n-messages-and-leaf-components P02 | 4 | 2 tasks | 5 files |
 - [Phase 23-i18n-messages-and-leaf-components]: LANG_LOCALE inlined in AudioButton.vue — single consumer, no shared module needed
 - [Phase 23-i18n-messages-and-leaf-components]: LevelFilterChips omits FLTR-06 guard — guard belongs in useLevelFilter (Phase 22)
+| Phase 23-i18n-messages-and-leaf-components P03 | 2 | 1 tasks | 1 files |
+- [Phase 23-i18n-messages-and-leaf-components]: data-back on NuxtLink directly — test selector [data-back] resolves href via attributes('href')
+- [Phase 23-i18n-messages-and-leaf-components]: data-locale-switcher on outer div — visible to test regardless of dropdown state
 
 ## Session Continuity
 
