@@ -185,7 +185,7 @@ Plans:
 | 20. Scaffold | v2.0 | 2/2 | Complete | 2026-03-12 |
 | 21. Pure Logic and Routing Skeleton | 1/1 | Complete    | 2026-03-12 | — |
 | 22. Composables | 5/5 | Complete    | 2026-03-13 | — |
-| 23. i18n Messages and Leaf Components | v2.0 | 0/3 | Not started | — |
+| 23. i18n Messages and Leaf Components | 1/3 | In Progress|  | — |
 | 24. Browser Screens | v2.0 | 0/? | Not started | — |
 | 25. Study Sessions | v2.0 | 0/? | Not started | — |
 | 26. Deployment | v2.0 | 0/? | Not started | — |

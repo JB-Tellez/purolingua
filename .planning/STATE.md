@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T00:34:16.687Z"
-last_activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerendered routes, full test suite 22/22, human verify approved)
+last_updated: "2026-03-13T01:15:00Z"
+last_activity: 2026-03-13 — Completed 23-01 (6 RED TDD test stubs for leaf components and SiteHeader)
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 9
+  completed_plans: 9
 ---
 
 # State
@@ -23,15 +23,15 @@ See: .planning/PROJECT.md (updated 2026-03-12 after v2.0 milestone started)
 
 ## Current Position
 
-Phase: 20 — Scaffold (COMPLETE — both plans done)
-Plan: 02 done; Phase 20 complete
-Status: In Progress (next: Phase 21)
+Phase: 23 — i18n Messages and Leaf Components (in progress)
+Plan: 01 done; next: 23-02 (implement leaf components)
+Status: In Progress
 
 ```
-v2.0 Progress: [██████████] 100% (plan 02/02 in phase 20 — phase complete)
+v2.0 Progress: [████░░░░░░] 40% (plan 23-01 complete, 23-02 and 23-03 pending)
 ```
 
-Last activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerendered routes, full test suite 22/22, human verify approved)
+Last activity: 2026-03-13 — Completed 23-01 (6 RED TDD test stubs for leaf components and SiteHeader)
 
 ## Performance Metrics
 
@@ -99,8 +99,10 @@ Last activity: 2026-03-12 — Completed 20-02 (placeholder Vue pages, 36 prerend
 | Phase 22-composables P05 | 5 | 2 tasks | 2 files |
 - [Phase 22-composables]: getSpeechRecognition() accesses window without import.meta.client — safe because all call sites are client-only (onMounted or user-triggered)
 - [Phase 22-composables]: vi.fn mock constructor requires regular function (not arrow) to support new operator
+- [Phase 23-i18n-messages-and-leaf-components]: data-* attribute selectors (data-speaker, data-back, data-locale-switcher, data-reset) used in test stubs — Plan 02 implementations must add these attributes
+- [Phase 23-i18n-messages-and-leaf-components]: Per-test dynamic import inside each it() block follows smoke.test.ts established pattern
 
 ## Session Continuity
 
-Last stopped: Completed 22-03 (useLevelFilter composable, 9/9 COMP-02 tests GREEN)
-Next action: Phase 22-04 — implement useQASRS composable
+Last stopped: Completed 23-01 (6 RED TDD test stubs for leaf components and SiteHeader)
+Next action: Phase 23-02 — implement leaf components (ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips)

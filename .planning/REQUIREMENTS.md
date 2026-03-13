@@ -29,8 +29,8 @@ Full feature parity with v1.3 in Nuxt 4 + Vue 3. No new features — the migrati
 
 ### UI Components
 
-- [ ] **UI-01**: Leaf components ported as Vue SFCs: ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips (callback props become `defineEmits`)
-- [ ] **UI-02**: i18n messages (`it.json`, `es.json`) adjusted for @nuxtjs/i18n dotted key path format; SiteHeader locale switcher verified working in static output
+- [x] **UI-01**: Leaf components ported as Vue SFCs: ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips (callback props become `defineEmits`)
+- [x] **UI-02**: i18n messages (`it.json`, `es.json`) adjusted for @nuxtjs/i18n dotted key path format; SiteHeader locale switcher verified working in static output
 - [ ] **UI-03**: ActivityPicker screen with Rephrase/Q&A navigation tiles using `<NuxtLinkLocale>`
 - [ ] **UI-04**: DeckGrid screen with reactive live due-count badges (computed from `useSRS`) and level filter chips; A1/A2 toggle updates badge counts in one render cycle
 - [ ] **UI-05**: ScenarioGrid (Q&A browser) with reactive live due-count badges per scenario tile and level filter chips
@@ -82,8 +82,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-02 | Phase 22 | Complete |
 | COMP-03 | Phase 22 | Complete |
 | COMP-04 | Phase 22 | Complete |
-| UI-01 | Phase 23 | Pending |
-| UI-02 | Phase 23 | Pending |
+| UI-01 | Phase 23 | Complete |
+| UI-02 | Phase 23 | Complete |
 | UI-03 | Phase 24 | Pending |
 | UI-04 | Phase 24 | Pending |
 | UI-05 | Phase 24 | Pending |
