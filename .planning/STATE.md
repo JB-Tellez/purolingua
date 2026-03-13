@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
-status: in_progress
-last_updated: "2026-03-13T02:41:00.000Z"
+status: executing
+last_updated: "2026-03-13T02:41:46.667Z"
 last_activity: 2026-03-13 — Completed 24-01 (browser screen test stubs — RED phase, 9/11 tests failing correctly)
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 15
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # State
@@ -110,6 +110,8 @@ Last activity: 2026-03-13 — Completed 24-01 (browser screen test stubs — RED
 | Phase 24-browser-screens P01 | 5 | 1 tasks | 3 files |
 - [Phase 24-browser-screens]: Tests use [data-level-filter] attribute selector — Plan 03/04 must wrap LevelFilterChips in <div data-level-filter>
 - [Phase 24-browser-screens]: Badge text accepts digit string or checkmark to cover both due-count and all-complete states
+| Phase 24-browser-screens P02 | 3 | 1 tasks | 1 files |
+- [Phase 24-browser-screens]: NuxtLinkLocale used (not NuxtLink) in ActivityPicker — auto-prefixes locale; no hardcoded /it/ or /es/ prefix
 
 ## Session Continuity
 

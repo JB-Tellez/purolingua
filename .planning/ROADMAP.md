@@ -191,6 +191,6 @@ Plans:
 | 21. Pure Logic and Routing Skeleton | 1/1 | Complete    | 2026-03-12 | — |
 | 22. Composables | 5/5 | Complete    | 2026-03-13 | — |
 | 23. i18n Messages and Leaf Components | 3/3 | Complete    | 2026-03-13 | — |
-| 24. Browser Screens | 1/4 | In Progress|  | — |
+| 24. Browser Screens | 2/4 | In Progress|  | — |
 | 25. Study Sessions | v2.0 | 0/? | Not started | — |
 | 26. Deployment | v2.0 | 0/? | Not started | — |
