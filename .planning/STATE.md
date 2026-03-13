@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
 status: executing
-last_updated: "2026-03-13T04:49:37.618Z"
-last_activity: 2026-03-13 — Completed 24-04 (ScenarioGrid implementation — all 4 tests GREEN)
+last_updated: "2026-03-13T04:54:23Z"
+last_activity: 2026-03-13 — Completed 25-02 (Rephrase StudySession page — 5 tests GREEN, UI-06 complete)
 progress:
   total_phases: 7
   completed_phases: 5
   total_plans: 18
-  completed_plans: 16
+  completed_plans: 17
 ---
 
 # State
@@ -23,15 +23,15 @@ See: .planning/PROJECT.md (updated 2026-03-12 after v2.0 milestone started)
 
 ## Current Position
 
-Phase: 24 — Browser Screens (In Progress)
-Plan: 24-03 done; 24-04 done; Phase 24 complete
-Status: Phase 24 in progress
+Phase: 25 — Study Sessions (In Progress)
+Plan: 25-01 done; 25-02 done
+Status: Phase 25 in progress
 
 ```
-v2.0 Progress: [█████████░] 93% (14/15 plans complete)
+v2.0 Progress: [█████████░] 94% (17/18 plans complete)
 ```
 
-Last activity: 2026-03-13 — Completed 24-04 (ScenarioGrid implementation — all 4 tests GREEN)
+Last activity: 2026-03-13 — Completed 25-02 (Rephrase StudySession page — 5 tests GREEN, UI-06 complete)
 
 ## Performance Metrics
 
@@ -119,8 +119,12 @@ Last activity: 2026-03-13 — Completed 24-04 (ScenarioGrid implementation — a
 | Phase 25-study-sessions P01 | 74 | 2 tasks | 2 files |
 - [Phase 25-study-sessions]: it.skip used for SRS-seeded tests (Tests 2 and 3) — pre-seeding SRS state requires the key format established in Plans 02/03; full interaction tests written during implementation
 - [Phase 25-study-sessions]: data-* selector contracts established as authoritative — Plans 02 and 03 must implement: data-session-done, data-session-card, data-card-counter, data-progress-bar, data-deck-done, data-choice
+| Phase 25-study-sessions P02 | 3 | 1 task | 2 files |
+- [Phase 25-study-sessions]: dueCards as ref not computed — snapshot in onMounted preserves session stability as SRS updates during study
+- [Phase 25-study-sessions]: mountSuspended(Page, { route: '/it/rephrase/daily' }) pattern — route option resolves params via router, enabling real deck data in tests
+- [Phase 25-study-sessions]: speak() helper inlined in page — DEBT-01 extraction deferred per plan
 
 ## Session Continuity
 
-Last stopped: Completed 23-03 (SiteHeader + i18n human verification approved)
-Next action: Phase 24 — Browser Screens (ActivityPicker, DeckGrid, ScenarioGrid)
+Last stopped: Completed 25-02 (Rephrase StudySession page — 5 tests GREEN, UI-06 complete)
+Next action: Phase 25 — Study Sessions Plan 03 (QASession page)
