@@ -20,7 +20,8 @@ let mockRecognitionInstance: MockSpeechRecognition
 
 beforeEach(() => {
   mockRecognitionInstance = new MockSpeechRecognition()
-  const MockClass = vi.fn(() => mockRecognitionInstance)
+  // eslint-disable-next-line prefer-arrow-callback
+  const MockClass = vi.fn(function () { return mockRecognitionInstance })
   Object.defineProperty(window, 'SpeechRecognition', {
     value: MockClass,
     writable: true,
