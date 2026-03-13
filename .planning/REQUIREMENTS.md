@@ -31,9 +31,9 @@ Full feature parity with v1.3 in Nuxt 4 + Vue 3. No new features — the migrati
 
 - [x] **UI-01**: Leaf components ported as Vue SFCs: ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips (callback props become `defineEmits`)
 - [x] **UI-02**: i18n messages (`it.json`, `es.json`) adjusted for @nuxtjs/i18n dotted key path format; SiteHeader locale switcher verified working in static output
-- [ ] **UI-03**: ActivityPicker screen with Rephrase/Q&A navigation tiles using `<NuxtLinkLocale>`
-- [ ] **UI-04**: DeckGrid screen with reactive live due-count badges (computed from `useSRS`) and level filter chips; A1/A2 toggle updates badge counts in one render cycle
-- [ ] **UI-05**: ScenarioGrid (Q&A browser) with reactive live due-count badges per scenario tile and level filter chips
+- [x] **UI-03**: ActivityPicker screen with Rephrase/Q&A navigation tiles using `<NuxtLinkLocale>`
+- [x] **UI-04**: DeckGrid screen with reactive live due-count badges (computed from `useSRS`) and level filter chips; A1/A2 toggle updates badge counts in one render cycle
+- [x] **UI-05**: ScenarioGrid (Q&A browser) with reactive live due-count badges per scenario tile and level filter chips
 - [ ] **UI-06**: Rephrase StudySession — full Leitner flip/grade/advance, `dueCards` snapshotted as `ref` in `onMounted` (not `computed`), voice recognition, TTS audio, deck-done and all-done end screens; wrapped in `<ClientOnly>`
 - [ ] **UI-07**: Q&A StudySession — 4-choice interaction, `useQASRS`, TTS audio, voice recognition, correct/incorrect feedback, scenario-done and all-done screens; wrapped in `<ClientOnly>`
 
@@ -84,9 +84,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-04 | Phase 22 | Complete |
 | UI-01 | Phase 23 | Complete |
 | UI-02 | Phase 23 | Complete |
-| UI-03 | Phase 24 | Pending |
-| UI-04 | Phase 24 | Pending |
-| UI-05 | Phase 24 | Pending |
+| UI-03 | Phase 24 | Complete |
+| UI-04 | Phase 24 | Complete |
+| UI-05 | Phase 24 | Complete |
 | UI-06 | Phase 25 | Pending |
 | UI-07 | Phase 25 | Pending |
 | DEPLOY-01 | Phase 26 | Pending |

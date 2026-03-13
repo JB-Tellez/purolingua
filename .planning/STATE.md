@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Vue Port
-status: completed
-last_updated: "2026-03-13T01:38:58.388Z"
-last_activity: 2026-03-13 — Completed 23-03 (SiteHeader + i18n human verification approved — locale switching confirmed working)
+status: in_progress
+last_updated: "2026-03-13T02:41:00.000Z"
+last_activity: 2026-03-13 — Completed 24-01 (browser screen test stubs — RED phase, 9/11 tests failing correctly)
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 15
+  completed_plans: 12
 ---
 
 # State
@@ -23,15 +23,15 @@ See: .planning/PROJECT.md (updated 2026-03-12 after v2.0 milestone started)
 
 ## Current Position
 
-Phase: 23 — i18n Messages and Leaf Components (COMPLETE)
-Plan: 23-03 done; next: Phase 24 (Browser Screens)
-Status: Phase 23 complete
+Phase: 24 — Browser Screens (In Progress)
+Plan: 24-01 done; next: 24-02 (ActivityPicker implementation)
+Status: Phase 24 in progress
 
 ```
-v2.0 Progress: [██████████] 100% (all 11 plans across phases 20-23 complete)
+v2.0 Progress: [████████░░] 80% (12/15 plans complete)
 ```
 
-Last activity: 2026-03-13 — Completed 23-03 (SiteHeader + i18n human verification approved — locale switching confirmed working)
+Last activity: 2026-03-13 — Completed 24-01 (browser screen test stubs — RED phase, 9/11 tests failing correctly)
 
 ## Performance Metrics
 
@@ -107,6 +107,9 @@ Last activity: 2026-03-13 — Completed 23-03 (SiteHeader + i18n human verificat
 | Phase 23-i18n-messages-and-leaf-components P03 | 2 | 1 tasks | 1 files |
 - [Phase 23-i18n-messages-and-leaf-components]: data-back on NuxtLink directly — test selector [data-back] resolves href via attributes('href')
 - [Phase 23-i18n-messages-and-leaf-components]: data-locale-switcher on outer div — visible to test regardless of dropdown state
+| Phase 24-browser-screens P01 | 5 | 1 tasks | 3 files |
+- [Phase 24-browser-screens]: Tests use [data-level-filter] attribute selector — Plan 03/04 must wrap LevelFilterChips in <div data-level-filter>
+- [Phase 24-browser-screens]: Badge text accepts digit string or checkmark to cover both due-count and all-complete states
 
 ## Session Continuity
 
