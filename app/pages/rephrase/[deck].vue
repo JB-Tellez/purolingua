@@ -122,6 +122,12 @@ function handleAnswer(correct: boolean) {
   }
 }
 
+// --- Handle Prossimo (Next) button: flip back to front, then advance ---
+function handleNext() {
+  flipped.value = false
+  setTimeout(() => handleAnswer(true), 700)
+}
+
 // --- Handle choice button click ---
 function handleChoiceClick(i: number) {
   if (selectedChoice.value !== null) return // already answered
@@ -316,7 +322,7 @@ function choiceState(i: number): 'idle' | 'correct' | 'incorrect' {
                 <button
                   type="button"
                   class="btn primary"
-                  @click="handleAnswer(true)"
+                  @click="handleNext"
                 >
                   {{ t('study.nextButton') }}
                 </button>
