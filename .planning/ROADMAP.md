@@ -124,7 +124,11 @@ Plans:
   1. Locale switching from `/it/` to `/es/` in the static output changes all visible UI strings without a 404 on the locale JSON
   2. SiteHeader renders the correct locale and the switcher navigates to the corresponding `/es/` or `/it/` path
   3. ChoiceButton, AudioButton, MicButton, FeedbackMessage, and LevelFilterChips render and emit events correctly (callback props replaced with `defineEmits`)
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 23-01-PLAN.md — Write failing test stubs for all 6 components (Wave 0)
+- [ ] 23-02-PLAN.md — Implement 5 leaf components: ChoiceButton, AudioButton, MicButton, FeedbackMessage, LevelFilterChips (UI-01)
+- [ ] 23-03-PLAN.md — Implement SiteHeader + human verify i18n static output (UI-02)
 
 ### Phase 24: Browser Screens
 **Goal**: Users can navigate between the activity picker, rephrase deck grid, and Q&A scenario grid, see live due-count badges that react to level filter changes, and toggle A1/A2 chips
@@ -181,7 +185,7 @@ Plans:
 | 20. Scaffold | v2.0 | 2/2 | Complete | 2026-03-12 |
 | 21. Pure Logic and Routing Skeleton | 1/1 | Complete    | 2026-03-12 | — |
 | 22. Composables | 5/5 | Complete    | 2026-03-13 | — |
-| 23. i18n Messages and Leaf Components | v2.0 | 0/? | Not started | — |
+| 23. i18n Messages and Leaf Components | v2.0 | 0/3 | Not started | — |
 | 24. Browser Screens | v2.0 | 0/? | Not started | — |
 | 25. Study Sessions | v2.0 | 0/? | Not started | — |
 | 26. Deployment | v2.0 | 0/? | Not started | — |
