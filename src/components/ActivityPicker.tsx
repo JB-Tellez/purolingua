@@ -8,8 +8,8 @@ interface Props {
 }
 
 const ACTIVITIES = [
-  { key: 'rephrase', icon: '🃏', path: 'rephrase' },
-  { key: 'qa', icon: '💬', path: 'qa' },
+  { key: 'rephrase', icon: '🃏', path: 'rephrase', theme: 'teal' },
+  { key: 'qa', icon: '💬', path: 'qa', theme: 'blue' },
 ] as const;
 
 export default function ActivityPicker({ lang }: Props) {
@@ -17,13 +17,13 @@ export default function ActivityPicker({ lang }: Props) {
 
   return (
     <div className="activity-grid">
-      {ACTIVITIES.map(({ key, icon, path }) => (
+      {ACTIVITIES.map(({ key, icon, path, theme }) => (
         <Link
           key={key}
           href={`/${lang}/${path}`}
           style={{ textDecoration: 'none', display: 'block', height: '100%' }}
         >
-          <div className="deck-card" style={{ height: '100%' }}>
+          <div className={`deck-card theme-${theme}`} style={{ height: '100%' }}>
             <div className="deck-icon-circle">{icon}</div>
             <h3>{t(`${key}.title`)}</h3>
             <p>{t(`${key}.description`)}</p>
