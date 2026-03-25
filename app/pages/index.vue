@@ -2,8 +2,8 @@
 const { t } = useI18n()
 
 const ACTIVITIES = [
-  { key: 'rephrase', icon: '🃏', path: '/rephrase' },
-  { key: 'qa',       icon: '💬', path: '/qa' },
+  { key: 'rephrase', icon: '🃏', path: '/rephrase', theme: 'teal' },
+  { key: 'qa',       icon: '💬', path: '/qa',       theme: 'blue' },
 ] as const
 </script>
 
@@ -19,7 +19,7 @@ const ACTIVITIES = [
         :key="activity.key"
         :to="activity.path"
       >
-        <div class="deck-card">
+        <div :class="`deck-card theme-${activity.theme}`">
           <div class="deck-icon-circle">{{ activity.icon }}</div>
           <h3>{{ t('activities.' + activity.key + '.title') }}</h3>
           <p>{{ t('activities.' + activity.key + '.description') }}</p>
