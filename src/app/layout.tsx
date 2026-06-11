@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import pkg from '../../package.json';
 
 export const metadata: Metadata = {
   title: 'PuroLingua',
@@ -21,7 +22,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <footer>{`v${pkg.version}`}</footer>
+      </body>
     </html>
   );
 }

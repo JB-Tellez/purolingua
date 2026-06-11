@@ -20,7 +20,6 @@ export default function LangPage() {
         <p className="subtitle">{t('subtitle')}</p>
       </div>
       <ActivityPicker lang={lang} />
-      <footer>v0.0.1</footer>
     </main>
   );
 }
