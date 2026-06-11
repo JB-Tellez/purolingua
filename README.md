@@ -35,7 +35,7 @@ A browser-based language learning app built with vanilla JavaScript. PuroLingua 
 
 ## Getting Started
 
-**Prerequisites:** [Bun](https://bun.sh) or Node.js 18+
+**Prerequisites:** Node.js 20+ and npm
 
 ```bash
 # Clone the repository
@@ -43,13 +43,13 @@ git clone https://github.com/JB-Tellez/purolingua.git
 cd purolingua
 
 # Install dependencies
-bun install
+npm install
 
 # Start the dev server
-bun run dev
+npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
@@ -57,20 +57,10 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 | Command | Description |
 |---|---|
-| `bun run dev` | Start local dev server |
-| `bun run build` | Build for production |
-| `bun run preview` | Preview the production build |
-| `bun run test` | Run unit tests (Vitest) |
-| `bun run test:watch` | Run unit tests in watch mode |
-| `bun run test:ui` | Open the Vitest browser UI |
-| `bun run test:coverage` | Generate a coverage report |
-
-For end-to-end tests (requires Playwright browsers):
-
-```bash
-npx playwright install
-npx playwright test
-```
+| `npm run dev` | Start local dev server |
+| `npm run build` | Build for production (static export to `out/`) |
+| `npm start` | Serve the production build |
+| `npm test` | Run unit tests (Vitest) |
 
 ---
 
