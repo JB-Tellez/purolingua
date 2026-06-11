@@ -1,6 +1,6 @@
 # PuroLingua
 
-A browser-based language learning app built with vanilla JavaScript. PuroLingua uses flashcard decks and a spaced repetition algorithm to help you build real conversational vocabulary — no frameworks, no backend required.
+A browser-based language learning app built with Next.js and React. PuroLingua uses flashcard decks and a spaced repetition algorithm to help you build real conversational vocabulary — no backend required.
 
 **[Live Site](https://purolingua.com/?lang=it)** &nbsp;·&nbsp; **[GitHub](https://github.com/JB-Tellez/purolingua)**
 
@@ -14,8 +14,8 @@ A browser-based language learning app built with vanilla JavaScript. PuroLingua 
 - **Audio Playback** — Hear any card read aloud via the Web Speech API.
 - **Voice Recognition** — Speak your answer and get instant feedback using the browser's speech recognition API.
 - **Multiple-Choice Quiz** — The card back presents randomized answer choices including plausible distractors.
+- **Q&A Study Mode** — An open-ended question-and-answer mode with voice recognition, alongside the flashcard decks.
 - **Persistent Progress** — Progress is saved per language to `localStorage` with no sign-up required.
-- **No Build Required to Use** — Works directly in the browser via Vite's dev server or as a static build.
 
 ---
 
@@ -23,13 +23,15 @@ A browser-based language learning app built with vanilla JavaScript. PuroLingua 
 
 | Category | Technology |
 |---|---|
-| Language | Vanilla JavaScript (ES Modules) |
-| Build Tool | Vite |
-| Unit Tests | Vitest + jsdom |
-| E2E Tests | Playwright (Chromium, Firefox, WebKit) |
+| Framework | Next.js 16 (App Router), static export |
+| UI | React 19 |
+| Language | TypeScript |
+| i18n | next-intl 4 |
+| Styling | Tailwind CSS 4 |
+| Unit Tests | Vitest 4 + jsdom (Testing Library) |
 | Browser APIs | Web Speech API (TTS + recognition) |
 | Persistence | localStorage |
-| Styling | Custom CSS |
+| Deployment | Static export served via nginx, deployed with Coolify |
 
 ---
 
@@ -69,19 +71,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ```
 purolingua/
 ├── src/
-│   ├── js/
-│   │   ├── core/          # App bootstrap, state, view routing, i18n
-│   │   ├── features/      # Audio, voice recognition, progress tracking, UI helpers
-│   │   └── utils/         # Deck utilities (shuffle, choice generation)
-│   ├── locales/
-│   │   ├── es/            # Spanish UI strings and decks
-│   │   └── it/            # Italian UI strings and decks
-│   └── css/
-│       └── style.css
-├── tests/                 # Vitest unit tests
-├── vite.config.js
-├── vitest.config.js
-└── playwright.config.js
+│   ├── app/[lang]/        # App Router routes (locale-segmented; also /qa, /rephrase)
+│   ├── components/        # React UI components
+│   ├── hooks/             # useSRS, useQASRS, useLevelFilter, useVoiceRecognition
+│   ├── lib/               # srs.ts (Leitner logic), generateChoices.ts
+│   ├── data/              # Vocabulary content: it/, es/, qa/
+│   ├── types/             # TypeScript types
+│   ├── i18n/              # next-intl request config
+│   └── __tests__/         # Vitest unit tests (components, hooks, lib)
+├── messages/              # UI strings: it.json, es.json
+├── next.config.ts
+└── vitest.config.ts
 ```
 
 ---
@@ -103,9 +103,9 @@ Progress is stored in `localStorage` under a per-language key, so switching lang
 
 ## Adding a New Language
 
-1. Create `src/locales/<code>/ui.js` with translated UI strings and locale metadata.
-2. Create `src/locales/<code>/decks.js` with vocabulary decks.
-3. Import and register both in `src/js/core/i18n.js`.
+1. Add `messages/<code>.json` with translated UI strings.
+2. Add vocabulary decks under `src/data/<code>/`.
+3. Register the new locale in `src/i18n/request.ts` (and the routing config).
 
 The language picker will automatically include the new locale.
 
