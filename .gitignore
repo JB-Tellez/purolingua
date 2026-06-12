@@ -2,7 +2,6 @@
 node_modules/
 
 # Build output
-dist/
 .next/
 out/
 tsconfig.tsbuildinfo
@@ -25,10 +24,3 @@ yarn-error.log*
 
 # Claude Code
 .claude/settings.local.json
-
-# Playwright
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
