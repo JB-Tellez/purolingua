@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { Lang, Level, Scenario, ScenarioId, ProgressRecord } from '@/types';
@@ -116,6 +116,13 @@ export default function QAStudySession({ lang, scenario }: Props) {
       ? currentCard.question
       : currentCard.questionEs
     : '';
+
+  // Auto-speak the question whenever the card changes
+  useEffect(() => {
+    if (questionText) speak(questionText, lang);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index]);
+
   const correctText = currentCard
     ? lang === 'it'
       ? currentCard.correct
@@ -332,36 +339,44 @@ export default function QAStudySession({ lang, scenario }: Props) {
           {t('cardCounter', { current: index + 1, total: sessionDueCards.length })}
         </p>
 
-        <div className="card-container">
-          <div className="card">
-            <div className="card-face">
-              <p
-                style={{
-                  fontSize: '1.25rem',
-                  fontWeight: 600,
-                  textAlign: 'center',
-                  color: 'var(--color-text)',
-                }}
-                id="question-text"
-              >
-                {questionText}
-              </p>
-            </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
+            padding: '1rem 1.25rem',
+            background: 'rgba(230, 155, 0, 0.07)',
+            border: '1.5px solid rgba(230, 155, 0, 0.22)',
+            borderRadius: '12px',
+            marginBottom: '0.5rem',
+          }}
+        >
+          <p
+            id="question-text"
+            style={{
+              fontSize: '1.4rem',
+              fontWeight: 700,
+              color: 'var(--color-text)',
+              margin: 0,
+              textAlign: 'center',
+            }}
+          >
+            {questionText}
+          </p>
+          <div className="card-audio-controls">
+            <AudioButton phrase={questionText} lang={lang} />
           </div>
         </div>
 
-        <div
-          className="card-audio-controls"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '0.75rem',
-            margin: '0.75rem 0',
-          }}
-        >
-          <AudioButton phrase={questionText} lang={lang} />
-          {isSupported && <MicButton state={micState} onPress={handleMicPress} />}
-        </div>
+        {isSupported && (
+          <div
+            className="card-audio-controls"
+            style={{ display: 'flex', justifyContent: 'center', margin: '0.5rem 0' }}
+          >
+            <MicButton state={micState} onPress={handleMicPress} />
+          </div>
+        )}
 
         <div className="quiz-options">
           {choices.map((choice, i) => {
