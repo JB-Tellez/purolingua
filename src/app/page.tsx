@@ -1,24 +1,54 @@
 import Link from 'next/link';
 
+const LANGUAGES = [
+  {
+    code: 'it',
+    flag: '🇮🇹',
+    name: 'Italiano',
+    description: 'Impara frasi utili per la vita quotidiana.',
+    theme: 'green',
+  },
+  {
+    code: 'es',
+    flag: '🇪🇸',
+    name: 'Español',
+    description: 'Aprende frases útiles para la vida diaria.',
+    theme: 'red',
+  },
+] as const;
+
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-8 p-8">
-      <h1 className="text-4xl font-bold">PuroLingua</h1>
-      <p className="text-lg text-gray-600">Choose your language / Scegli la lingua</p>
-      <div className="flex gap-6">
-        <Link
-          href="/it"
-          className="rounded-xl border-2 border-gray-200 px-8 py-4 text-xl font-medium hover:border-blue-500 hover:text-blue-600 transition-colors"
-        >
-          Italiano
-        </Link>
-        <Link
-          href="/es"
-          className="rounded-xl border-2 border-gray-200 px-8 py-4 text-xl font-medium hover:border-red-500 hover:text-red-600 transition-colors"
-        >
-          Espanol
-        </Link>
-      </div>
-    </main>
+    <>
+      <header>
+        <nav>
+          <div className="logo">
+            <span>🌍</span>
+            <span>PuroLingua</span>
+          </div>
+        </nav>
+      </header>
+      <main>
+        <div className="section-header">
+          <h1>Choose Your Language</h1>
+          <p className="subtitle">Scegli la lingua · Elige tu idioma</p>
+        </div>
+        <div className="activity-grid">
+          {LANGUAGES.map(({ code, flag, name, description, theme }) => (
+            <Link
+              key={code}
+              href={`/${code}`}
+              style={{ textDecoration: 'none', display: 'block', height: '100%' }}
+            >
+              <div className={`deck-card theme-${theme}`} style={{ height: '100%' }}>
+                <div className="deck-icon-circle">{flag}</div>
+                <h3>{name}</h3>
+                <p>{description}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </main>
+    </>
   );
 }
