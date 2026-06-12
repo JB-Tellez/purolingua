@@ -7,6 +7,7 @@ import { useQASRS } from '@/hooks/useQASRS';
 import { useLevelFilter } from '@/hooks/useLevelFilter';
 import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
 import { isCardDue } from '@/lib/srs';
+import { matchesTranscript } from '@/lib/matchTranscript';
 import { scenarios as allScenarios } from '@/data/qa';
 import AudioButton from '@/components/AudioButton';
 import ChoiceButton from '@/components/ChoiceButton';
@@ -146,13 +147,6 @@ export default function QAStudySession({ lang, scenario }: Props) {
     setFeedbackState(null);
   }
 
-  const normalize = (s: string) =>
-    s
-      .toLowerCase()
-      .trim()
-      .replace(/[.,!?;:'"¿¡]+$/g, '')
-      .trim();
-
   function handleAnswer(isCorrect: boolean) {
     if (currentCard) {
       updateCard(currentCard.id, isCorrect);
@@ -197,7 +191,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
     startListening(
       (transcript) => {
         setMicState('idle');
-        if (normalize(transcript) === normalize(correctText)) {
+        if (matchesTranscript(transcript, correctText)) {
           // Matched correct answer — find correct choice and trigger click
           const correctIndex = choices.findIndex((c) => c.isCorrect);
           if (correctIndex !== -1) {

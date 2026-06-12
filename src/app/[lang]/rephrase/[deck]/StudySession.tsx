@@ -6,6 +6,7 @@ import type { Card, DeckId, Lang } from '@/types';
 import { useSRS } from '@/hooks/useSRS';
 import { useLevelFilter } from '@/hooks/useLevelFilter';
 import { generateChoices } from '@/lib/generateChoices';
+import { matchesTranscript } from '@/lib/matchTranscript';
 import AudioButton from '@/components/AudioButton';
 import ChoiceButton from '@/components/ChoiceButton';
 import FeedbackMessage from '@/components/FeedbackMessage';
@@ -137,15 +138,13 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
   const { originalIndex, card: currentCard } = currentEntry!;
 
-  const normalize = (s: string) => s.toLowerCase().trim().replace(/[.,!?;:'"¿¡]+$/g, '').trim();
-
   function handleFrontMicPress() {
     if (isListening) return;
     setMicState('listening');
     startListening(
       (transcript) => {
         setMicState('idle');
-        if (normalize(transcript) === normalize(currentCard.front)) {
+        if (matchesTranscript(transcript, currentCard.front)) {
           setFeedbackState('heard');
           setFlipped(true);
         } else {
@@ -169,7 +168,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
       (transcript) => {
         setMicState('idle');
         const matchedIndex = choices.findIndex(
-          (c) => normalize(c.text) === normalize(transcript)
+          (c) => matchesTranscript(transcript, c.text)
         );
         if (matchedIndex !== -1) {
           setFeedbackState('heard');
