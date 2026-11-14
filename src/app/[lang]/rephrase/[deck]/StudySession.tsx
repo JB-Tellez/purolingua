@@ -56,8 +56,10 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [done, setDone] = useState(false);
-  const [allDone, setAllDone] = useState(false);
+  // Which end screen to show is derived at render time (below), not decided in
+  // handleAnswer: the handler's closure still sees progress from before
+  // updateCard, so the just-answered card would always look due.
+  const [finished, setFinished] = useState(false);
   // selectedChoice: null = not answered, index of selected choice once answered
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
@@ -83,14 +85,26 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   function resetSession() {
     setIndex(0);
     setFlipped(false);
-    setDone(false);
-    setAllDone(false);
+    setFinished(false);
     setSelectedChoice(null);
     setMicState('idle');
     setFeedbackState(null);
   }
 
-  if (allDone || dueCards.length === 0) {
+  function allDecksEmpty(): boolean {
+    return deckMetadata
+      .filter((d) => d.lang === lang)
+      .every(({ id }) =>
+        (DECK_MAP[lang]?.[id] ?? [])
+          .map((card, i) => ({ card, i }))
+          .filter(({ card }) => activeLevels.includes(card.level))
+          .every(({ i }) => !isCardDueForDeck(id, i))
+      );
+  }
+
+  const allDone = dueCards.length === 0 || (finished && allDecksEmpty());
+
+  if (allDone) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
@@ -113,7 +127,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     );
   }
 
-  if (done) {
+  if (finished) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
@@ -195,19 +209,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     if (index + 1 < dueCards.length) {
       setIndex((i) => i + 1);
     } else {
-      const langDecks = deckMetadata.filter(d => d.lang === lang);
-      const allDecksEmpty = langDecks.every(({ id }) => {
-        const deckCards = DECK_MAP[lang]?.[id] ?? [];
-        return deckCards
-          .map((card, i) => ({ card, i }))
-          .filter(({ card }) => activeLevels.includes(card.level))
-          .every(({ i }) => !isCardDueForDeck(id, i));
-      });
-      if (allDecksEmpty) {
-        setAllDone(true);
-      } else {
-        setDone(true);
-      }
+      setFinished(true);
     }
   }
 

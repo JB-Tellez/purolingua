@@ -1,0 +1,87 @@
+# components
+
+## Overview
+
+Shared client-side React UI components (`'use client'`) for the PuroLingua
+Next.js app. Every component is a default export. Most are presentational and
+take a `lang: Lang` prop (`'it' | 'es'`). Translated strings come from
+`next-intl` `useTranslations` namespaces. Two grid components (`DeckGrid`,
+`ScenarioGrid`) read SRS progress through the hooks in
+[`../hooks/README.md`](../hooks/README.md) to show due-card badges.
+
+Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
+`rephrase`, and the study session components).
+
+## Interface
+
+| Component | Props | Notes |
+| --- | --- | --- |
+| `ActivityPicker` (`ActivityPicker.tsx`) | `{ lang }` | Links to `/{lang}/rephrase` and `/{lang}/qa`; i18n namespace `activities`. |
+| `AudioButton` (`AudioButton.tsx`) | `{ phrase: string; lang }` | Speaks `phrase` with `speechSynthesis`; i18n namespace `study` (`audio`). |
+| `ChoiceButton` (`ChoiceButton.tsx`) | `{ text; state: 'idle' \| 'correct' \| 'incorrect'; onClick; disabled?; onSpeak? }` | Quiz answer button with nested audio icon. |
+| `DeckGrid` (`DeckGrid.tsx`) | `{ lang }` | Cards from `@/data/decks:deckMetadata` filtered by `lang`, linking to `/{lang}/{deck.id}`; due badge from `useSRS` + `useLevelFilter`. Not imported by any route (only by `DeckGrid.test.tsx`); `src/app/[lang]/rephrase/page.tsx` uses its own private `DeckGrid`. Its links do not match the generated `/{lang}/rephrase/{deck}` routes. |
+| `FeedbackMessage` (`FeedbackMessage.tsx`) | `{ state: 'correct' \| 'incorrect' \| 'heard' \| 'notRecognized' \| null }` | `role="status"`, `aria-live="polite"`; i18n namespace `study`. |
+| `LevelFilterChips` (`LevelFilterChips.tsx`) | `{ lang; activeLevels: Level[]; setActiveLevels(levels: Level[] \| null) }` | Toggle chips for `A1` / `A2`; i18n namespace `filter`. `lang` is unused. |
+| `MicButton` (`MicButton.tsx`) | `{ state: 'idle' \| 'listening' \| 'error'; onPress }` | Class `mic-btn` plus `mic-btn--{state}` when not idle. |
+| `ScenarioGrid` (`ScenarioGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One tile per `@/data/qa:scenarios`, linking to `/{lang}/qa/{scenario.id}`; due badge from `useQASRS`. |
+| `SiteHeader` (`SiteHeader.tsx`) | `{ lang }` | Logo, back link, progress reset, language dropdown; i18n namespace `nav`. |
+
+## Invariants
+
+- **Due badges**: `DeckGrid` and `ScenarioGrid` render `✓` with class
+  `deck-card-badge--done` when the due count is `0`, otherwise the count.
+  `DeckGrid` counts only cards whose `level` is in `activeLevels` from
+  `useLevelFilter(lang, hasProgress)`. `ScenarioGrid` takes `activeLevels` as
+  a prop and uses `useQASRS(...).dueCards.length`.
+- **Deck lookup**: `DeckGrid` gets cards from `@/data/deckMap:DECK_MAP[lang][deck.id]`
+  and falls back to `[]` when missing. Indices are positional and passed to
+  `isCardDueForDeck(deckId, index)`.
+- **Scenario theming**: `ScenarioGrid` assigns themes cyclically from
+  `SCENARIO_THEMES` by array index, and titles from `titleIt` / `titleEs` by `lang`.
+- **ChoiceButton is locked after answering**: it is disabled when `disabled`
+  is true or `state !== 'idle'`. The audio icon stops click propagation, so
+  `onSpeak` fires without triggering `onClick` (also on `Enter` / space).
+- **Click propagation**: `AudioButton` and `MicButton` call
+  `e.stopPropagation()` before acting, so they can sit inside clickable cards.
+- **LevelFilterChips relies on the FLTR-06 guard**: deselecting the last
+  active level passes `[]` to `setActiveLevels`, and the component expects the
+  setter (`useLevelFilter`) to ignore it.
+- **FeedbackMessage** renders nothing when `state === null`.
+- **AudioButton voice choice**: locale `it-IT` / `es-ES` (`LANG_LOCALE`),
+  rate `0.9`. It prefers an exact-locale voice, then any voice whose `lang`
+  starts with the language code, then the browser default. It does nothing if
+  `window.speechSynthesis` is absent.
+- **SiteHeader back link**: shown when the pathname has 2 or more segments
+  (`segments.length >= 2`), pointing to the path with its last segment removed.
+  The inline comment says "3+ segments", but the code checks `>= 2`.
+- **SiteHeader language dropdown**: the first option is always labeled with
+  `LANG_META.it` (Italiano) but links to `/{lang}`. The second is labeled with
+  `LANG_META[OTHER_LANG[lang]]` and links to `/{other}`. For `lang === 'it'`
+  this gives Italiano -> `/it` and Español -> `/es`. For `lang === 'es'`, both
+  options are labeled Italiano (linking to `/es` and `/it`), and no Español
+  option is shown. This is current code behavior, not a design guarantee.
+
+## Side Effects
+
+- `SiteHeader` reset: `localStorage.removeItem('{lang}-progress')`, then a full
+  page reload via `reloadPage()` (`@/lib/reloadPage`), so mounted grids and
+  study sessions drop their in-memory progress. This key holds both Rephrase
+  and Q&A progress (see `../hooks/README.md`), so both are cleared.
+  `"{lang}-level-filter"` and the other language's progress are not touched.
+- `AudioButton`: `window.speechSynthesis.cancel()` then `speak(utterance)`
+  (audio output).
+- `DeckGrid` and `ScenarioGrid` read `localStorage` indirectly via `useSRS`,
+  `useLevelFilter`, and `useQASRS`. `ScenarioGrid` mounts one `useQASRS`
+  instance per scenario tile.
+- All other components are pure render plus callback props.
+
+## Verification
+
+- Run: `npm test` (Vitest; `npm test` runs `vitest`, which starts watch mode
+  in an interactive terminal).
+- Targeted, single run: `npx vitest run src/__tests__/components`
+  (tests live in the mirror tree `src/__tests__/components/`. That directory
+  also holds tests for `QAStudySession` and `StudySession`, which live under
+  `src/app/[lang]/`). `AudioButton`, `ChoiceButton`, and `LevelFilterChips`
+  have no tests yet.
+- Coverage gaps: `node scripts/analyze-test-coverage.ts src/components/`

@@ -1,0 +1,84 @@
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import SiteHeader from '@/components/SiteHeader';
+import { reloadPage } from '@/lib/reloadPage';
+
+// jsdom does not allow stubbing window.location.reload, so the reload goes
+// through a tiny module that tests can replace.
+vi.mock('@/lib/reloadPage', () => ({ reloadPage: vi.fn() }));
+
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => key,
+}));
+
+let pathname = '/it';
+vi.mock('next/navigation', () => ({
+  usePathname: () => pathname,
+  useRouter: () => ({ refresh: vi.fn(), push: vi.fn() }),
+}));
+
+vi.mock('next/link', () => ({
+  default: ({ children, href, className }: { children: React.ReactNode; href: string; className?: string }) => (
+    <a href={href} className={className}>{children}</a>
+  ),
+}));
+
+const progress = JSON.stringify({ daily_0: { box: 2, nextReview: '2099-01-01' } });
+
+beforeEach(() => {
+  pathname = '/it';
+  vi.mocked(reloadPage).mockClear();
+});
+
+describe('SiteHeader reset', () => {
+  it('removes the current language progress key', () => {
+    localStorage.setItem('it-progress', progress);
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(screen.getByText('reset'));
+    expect(localStorage.getItem('it-progress')).toBeNull();
+  });
+
+  it('keeps the level filter', () => {
+    localStorage.setItem('it-level-filter', JSON.stringify(['A2']));
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(screen.getByText('reset'));
+    expect(localStorage.getItem('it-level-filter')).toBe('["A2"]');
+  });
+
+  it("does not touch the other language's progress", () => {
+    localStorage.setItem('es-progress', progress);
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(screen.getByText('reset'));
+    expect(localStorage.getItem('es-progress')).toBe(progress);
+  });
+
+  it('reloads the page so mounted hooks and sessions drop their in-memory progress', () => {
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(screen.getByText('reset'));
+    expect(reloadPage).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears storage before reloading', () => {
+    localStorage.setItem('it-progress', progress);
+    vi.mocked(reloadPage).mockImplementationOnce(() => {
+      expect(localStorage.getItem('it-progress')).toBeNull();
+    });
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(screen.getByText('reset'));
+    expect(reloadPage).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('SiteHeader back link', () => {
+  it('is hidden on the language home page', () => {
+    pathname = '/it';
+    render(<SiteHeader lang="it" />);
+    expect(screen.queryByText('back')).toBeNull();
+  });
+
+  it('points one level up on a nested page', () => {
+    pathname = '/it/rephrase/daily';
+    render(<SiteHeader lang="it" />);
+    expect(screen.getByText('back').closest('a')).toHaveAttribute('href', '/it/rephrase');
+  });
+});

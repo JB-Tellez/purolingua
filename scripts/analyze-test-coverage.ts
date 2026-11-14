@@ -146,33 +146,30 @@ export function parseLogicBranches(source: string): Array<{ type: string; line: 
 // 2. Test file discovery
 // ---------------------------------------------------------------------------
 
+const TEST_SUFFIXES = ['.test.ts', '.test.tsx', '.spec.ts', '.spec.tsx'];
+
 export function findTestFile(sourceFilePath: string): string | null {
   const baseDir = path.dirname(sourceFilePath);
   const baseName = path.basename(sourceFilePath, path.extname(sourceFilePath));
+  const withSuffixes = (base: string) => TEST_SUFFIXES.map((suffix) => `${base}${suffix}`);
 
   const candidates: string[] = [
-    path.join(baseDir, `${baseName}.test.ts`),
-    path.join(baseDir, `${baseName}.test.tsx`),
-    path.join(baseDir, `${baseName}.spec.ts`),
-    path.join(baseDir, `${baseName}.spec.tsx`),
+    ...withSuffixes(path.join(baseDir, baseName)),
     path.join(baseDir, '__tests__', `${baseName}.ts`),
     path.join(baseDir, '__tests__', `${baseName}.tsx`),
-    path.join(baseDir, '__tests__', `${baseName}.test.ts`),
-    path.join(baseDir, '__tests__', `${baseName}.test.tsx`),
-    path.join(baseDir, '__tests__', `${baseName}.spec.ts`),
-    path.join(baseDir, '__tests__', `${baseName}.spec.tsx`),
+    ...withSuffixes(path.join(baseDir, '__tests__', baseName)),
   ];
 
   // Also check src/__tests__/ mirror of src/ path
   try {
     const relativePath = path.relative(path.join(process.cwd(), 'src'), sourceFilePath);
     if (relativePath && !relativePath.startsWith('..')) {
-      const mirroredPath = path.join(process.cwd(), 'src', '__tests__', ...relativePath.split(path.sep).map((seg) =>
-        seg.replace(/\.ts(x)?$/, '.test.tsx')
-      ));
-      if (fs.existsSync(mirroredPath)) {
-        candidates.push(mirroredPath);
-      }
+      const mirroredBase = path.join(
+        process.cwd(), 'src', '__tests__',
+        path.dirname(relativePath),
+        baseName
+      );
+      candidates.push(...withSuffixes(mirroredBase));
     }
   } catch (e) {
     // path.relative can throw on Windows; ignore

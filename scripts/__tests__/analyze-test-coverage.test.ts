@@ -224,6 +224,61 @@ describe('findTestFile', () => {
     const result = findTestFile('/src/hooks/foo.ts');
     expect(result).toContain('.spec.ts');
   });
+
+  describe('src/__tests__ mirror tree', () => {
+    const cwd = process.cwd();
+    const src = (...segs: string[]) => path.join(cwd, 'src', ...segs);
+    const mirror = (...segs: string[]) => path.join(cwd, 'src', '__tests__', ...segs);
+
+    async function findWith(existing: string[], sourcePath: string) {
+      const fsMock = mockFs();
+      const present = new Set(existing);
+      fsMock.existsSync.mockImplementation((p: string) => present.has(p));
+      vi.doMock('fs', () => fsMock);
+      const { findTestFile } = await import('../analyze-test-coverage');
+      return findTestFile(sourcePath);
+    }
+
+    it('finds a .test.ts mirror for a .ts source (src/lib/srs.ts)', async () => {
+      const expected = mirror('lib', 'srs.test.ts');
+      expect(await findWith([expected], src('lib', 'srs.ts'))).toBe(expected);
+    });
+
+    it('still finds a .test.tsx mirror for a .ts source (hook tests)', async () => {
+      const expected = mirror('hooks', 'useLevelFilter.test.tsx');
+      expect(await findWith([expected], src('hooks', 'useLevelFilter.ts'))).toBe(expected);
+    });
+
+    it('finds a .test.ts mirror for a .tsx source', async () => {
+      const expected = mirror('components', 'Widget.test.ts');
+      expect(await findWith([expected], src('components', 'Widget.tsx'))).toBe(expected);
+    });
+
+    it('finds .spec.ts and .spec.tsx mirrors', async () => {
+      const specTs = mirror('lib', 'srs.spec.ts');
+      expect(await findWith([specTs], src('lib', 'srs.ts'))).toBe(specTs);
+
+      vi.resetModules();
+      const specTsx = mirror('components', 'Widget.spec.tsx');
+      expect(await findWith([specTsx], src('components', 'Widget.tsx'))).toBe(specTsx);
+    });
+
+    it('resolves a cwd-relative source path, as the CLI passes it', async () => {
+      const expected = mirror('lib', 'generateChoices.test.ts');
+      expect(await findWith([expected], path.join('src', 'lib', 'generateChoices.ts'))).toBe(expected);
+    });
+
+    it('prefers a sibling test file over the mirror', async () => {
+      const sibling = src('lib', 'srs.test.ts');
+      expect(await findWith([sibling, mirror('lib', 'srs.test.ts')], src('lib', 'srs.ts'))).toBe(sibling);
+    });
+
+    it('does not mirror sources outside src/', async () => {
+      const outside = path.join(cwd, 'scripts', 'tool.ts');
+      const bogus = path.join(cwd, 'src', '__tests__', '..', 'scripts', 'tool.test.ts');
+      expect(await findWith([bogus], outside)).toBeNull();
+    });
+  });
 });
 
 // ---------------------------------------------------------------------------

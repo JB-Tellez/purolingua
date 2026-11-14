@@ -58,3 +58,36 @@ describe('useSRS isCardDueForDeck', () => {
     expect(result.current.isCardDueForDeck('daily', 0)).toBe(false);
   });
 });
+
+describe('useSRS writes are based on current storage, not a stale snapshot', () => {
+  const storedKeys = () => Object.keys(JSON.parse(localStorage.getItem('it-progress') ?? '{}')).sort();
+
+  it('a progress reset while mounted is not undone by the next updateCard', () => {
+    const { result } = renderHook(() => useSRS('it'));
+    act(() => { result.current.updateCard('daily', 0, true); });
+    act(() => { result.current.updateCard('daily', 1, true); });
+
+    localStorage.removeItem('it-progress'); // what SiteHeader's reset does
+
+    act(() => { result.current.updateCard('daily', 2, true); });
+    expect(storedKeys()).toEqual(['daily_2']);
+    expect(result.current.isCardDueForDeck('daily', 0)).toBe(true);
+  });
+
+  it('after a reset, the answered card starts from box 1 again', () => {
+    const { result } = renderHook(() => useSRS('it'));
+    act(() => { result.current.updateCard('daily', 0, true); }); // box 2
+    localStorage.removeItem('it-progress');
+    act(() => { result.current.updateCard('daily', 0, true); });
+    const stored = JSON.parse(localStorage.getItem('it-progress') ?? '{}');
+    expect(stored['daily_0'].box).toBe(2); // 1 → 2, not 2 → 3
+  });
+
+  it('two mounted instances do not erase each other\'s writes', () => {
+    const { result: a } = renderHook(() => useSRS('it'));
+    const { result: b } = renderHook(() => useSRS('it'));
+    act(() => { a.current.updateCard('daily', 0, true); });
+    act(() => { b.current.updateCard('travel', 0, true); });
+    expect(storedKeys()).toEqual(['daily_0', 'travel_0']);
+  });
+});

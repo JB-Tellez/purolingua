@@ -98,8 +98,10 @@ export default function QAStudySession({ lang, scenario }: Props) {
   const { isSupported, isListening, startListening } = useVoiceRecognition(lang);
 
   const [index, setIndex] = useState(0);
-  const [done, setDone] = useState(false);
-  const [allDone, setAllDone] = useState(false);
+  // Which end screen to show is derived at render time (below), not decided in
+  // handleAnswer: the handler's closure still sees progress from before
+  // updateCard, so the just-answered card would always look due.
+  const [finished, setFinished] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
   const [feedbackState, setFeedbackState] = useState<
@@ -147,8 +149,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
 
   function resetSession() {
     setIndex(0);
-    setDone(false);
-    setAllDone(false);
+    setFinished(false);
     setSelectedChoice(null);
     setMicState('idle');
     setFeedbackState(null);
@@ -164,15 +165,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
     if (index + 1 < sessionDueCards.length) {
       setIndex((i) => i + 1);
     } else {
-      // Check all 7 scenarios for any remaining due cards using live progress state
-      const anyScenarioHasDue = allScenarios.some((sc) =>
-        isScenarioHasDue(progress, sc.id, sc.cards, activeLevels)
-      );
-      if (anyScenarioHasDue) {
-        setDone(true);
-      } else {
-        setAllDone(true);
-      }
+      setFinished(true);
     }
   }
 
@@ -228,8 +221,14 @@ export default function QAStudySession({ lang, scenario }: Props) {
     );
   }
 
-  // All-done screen (shown when 0 due cards at mount OR after all scenarios exhausted)
-  if (allDone || sessionDueCards.length === 0) {
+  // All-done screen (shown when 0 due cards at mount OR after all scenarios exhausted).
+  // `progress` here is post-updateCard, so the just-answered card is counted correctly.
+  const allDone =
+    sessionDueCards.length === 0 ||
+    (finished &&
+      !allScenarios.some((sc) => isScenarioHasDue(progress, sc.id, sc.cards, activeLevels)));
+
+  if (allDone) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
@@ -273,7 +272,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
   }
 
   // Scenario-done screen (shown after last card in this scenario, but other scenarios have due cards)
-  if (done) {
+  if (finished) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>

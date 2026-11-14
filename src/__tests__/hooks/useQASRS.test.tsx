@@ -139,3 +139,33 @@ describe('useQASRS key isolation', () => {
     expect(localStorage.getItem('es-progress')).toBeNull();
   });
 });
+
+describe('useQASRS writes are based on current storage, not a stale snapshot', () => {
+  const storedKeys = () => Object.keys(JSON.parse(localStorage.getItem('it-progress') ?? '{}')).sort();
+
+  it('a progress reset while mounted is not undone by the next updateCard', () => {
+    const { result } = renderHook(() =>
+      useQASRS('it', 'coffee', mockCards, ['A1', 'A2'])
+    );
+    act(() => { result.current.updateCard('test_01', true); });
+
+    localStorage.removeItem('it-progress'); // what SiteHeader's reset does
+
+    act(() => { result.current.updateCard('test_02', true); });
+    expect(storedKeys()).toEqual(['qa_coffee_test_02']);
+    expect(result.current.isCardDueForScenario('test_01')).toBe(true);
+  });
+
+  it('does not erase Rephrase progress written to the shared key after mount', () => {
+    const { result } = renderHook(() =>
+      useQASRS('it', 'coffee', mockCards, ['A1', 'A2'])
+    );
+    // Another writer (e.g. useSRS) stores Rephrase progress after this hook loaded
+    localStorage.setItem(
+      'it-progress',
+      JSON.stringify({ daily_0: { box: 2, nextReview: '2099-01-01' } })
+    );
+    act(() => { result.current.updateCard('test_01', true); });
+    expect(storedKeys()).toEqual(['daily_0', 'qa_coffee_test_01']);
+  });
+});
