@@ -21,10 +21,10 @@ Scope: the 18 EGM contracts (`README.md` plus 17 child `README.md` files), each 
 
 ## src/components/README.md
 
-- **The "SiteHeader language dropdown" invariant still describes the bug fixed in PR #2.** It says the first option is always Italiano, refers to `OTHER_LANG`, and says `/es` shows no Español option. The code renders one option per `LANG_META` entry, each linking to its own `/{code}` and marked `active` for the current language (`SiteHeader.tsx`). `OTHER_LANG` no longer exists.
-- The "SiteHeader back link" invariant says "The inline comment says '3+ segments', but the code checks `>= 2`". The comment was corrected and now describes the 2+ rule (`SiteHeader.tsx:25`).
-- Side Effects says `DeckGrid` and `ScenarioGrid` read `localStorage` "via `useSRS`, `useLevelFilter`, and `useQASRS`". Neither grid calls `useLevelFilter`; both receive `activeLevels` as a prop, as the Due-badges invariant states.
-- Side Effects describes the reset as `localStorage.removeItem('{lang}-progress')`. `SiteHeader` calls `clearProgress(lang)` from `@/lib/progressStorage`, which owns the key name.
+- **[FIXED 2026-11-18.]** **The "SiteHeader language dropdown" invariant still describes the bug fixed in PR #2.** It says the first option is always Italiano, refers to `OTHER_LANG`, and says `/es` shows no Español option. The code renders one option per `LANG_META` entry, each linking to its own `/{code}` and marked `active` for the current language (`SiteHeader.tsx`). `OTHER_LANG` no longer exists.
+- **[FIXED 2026-11-18.]** The "SiteHeader back link" invariant says "The inline comment says '3+ segments', but the code checks `>= 2`". The comment was corrected and now describes the 2+ rule (`SiteHeader.tsx:25`).
+- **[FIXED 2026-11-18.]** Side Effects says `DeckGrid` and `ScenarioGrid` read `localStorage` "via `useSRS`, `useLevelFilter`, and `useQASRS`". Neither grid calls `useLevelFilter`; both receive `activeLevels` as a prop, as the Due-badges invariant states.
+- **[FIXED 2026-11-18.]** Side Effects describes the reset as `localStorage.removeItem('{lang}-progress')`. `SiteHeader` calls `clearProgress(lang)` from `@/lib/progressStorage`, which owns the key name.
 
 ## src/i18n/README.md
 
@@ -59,8 +59,8 @@ No drift detected. (Checked against the real data: 16 decks of 40 cards, 20 A1 /
 
 ## src/app/[lang]/rephrase/[deck]/README.md
 
-- **The "next" invariant still describes the bug fixed in PR #2**: "The 'next' control calls `handleAnswer(true)` directly." The Next button is disabled until a choice is selected, records that choice's correctness, and cancels the pending 600 ms auto-advance (`StudySession.tsx:205-207, 223, 296`). The contract's own Invariants list (third bullet) now contradicts this one.
-- "Study again" is not documented. It replays the session's cards as practice without saving answers (`practice` state, `StudySession.tsx:49-50, 207`), and it is hidden on the all-done screen when the session started with no due cards. The Interface lists the end screens but not this behavior.
+- **[FIXED 2026-11-18.]** **The "next" invariant still describes the bug fixed in PR #2**: "The 'next' control calls `handleAnswer(true)` directly." The Next button is disabled until a choice is selected, records that choice's correctness, and cancels the pending 600 ms auto-advance (`StudySession.tsx:205-207, 223, 296`). The contract's own Invariants list (third bullet) now contradicts this one.
+- **[FIXED 2026-11-18.]** "Study again" is not documented. It replays the session's cards as practice without saving answers (`practice` state, `StudySession.tsx:49-50, 207`), and it is hidden on the all-done screen when the session started with no due cards. The Interface lists the end screens but not this behavior.
 
 ## src/app/[lang]/qa/README.md
 
@@ -68,9 +68,9 @@ No drift detected. (Checked against the real data: 16 decks of 40 cards, 20 A1 /
 
 ## src/app/[lang]/qa/[scenario]/README.md
 
-- **The answer-recording invariant still describes the bug fixed in PR #2**: "Wrong answers are not recorded in SRS." A card missed before the correct retry is recorded as wrong: `updateCard(currentCard.id, isCorrect && !missedCurrent)` (`QAStudySession.tsx:88, 145`). The retry flow itself is as documented.
-- "Study again" is not documented. It replays the session as practice without saving answers (`practice`, `QAStudySession.tsx:84-85, 144`) and is hidden on the all-done screen when the session started with no due cards.
-- The block comment above `bootstrapHasProgress` (`QAStudySession.tsx:51-60`) describes logic the code does not have. It says the session bootstraps with `hasProgress=false` and "let[s] useQASRS's returned hasProgress update on rerender", but the flag is read once from storage in a `useState` initializer and never updated, and `useQASRS`'s `hasProgress` is unused. Its last line says "the level filter is shared", which stopped being true when Q&A got `{lang}-qa-level-filter`. (The contract's own description of `bootstrapHasProgress` is correct.)
+- **[FIXED 2026-11-18.]** **The answer-recording invariant still describes the bug fixed in PR #2**: "Wrong answers are not recorded in SRS." A card missed before the correct retry is recorded as wrong: `updateCard(currentCard.id, isCorrect && !missedCurrent)` (`QAStudySession.tsx:88, 145`). The retry flow itself is as documented.
+- **[FIXED 2026-11-18.]** "Study again" is not documented. It replays the session as practice without saving answers (`practice`, `QAStudySession.tsx:84-85, 144`) and is hidden on the all-done screen when the session started with no due cards.
+- **[FIXED 2026-11-18: comment rewritten.]** The block comment above `bootstrapHasProgress` (`QAStudySession.tsx:51-60`) describes logic the code does not have. It says the session bootstraps with `hasProgress=false` and "let[s] useQASRS's returned hasProgress update on rerender", but the flag is read once from storage in a `useState` initializer and never updated, and `useQASRS`'s `hasProgress` is unused. Its last line says "the level filter is shared", which stopped being true when Q&A got `{lang}-qa-level-filter`. (The contract's own description of `bootstrapHasProgress` is correct.)
 
 ## src/app/README.md
 

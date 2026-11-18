@@ -51,10 +51,15 @@ synthesis, speech recognition).
   `foils`. Other languages use `questionEs`, `correctEs`, and `foilsEs`.
 - `choices` is memoized on `currentCard`, so the shuffle order stays the same
   while a card is shown.
-- A click is ignored while `selectedChoice !== null`. A correct answer calls
-  `updateCard(card.id, true)` after 600 ms. A wrong answer only resets the
-  selection after 800 ms so the user can retry. Wrong answers are not recorded
-  in SRS.
+- A click is ignored while `selectedChoice !== null`. A wrong answer sets
+  `missedCurrent` and resets the selection after 800 ms so the user can retry.
+  A correct answer advances after 600 ms and calls
+  `updateCard(card.id, isCorrect && !missedCurrent)`: a card missed before the
+  correct retry is recorded as wrong (box 1). The card is recorded once, when
+  it advances. Covered by `QAStudySession.endScreens.test.tsx`.
+- "Study again" (on both end screens) replays `sessionDueCards` as practice:
+  `practice` is set and `handleAnswer` skips `updateCard`. It is hidden on the
+  all-done screen when the session started with no due cards.
 - Mic input: a transcript that matches `correctText` selects the correct choice
   and advances. A transcript that does not match, or a recognition error, shows
   `notRecognized` for 800 ms and does not update SRS.
