@@ -102,6 +102,8 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // handleAnswer: the handler's closure still sees progress from before
   // updateCard, so the just-answered card would always look due.
   const [finished, setFinished] = useState(false);
+  // "Study again" replays the session as practice: answers are not saved.
+  const [practice, setPractice] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   // A wrong choice lets the user retry, but the card is still recorded as wrong.
   const [missedCurrent, setMissedCurrent] = useState(false);
@@ -152,6 +154,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
   function resetSession() {
     setIndex(0);
     setFinished(false);
+    setPractice(true);
     setSelectedChoice(null);
     setMissedCurrent(false);
     setMicState('idle');
@@ -159,7 +162,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
   }
 
   function handleAnswer(isCorrect: boolean) {
-    if (currentCard) {
+    if (currentCard && !practice) {
       updateCard(currentCard.id, isCorrect && !missedCurrent);
     }
     setSelectedChoice(null);
@@ -265,9 +268,11 @@ export default function QAStudySession({ lang, scenario }: Props) {
                     {t('backToScenarios')}
                   </button>
                 </Link>
-                <button className="btn primary" type="button" onClick={resetSession}>
-                  {t('studyAgain')}
-                </button>
+                {sessionDueCards.length > 0 && (
+                  <button className="btn primary" type="button" onClick={resetSession}>
+                    {t('studyAgain')}
+                  </button>
+                )}
               </div>
             </div>
           </div>

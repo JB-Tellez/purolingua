@@ -114,3 +114,36 @@ describe('QAStudySession answer recording (real SRS state)', () => {
     expect(saved().qa_coffee_hotel_01.box).toBe(3);
   });
 });
+
+describe('QAStudySession "Study again" practice replay (real SRS state)', () => {
+  const saved = () => JSON.parse(localStorage.getItem('it-progress') ?? '{}');
+  const studyAgain = () => act(() => { fireEvent.click(screen.getByRole('button', { name: 'studyAgain' })); });
+
+  it('replays the session cards', () => {
+    seed({ qa_hotel_hotel_01: FUTURE });
+    renderCoffee();
+    answerCorrectly();
+    studyAgain();
+    expect(screen.getByRole('button', { name: /Un caffè/ })).toBeInTheDocument();
+  });
+
+  it('does not save answers given during the replay', () => {
+    seed({ qa_hotel_hotel_01: FUTURE });
+    renderCoffee();
+    answerCorrectly();
+    const afterSession = saved();
+    studyAgain();
+    act(() => { fireEvent.click(screen.getByRole('button', { name: /coffee_01 foil 1/ })); });
+    act(() => { vi.advanceTimersByTime(800); });
+    answerCorrectly();
+    expect(saved()).toEqual(afterSession);
+    expect(screen.getByText('allScenariosDone')).toBeInTheDocument();
+  });
+
+  it('is not offered when the session started with no due cards', () => {
+    seed({ qa_coffee_coffee_01: FUTURE, qa_hotel_hotel_01: FUTURE });
+    renderCoffee();
+    expect(screen.getByText('allScenariosDone')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'studyAgain' })).toBeNull();
+  });
+});

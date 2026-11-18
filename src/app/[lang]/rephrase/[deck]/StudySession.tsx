@@ -60,6 +60,8 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   // handleAnswer: the handler's closure still sees progress from before
   // updateCard, so the just-answered card would always look due.
   const [finished, setFinished] = useState(false);
+  // "Study again" replays the session as practice: answers are not saved.
+  const [practice, setPractice] = useState(false);
   // selectedChoice: null = not answered, index of selected choice once answered
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
@@ -88,6 +90,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     setIndex(0);
     setFlipped(false);
     setFinished(false);
+    setPractice(true);
     setSelectedChoice(null);
     setMicState('idle');
     setFeedbackState(null);
@@ -120,7 +123,9 @@ export default function StudySession({ lang, deckId, cards }: Props) {
                 <Link href={backLink}>
                   <button className="btn secondary" type="button">{t('backToDecks')}</button>
                 </Link>
-                <button className="btn primary" type="button" onClick={resetSession}>{t('studyAgain')}</button>
+                {dueCards.length > 0 && (
+                  <button className="btn primary" type="button" onClick={resetSession}>{t('studyAgain')}</button>
+                )}
               </div>
             </div>
           </div>
@@ -206,7 +211,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   function handleAnswer(isCorrect: boolean) {
     if (advanceTimer.current) clearTimeout(advanceTimer.current);
     advanceTimer.current = null;
-    updateCard(deckId, originalIndex, isCorrect);
+    if (!practice) updateCard(deckId, originalIndex, isCorrect);
     setFlipped(false);
     setSelectedChoice(null);
     setFeedbackState(null);

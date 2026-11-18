@@ -135,3 +135,35 @@ describe('StudySession Next button (real SRS state)', () => {
     expect(screen.getByText('cardCounter({"current":2,"total":2})')).toBeInTheDocument();
   });
 });
+
+describe('StudySession "Study again" practice replay (real SRS state)', () => {
+  const saved = () => JSON.parse(localStorage.getItem('it-progress') ?? '{}');
+  const studyAgain = () => act(() => { fireEvent.click(screen.getByRole('button', { name: 'studyAgain' })); });
+
+  it('replays the session cards', () => {
+    seed({ daily_1: FUTURE, restaurant_0: FUTURE });
+    renderDaily();
+    answer('Hello');
+    studyAgain();
+    expect(screen.getByText('Ciao')).toBeInTheDocument();
+    expect(screen.getByText('cardCounter({"current":1,"total":1})')).toBeInTheDocument();
+  });
+
+  it('does not save answers given during the replay', () => {
+    seed({ daily_1: FUTURE, restaurant_0: FUTURE });
+    renderDaily();
+    answer('Hello');
+    const afterSession = saved();
+    studyAgain();
+    answer('Thank you');
+    expect(saved()).toEqual(afterSession);
+    expect(screen.getByText('allDone')).toBeInTheDocument();
+  });
+
+  it('is not offered when the session started with no due cards', () => {
+    seed({ daily_0: FUTURE, daily_1: FUTURE, restaurant_0: FUTURE });
+    renderDaily();
+    expect(screen.getByText('allDone')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'studyAgain' })).toBeNull();
+  });
+});
