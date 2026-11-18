@@ -70,12 +70,14 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // Since useLevelFilter's hasProgress param only sets the DEFAULT levels (localStorage wins),
   // we bootstrap with hasProgress=false and let useQASRS's returned hasProgress update on rerender.
   // For the first render this means new users get A1 (correct), returning users get their saved filter.
+  // Any progress counts (Rephrase or Q&A), matching useSRS/useQASRS `hasProgress`:
+  // the level filter is shared, so every page and session must default the same way.
   const [bootstrapHasProgress] = useState(() => {
     try {
       const saved = localStorage.getItem(`${lang}-progress`);
       if (!saved) return false;
       const parsed = JSON.parse(saved) as Record<string, unknown>;
-      return Object.keys(parsed).some((k) => k.startsWith('qa_'));
+      return Object.keys(parsed).length > 0;
     } catch {
       return false;
     }

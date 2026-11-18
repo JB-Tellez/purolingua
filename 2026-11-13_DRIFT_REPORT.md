@@ -78,7 +78,7 @@ No drift detected.
 
 ## src/app/[lang]/qa/README.md
 
-- `qa/page.tsx` passes `useSRS(lang).hasProgress` (true for any Rephrase *or* Q&A key) to `useLevelFilter`. `QAStudySession` uses `bootstrapHasProgress`, which counts only `qa_` keys. With no saved filter, the browser page and the session can therefore default to different levels (`['A1','A2']` vs `['A1']`).
+- **[FIXED 2026-11-17: `QAStudySession` now counts any progress, like every other caller.]** `qa/page.tsx` passes `useSRS(lang).hasProgress` (true for any Rephrase *or* Q&A key) to `useLevelFilter`. `QAStudySession` uses `bootstrapHasProgress`, which counts only `qa_` keys. With no saved filter, the browser page and the session can therefore default to different levels (`['A1','A2']` vs `['A1']`).
 
 ## src/app/[lang]/qa/[scenario]/README.md
 

@@ -147,3 +147,12 @@ describe('QAStudySession "Study again" practice replay (real SRS state)', () => 
     expect(screen.queryByRole('button', { name: 'studyAgain' })).toBeNull();
   });
 });
+
+describe('QAStudySession default level filter (real storage)', () => {
+  it('a user with only Rephrase progress gets the returning-user default (A1 + A2), like the Q&A list page', () => {
+    localStorage.setItem('it-progress', JSON.stringify({ daily_0: FUTURE })); // no saved level filter
+    const a2Scenario = { ...scenarios[0], cards: [{ ...scenarios[0].cards[0], level: 'A2' }] } as Scenario;
+    render(<QAStudySession lang="it" scenario={a2Scenario} />);
+    expect(screen.getByRole('button', { name: /Un caffè/ })).toBeInTheDocument();
+  });
+});
