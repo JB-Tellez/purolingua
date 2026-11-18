@@ -6,8 +6,10 @@ import type { Lang, Level, Scenario, ScenarioId, ProgressRecord } from '@/types'
 import { useQASRS } from '@/hooks/useQASRS';
 import { useLevelFilter } from '@/hooks/useLevelFilter';
 import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
-import { isCardDue } from '@/lib/srs';
+import { isCardDue, getQACardKey } from '@/lib/srs';
+import { loadProgress } from '@/lib/progressStorage';
 import { matchesTranscript } from '@/lib/matchTranscript';
+import { speak } from '@/lib/speak';
 import { scenarios as allScenarios } from '@/data/qa';
 import AudioButton from '@/components/AudioButton';
 import ChoiceButton from '@/components/ChoiceButton';
@@ -17,21 +19,6 @@ import MicButton from '@/components/MicButton';
 interface Props {
   lang: Lang;
   scenario: Scenario;
-}
-
-const LANG_LOCALE: Record<Lang, string> = { it: 'it-IT', es: 'es-ES' };
-
-function speak(phrase: string, lang: Lang) {
-  if (typeof window === 'undefined' || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(phrase);
-  utterance.lang = LANG_LOCALE[lang];
-  utterance.rate = 0.9;
-  const voices = window.speechSynthesis.getVoices();
-  const matching = voices.filter((v) => v.lang.startsWith(lang));
-  const exact = matching.find((v) => v.lang === LANG_LOCALE[lang]);
-  utterance.voice = exact ?? matching[0] ?? null;
-  window.speechSynthesis.speak(utterance);
 }
 
 /** Fisher-Yates shuffle — returns a new array */
@@ -56,8 +43,7 @@ function isScenarioHasDue(
 ): boolean {
   return cards.some((card) => {
     if (!activeLevels.includes(card.level)) return false;
-    const key = `qa_${scenarioId}_${card.id}`;
-    return isCardDue(progress[key]);
+    return isCardDue(progress[getQACardKey(scenarioId, card.id)]);
   });
 }
 
@@ -72,16 +58,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // For the first render this means new users get A1 (correct), returning users get their saved filter.
   // Any progress counts (Rephrase or Q&A), matching useSRS/useQASRS `hasProgress`:
   // the level filter is shared, so every page and session must default the same way.
-  const [bootstrapHasProgress] = useState(() => {
-    try {
-      const saved = localStorage.getItem(`${lang}-progress`);
-      if (!saved) return false;
-      const parsed = JSON.parse(saved) as Record<string, unknown>;
-      return Object.keys(parsed).length > 0;
-    } catch {
-      return false;
-    }
-  });
+  const [bootstrapHasProgress] = useState(() => Object.keys(loadProgress(lang)).length > 0);
 
   const { activeLevels } = useLevelFilter(lang, bootstrapHasProgress);
 

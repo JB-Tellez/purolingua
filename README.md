@@ -116,18 +116,18 @@ Request flow: `src/app/[lang]/layout.tsx` validates the locale, loads messages, 
 
 ## Global Invariants
 
-- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/hooks/useQASRS.ts:getQACardKey`); `{lang}-level-filter` holds the level filter. Source comments state these keys must match v1.1.
+- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/lib/srs.ts:getQACardKey`), read and written through `src/lib/progressStorage.ts`; `{lang}-level-filter` holds the level filter. Source comments state these keys must match v1.1.
 - **Card position and id are persisted identity.** Reordering or inserting cards mid-array in `src/data/it` / `src/data/es`, or renaming a Q&A `card.id` / scenario `id`, orphans stored progress.
 - **Deck size is hard-coded.** `src/data/decks.ts:deckMetadata` declares `cardCount: 40` for every deck; nothing enforces that it matches `DECK_MAP` array lengths.
 - **The level filter is never empty.** `useLevelFilter.setActiveLevels(null | [])` is a no-op (FLTR-06); `LevelFilterChips` relies on this guard.
 - **Static params must agree.** Each dynamic segment's `layout.tsx` and `page.tsx` both export `generateStaticParams` (client pages cannot), and they must produce the same set.
-- **The locale set is duplicated, not derived.** `src/i18n/routing.ts:routing.locales` (`it`, `es`) must stay in sync with `src/types:Lang`, `messages/*.json`, `src/data/deckMap.ts:DECK_MAP`, `src/data/decks.ts:deckMetadata`, `src/app/page.tsx:LANGUAGES`, the literal `['it', 'es']` in `src/app/[lang]/qa/[scenario]/page.tsx`, `src/components/SiteHeader.tsx:LANG_META`/`OTHER_LANG`, and the four `LANG_LOCALE` maps (`AudioButton.tsx`, `useVoiceRecognition.ts`, `StudySession.tsx`, `QAStudySession.tsx`).
+- **The locale set is duplicated, not derived.** `src/i18n/routing.ts:routing.locales` (`it`, `es`) must stay in sync with `src/types:Lang`, `messages/*.json`, `src/data/deckMap.ts:DECK_MAP`, `src/data/decks.ts:deckMetadata`, `src/app/page.tsx:LANGUAGES`, the literal `['it', 'es']` in `src/app/[lang]/qa/[scenario]/page.tsx`, `src/components/SiteHeader.tsx:LANG_META`, and `src/lib/locale.ts:LANG_LOCALE`.
 - **Dates are UTC `YYYY-MM-DD` strings**, compared lexicographically (`src/lib/srs.ts:isCardDue`).
 
 ## Global Side Effects
 
 - Browser `localStorage`: read/write `{lang}-progress` and `{lang}-level-filter`. SRS writes always re-read the stored record first. `SiteHeader` reset removes `{lang}-progress` (both Rephrase and Q&A progress), but not `{lang}-level-filter`, then reloads the page.
-- Web Speech API: `speechSynthesis` playback (`AudioButton`, session `speak`) and `SpeechRecognition` / `webkitSpeechRecognition` microphone capture (`useVoiceRecognition`).
+- Web Speech API: `speechSynthesis` playback (`src/lib/speak.ts`, used by `AudioButton` and both sessions) and `SpeechRecognition` / `webkitSpeechRecognition` microphone capture (`useVoiceRecognition`).
 - Network: Google Fonts from `fonts.googleapis.com` / `fonts.gstatic.com` (`src/app/layout.tsx`); no other runtime network calls.
 - Build time: `package.json` imported for the version footer; `messages/<locale>.json` loaded by `src/i18n/request.ts`; static output written to `out/`.
 
@@ -160,9 +160,9 @@ Progress is stored in `localStorage` under a per-language key, so switching lang
 1. Add `messages/<code>.json` with translated UI strings.
 2. Add the locale to `routing.locales` in `src/i18n/routing.ts` and to the `Lang` type in `src/types/index.ts`.
 3. Add vocabulary decks under `src/data/<code>/`, then register them in `src/data/deckMap.ts` (`DECK_MAP`) and `src/data/decks.ts` (`deckMetadata`).
-4. Update the other hard-coded locale lists: `LANGUAGES` in `src/app/page.tsx`, the `['it', 'es']` check in `src/app/[lang]/qa/[scenario]/page.tsx`, and the `LANG_LOCALE` maps in `src/components/AudioButton.tsx`, `src/hooks/useVoiceRecognition.ts`, `StudySession.tsx`, and `QAStudySession.tsx`.
+4. Update the other hard-coded locale lists: `LANGUAGES` in `src/app/page.tsx`, the `['it', 'es']` check in `src/app/[lang]/qa/[scenario]/page.tsx`, `LANG_LOCALE` in `src/lib/locale.ts`, and `LANG_META` in `src/components/SiteHeader.tsx`.
 
-The language picker in `src/components/SiteHeader.tsx` (`LANG_META`, `OTHER_LANG`) is a two-language toggle and must be reworked for a third locale. Q&A scenarios only carry Italian fields and parallel `*Es` fields; any non-`it` locale currently shows the Spanish fields.
+The language picker in `src/components/SiteHeader.tsx` lists every `LANG_META` entry, so it needs no other change. Q&A scenarios only carry Italian fields and parallel `*Es` fields; any non-`it` locale currently shows the Spanish fields.
 
 ---
 

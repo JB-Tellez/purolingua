@@ -5,34 +5,8 @@
 'use client';
 import { useState, useCallback, useMemo } from 'react';
 import type { Lang, Level, QACard, ScenarioId, ProgressRecord } from '@/types';
-import { advanceBox, isCardDue } from '@/lib/srs';
-
-/** Q&A card key format: "qa_{scenarioId}_{cardId}" — disjoint from Rephrase keys */
-function getQACardKey(scenarioId: ScenarioId, cardId: string): string {
-  return `qa_${scenarioId}_${cardId}`;
-}
-
-function getStorageKey(lang: Lang): string {
-  return `${lang}-progress`;
-}
-
-function loadFromStorage(lang: Lang): ProgressRecord {
-  if (typeof window === 'undefined') return {};
-  try {
-    const saved = localStorage.getItem(getStorageKey(lang));
-    return saved ? (JSON.parse(saved) as ProgressRecord) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveToStorage(lang: Lang, record: ProgressRecord): void {
-  try {
-    localStorage.setItem(getStorageKey(lang), JSON.stringify(record));
-  } catch {
-    // localStorage unavailable (private browsing / quota exceeded) — silent fail
-  }
-}
+import { advanceBox, isCardDue, getQACardKey } from '@/lib/srs';
+import { loadProgress, saveProgress } from '@/lib/progressStorage';
 
 /**
  * SRS hook for Q&A mode.
@@ -48,7 +22,7 @@ export function useQASRS(
   cards: QACard[],
   activeLevels: Level[]
 ) {
-  const [progress, setProgress] = useState<ProgressRecord>(() => loadFromStorage(lang));
+  const [progress, setProgress] = useState<ProgressRecord>(() => loadProgress(lang));
 
   const dueCards = useMemo(
     () =>
@@ -66,10 +40,10 @@ export function useQASRS(
       // may have changed the shared key since this hook mounted.
       // Kept outside the setState updater so StrictMode's double-invoke can't
       // advance the box twice.
-      const current = loadFromStorage(lang);
+      const current = loadProgress(lang);
       const key = getQACardKey(scenarioId, cardId);
       const updated = { ...current, [key]: advanceBox(current[key], isCorrect) };
-      saveToStorage(lang, updated);
+      saveProgress(lang, updated);
       setProgress(updated);
     },
     [lang, scenarioId]

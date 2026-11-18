@@ -7,6 +7,7 @@ import { useSRS } from '@/hooks/useSRS';
 import { useLevelFilter } from '@/hooks/useLevelFilter';
 import { generateChoices } from '@/lib/generateChoices';
 import { matchesTranscript } from '@/lib/matchTranscript';
+import { speak } from '@/lib/speak';
 import AudioButton from '@/components/AudioButton';
 import ChoiceButton from '@/components/ChoiceButton';
 import FeedbackMessage from '@/components/FeedbackMessage';
@@ -19,21 +20,6 @@ interface Props {
   lang: Lang;
   deckId: DeckId;
   cards: Card[];
-}
-
-const LANG_LOCALE: Record<Lang, string> = { it: 'it-IT', es: 'es-ES' };
-
-function speak(phrase: string, lang: Lang) {
-  if (typeof window === 'undefined' || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(phrase);
-  utterance.lang = LANG_LOCALE[lang];
-  utterance.rate = 0.9;
-  const voices = window.speechSynthesis.getVoices();
-  const matching = voices.filter((v) => v.lang.startsWith(lang));
-  const exact = matching.find((v) => v.lang === LANG_LOCALE[lang]);
-  utterance.voice = exact ?? matching[0] ?? null;
-  window.speechSynthesis.speak(utterance);
 }
 
 export default function StudySession({ lang, deckId, cards }: Props) {

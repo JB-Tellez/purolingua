@@ -38,8 +38,8 @@ and pages/sessions under `src/app/[lang]/` (including
 ## Invariants
 
 - **Shared progress key**: `useSRS` and `useQASRS` both read and write the same
-  `localStorage` key `"{lang}-progress"` (`getStorageKey` in each file). Q&A
-  entries are namespaced as `qa_{scenarioId}_{cardId}` (`useQASRS.ts:getQACardKey`)
+  `localStorage` key `"{lang}-progress"` through `@/lib/progressStorage`. Q&A
+  entries are namespaced as `qa_{scenarioId}_{cardId}` (`@/lib/srs:getQACardKey`)
   so they do not collide with Rephrase keys from `@/lib/srs:getCardKey`. Changing
   either key format breaks existing user data.
 - **Storage key formats are compatibility contracts**: comments in `useSRS.ts`

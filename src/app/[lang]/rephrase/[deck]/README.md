@@ -29,7 +29,7 @@ tapping or by voice.
     the session UI. It has three screens: all-done (`allDone`), deck complete
     (`deckComplete`), and the active flip card with choices, mic, and
     flip/next controls.
-  - Module-private: `speak(phrase, lang)` and the `LANG_LOCALE` map.
+  - Speaks choices with `speak` from `@/lib/speak`.
   - Dependencies: `useSRS`, `useLevelFilter`, `useVoiceRecognition`
     (`@/hooks`), `generateChoices` (`@/lib/generateChoices`),
     `matchesTranscript` (`@/lib/matchTranscript`), `deckMetadata`

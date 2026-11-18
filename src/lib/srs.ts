@@ -1,11 +1,16 @@
 // src/lib/srs.ts
 // Pure Leitner SRS functions — no localStorage, no React, no side effects.
 // Ported from v1.1 src/js/features/progress.js (main branch).
-import type { DeckId, Progress } from '@/types';
+import type { DeckId, Progress, ScenarioId } from '@/types';
 
 /** Card key format matches v1.1 exactly: "{deckId}_{cardIndex}" */
 export function getCardKey(deckId: DeckId, cardIndex: number): string {
   return `${deckId}_${cardIndex}`;
+}
+
+/** Q&A card key format: "qa_{scenarioId}_{cardId}" — disjoint from Rephrase keys */
+export function getQACardKey(scenarioId: ScenarioId, cardId: string): string {
+  return `qa_${scenarioId}_${cardId}`;
 }
 
 /** Returns today's date as a YYYY-MM-DD string. */

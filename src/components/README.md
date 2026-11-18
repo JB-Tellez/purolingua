@@ -48,9 +48,8 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
   active level passes `[]` to `setActiveLevels`, and the component expects the
   setter (`useLevelFilter`) to ignore it.
 - **FeedbackMessage** renders nothing when `state === null`.
-- **AudioButton voice choice**: locale `it-IT` / `es-ES` (`LANG_LOCALE`),
-  rate `0.9`. It prefers an exact-locale voice, then any voice whose `lang`
-  starts with the language code, then the browser default. It does nothing if
+- **AudioButton** speaks with `@/lib/speak` (locale, rate, and voice choice
+  are documented in [`../lib/README.md`](../lib/README.md)). It does nothing if
   `window.speechSynthesis` is absent.
 - **SiteHeader back link**: shown when the pathname has 2 or more segments
   (`segments.length >= 2`), pointing to the path with its last segment removed.

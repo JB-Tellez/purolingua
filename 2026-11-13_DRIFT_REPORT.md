@@ -22,7 +22,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 ## src/hooks/README.md
 
 - **[FIXED 2026-11-13: `updateCard` re-reads storage before writing.]** **Concurrent writers can overwrite each other.** `useSRS` and `useQASRS` each hold a private in-memory snapshot of `{lang}-progress`, and every `updateCard` writes the whole snapshot back (`{ ...prev, [key]: ... }`, `useSRS.ts:38`, `useQASRS.ts:67`). Two writers mounted at the same time would erase each other's keys. The contract says instances "do not observe each other's writes"; it does not mention that they overwrite each other.
-- `loadFromStorage`, `saveToStorage`, and `getStorageKey` are copied verbatim in `useSRS.ts` and `useQASRS.ts`. The shared key is a convention between two copies, not a shared module.
+- **[FIXED 2026-11-18: moved to `src/lib/progressStorage.ts`.]** `loadFromStorage`, `saveToStorage`, and `getStorageKey` are copied verbatim in `useSRS.ts` and `useQASRS.ts`. The shared key is a convention between two copies, not a shared module.
 - `useVoiceRecognition` returns `stopListening`, but no consumer calls it (`StudySession.tsx:55` and `QAStudySession.tsx:98` take only `isSupported`, `isListening`, `startListening`). A user cannot cancel listening.
 - `useLevelFilter` accepts any non-empty saved array without checking its elements (`useLevelFilter.ts:20`). A stored `["B1"]` would hide every card. The contract notes the missing validation; nothing guards against it.
 - Rephrase and Q&A share one `{lang}-level-filter` value, because `rephrase/page.tsx`, `qa/page.tsx`, and both sessions call `useLevelFilter(lang, …)` with the same key. No contract states that the filter is shared between activities.
@@ -85,13 +85,13 @@ No drift detected.
 - **[FIXED 2026-11-13: end screen now derived at render time; real-state tests in `QAStudySession.endScreens.test.tsx`.]** **The "all scenarios done" screen cannot be reached by finishing a session.** This is the same stale-closure defect as Rephrase: `handleAnswer` checks `isScenarioHasDue(progress, …)` with the `progress` captured before `updateCard` applies (`QAStudySession.tsx:157-176`). The last card counts as due, so `done` is always chosen.
 - **[FIXED 2026-11-17: a card missed before the correct retry is recorded as wrong; tests in `QAStudySession.endScreens.test.tsx`.]** **Wrong answers are never recorded.** `updateCard` is only ever called with `true` (`QAStudySession.tsx:185, 207`). Q&A cards never return to box 1, which contradicts the Leitner rule in the root README ("Incorrect (any box) → 1"). The contract states the behavior; the root README does not scope its rule to Rephrase.
 - **[FIXED 2026-11-17: "Study again" is now a practice replay that saves nothing, hidden when the session had no cards.]** "Study again" replays the same `sessionDueCards` snapshot. Same issue as Rephrase.
-- `isScenarioHasDue` re-implements the `qa_{scenarioId}_{cardId}` key format inline (`QAStudySession.tsx:59`) instead of sharing `getQACardKey` (which is private to `useQASRS.ts`). That makes a third copy of a persisted-key contract.
-- `speak()` and `LANG_LOCALE` are copied in `QAStudySession.tsx`, `StudySession.tsx`, and `AudioButton.tsx`.
+- **[FIXED 2026-11-18: `getQACardKey` moved to `@/lib/srs` and shared.]** `isScenarioHasDue` re-implements the `qa_{scenarioId}_{cardId}` key format inline (`QAStudySession.tsx:59`) instead of sharing `getQACardKey` (which is private to `useQASRS.ts`). That makes a third copy of a persisted-key contract.
+- **[FIXED 2026-11-18: one `speak` in `src/lib/speak.ts`, one `LANG_LOCALE` in `src/lib/locale.ts`.]** `speak()` and `LANG_LOCALE` are copied in `QAStudySession.tsx`, `StudySession.tsx`, and `AudioButton.tsx`.
 - `page.tsx` validates `lang` with the literal `['it', 'es']` (line 24), while the sibling `rephrase/[deck]/page.tsx` uses `routing.locales`.
 
 ## src/README.md
 
-- **[PARTLY FIXED 2026-11-18: the private `DeckGrid` is gone; the `speak`/`LANG_LOCALE` copies remain.]** The stated layering (`app` → `components` → `hooks` → `lib` → `types`) holds for imports, but `app` duplicates logic that belongs lower down: a private `DeckGrid` and three copies of `speak`/`LANG_LOCALE`. The dependency map does not show this.
+- **[FIXED 2026-11-18: the private `DeckGrid` and the `speak`/`LANG_LOCALE` copies are gone.]** The stated layering (`app` → `components` → `hooks` → `lib` → `types`) holds for imports, but `app` duplicates logic that belongs lower down: a private `DeckGrid` and three copies of `speak`/`LANG_LOCALE`. The dependency map does not show this.
 
 ## scripts/README.md
 
