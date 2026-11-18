@@ -2,9 +2,8 @@
 // Server component: validates route params, loads scenario data, renders QAStudySession.
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { routing } from '@/i18n/routing';
+import { routing, isLang } from '@/i18n/routing';
 import { scenarios } from '@/data/qa';
-import type { Lang } from '@/types';
 import QAStudySessionNoSSR from './QAStudySessionNoSSR';
 
 export function generateStaticParams() {
@@ -21,7 +20,7 @@ export default async function QAStudyPage({ params }: Props) {
   const { lang, scenario } = await params;
 
   // Validate lang
-  if (!['it', 'es'].includes(lang)) {
+  if (!isLang(lang)) {
     notFound();
   }
 
@@ -33,5 +32,5 @@ export default async function QAStudyPage({ params }: Props) {
 
   setRequestLocale(lang);
 
-  return <QAStudySessionNoSSR lang={lang as Lang} scenario={matchedScenario} />;
+  return <QAStudySessionNoSSR lang={lang} scenario={matchedScenario} />;
 }

@@ -15,7 +15,7 @@ Static, build-time content for PuroLingua. This directory holds the Rephrase-mod
   - [`es`](./es/README.md): Spanish Rephrase decks (`spanishDaily` ... `spanishWeather`, each a `Card[]`).
   - [`qa`](./qa/README.md): Q&A scenarios (`scenarios` plus 7 named `Scenario` exports).
 
-Consumers: `src/components/DeckGrid.tsx`, `src/app/[lang]/rephrase/page.tsx`, `src/app/[lang]/rephrase/layout.tsx`, `src/app/[lang]/rephrase/[deck]/page.tsx`, and `src/app/[lang]/rephrase/[deck]/StudySession.tsx` import `deckMetadata`, `DECK_IDS`, and/or `DECK_MAP`.
+Consumers: `src/components/DeckGrid.tsx`, `src/app/[lang]/rephrase/layout.tsx`, `src/app/[lang]/rephrase/[deck]/page.tsx`, and `src/app/[lang]/rephrase/[deck]/StudySession.tsx` import `deckMetadata`, `DECK_IDS`, and/or `DECK_MAP`.
 
 ## Invariants
 - `DECK_MAP` must have an entry for every `Lang` × `DeckId` combination. The `Record<Lang, Record<DeckId, Card[]>>` type enforces this at compile time.

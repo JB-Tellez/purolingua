@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import type { Lang } from '@/types';
 import { reloadPage } from '@/lib/reloadPage';
+import { clearProgress } from '@/lib/progressStorage';
 
 const LANG_META: Record<Lang, { flag: string; name: string }> = {
   it: { flag: '🇮🇹', name: 'Italiano' },
@@ -28,7 +29,7 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
 
   function handleReset() {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem(`${lang}-progress`);
+      clearProgress(lang);
       // Full reload, not router.refresh(): refresh keeps client state, so mounted
       // grids and study sessions would keep showing (and re-saving) old progress.
       reloadPage();
@@ -65,7 +66,7 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
             <div className="language-selector">
               <button
                 className="language-btn"
-                aria-label="Change language"
+                aria-label={t('changeLanguage')}
                 onClick={() => setDropdownOpen((o) => !o)}
               >
                 {currentMeta.flag}

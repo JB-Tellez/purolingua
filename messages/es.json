@@ -1,6 +1,7 @@
 {
   "nav": {
     "logo": "Espa\u00f1ol",
+    "changeLanguage": "Cambiar idioma",
     "back": "\u2190 Atr\u00e1s",
     "reset": "Reiniciar",
     "backToDecks": "Volver"
@@ -11,9 +12,7 @@
     "activityTitle": "Elige una Actividad",
     "activitySubtitle": "¿Cómo quieres practicar hoy?",
     "scenarioTitle": "Elige un Escenario",
-    "scenarioSubtitle": "Selecciona una situación para empezar",
-    "chooseLanguage": "Elige un idioma",
-    "chooseDeck": "Elige un mazo"
+    "scenarioSubtitle": "Selecciona una situación para empezar"
   },
   "decks": {
     "daily": "Vida Diaria",
@@ -35,7 +34,6 @@
     "social": "Presentarse y hablar con la gente.",
     "weather": "Hablar del clima y las estaciones."
   },
-  "deckCardCount": "{count} tarjetas",
   "filter": {
     "label": "Nivel",
     "chips": {
@@ -64,6 +62,8 @@
     "backToDecks": "\u2190 Volver a los mazos",
     "cardCounter": "Tarjeta {current} de {total}",
     "audio": "Escuchar",
+    "micStart": "Empieza a hablar",
+    "micListening": "Escuchando…",
     "heard": "Escuchado",
     "notRecognized": "No reconocido",
     "deckComplete": "¡Mazo completado!",

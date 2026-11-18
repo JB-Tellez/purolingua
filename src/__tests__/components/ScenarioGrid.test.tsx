@@ -4,7 +4,7 @@ import ScenarioGrid from '@/components/ScenarioGrid';
 import type { Level } from '@/types';
 
 // Mock useQASRS — default: 3 due cards (simulates cards in queue)
-const mockUseQASRS = vi.fn(() => ({ dueCards: [{ id: 'c1' }, { id: 'c2' }, { id: 'c3' }] }));
+const mockUseQASRS = vi.fn((..._args: unknown[]) => ({ dueCards: [{ id: 'c1' }, { id: 'c2' }, { id: 'c3' }] }));
 vi.mock('@/hooks/useQASRS', () => ({ useQASRS: (...args: unknown[]) => mockUseQASRS(...args) }));
 
 vi.mock('next/link', () => ({

@@ -13,8 +13,8 @@ picker. The two activities are under `qa/` and `rephrase/`.
   - `generateStaticParams()`: returns `routing.locales.map(locale => ({ lang: locale }))`
     (`it`, `es`).
   - `default LocaleLayout({ children, params })` (async server component):
-    awaits `params: Promise<{ lang }>`, calls `notFound()` when lang is not in
-    `routing.locales`, calls `setRequestLocale(lang)`, then
+    awaits `params: Promise<{ lang }>`, calls `notFound()` unless
+    `isLang(lang)`, calls `setRequestLocale(lang)`, then
     `getMessages()`. Renders `<NextIntlClientProvider messages>`,
     `<SiteHeader lang>`, and `children`.
 - `page.tsx`

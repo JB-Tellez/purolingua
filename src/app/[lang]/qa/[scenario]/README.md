@@ -15,8 +15,8 @@ synthesis, speech recognition).
   - `generateStaticParams()`: returns every `{ lang, scenario }` pair from
     `routing.locales` x `scenarios[].id`, used for static export.
   - `default QAStudyPage({ params })` (async server component): awaits
-    `params: Promise<{ lang; scenario }>`, calls `notFound()` for an invalid
-    lang or an unknown scenario id, calls `setRequestLocale(lang)`, and then
+    `params: Promise<{ lang; scenario }>`, calls `notFound()` unless
+    `isLang(lang)` and the scenario id exists, calls `setRequestLocale(lang)`, and then
     renders `<QAStudySessionNoSSR lang scenario={matchedScenario} />`.
 - `QAStudySessionNoSSR.tsx`
   - `default QAStudySessionNoSSR(props: { lang: Lang; scenario: Scenario })`:
@@ -26,28 +26,26 @@ synthesis, speech recognition).
     session UI. It has three screens: all-done (`allScenariosDone`), scenario
     done (`scenarioDone`), and the active question with choices, mic, and
     feedback.
-  - Module-private helpers: `speak(phrase, lang)`, `shuffle<T>(arr)` (Fisher-Yates, returns a new array),
-    `isScenarioHasDue(progress, scenarioId, cards, activeLevels)`, and the
-    `LANG_LOCALE` map (`it -> it-IT`, `es -> es-ES`).
+  - Module-private helpers: `shuffle<T>(arr)` (Fisher-Yates, returns a new array)
+    and `isScenarioHasDue(progress, scenarioId, cards, activeLevels)`.
   - Dependencies: `useQASRS`, `useLevelFilter`, `useVoiceRecognition`
-    (`@/hooks`), `isCardDue` (`@/lib/srs`), `matchesTranscript`
+    (`@/hooks`), `isCardDue` and `getQACardKey` (`@/lib/srs`), `loadProgress`
+    (`@/lib/progressStorage`), `speak` (`@/lib/speak`), `matchesTranscript`
     (`@/lib/matchTranscript`), `scenarios` (`@/data/qa`), and
     `AudioButton`, `ChoiceButton`, `FeedbackMessage`, `MicButton`
     (`@/components`).
 
 ## Invariants
 
-- `page.tsx` checks lang against the literal `['it', 'es']`, not
-  `routing.locales`. Keep the two lists in sync.
 - The session takes one snapshot of the due cards at mount
   (`useState(() => dueCards)` as `sessionDueCards`). Changes to SRS state during
   the session do not re-filter or re-index the cards.
-- `bootstrapHasProgress` is computed once from localStorage key
-  `${lang}-progress`. It is true when any key starts with `qa_`, and any
-  read or parse error yields `false`. This flag only sets the default
+- `bootstrapHasProgress` is computed once with `loadProgress(lang)`. It is
+  true when there is any progress (Rephrase or Q&A), matching every other
+  `useLevelFilter` caller; a missing or unreadable record yields `false`. This flag only sets the default
   levels in `useLevelFilter`. A saved filter takes precedence.
-- Progress keys are formatted as `qa_${scenarioId}_${card.id}`
-  (`isScenarioHasDue`).
+- `isScenarioHasDue` looks progress up with `getQACardKey`, the same key
+  format `useQASRS` writes.
 - Text fields depend on the language. `it` uses `question`, `correct`, and
   `foils`. Other languages use `questionEs`, `correctEs`, and `foilsEs`.
 - `choices` is memoized on `currentCard`, so the shuffle order stays the same

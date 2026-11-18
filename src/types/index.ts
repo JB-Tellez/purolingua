@@ -2,7 +2,9 @@
 // Core domain types for PuroLingua v1.2
 // All downstream phases import from '@/types'
 
-export type Lang = 'it' | 'es';
+import type { routing } from '@/i18n/routing';
+
+export type Lang = (typeof routing.locales)[number];
 
 export type Level = 'A1' | 'A2';
 
@@ -21,12 +23,6 @@ export interface Card {
   front: string;   // target language word/phrase
   back: string;    // translation/answer
   level: Level;    // CEFR level
-}
-
-export interface Deck {
-  id: DeckId;
-  lang: Lang;
-  cards: Card[];
 }
 
 // Progress stored in localStorage keyed by "{deckId}_{cardIndex}"

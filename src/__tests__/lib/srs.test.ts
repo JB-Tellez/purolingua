@@ -1,10 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import { getCardKey, getTodayString, getNextReviewDate, isCardDue, advanceBox } from '@/lib/srs';
+import { getCardKey, getQACardKey, getTodayString, getNextReviewDate, isCardDue, advanceBox } from '@/lib/srs';
 
 describe('getCardKey', () => {
   it('combines deckId and cardIndex with underscore', () => {
     expect(getCardKey('daily', 0)).toBe('daily_0');
     expect(getCardKey('restaurant', 12)).toBe('restaurant_12');
+  });
+});
+
+describe('getQACardKey', () => {
+  it('prefixes qa_ so Q&A keys never collide with Rephrase keys', () => {
+    expect(getQACardKey('coffee', 'coffee_01')).toBe('qa_coffee_coffee_01');
   });
 });
 

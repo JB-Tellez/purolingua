@@ -1,4 +1,5 @@
 'use client';
+import { useTranslations } from 'next-intl';
 
 interface Props {
   text: string;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function ChoiceButton({ text, state, onClick, disabled, onSpeak }: Props) {
+  const t = useTranslations('study');
   const classNames = ['quiz-btn', state !== 'idle' ? state : ''].filter(Boolean).join(' ');
 
   return (
@@ -21,7 +23,7 @@ export default function ChoiceButton({ text, state, onClick, disabled, onSpeak }
       <span
         className="quiz-audio-icon"
         role="button"
-        aria-label="audio"
+        aria-label={t('audio')}
         tabIndex={0}
         onClick={(e) => {
           e.stopPropagation();

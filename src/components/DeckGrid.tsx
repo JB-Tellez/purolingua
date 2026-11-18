@@ -4,30 +4,26 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { deckMetadata } from '@/data/decks';
 import { useSRS } from '@/hooks/useSRS';
-import { useLevelFilter } from '@/hooks/useLevelFilter';
 import { DECK_MAP } from '@/data/deckMap';
 import type { Card, DeckId, Lang, Level } from '@/types';
 
 interface Props {
   lang: Lang;
-}
-
-interface DeckGridInnerProps {
-  lang: Lang;
+  // From the page's useLevelFilter, shared with LevelFilterChips so the badges follow the chips.
   activeLevels: Level[];
-  isCardDueForDeck: (deckId: DeckId, cardIndex: number) => boolean;
 }
 
-function DeckGridInner({ lang, activeLevels, isCardDueForDeck }: DeckGridInnerProps) {
+export default function DeckGrid({ lang, activeLevels }: Props) {
   const t = useTranslations('decks');
   const td = useTranslations('deckDescriptions');
+  const { isCardDueForDeck } = useSRS(lang);
 
   const decks = deckMetadata.filter((d) => d.lang === lang);
 
   function getDueCount(deckId: DeckId, cards: Card[]): number {
     return cards
       .map((card, i) => ({ card, i }))
-      .filter(({ card }) => (activeLevels as Level[]).includes(card.level))
+      .filter(({ card }) => activeLevels.includes(card.level))
       .filter(({ i }) => isCardDueForDeck(deckId, i))
       .length;
   }
@@ -40,7 +36,7 @@ function DeckGridInner({ lang, activeLevels, isCardDueForDeck }: DeckGridInnerPr
         return (
           <Link
             key={deck.id}
-            href={`/${lang}/${deck.id}`}
+            href={`/${lang}/rephrase/${deck.id}`}
             style={{ textDecoration: 'none', display: 'block', height: '100%' }}
           >
             <div className={`deck-card theme-${deck.theme}`} style={{ height: '100%' }}>
@@ -55,18 +51,5 @@ function DeckGridInner({ lang, activeLevels, isCardDueForDeck }: DeckGridInnerPr
         );
       })}
     </div>
-  );
-}
-
-export default function DeckGrid({ lang }: Props) {
-  const { isCardDueForDeck, hasProgress } = useSRS(lang);
-  const { activeLevels } = useLevelFilter(lang, hasProgress);
-
-  return (
-    <DeckGridInner
-      lang={lang}
-      activeLevels={activeLevels}
-      isCardDueForDeck={isCardDueForDeck}
-    />
   );
 }

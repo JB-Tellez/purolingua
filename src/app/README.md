@@ -16,9 +16,10 @@ learning content is under the `[lang]` segment.
     Fonts links (Inter and Crimson Text), `children`, and a
     `<footer>` that shows `v${pkg.version}` from `package.json`.
 - `page.tsx`
-  - `default HomePage()`: renders one card per entry in the module-private
-    `LANGUAGES` constant (`it` Italiano, `es` Español). Each card links to
-    `/${code}`.
+  - `default HomePage()`: renders one card per locale in `routing.locales`,
+    using the module-private `LANGUAGES: Record<Lang, …>` table (`it` Italiano,
+    `es` Español) for its flag, name, description, and theme. Each card links
+    to `/${code}`.
 - `globals.css`: imports `tailwindcss` and `../style-reference.css`.
 - Subdirectories
   - `[lang]`: [./[lang]/README.md](./[lang]/README.md). Locale validation,
@@ -27,8 +28,8 @@ learning content is under the `[lang]` segment.
 
 ## Invariants
 
-- The `LANGUAGES` list in `page.tsx` must match `routing.locales` in
-  `src/i18n/routing.ts` (`['it', 'es']`). It is a separate hardcoded copy.
+- `LANGUAGES` is typed `Record<Lang, …>`, so `tsc` fails if a locale in
+  `routing.locales` has no entry.
 - The root layout hardcodes `<html lang="en">`. It does not change with the
   active locale.
 

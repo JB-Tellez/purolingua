@@ -1,21 +1,22 @@
 import Link from 'next/link';
+import { routing } from '@/i18n/routing';
+import type { Lang } from '@/types';
 
-const LANGUAGES = [
-  {
-    code: 'it',
+// Record<Lang, …>: tsc fails here if a locale in routing.locales has no entry.
+const LANGUAGES: Record<Lang, { flag: string; name: string; description: string; theme: string }> = {
+  it: {
     flag: '🇮🇹',
     name: 'Italiano',
     description: 'Impara frasi utili per la vita quotidiana.',
     theme: 'green',
   },
-  {
-    code: 'es',
+  es: {
     flag: '🇪🇸',
     name: 'Español',
     description: 'Aprende frases útiles para la vida diaria.',
     theme: 'red',
   },
-] as const;
+};
 
 export default function HomePage() {
   return (
@@ -34,19 +35,22 @@ export default function HomePage() {
           <p className="subtitle">Scegli la lingua · Elige tu idioma</p>
         </div>
         <div className="activity-grid">
-          {LANGUAGES.map(({ code, flag, name, description, theme }) => (
-            <Link
-              key={code}
-              href={`/${code}`}
-              style={{ textDecoration: 'none', display: 'block', height: '100%' }}
-            >
-              <div className={`deck-card theme-${theme}`} style={{ height: '100%' }}>
-                <div className="deck-icon-circle">{flag}</div>
-                <h3>{name}</h3>
-                <p>{description}</p>
-              </div>
-            </Link>
-          ))}
+          {routing.locales.map((code) => {
+            const { flag, name, description, theme } = LANGUAGES[code];
+            return (
+              <Link
+                key={code}
+                href={`/${code}`}
+                style={{ textDecoration: 'none', display: 'block', height: '100%' }}
+              >
+                <div className={`deck-card theme-${theme}`} style={{ height: '100%' }}>
+                  <div className="deck-icon-circle">{flag}</div>
+                  <h3>{name}</h3>
+                  <p>{description}</p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </main>
     </>

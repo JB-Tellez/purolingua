@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { Lang } from '@/types';
+import { LANG_LOCALE } from '@/lib/locale';
 
 interface SpeechRecognitionInstance {
   lang: string;
@@ -15,11 +16,6 @@ interface SpeechRecognitionInstance {
 }
 
 type SpeechRecognitionCtor = new () => SpeechRecognitionInstance;
-
-const LANG_LOCALE: Record<Lang, string> = {
-  it: 'it-IT',
-  es: 'es-ES',
-};
 
 function getSpeechRecognition(): SpeechRecognitionCtor | null {
   if (typeof window === 'undefined') return null;

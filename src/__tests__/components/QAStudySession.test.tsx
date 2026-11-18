@@ -72,7 +72,8 @@ vi.mock('@/data/qa', () => ({
 
 // Mock @/lib/srs isCardDue — controlled per test
 let isCardDueImpl: (progress: unknown) => boolean = () => true;
-vi.mock('@/lib/srs', () => ({
+vi.mock('@/lib/srs', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/srs')>()),
   isCardDue: (progress: unknown) => isCardDueImpl(progress),
 }));
 
@@ -313,7 +314,7 @@ describe('QAStudySession', () => {
     renderQAStudySession('it');
 
     // MicButton renders when isSupported=true
-    const micBtn = screen.getByRole('button', { name: /start speaking/i });
+    const micBtn = screen.getByRole('button', { name: 'micStart' });
     expect(micBtn).toBeInTheDocument();
 
     // Click mic button
@@ -348,7 +349,7 @@ describe('QAStudySession', () => {
     vi.useFakeTimers();
     renderQAStudySession('it');
 
-    const micBtn = screen.getByRole('button', { name: /start speaking/i });
+    const micBtn = screen.getByRole('button', { name: 'micStart' });
     act(() => {
       micBtn.click();
     });

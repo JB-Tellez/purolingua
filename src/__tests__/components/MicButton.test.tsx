@@ -3,6 +3,10 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MicButton from '@/components/MicButton';
 
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => key,
+}));
+
 describe('MicButton', () => {
   // Idle state: base class only
   it('idle state: renders with base mic-btn class and no state modifier', () => {
@@ -19,7 +23,7 @@ describe('MicButton', () => {
     const btn = screen.getByRole('button');
     expect(btn).toHaveClass('mic-btn');
     expect(btn).toHaveClass('mic-btn--listening');
-    expect(btn).toHaveAttribute('aria-label', 'Listening\u2026');
+    expect(btn).toHaveAttribute('aria-label', 'micListening');
   });
 
   // VOICE-09: MicButton renders with error class when state='error'

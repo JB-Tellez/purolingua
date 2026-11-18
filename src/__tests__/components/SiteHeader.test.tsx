@@ -84,7 +84,7 @@ describe('SiteHeader back link', () => {
 });
 
 describe('SiteHeader language dropdown', () => {
-  const openDropdown = () => fireEvent.click(screen.getByLabelText('Change language'));
+  const openDropdown = () => fireEvent.click(screen.getByLabelText('changeLanguage'));
 
   it.each(['it', 'es'] as const)('on /%s lists each language once, linking to its own home', (lang) => {
     pathname = `/${lang}`;

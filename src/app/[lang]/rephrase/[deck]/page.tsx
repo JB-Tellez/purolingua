@@ -3,7 +3,7 @@
 // generateStaticParams covers all 16 lang×deck paths for static export.
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { routing } from '@/i18n/routing';
+import { routing, isLang } from '@/i18n/routing';
 import { DECK_IDS } from '@/data/decks';
 import type { DeckId, Lang } from '@/types';
 import StudySession from './StudySessionNoSSR';
@@ -27,7 +27,7 @@ export default async function DeckPage({ params }: Props) {
   const { lang, deck } = await params;
 
   // Validate lang
-  if (!routing.locales.includes(lang as Lang)) {
+  if (!isLang(lang)) {
     notFound();
   }
 
@@ -38,11 +38,11 @@ export default async function DeckPage({ params }: Props) {
 
   setRequestLocale(lang);
 
-  const cards = getCards(lang as Lang, deck as DeckId);
+  const cards = getCards(lang, deck as DeckId);
 
   return (
     <StudySession
-      lang={lang as Lang}
+      lang={lang}
       deckId={deck as DeckId}
       cards={cards}
     />

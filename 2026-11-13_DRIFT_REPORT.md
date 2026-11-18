@@ -4,7 +4,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 ## src/types/README.md
 
-- `Deck` (`src/types/index.ts:26`) is documented as part of the interface but is never imported anywhere in `src/` (dead type).
+- **[FIXED 2026-11-18: removed.]** `Deck` (`src/types/index.ts:26`) is documented as part of the interface but is never imported anywhere in `src/` (dead type).
 - `Card.back` is commented "translation/answer" (`src/types/index.ts:22`), but every Rephrase deck stores a same-language paraphrase in `back` (e.g. `src/data/it/daily.ts`: `'Ho perso il treno.'` → `'Non sono arrivato in tempo alla stazione.'`). The source comment is stale, and the contract does not state the field's meaning.
 - Source comments reference v1.1 files that do not exist in this repo (`src/locales/it/decks.js` at `index.ts:9`, `src/js/features/progress.js` at `index.ts:34`). The v1.1 compatibility claim cannot be verified from this repository.
 
@@ -16,13 +16,13 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 ## src/i18n/README.md
 
-- `navigation.ts` exports `Link`, `redirect`, `usePathname`, `useRouter`, and `getPathname`, but nothing imports `@/i18n/navigation`. `SiteHeader` uses `next/link` and `next/navigation` instead (see below), so its links bypass the locale-aware helpers. This is dead code or an unfinished migration.
-- `routing.ts` is declared the next-intl source of truth, but at least 8 other places hard-code the locale set (listed under Global Invariants in `README.md`). There is no shared derivation from `routing.locales`.
+- **[FIXED 2026-11-18: `navigation.ts` removed; the app uses `next/link` / `next/navigation` throughout.]** `navigation.ts` exports `Link`, `redirect`, `usePathname`, `useRouter`, and `getPathname`, but nothing imports `@/i18n/navigation`. `SiteHeader` uses `next/link` and `next/navigation` instead (see below), so its links bypass the locale-aware helpers. This is dead code or an unfinished migration.
+- **[FIXED 2026-11-18: `Lang` is derived from `routing.locales`; per-language tables are `Record<Lang, …>`, so `tsc` flags each one.]** `routing.ts` is declared the next-intl source of truth, but at least 8 other places hard-code the locale set (listed under Global Invariants in `README.md`). There is no shared derivation from `routing.locales`.
 
 ## src/hooks/README.md
 
 - **[FIXED 2026-11-13: `updateCard` re-reads storage before writing.]** **Concurrent writers can overwrite each other.** `useSRS` and `useQASRS` each hold a private in-memory snapshot of `{lang}-progress`, and every `updateCard` writes the whole snapshot back (`{ ...prev, [key]: ... }`, `useSRS.ts:38`, `useQASRS.ts:67`). Two writers mounted at the same time would erase each other's keys. The contract says instances "do not observe each other's writes"; it does not mention that they overwrite each other.
-- `loadFromStorage`, `saveToStorage`, and `getStorageKey` are copied verbatim in `useSRS.ts` and `useQASRS.ts`. The shared key is a convention between two copies, not a shared module.
+- **[FIXED 2026-11-18: moved to `src/lib/progressStorage.ts`.]** `loadFromStorage`, `saveToStorage`, and `getStorageKey` are copied verbatim in `useSRS.ts` and `useQASRS.ts`. The shared key is a convention between two copies, not a shared module.
 - `useVoiceRecognition` returns `stopListening`, but no consumer calls it (`StudySession.tsx:55` and `QAStudySession.tsx:98` take only `isSupported`, `isListening`, `startListening`). A user cannot cancel listening.
 - `useLevelFilter` accepts any non-empty saved array without checking its elements (`useLevelFilter.ts:20`). A stored `["B1"]` would hide every card. The contract notes the missing validation; nothing guards against it.
 - Rephrase and Q&A share one `{lang}-level-filter` value, because `rephrase/page.tsx`, `qa/page.tsx`, and both sessions call `useLevelFilter(lang, …)` with the same key. No contract states that the filter is shared between activities.
@@ -32,9 +32,9 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 - **[FIXED 2026-11-13: reproduced by hook tests; fixed in the hooks, and reset now reloads the page.]** **Reset probably does not survive the next answer (not confirmed by running).** `SiteHeader.handleReset` only calls `localStorage.removeItem('{lang}-progress')` and `router.refresh()` (`SiteHeader.tsx:31-36`). It is rendered in the persistent `[lang]` layout, and `router.refresh()` keeps client `useState`. A study session mounted at that moment keeps its old progress snapshot, and its next `updateCard` writes the full pre-reset record back to storage (see the hooks finding above). Badges on a browser page also stay stale until remount.
 - **[FIXED 2026-11-17: one option per `LANG_META` entry; dropdown tests for both languages.]** **The language dropdown is wrong for `es`.** The first option always renders `LANG_META.it` but links to `/${lang}`; the second renders `LANG_META[OTHER_LANG[lang]]`. On `/es` both options read "Italiano" and Español never appears (`SiteHeader.tsx:77-90`).
 - The comment for the `SiteHeader` back link says "3+ segments: /lang/deck", but the code checks `segments.length >= 2` (`SiteHeader.tsx:26-28`). On `/it/rephrase/daily` the back link goes to `/it/rephrase`.
-- `SiteHeader` uses `next/link` and `next/navigation` rather than the locale-aware `@/i18n/navigation` helpers.
-- `DeckGrid` is dead and its links are wrong. No route imports it (only `DeckGrid.test.tsx`), and it links to `/${lang}/${deck.id}` (`DeckGrid.tsx:43`), which is not a generated route (the real route is `/${lang}/rephrase/${deck}`). `src/app/[lang]/rephrase/page.tsx` re-implements it privately with the correct link, so the tested component and the shipped one differ.
-- Accessibility labels are hard-coded in English despite next-intl: `MicButton` (`'Listening…'`, `'Start speaking'`), `ChoiceButton` (`aria-label="audio"`), and `SiteHeader` (`aria-label="Change language"`).
+- **[RESOLVED 2026-11-18: the unused helpers were removed instead.]** `SiteHeader` uses `next/link` and `next/navigation` rather than the locale-aware `@/i18n/navigation` helpers.
+- **[FIXED 2026-11-18: `@/components/DeckGrid` is now the shipped grid (`{ lang, activeLevels }`, correct links), imported by `rephrase/page.tsx`.]** `DeckGrid` is dead and its links are wrong. No route imports it (only `DeckGrid.test.tsx`), and it links to `/${lang}/${deck.id}` (`DeckGrid.tsx:43`), which is not a generated route (the real route is `/${lang}/rephrase/${deck}`). `src/app/[lang]/rephrase/page.tsx` re-implements it privately with the correct link, so the tested component and the shipped one differ.
+- **[FIXED 2026-11-18: labels come from `study.micStart` / `study.micListening` / `study.audio` / `nav.changeLanguage`; tested with real messages in `a11yLabels.test.tsx`.]** Accessibility labels are hard-coded in English despite next-intl: `MicButton` (`'Listening…'`, `'Start speaking'`), `ChoiceButton` (`aria-label="audio"`), and `SiteHeader` (`aria-label="Change language"`).
 - `ChoiceButton` nests an interactive `<span role="button" tabIndex={0}>` inside a `<button>` (`ChoiceButton.tsx:15-38`). This nesting is invalid. Once the button is disabled after an answer, browsers usually stop delivering clicks to its children, so the 🔊 control stops working at that point. The contract describes the propagation guard but not this limitation.
 - [PARTLY FIXED 2026-11-13: `SiteHeader` now has reset and back-link tests.] `AudioButton`, `ChoiceButton`, `LevelFilterChips`, and `SiteHeader` have no tests in `src/__tests__/components/`. `SiteHeader` is where the reset, dropdown, and back-link defects above live.
 
@@ -62,12 +62,12 @@ No drift detected.
 ## src/app/[lang]/README.md
 
 - **[FIXED 2026-11-17: activity picker and scenario list have their own `page.*` strings; tests in `src/__tests__/app/listPageHeadings.test.tsx`.]** **All three browser pages share one heading.** `[lang]/page.tsx`, `rephrase/page.tsx`, and `qa/page.tsx` each render `t('page.title')` / `t('page.subtitle')`, which are deck-specific strings ("Scegli un Mazzo" / "Seleziona una categoria per iniziare"; "Elige un Mazo"). The activity picker and the Q&A scenario list are therefore headed "Choose a Deck".
-- The layout's locale check casts to the literal `'it' | 'es'` (`layout.tsx:23`), adding another hard-coded copy of the locale set.
-- The message keys `page.chooseLanguage`, `page.chooseDeck`, and the `deckCardCount` namespace in `messages/*.json` are not referenced anywhere in `src/` (dead strings).
+- **[FIXED 2026-11-18: uses `isLang`.]** The layout's locale check casts to the literal `'it' | 'es'` (`layout.tsx:23`), adding another hard-coded copy of the locale set.
+- **[FIXED 2026-11-18: removed.]** The message keys `page.chooseLanguage`, `page.chooseDeck`, and the `deckCardCount` namespace in `messages/*.json` are not referenced anywhere in `src/` (dead strings).
 
 ## src/app/[lang]/rephrase/README.md
 
-- This page duplicates `@/components/DeckGrid` almost line for line (only the `href` differs), so the shipped grid is untested and the tested one is unused (see `src/components`).
+- **[FIXED 2026-11-18: the page imports `@/components/DeckGrid`.]** This page duplicates `@/components/DeckGrid` almost line for line (only the `href` differs), so the shipped grid is untested and the tested one is unused (see `src/components`).
 
 ## src/app/[lang]/rephrase/[deck]/README.md
 
@@ -85,13 +85,13 @@ No drift detected.
 - **[FIXED 2026-11-13: end screen now derived at render time; real-state tests in `QAStudySession.endScreens.test.tsx`.]** **The "all scenarios done" screen cannot be reached by finishing a session.** This is the same stale-closure defect as Rephrase: `handleAnswer` checks `isScenarioHasDue(progress, …)` with the `progress` captured before `updateCard` applies (`QAStudySession.tsx:157-176`). The last card counts as due, so `done` is always chosen.
 - **[FIXED 2026-11-17: a card missed before the correct retry is recorded as wrong; tests in `QAStudySession.endScreens.test.tsx`.]** **Wrong answers are never recorded.** `updateCard` is only ever called with `true` (`QAStudySession.tsx:185, 207`). Q&A cards never return to box 1, which contradicts the Leitner rule in the root README ("Incorrect (any box) → 1"). The contract states the behavior; the root README does not scope its rule to Rephrase.
 - **[FIXED 2026-11-17: "Study again" is now a practice replay that saves nothing, hidden when the session had no cards.]** "Study again" replays the same `sessionDueCards` snapshot. Same issue as Rephrase.
-- `isScenarioHasDue` re-implements the `qa_{scenarioId}_{cardId}` key format inline (`QAStudySession.tsx:59`) instead of sharing `getQACardKey` (which is private to `useQASRS.ts`). That makes a third copy of a persisted-key contract.
-- `speak()` and `LANG_LOCALE` are copied in `QAStudySession.tsx`, `StudySession.tsx`, and `AudioButton.tsx`.
-- `page.tsx` validates `lang` with the literal `['it', 'es']` (line 24), while the sibling `rephrase/[deck]/page.tsx` uses `routing.locales`.
+- **[FIXED 2026-11-18: `getQACardKey` moved to `@/lib/srs` and shared.]** `isScenarioHasDue` re-implements the `qa_{scenarioId}_{cardId}` key format inline (`QAStudySession.tsx:59`) instead of sharing `getQACardKey` (which is private to `useQASRS.ts`). That makes a third copy of a persisted-key contract.
+- **[FIXED 2026-11-18: one `speak` in `src/lib/speak.ts`, one `LANG_LOCALE` in `src/lib/locale.ts`.]** `speak()` and `LANG_LOCALE` are copied in `QAStudySession.tsx`, `StudySession.tsx`, and `AudioButton.tsx`.
+- **[FIXED 2026-11-18: uses `isLang`, like every `[lang]` route.]** `page.tsx` validates `lang` with the literal `['it', 'es']` (line 24), while the sibling `rephrase/[deck]/page.tsx` uses `routing.locales`.
 
 ## src/README.md
 
-- The stated layering (`app` → `components` → `hooks` → `lib` → `types`) holds for imports, but `app` duplicates logic that belongs lower down: a private `DeckGrid` and three copies of `speak`/`LANG_LOCALE`. The dependency map does not show this.
+- **[FIXED 2026-11-18: the private `DeckGrid` and the `speak`/`LANG_LOCALE` copies are gone.]** The stated layering (`app` → `components` → `hooks` → `lib` → `types`) holds for imports, but `app` duplicates logic that belongs lower down: a private `DeckGrid` and three copies of `speak`/`LANG_LOCALE`. The dependency map does not show this.
 
 ## scripts/README.md
 
