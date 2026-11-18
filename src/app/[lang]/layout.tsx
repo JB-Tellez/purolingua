@@ -1,8 +1,15 @@
+import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { routing, isLang } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
+import RootDocument from '../RootDocument';
+
+export const metadata: Metadata = {
+  title: 'PuroLingua',
+  description: 'Language learning flashcards',
+};
 
 // Step 1: generateStaticParams — tell Next.js which locale paths to build
 export function generateStaticParams() {
@@ -30,9 +37,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      <SiteHeader lang={lang} />
-      {children}
-    </NextIntlClientProvider>
+    // A root layout (there is no app/layout.tsx), so <html lang> matches the locale.
+    <RootDocument lang={lang}>
+      <NextIntlClientProvider messages={messages}>
+        <SiteHeader lang={lang} />
+        {children}
+      </NextIntlClientProvider>
+    </RootDocument>
   );
 }

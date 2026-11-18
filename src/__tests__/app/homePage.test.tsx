@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import HomePage from '@/app/page';
+import HomePage from '@/app/(home)/page';
 import { routing } from '@/i18n/routing';
 
 vi.mock('next/link', () => ({

@@ -32,7 +32,7 @@ export default function HomePage() {
       <main>
         <div className="section-header">
           <h1>Choose Your Language</h1>
-          <p className="subtitle">Scegli la lingua · Elige tu idioma</p>
+          <p className="subtitle"><span lang="it">Scegli la lingua</span> · <span lang="es">Elige tu idioma</span></p>
         </div>
         <div className="activity-grid">
           {routing.locales.map((code) => {
@@ -43,7 +43,7 @@ export default function HomePage() {
                 href={`/${code}`}
                 style={{ textDecoration: 'none', display: 'block', height: '100%' }}
               >
-                <div className={`deck-card theme-${theme}`} style={{ height: '100%' }}>
+                <div className={`deck-card theme-${theme}`} style={{ height: '100%' }} lang={code}>
                   <div className="deck-icon-circle">{flag}</div>
                   <h3>{name}</h3>
                   <p>{description}</p>

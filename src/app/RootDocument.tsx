@@ -1,19 +1,12 @@
-import type { Metadata } from 'next';
+// The <html> shell shared by the two root layouts: (home)/layout.tsx and
+// [lang]/layout.tsx. Each passes its document language, so /it and /es pages
+// declare it in the static HTML.
 import './globals.css';
 import pkg from '../../package.json';
 
-export const metadata: Metadata = {
-  title: 'PuroLingua',
-  description: 'Language learning flashcards',
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootDocument({ lang, children }: { lang: string; children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang={lang}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

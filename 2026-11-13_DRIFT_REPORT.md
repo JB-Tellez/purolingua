@@ -57,7 +57,7 @@ No drift detected.
 
 ## src/app/README.md
 
-- The home page is not localized. `<html lang="en">` is hard-coded (`layout.tsx:16`) and `"Choose Your Language"` is an English literal (`page.tsx:33`), while all content under `[lang]` is Italian or Spanish via next-intl. Screen readers will use English pronunciation for Italian/Spanish text.
+- **[FIXED 2026-11-18: two root layouts via a `(home)` route group; `[lang]` pages render `<html lang={lang}>` in the static HTML, the home page marks its it/es parts, and `global-not-found.tsx` keeps a styled 404.]** The home page is not localized. `<html lang="en">` is hard-coded (`layout.tsx:16`) and `"Choose Your Language"` is an English literal (`page.tsx:33`), while all content under `[lang]` is Italian or Spanish via next-intl. Screen readers will use English pronunciation for Italian/Spanish text.
 
 ## src/app/[lang]/README.md
 
