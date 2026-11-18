@@ -1,14 +1,13 @@
 'use client';
 import { useTranslations } from 'next-intl';
 import type { Lang, Level } from '@/types';
+import { LEVELS } from '@/lib/levels';
 
 interface Props {
   lang: Lang;
   activeLevels: Level[];
   setActiveLevels: (levels: Level[] | null) => void;
 }
-
-const LEVELS: Level[] = ['A1', 'A2'];
 
 export default function LevelFilterChips({ lang: _lang, activeLevels, setActiveLevels }: Props) {
   const t = useTranslations('filter');

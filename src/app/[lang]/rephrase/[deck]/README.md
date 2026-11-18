@@ -38,6 +38,9 @@ tapping or by voice.
 
 ## Invariants
 
+- Pressing the mic while listening cancels (`stopListening`) and returns the mic to idle with no feedback message.
+- Answer and mic feedback render in one `FeedbackMessage` (one `role="status"` live region), below the card rather than on its back face, so it is visible and announced once whichever side is up.
+- The Next button is disabled until a choice is selected; `.btn:disabled` styles it as inert.
 - The session takes one snapshot of the due cards at mount (`useState`
   initializer). Each card is filtered by `activeLevels` and
   `isCardDueForDeck(deckId, originalIndex)`. The snapshot keeps indices from

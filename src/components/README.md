@@ -18,11 +18,11 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 | --- | --- | --- |
 | `ActivityPicker` (`ActivityPicker.tsx`) | `{ lang }` | Links to `/{lang}/rephrase` and `/{lang}/qa`; i18n namespace `activities`. |
 | `AudioButton` (`AudioButton.tsx`) | `{ phrase: string; lang }` | Speaks `phrase` with `speechSynthesis`; i18n namespace `study` (`audio`). |
-| `ChoiceButton` (`ChoiceButton.tsx`) | `{ text; state: 'idle' \| 'correct' \| 'incorrect'; onClick; disabled?; onSpeak? }` | Quiz answer button with nested audio icon labelled `study.audio`; i18n namespace `study`. |
+| `ChoiceButton` (`ChoiceButton.tsx`) | `{ text; state: 'idle' \| 'correct' \| 'incorrect'; onClick; disabled?; onSpeak? }` | A `.quiz-option` wrapper holding the answer button and, beside it, a speak button (`.quiz-audio-icon`, labelled `study.audio`); i18n namespace `study`. |
 | `DeckGrid` (`DeckGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One card per `@/data/decks:deckMetadata` entry for `lang`, linking to `/{lang}/rephrase/{deck.id}`; due badge from `useSRS`; i18n namespaces `decks`, `deckDescriptions`. Used by `src/app/[lang]/rephrase/page.tsx`. |
 | `FeedbackMessage` (`FeedbackMessage.tsx`) | `{ state: 'correct' \| 'incorrect' \| 'heard' \| 'notRecognized' \| null }` | `role="status"`, `aria-live="polite"`; i18n namespace `study`. |
-| `LevelFilterChips` (`LevelFilterChips.tsx`) | `{ lang; activeLevels: Level[]; setActiveLevels(levels: Level[] \| null) }` | Toggle chips for `A1` / `A2`; i18n namespace `filter`. `lang` is unused. |
-| `MicButton` (`MicButton.tsx`) | `{ state: 'idle' \| 'listening' \| 'error'; onPress }` | Class `mic-btn` plus `mic-btn--{state}` when not idle. Label `study.micListening` while listening, otherwise `study.micStart`. |
+| `LevelFilterChips` (`LevelFilterChips.tsx`) | `{ lang; activeLevels: Level[]; setActiveLevels(levels: Level[] \| null) }` | One toggle chip per level in `@/lib/levels:LEVELS` (`A1`, `A2`); i18n namespace `filter`. `lang` is unused. |
+| `MicButton` (`MicButton.tsx`) | `{ state: 'idle' \| 'listening' \| 'error'; onPress }` | Class `mic-btn` plus `mic-btn--{state}` when not idle. Label `study.micListening` while listening, otherwise `study.micStart`. A toggle (`aria-pressed`): both sessions cancel listening when it is pressed again. |
 | `ScenarioGrid` (`ScenarioGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One tile per `@/data/qa:scenarios`, linking to `/{lang}/qa/{scenario.id}`; due badge from `useQASRS`. |
 | `SiteHeader` (`SiteHeader.tsx`) | `{ lang }` | Logo, back link, progress reset, language dropdown (button labelled `nav.changeLanguage`); i18n namespace `nav`. |
 
@@ -39,9 +39,11 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
   `isCardDueForDeck(deckId, index)`.
 - **Scenario theming**: `ScenarioGrid` assigns themes cyclically from
   `SCENARIO_THEMES` by array index, and titles from `titleIt` / `titleEs` by `lang`.
-- **ChoiceButton is locked after answering**: it is disabled when `disabled`
-  is true or `state !== 'idle'`. The audio icon stops click propagation, so
-  `onSpeak` fires without triggering `onClick` (also on `Enter` / space).
+- **ChoiceButton is locked after answering**: the answer button is disabled
+  when `disabled` is true or `state !== 'idle'`. The speak button is a sibling,
+  never nested, so it stays enabled and clickable after answering; it calls
+  `onSpeak` without triggering `onClick`. The answer button's accessible name
+  is just `text`.
 - **Click propagation**: `AudioButton` and `MicButton` call
   `e.stopPropagation()` before acting, so they can sit inside clickable cards.
 - **LevelFilterChips relies on the FLTR-06 guard**: deselecting the last
@@ -67,7 +69,7 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
   page reload via `reloadPage()` (`@/lib/reloadPage`), so mounted grids and
   study sessions drop their in-memory progress. This key holds both Rephrase
   and Q&A progress (see `../hooks/README.md`), so both are cleared.
-  `"{lang}-level-filter"` and the other language's progress are not touched.
+  The level filters and the other language's progress are not touched.
 - `AudioButton`: `window.speechSynthesis.cancel()` then `speak(utterance)`
   (audio output).
 - `DeckGrid` and `ScenarioGrid` read `localStorage` indirectly via `useSRS`,
@@ -82,6 +84,5 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 - Targeted, single run: `npx vitest run src/__tests__/components`
   (tests live in the mirror tree `src/__tests__/components/`. That directory
   also holds tests for `QAStudySession` and `StudySession`, which live under
-  `src/app/[lang]/`). `AudioButton` and `LevelFilterChips`
-  have no tests yet.
+  `src/app/[lang]/`). `AudioButton` has no tests yet.
 - Coverage gaps: `node scripts/analyze-test-coverage.ts src/components/`

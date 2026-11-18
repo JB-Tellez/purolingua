@@ -21,7 +21,7 @@ Consumers import through `@/data/it` (used only by `../deckMap.ts`).
 
 ## Invariants
 - Each element must satisfy `Card` (`front: string`, `back: string`, `level: 'A1' | 'A2'`) from `@/types`.
-- Each array has 40 cards. This must match the hard-coded `cardCount: 40` for `lang: 'it'` in `../decks.ts` (`deckMetadata`). Nothing in the code enforces this.
+- Each array has 40 cards. This must match the hard-coded `cardCount: 40` for `lang: 'it'` in `../decks.ts` (`deckMetadata`); `src/__tests__/data/decks.test.ts` fails if they differ.
 - Do not reorder, insert, or remove cards in the middle of an array. Stored progress is keyed by `"{deckId}_{cardIndex}"` (see the `Progress` comment in `src/types/index.ts`), so array position is the card's identity.
 - Each export name must stay in sync with `index.ts` and the imports in `../deckMap.ts`.
 

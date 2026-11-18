@@ -670,6 +670,31 @@ h1 {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
 }
 
+/* ChoiceButton: the speak icon sits over the answer button's left edge as a
+   sibling, so it stays clickable when the answer button is disabled. */
+.quiz-option {
+    position: relative;
+}
+
+.quiz-option .quiz-btn {
+    width: 100%;
+    padding-left: 3.25rem;
+}
+
+.quiz-audio-icon {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
 .controls {
     display: flex;
     gap: 1rem;
@@ -735,6 +760,15 @@ h1 {
     box-shadow:
         0 2px 0 rgba(0, 0, 0, 0.08),
         0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Disabled (e.g. Next before a choice): look inert and drop the hover/press motion. */
+.btn:disabled,
+.btn:disabled:hover,
+.btn:disabled:active {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
 }
 
 /* Feedback Message */

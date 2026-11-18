@@ -15,8 +15,10 @@ picker. The two activities are under `qa/` and `rephrase/`.
   - `default LocaleLayout({ children, params })` (async server component):
     awaits `params: Promise<{ lang }>`, calls `notFound()` unless
     `isLang(lang)`, calls `setRequestLocale(lang)`, then
-    `getMessages()`. Renders `<NextIntlClientProvider messages>`,
-    `<SiteHeader lang>`, and `children`.
+    `getMessages()`. It is a root layout: renders `<RootDocument lang={lang}>`
+    (so the static HTML declares the locale) around
+    `<NextIntlClientProvider messages>`, `<SiteHeader lang>`, and `children`.
+  - `metadata`: same as `(home)/layout.tsx`.
 - `page.tsx`
   - `default LangPage()` (`'use client'`): reads `lang` from `useParams` and
     renders the `page.title` and `page.subtitle` messages and

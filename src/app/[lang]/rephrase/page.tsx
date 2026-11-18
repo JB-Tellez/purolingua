@@ -16,7 +16,7 @@ export default function LangPage() {
   const lang = params.lang as Lang;
   const t = useTranslations('page');
   const { hasProgress } = useSRS(lang);
-  const { activeLevels, setActiveLevels } = useLevelFilter(lang, hasProgress);
+  const { activeLevels, setActiveLevels } = useLevelFilter(lang, hasProgress, 'rephrase');
 
   return (
     <main>

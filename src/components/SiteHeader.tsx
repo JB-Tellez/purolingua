@@ -22,7 +22,7 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
   const pathname = usePathname();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // Show back button only when on a deck/study page (path has 3+ segments: /lang/deck)
+  // Show a back link (one level up) on every page below the language home: 2+ segments, e.g. /it/rephrase → /it
   const segments = pathname.split('/').filter(Boolean);
   const onDeckPage = segments.length >= 2;
   const backHref = '/' + segments.slice(0, -1).join('/');

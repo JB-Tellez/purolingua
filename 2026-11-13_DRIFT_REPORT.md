@@ -5,14 +5,14 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 ## src/types/README.md
 
 - **[FIXED 2026-11-18: removed.]** `Deck` (`src/types/index.ts:26`) is documented as part of the interface but is never imported anywhere in `src/` (dead type).
-- `Card.back` is commented "translation/answer" (`src/types/index.ts:22`), but every Rephrase deck stores a same-language paraphrase in `back` (e.g. `src/data/it/daily.ts`: `'Ho perso il treno.'` → `'Non sono arrivato in tempo alla stazione.'`). The source comment is stale, and the contract does not state the field's meaning.
-- Source comments reference v1.1 files that do not exist in this repo (`src/locales/it/decks.js` at `index.ts:9`, `src/js/features/progress.js` at `index.ts:34`). The v1.1 compatibility claim cannot be verified from this repository.
+- **[FIXED 2026-11-18: comment now says it is a same-language paraphrase.]** `Card.back` is commented "translation/answer" (`src/types/index.ts:22`), but every Rephrase deck stores a same-language paraphrase in `back` (e.g. `src/data/it/daily.ts`: `'Ho perso il treno.'` → `'Non sono arrivato in tempo alla stazione.'`). The source comment is stale, and the contract does not state the field's meaning.
+- **[FIXED 2026-11-18: the files are on the `vanilla` branch, not missing; comments now say so, and its storage keys were checked to match.]** Source comments reference v1.1 files that do not exist in this repo (`src/locales/it/decks.js` at `index.ts:9`, `src/js/features/progress.js` at `index.ts:34`). The v1.1 compatibility claim cannot be verified from this repository.
 
 ## src/lib/README.md
 
 - **[FIXED 2026-11-17: `generateChoices` now draws foils from distinct back texts.]** `generateChoices` excludes only foils whose `back` equals the correct answer; it does not de-duplicate foils against each other. `src/data/it/weather.ts` and `src/data/es/weather.ts` each contain 3 repeated `back` values (e.g. `'Cade la pioggia.'`, `'Il cielo è coperto.'`, `'La temperatura è alta.'`; `'Cae la lluvia.'`, `'El cielo está cubierto.'`, `'La temperatura es alta.'`), so a question can show two identical choices. The contract says nothing about this.
-- The header comment in `srs.ts` says "no side effects", but `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock. The contract documents this correctly; the source comment is the drift.
-- `matchTranscript.ts` has no unit test (`src/__tests__/lib/` covers only `generateChoices` and `srs`), even though it decides every voice answer in both study sessions.
+- **[FIXED 2026-11-18.]** The header comment in `srs.ts` says "no side effects", but `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock. The contract documents this correctly; the source comment is the drift.
+- **[FIXED 2026-11-18: `src/__tests__/lib/matchTranscript.test.ts`.]** `matchTranscript.ts` has no unit test (`src/__tests__/lib/` covers only `generateChoices` and `srs`), even though it decides every voice answer in both study sessions.
 
 ## src/i18n/README.md
 
@@ -23,25 +23,25 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 - **[FIXED 2026-11-13: `updateCard` re-reads storage before writing.]** **Concurrent writers can overwrite each other.** `useSRS` and `useQASRS` each hold a private in-memory snapshot of `{lang}-progress`, and every `updateCard` writes the whole snapshot back (`{ ...prev, [key]: ... }`, `useSRS.ts:38`, `useQASRS.ts:67`). Two writers mounted at the same time would erase each other's keys. The contract says instances "do not observe each other's writes"; it does not mention that they overwrite each other.
 - **[FIXED 2026-11-18: moved to `src/lib/progressStorage.ts`.]** `loadFromStorage`, `saveToStorage`, and `getStorageKey` are copied verbatim in `useSRS.ts` and `useQASRS.ts`. The shared key is a convention between two copies, not a shared module.
-- `useVoiceRecognition` returns `stopListening`, but no consumer calls it (`StudySession.tsx:55` and `QAStudySession.tsx:98` take only `isSupported`, `isListening`, `startListening`). A user cannot cancel listening.
-- `useLevelFilter` accepts any non-empty saved array without checking its elements (`useLevelFilter.ts:20`). A stored `["B1"]` would hide every card. The contract notes the missing validation; nothing guards against it.
-- Rephrase and Q&A share one `{lang}-level-filter` value, because `rephrase/page.tsx`, `qa/page.tsx`, and both sessions call `useLevelFilter(lang, …)` with the same key. No contract states that the filter is shared between activities.
+- **[FIXED 2026-11-18: pressing the mic while listening cancels in both sessions; `stopListening` aborts and suppresses the cancelled session's events.]** `useVoiceRecognition` returns `stopListening`, but no consumer calls it (`StudySession.tsx:55` and `QAStudySession.tsx:98` take only `isSupported`, `isListening`, `startListening`). A user cannot cancel listening.
+- **[FIXED 2026-11-18: the saved filter keeps only known levels (`@/lib/levels:isLevel`) and falls back to the default when none remain.]** `useLevelFilter` accepts any non-empty saved array without checking its elements (`useLevelFilter.ts:20`). A stored `["B1"]` would hide every card. The contract notes the missing validation; nothing guards against it.
+- **[FIXED 2026-11-18 (owner chose to split): Rephrase keeps `{lang}-level-filter`, Q&A uses `{lang}-qa-level-filter` and carries over the old shared value; `useLevelFilter` now requires an `activity`.]** Rephrase and Q&A share one `{lang}-level-filter` value, because `rephrase/page.tsx`, `qa/page.tsx`, and both sessions call `useLevelFilter(lang, …)` with the same key. No contract states that the filter is shared between activities.
 
 ## src/components/README.md
 
 - **[FIXED 2026-11-13: reproduced by hook tests; fixed in the hooks, and reset now reloads the page.]** **Reset probably does not survive the next answer (not confirmed by running).** `SiteHeader.handleReset` only calls `localStorage.removeItem('{lang}-progress')` and `router.refresh()` (`SiteHeader.tsx:31-36`). It is rendered in the persistent `[lang]` layout, and `router.refresh()` keeps client `useState`. A study session mounted at that moment keeps its old progress snapshot, and its next `updateCard` writes the full pre-reset record back to storage (see the hooks finding above). Badges on a browser page also stay stale until remount.
 - **[FIXED 2026-11-17: one option per `LANG_META` entry; dropdown tests for both languages.]** **The language dropdown is wrong for `es`.** The first option always renders `LANG_META.it` but links to `/${lang}`; the second renders `LANG_META[OTHER_LANG[lang]]`. On `/es` both options read "Italiano" and Español never appears (`SiteHeader.tsx:77-90`).
-- The comment for the `SiteHeader` back link says "3+ segments: /lang/deck", but the code checks `segments.length >= 2` (`SiteHeader.tsx:26-28`). On `/it/rephrase/daily` the back link goes to `/it/rephrase`.
+- **[FIXED 2026-11-18: comment now matches the 2+ segment rule.]** The comment for the `SiteHeader` back link says "3+ segments: /lang/deck", but the code checks `segments.length >= 2` (`SiteHeader.tsx:26-28`). On `/it/rephrase/daily` the back link goes to `/it/rephrase`.
 - **[RESOLVED 2026-11-18: the unused helpers were removed instead.]** `SiteHeader` uses `next/link` and `next/navigation` rather than the locale-aware `@/i18n/navigation` helpers.
 - **[FIXED 2026-11-18: `@/components/DeckGrid` is now the shipped grid (`{ lang, activeLevels }`, correct links), imported by `rephrase/page.tsx`.]** `DeckGrid` is dead and its links are wrong. No route imports it (only `DeckGrid.test.tsx`), and it links to `/${lang}/${deck.id}` (`DeckGrid.tsx:43`), which is not a generated route (the real route is `/${lang}/rephrase/${deck}`). `src/app/[lang]/rephrase/page.tsx` re-implements it privately with the correct link, so the tested component and the shipped one differ.
 - **[FIXED 2026-11-18: labels come from `study.micStart` / `study.micListening` / `study.audio` / `nav.changeLanguage`; tested with real messages in `a11yLabels.test.tsx`.]** Accessibility labels are hard-coded in English despite next-intl: `MicButton` (`'Listening…'`, `'Start speaking'`), `ChoiceButton` (`aria-label="audio"`), and `SiteHeader` (`aria-label="Change language"`).
-- `ChoiceButton` nests an interactive `<span role="button" tabIndex={0}>` inside a `<button>` (`ChoiceButton.tsx:15-38`). This nesting is invalid. Once the button is disabled after an answer, browsers usually stop delivering clicks to its children, so the 🔊 control stops working at that point. The contract describes the propagation guard but not this limitation.
+- **[FIXED 2026-11-18: the speak icon is a sibling `<button>`, positioned over the answer button with CSS; tests in `ChoiceButton.test.tsx`.]** `ChoiceButton` nests an interactive `<span role="button" tabIndex={0}>` inside a `<button>` (`ChoiceButton.tsx:15-38`). This nesting is invalid. Once the button is disabled after an answer, browsers usually stop delivering clicks to its children, so the 🔊 control stops working at that point. The contract describes the propagation guard but not this limitation.
 - [PARTLY FIXED 2026-11-13: `SiteHeader` now has reset and back-link tests.] `AudioButton`, `ChoiceButton`, `LevelFilterChips`, and `SiteHeader` have no tests in `src/__tests__/components/`. `SiteHeader` is where the reset, dropdown, and back-link defects above live.
 
 ## src/data/README.md
 
-- The header comment of `deckMap.ts` lists its users as "DeckPage … and StudySession", but `src/app/[lang]/rephrase/page.tsx` and `src/components/DeckGrid.tsx` also import `DECK_MAP`. Minor stale comment; the contract's consumer list is correct.
-- No test checks that `deckMetadata[*].cardCount` (hard-coded `40` × 16) matches the `DECK_MAP` array lengths. It holds today (every deck has 40 cards: 20 A1 / 20 A2), but only by convention.
+- **[FIXED 2026-11-18.]** The header comment of `deckMap.ts` lists its users as "DeckPage … and StudySession", but `src/app/[lang]/rephrase/page.tsx` and `src/components/DeckGrid.tsx` also import `DECK_MAP`. Minor stale comment; the contract's consumer list is correct.
+- **[FIXED 2026-11-18: `src/__tests__/data/decks.test.ts`.]** No test checks that `deckMetadata[*].cardCount` (hard-coded `40` × 16) matches the `DECK_MAP` array lengths. It holds today (every deck has 40 cards: 20 A1 / 20 A2), but only by convention.
 
 ## src/data/it/README.md
 
@@ -57,7 +57,7 @@ No drift detected.
 
 ## src/app/README.md
 
-- The home page is not localized. `<html lang="en">` is hard-coded (`layout.tsx:16`) and `"Choose Your Language"` is an English literal (`page.tsx:33`), while all content under `[lang]` is Italian or Spanish via next-intl. Screen readers will use English pronunciation for Italian/Spanish text.
+- **[FIXED 2026-11-18: two root layouts via a `(home)` route group; `[lang]` pages render `<html lang={lang}>` in the static HTML, the home page marks its it/es parts, and `global-not-found.tsx` keeps a styled 404.]** The home page is not localized. `<html lang="en">` is hard-coded (`layout.tsx:16`) and `"Choose Your Language"` is an English literal (`page.tsx:33`), while all content under `[lang]` is Italian or Spanish via next-intl. Screen readers will use English pronunciation for Italian/Spanish text.
 
 ## src/app/[lang]/README.md
 
@@ -74,7 +74,8 @@ No drift detected.
 - **[FIXED 2026-11-13: end screen now derived at render time; real-state tests in `StudySession.endScreens.test.tsx`.]** **The "all done" screen cannot be reached by finishing a session.** `handleAnswer` calls `updateCard(...)` (an async state update) and then evaluates `isCardDueForDeck` from the same render (`StudySession.tsx:190-205`). When called from the 600 ms `setTimeout` in `handleChoiceClick`, that is the render at click time. The card just answered is still due in that snapshot, so `allDecksEmpty` is always `false` and the session always shows `deckComplete`. The contract describes the intended behavior, not the actual one.
 - **[FIXED 2026-11-17: Next is disabled until a choice is made, records that choice, and cancels the pending auto-advance; tests in `StudySession.endScreens.test.tsx`.]** **"Next" records a correct answer without a quiz answer.** The `nextButton` control calls `handleAnswer(true)` directly (`StudySession.tsx:289`). A user can flip and press Next to promote every card. Pressing Next inside the 600 ms window after choosing also runs `handleAnswer` twice: two `updateCard` calls and a skipped card.
 - **[FIXED 2026-11-17: "Study again" is now a practice replay that saves nothing, hidden when the session had no cards.]** **"Study again" replays the same snapshot.** `resetSession` resets `index` but not the `dueCards` snapshot (`StudySession.tsx:83-91`). A second pass re-answers cards already reviewed and advances their boxes again on the same day. When the session mounted with zero due cards, the button does nothing.
-- `FeedbackMessage` is rendered twice, once inside the card back and once below the card (`StudySession.tsx:277, 282`). This gives two `role="status"` live regions with the same text.
+- **[FIXED 2026-11-18: one `FeedbackMessage`, below the card.]** `FeedbackMessage` is rendered twice, once inside the card back and once below the card (`StudySession.tsx:277, 282`). This gives two `role="status"` live regions with the same text.
+- **[FIXED 2026-11-18: `.btn:disabled` fades it and shows a not-allowed cursor.]** (Found 2026-11-18 while checking the `ChoiceButton` fix in Chrome.) The Next button is `disabled` until a choice is made, but `.btn` has no disabled style: it keeps full opacity and a pointer cursor, so it looks clickable when it is not.
 
 ## src/app/[lang]/qa/README.md
 
@@ -95,15 +96,15 @@ No drift detected.
 
 ## scripts/README.md
 
-- **[FIXED 2026-11-13: mirror lookup now tries all four test suffixes; the `src/app/**` limitation remains.]** **The analyzer that AGENTS.md requires misreports coverage.** Its mirror lookup rewrites every `.ts`/`.tsx` to `.test.tsx` (`analyze-test-coverage.ts:170-171`). Real runs today:
+- **[FIXED 2026-11-13: mirror lookup now tries all four test suffixes. 2026-11-18: `src/app/**` sources are also looked up in `src/__tests__/components/` and `src/__tests__/app/`.]** **The analyzer that AGENTS.md requires misreports coverage.** Its mirror lookup rewrites every `.ts`/`.tsx` to `.test.tsx` (`analyze-test-coverage.ts:170-171`). Real runs today:
   - `node scripts/analyze-test-coverage.ts src/lib/` reports "Test file: _Not found_" for all 3 files, although `srs.test.ts` and `generateChoices.test.ts` exist.
   - `src/hooks/` misses `useVoiceRecognition.test.ts`.
   - It cannot find tests for `src/app/**` sessions, because `StudySession.test.tsx` and `QAStudySession.test.tsx` live in `src/__tests__/components/`, not in a mirror of `src/app/`.
-- `generateMarkdownReport` prints a "Low severity" count (`analyze-test-coverage.ts:309, 317`), but `analyzeGaps` never produces `low`, so that row is always 0.
-- `parseExports` matches non-exported `function` declarations (`analyze-test-coverage.ts:34`), so private helpers (e.g. `shuffleArray`, `addDays`) show up as untested "exports" with high severity.
+- **[FIXED 2026-11-18: exported interfaces and types are now `low`.]** `generateMarkdownReport` prints a "Low severity" count (`analyze-test-coverage.ts:309, 317`), but `analyzeGaps` never produces `low`, so that row is always 0.
+- **[FIXED 2026-11-18: only exported declarations count; `export default function` (missed before) now counts too.]** `parseExports` matches non-exported `function` declarations (`analyze-test-coverage.ts:34`), so private helpers (e.g. `shuffleArray`, `addDays`) show up as untested "exports" with high severity.
 
 ## README.md
 
 - [FIXED 2026-11-17: Q&A now records misses, so the rule holds for both modes.] "How the Spaced Repetition Works" states that a wrong answer resets a card to box 1. That is true for Rephrase only; Q&A never records wrong answers (see `qa/[scenario]`).
-- The "Q&A Study Mode" feature line says "open-ended question-and-answer mode", but `QAStudySession` is strictly multiple choice (1 correct + 3 fixed foils) with optional voice selection.
+- **[FIXED 2026-11-18: README now says multiple choice, by tap or voice.]** The "Q&A Study Mode" feature line says "open-ended question-and-answer mode", but `QAStudySession` is strictly multiple choice (1 correct + 3 fixed foils) with optional voice selection.
 - [FIXED 2026-11-13] Global Side Effects describes the `SiteHeader` reset as clearing progress. In practice an active study session can write the old progress back (see `src/components`).

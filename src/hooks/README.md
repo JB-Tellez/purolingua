@@ -30,10 +30,13 @@ and pages/sessions under `src/app/[lang]/` (including
   - `dueCards`: memoized subset of `cards` whose `level` is in `activeLevels`
     and that are due per `isCardDue`.
   - `updateCard(cardId: string, isCorrect: boolean)`, `isCardDueForScenario(cardId: string): boolean`.
-- `useLevelFilter(lang: Lang, hasProgress: boolean)` (`useLevelFilter.ts`)
-  returns `{ activeLevels: Level[], setActiveLevels(levels: Level[] | null) }`.
+- `useLevelFilter(lang: Lang, hasProgress: boolean, activity: Activity)` (`useLevelFilter.ts`;
+  `type Activity = 'rephrase' | 'qa'`) returns
+  `{ activeLevels: Level[], setActiveLevels(levels: Level[] | null) }`.
+  `activity` is required so no caller shares a filter by accident.
 - `useVoiceRecognition(lang: Lang)` (`useVoiceRecognition.ts`) returns
   `{ isSupported, isListening, startListening(onResult: (transcript: string) => void, onError: () => void), stopListening() }`.
+  `stopListening` cancels: it calls `abort()` (discarding any pending result), sets `isListening` to `false` at once, and the cancelled session's late `onresult` / `onerror` (Chrome fires `"aborted"`) are ignored, so callers get neither callback.
 
 ## Invariants
 
@@ -45,6 +48,11 @@ and pages/sessions under `src/app/[lang]/` (including
 - **Storage key formats are compatibility contracts**: comments in `useSRS.ts`
   and `useLevelFilter.ts` state the `"{lang}-progress"` and
   `"{lang}-level-filter"` keys match v1.1 for user data continuity.
+- **One level filter per activity**: Rephrase reads and writes
+  `"{lang}-level-filter"` (the v1.1 key); Q&A writes `"{lang}-qa-level-filter"`
+  and, until that exists, reads the Rephrase value as its starting point
+  (both activities shared one filter before the split). Changing one never
+  changes the other.
 - **Writes start from current storage**: `updateCard` re-reads
   `"{lang}-progress"`, changes one key, writes it back, then sets state. It
   never writes the in-memory snapshot, so a reset or another writer (a second
@@ -59,8 +67,9 @@ and pages/sessions under `src/app/[lang]/` (including
   `setActiveLevels([])` are silent no-ops (`useLevelFilter.ts:setActiveLevels`).
 - **Level filter default**: when no valid saved filter exists, the initial
   value is `['A1', 'A2']` if `hasProgress` is true, otherwise `['A1']`. A saved
-  value is accepted only if it parses as a non-empty array
-  (`useLevelFilter.ts:loadFilter`); element values are not validated.
+  value keeps only known levels (`@/lib/levels:isLevel`), without duplicates;
+  if nothing valid is left (e.g. `["B1"]`, `[42]`, a non-array), the default
+  applies (`useLevelFilter.ts:loadFilter`).
 - **Corrupt or missing storage is non-fatal**: JSON parse failures and missing
   keys yield `{}` (SRS hooks) or `null` (level filter); `localStorage.setItem`
   failures (quota, private browsing) are swallowed.
@@ -79,9 +88,10 @@ and pages/sessions under `src/app/[lang]/` (including
 
 - `localStorage.getItem` / `setItem` on `"{lang}-progress"` (`useSRS`,
   `useQASRS`; every `updateCard` reads, then writes, the full record) and on
-  `"{lang}-level-filter"` (`useLevelFilter`; every accepted `setActiveLevels`).
+  `"{lang}-level-filter"` / `"{lang}-qa-level-filter"` (`useLevelFilter`; every
+  accepted `setActiveLevels` writes its activity's key).
 - `useVoiceRecognition` constructs `window.SpeechRecognition` (or
-  `webkitSpeechRecognition`), calls `start()` / `stop()`, and therefore triggers
+  `webkitSpeechRecognition`), calls `start()` / `abort()`, and therefore triggers
   the browser microphone permission flow. Exceptions from `start()` are
   swallowed.
 - `console.error('[SpeechRecognition] no results returned')` when a result
@@ -94,5 +104,6 @@ and pages/sessions under `src/app/[lang]/` (including
 - Targeted, single run: `npx vitest run src/__tests__/hooks`
   (tests live in the mirror tree `src/__tests__/hooks/`).
 - Coverage gaps: `node scripts/analyze-test-coverage.ts src/hooks/`
-- Notes on `useLevelFilter` test coverage: see
-  `docs/handoff-coverage-work.md` before changing its tests.
+- `useLevelFilter` has no "window is undefined" (SSR) tests on purpose: React
+  19 cannot render under jsdom without `window`. See the comment at the top of
+  `src/__tests__/hooks/useLevelFilter.test.tsx`.

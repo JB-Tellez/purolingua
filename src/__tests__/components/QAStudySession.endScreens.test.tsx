@@ -156,3 +156,14 @@ describe('QAStudySession default level filter (real storage)', () => {
     expect(screen.getByRole('button', { name: /Un caffè/ })).toBeInTheDocument();
   });
 });
+
+describe('QAStudySession uses the Q&A level filter', () => {
+  it('follows {lang}-qa-level-filter, not the Rephrase filter', () => {
+    localStorage.setItem('it-level-filter', JSON.stringify(['A1']));
+    localStorage.setItem('it-qa-level-filter', JSON.stringify(['A2']));
+    localStorage.setItem('it-progress', JSON.stringify({}));
+    const a2Scenario = { ...scenarios[0], cards: [{ ...scenarios[0].cards[0], level: 'A2' }] } as Scenario;
+    render(<QAStudySession lang="it" scenario={a2Scenario} />);
+    expect(screen.getByRole('button', { name: /Un caffè/ })).toBeInTheDocument();
+  });
+});

@@ -14,7 +14,7 @@ A browser-based language learning app built with Next.js and React. PuroLingua u
 - **Audio Playback** — Hear any card read aloud via the Web Speech API.
 - **Voice Recognition** — Speak your answer and get instant feedback using the browser's speech recognition API.
 - **Multiple-Choice Quiz** — The card back presents randomized answer choices including plausible distractors.
-- **Q&A Study Mode** — An open-ended question-and-answer mode with voice recognition, alongside the flashcard decks.
+- **Q&A Study Mode** — Scenario-based questions answered by multiple choice (one correct answer, three distractors), by tap or by voice, alongside the flashcard decks.
 - **Persistent Progress** — Progress is saved per language to `localStorage` with no sign-up required.
 
 ---
@@ -71,17 +71,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ```
 purolingua/
 ├── src/
-│   ├── app/[lang]/        # App Router routes (locale-segmented; also /qa, /rephrase)
+│   ├── app/(home)/        # Language picker (/) and its root layout
+│   ├── app/[lang]/        # Locale root layout and routes (/qa, /rephrase)
 │   ├── components/        # React UI components
 │   ├── hooks/             # useSRS, useQASRS, useLevelFilter, useVoiceRecognition
 │   ├── lib/               # srs.ts (Leitner logic), generateChoices.ts, matchTranscript.ts
 │   ├── data/              # Vocabulary content: it/, es/, qa/
 │   ├── types/             # TypeScript types
-│   ├── i18n/              # next-intl routing, request config, navigation helpers
+│   ├── i18n/              # next-intl routing (isLang) and request config
 │   └── __tests__/         # Vitest unit tests (components, hooks, lib)
 ├── scripts/               # analyze-test-coverage.ts (static coverage-gap CLI)
 ├── messages/              # UI strings: it.json, es.json
-├── docs/                  # Working notes (e.g. coverage handoff)
 ├── next.config.ts
 └── vitest.config.ts
 ```
@@ -92,7 +92,7 @@ purolingua/
 
 PuroLingua is a backend-free, statically exported Next.js 16 App Router app (`next.config.ts`: `output: 'export'`, `trailingSlash: true`), built in Docker and served by nginx (`Dockerfile`, `nginx.conf`). All routes are pre-rendered from `generateStaticParams` over `routing.locales` × `DECK_IDS` / `scenarios`. The two study sessions (`rephrase/[deck]/StudySession`, `qa/[scenario]/QAStudySession`) are client-only (`next/dynamic` with `ssr: false`). Content is compiled in from `src/data`, UI strings come from `messages/<locale>.json` via next-intl, learner state lives only in browser `localStorage`, and audio/voice use the Web Speech API.
 
-Request flow: `src/app/[lang]/layout.tsx` validates the locale, loads messages, and wraps pages in `NextIntlClientProvider` + `SiteHeader` → a browser page (`DeckGrid` / `ScenarioGrid` with `LevelFilterChips`) → a study session that reads due cards through `useSRS` / `useQASRS` (scheduling math in `src/lib/srs.ts`) and writes results back to `localStorage`.
+Request flow: `src/app/[lang]/layout.tsx` (a root layout that renders `<html lang={lang}>`) validates the locale, loads messages, and wraps pages in `NextIntlClientProvider` + `SiteHeader` → a browser page (`DeckGrid` / `ScenarioGrid` with `LevelFilterChips`) → a study session that reads due cards through `useSRS` / `useQASRS` (scheduling math in `src/lib/srs.ts`) and writes results back to `localStorage`.
 
 ## Local Interface & Invariants
 
@@ -116,19 +116,19 @@ Request flow: `src/app/[lang]/layout.tsx` validates the locale, loads messages, 
 
 ## Global Invariants
 
-- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/lib/srs.ts:getQACardKey`), read and written through `src/lib/progressStorage.ts`; `{lang}-level-filter` holds the level filter. Source comments state these keys must match v1.1.
+- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/lib/srs.ts:getQACardKey`), read and written through `src/lib/progressStorage.ts`; `{lang}-level-filter` holds the Rephrase level filter; Q&A has its own `{lang}-qa-level-filter` (added after v1.1), which starts from the Rephrase value until Q&A saves one. They match v1.1, the pre-Next.js app on the `vanilla` branch (`src/js/features/progress.js`), so existing users keep their progress.
 - **Card position and id are persisted identity.** Reordering or inserting cards mid-array in `src/data/it` / `src/data/es`, or renaming a Q&A `card.id` / scenario `id`, orphans stored progress.
-- **Deck size is hard-coded.** `src/data/decks.ts:deckMetadata` declares `cardCount: 40` for every deck; nothing enforces that it matches `DECK_MAP` array lengths.
+- **Deck size is hard-coded.** `src/data/decks.ts:deckMetadata` declares `cardCount: 40` for every deck; `src/__tests__/data/decks.test.ts` fails if it stops matching the `DECK_MAP` array lengths.
 - **The level filter is never empty.** `useLevelFilter.setActiveLevels(null | [])` is a no-op (FLTR-06); `LevelFilterChips` relies on this guard.
 - **Static params must agree.** Each dynamic segment's `layout.tsx` and `page.tsx` both export `generateStaticParams` (client pages cannot), and they must produce the same set.
-- **`routing.locales` is the one locale list.** `src/types:Lang` is derived from `src/i18n/routing.ts:routing.locales`, and routes validate with `isLang`. The per-language tables (`src/app/page.tsx:LANGUAGES`, `src/components/SiteHeader.tsx:LANG_META`, `src/data/deckMap.ts:DECK_MAP`, `src/lib/locale.ts:LANG_LOCALE`) are typed `Record<Lang, …>`, so `tsc` fails until each has the new locale. Not compiler-checked: `messages/*.json`, `src/data/decks.ts:deckMetadata`, and the Q&A `*It` / `*Es` fields.
+- **`routing.locales` is the one locale list.** `src/types:Lang` is derived from `src/i18n/routing.ts:routing.locales`, and routes validate with `isLang`. The per-language tables (`src/app/(home)/page.tsx:LANGUAGES`, `src/components/SiteHeader.tsx:LANG_META`, `src/data/deckMap.ts:DECK_MAP`, `src/lib/locale.ts:LANG_LOCALE`) are typed `Record<Lang, …>`, so `tsc` fails until each has the new locale. Not compiler-checked: `messages/*.json`, `src/data/decks.ts:deckMetadata`, and the Q&A `*It` / `*Es` fields.
 - **Dates are UTC `YYYY-MM-DD` strings**, compared lexicographically (`src/lib/srs.ts:isCardDue`).
 
 ## Global Side Effects
 
-- Browser `localStorage`: read/write `{lang}-progress` and `{lang}-level-filter`. SRS writes always re-read the stored record first. `SiteHeader` reset removes `{lang}-progress` (both Rephrase and Q&A progress), but not `{lang}-level-filter`, then reloads the page.
+- Browser `localStorage`: read/write `{lang}-progress`, `{lang}-level-filter` (Rephrase), and `{lang}-qa-level-filter` (Q&A). SRS writes always re-read the stored record first. `SiteHeader` reset removes `{lang}-progress` (both Rephrase and Q&A progress), but not the level filters, then reloads the page.
 - Web Speech API: `speechSynthesis` playback (`src/lib/speak.ts`, used by `AudioButton` and both sessions) and `SpeechRecognition` / `webkitSpeechRecognition` microphone capture (`useVoiceRecognition`).
-- Network: Google Fonts from `fonts.googleapis.com` / `fonts.gstatic.com` (`src/app/layout.tsx`); no other runtime network calls.
+- Network: Google Fonts from `fonts.googleapis.com` / `fonts.gstatic.com` (`src/app/RootDocument.tsx`); no other runtime network calls.
 - Build time: `package.json` imported for the version footer; `messages/<locale>.json` loaded by `src/i18n/request.ts`; static output written to `out/`.
 
 ## System Verification
@@ -160,7 +160,7 @@ Progress is stored in `localStorage` under a per-language key, so switching lang
 1. Add `messages/<code>.json` with translated UI strings.
 2. Add the locale to `routing.locales` in `src/i18n/routing.ts`. `Lang` follows automatically.
 3. Add vocabulary decks under `src/data/<code>/`, then register them in `src/data/deckMap.ts` (`DECK_MAP`) and `src/data/decks.ts` (`deckMetadata`).
-4. Run `npx tsc --noEmit` and add the locale to each table it reports: `LANGUAGES` (`src/app/page.tsx`), `LANG_META` (`src/components/SiteHeader.tsx`), `DECK_MAP` (step 3), and `LANG_LOCALE` (`src/lib/locale.ts`).
+4. Run `npx tsc --noEmit` and add the locale to each table it reports: `LANGUAGES` (`src/app/(home)/page.tsx`), `LANG_META` (`src/components/SiteHeader.tsx`), `DECK_MAP` (step 3), and `LANG_LOCALE` (`src/lib/locale.ts`).
 
 The language picker in `src/components/SiteHeader.tsx` lists every `LANG_META` entry, so it needs no other change. Q&A scenarios only carry Italian fields and parallel `*Es` fields; any non-`it` locale currently shows the Spanish fields.
 

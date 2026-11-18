@@ -60,7 +60,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // the level filter is shared, so every page and session must default the same way.
   const [bootstrapHasProgress] = useState(() => Object.keys(loadProgress(lang)).length > 0);
 
-  const { activeLevels } = useLevelFilter(lang, bootstrapHasProgress);
+  const { activeLevels } = useLevelFilter(lang, bootstrapHasProgress, 'qa');
 
   const { dueCards, updateCard, progress } = useQASRS(
     lang,
@@ -74,7 +74,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // Snapshot due cards once at session start — prevents re-filtering mid-session
   const [sessionDueCards] = useState(() => dueCards);
 
-  const { isSupported, isListening, startListening } = useVoiceRecognition(lang);
+  const { isSupported, isListening, startListening, stopListening } = useVoiceRecognition(lang);
 
   const [index, setIndex] = useState(0);
   // Which end screen to show is derived at render time (below), not decided in
@@ -173,7 +173,13 @@ export default function QAStudySession({ lang, scenario }: Props) {
   }
 
   function handleMicPress() {
-    if (isListening || selectedChoice !== null) return;
+    // Pressing the mic while listening cancels (the button is a toggle: aria-pressed).
+    if (isListening) {
+      stopListening();
+      setMicState('idle');
+      return;
+    }
+    if (selectedChoice !== null) return;
     setMicState('listening');
     startListening(
       (transcript) => {

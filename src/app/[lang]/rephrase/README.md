@@ -15,7 +15,7 @@ for the nested `[deck]` route.
 - `page.tsx`
   - `default LangPage()` (`'use client'`): reads `lang` from `useParams`, gets
     `hasProgress` from `useSRS(lang)`, and gets `{ activeLevels, setActiveLevels }`
-    from `useLevelFilter`. Renders the page title, `<LevelFilterChips>`, and
+    from `useLevelFilter(lang, hasProgress, 'rephrase')`. Renders the page title, `<LevelFilterChips>`, and
     `<DeckGrid lang activeLevels>` from
     [`@/components`](../../../components/README.md), which links each deck to
     `/${lang}/rephrase/${deck.id}` with a due-count badge.

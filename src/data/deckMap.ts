@@ -1,6 +1,7 @@
 // src/data/deckMap.ts
 // Shared card array map for all language x deck combinations.
-// Used by DeckPage (route param lookup) and StudySession (allDecksEmpty cross-deck check).
+// Used by the deck route page (cards for a lang/deck), DeckGrid (due badges), and
+// StudySession (allDecksEmpty cross-deck check).
 import type { Card, DeckId, Lang } from '@/types';
 
 // Italian decks

@@ -19,7 +19,7 @@ Consumers: `src/components/DeckGrid.tsx`, `src/app/[lang]/rephrase/layout.tsx`, 
 
 ## Invariants
 - `DECK_MAP` must have an entry for every `Lang` × `DeckId` combination. The `Record<Lang, Record<DeckId, Card[]>>` type enforces this at compile time.
-- `deckMetadata[*].cardCount` is hard-coded (40) and must match the length of the corresponding `DECK_MAP[lang][id]` array. Nothing in the code enforces this.
+- `deckMetadata[*].cardCount` is hard-coded (40) and must match the length of the corresponding `DECK_MAP[lang][id]` array. `src/__tests__/data/decks.test.ts` enforces this, and that `deckMetadata` has exactly one entry per locale × deck.
 - `DECK_IDS` must list every `DeckId` literal from `@/types` exactly once. It is used to generate routes (`src/app/[lang]/rephrase/[deck]/page.tsx`, `src/app/[lang]/rephrase/layout.tsx`).
 - Card array order is part of the persisted identity. Rephrase progress is keyed by `"{deckId}_{cardIndex}"` (see `Progress` in `src/types/index.ts`).
 
@@ -27,4 +27,4 @@ Consumers: `src/components/DeckGrid.tsx`, `src/app/[lang]/rephrase/layout.tsx`, 
 - None. These are pure constant module exports with no runtime I/O.
 
 ## Verification
-- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). No test imports `src/data` modules directly. `src/__tests__/components/DeckGrid.test.tsx` and `src/__tests__/components/StudySession.test.tsx` mock `@/data/decks` and `@/data/deckMap`.
+- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). `src/__tests__/data/decks.test.ts` checks the real `deckMetadata` against `DECK_MAP`. `src/__tests__/components/DeckGrid.test.tsx` and `src/__tests__/components/StudySession.test.tsx` mock `@/data/decks` and `@/data/deckMap`.

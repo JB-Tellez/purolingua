@@ -13,6 +13,7 @@ interface SpeechRecognitionInstance {
   onerror: (() => void) | null;
   start(): void;
   stop(): void;
+  abort(): void;
 }
 
 type SpeechRecognitionCtor = new () => SpeechRecognitionInstance;
@@ -29,6 +30,8 @@ function getSpeechRecognition(): SpeechRecognitionCtor | null {
 export function useVoiceRecognition(lang: Lang) {
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  // Per-session flag: once cancelled, that session's late events are ignored.
+  const sessionRef = useRef<{ cancelled: boolean } | null>(null);
 
   const [isListening, setIsListening] = useState(false);
 
@@ -44,10 +47,13 @@ export function useVoiceRecognition(lang: Lang) {
       rec.lang = LANG_LOCALE[lang];
       rec.continuous = false;
       rec.interimResults = false;
+      const session = { cancelled: false };
+      sessionRef.current = session;
 
-      rec.onstart = () => setIsListening(true);
+      rec.onstart = () => { if (!session.cancelled) setIsListening(true); };
       rec.onend = () => setIsListening(false);
       rec.onresult = (e) => {
+        if (session.cancelled) return;
         if (e.results.length === 0) {
           console.error('[SpeechRecognition] no results returned');
           return;
@@ -57,6 +63,7 @@ export function useVoiceRecognition(lang: Lang) {
       };
       rec.onerror = () => {
         setIsListening(false);
+        if (session.cancelled) return; // e.g. the "aborted" error that follows a cancel
         onError();
       };
 
@@ -66,8 +73,11 @@ export function useVoiceRecognition(lang: Lang) {
     [lang, isListening]
   );
 
+  // Cancels the current session: abort() discards any pending result, unlike stop().
   const stopListening = useCallback(() => {
-    recognitionRef.current?.stop();
+    if (sessionRef.current) sessionRef.current.cancelled = true;
+    recognitionRef.current?.abort();
+    setIsListening(false);
   }, []);
 
   return { isSupported, isListening, startListening, stopListening };

@@ -8,7 +8,7 @@ export type Lang = (typeof routing.locales)[number];
 
 export type Level = 'A1' | 'A2';
 
-// DeckId literals confirmed against src/locales/it/decks.js (main branch)
+// DeckId literals confirmed against v1.1 src/locales/it/decks.js (on the `vanilla` branch)
 export type DeckId =
   | 'daily'
   | 'restaurant'
@@ -21,13 +21,13 @@ export type DeckId =
 
 export interface Card {
   front: string;   // target language word/phrase
-  back: string;    // translation/answer
+  back: string;    // the answer: a same-language paraphrase of `front` (not a translation)
   level: Level;    // CEFR level
 }
 
 // Progress stored in localStorage keyed by "{deckId}_{cardIndex}"
 // e.g., "daily_0", "restaurant_12"
-// Key format MUST match v1.1 exactly — see src/js/features/progress.js on main branch
+// Key format MUST match v1.1 exactly — see src/js/features/progress.js on the `vanilla` branch
 export interface Progress {
   box: number;
   nextReview: string; // YYYY-MM-DD date string; matches v1.1 localStorage format exactly

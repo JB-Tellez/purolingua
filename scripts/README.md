@@ -8,7 +8,7 @@ This directory holds developer tooling scripts. Right now it contains one script
 ## Interface
 - CLI: `node scripts/analyze-test-coverage.ts <file-or-directory>`. It prints a Markdown report to stdout.
 - Exported functions (from `analyze-test-coverage.ts`):
-  - `parseExports(source: string): Array<{ kind; name; line }>`: finds `function`, `export const|let|var`, `class`, indented method-like lines, and `interface`/`type` declarations.
+  - `parseExports(source: string): Array<{ kind; name; line }>`: finds exported declarations only: `export [default] [async] function`, `export const|let|var`, `export [default] class` (plus the methods directly in that class body), and `export interface|type`.
   - `parseLogicBranches(source: string): Array<{ type; line; text }>`: finds `if`, `else`, `for`/`while`, `switch`, `catch`, ternary, optional chaining, and `return` lines.
   - `findTestFile(sourceFilePath: string): string | null`
   - `parseTestFile(testFilePath: string, source: string): string[]`: collects the identifiers a test file references, from imports, string literals, and calls.
@@ -19,11 +19,11 @@ This directory holds developer tooling scripts. Right now it contains one script
 
 ## Invariants
 - Comment lines (those starting with `//`, `*`, or `/*`) are skipped when parsing exports and branches.
-- `parseExports` matches any `function name`, even when it is not exported. So module-private functions are reported as "exports".
+- `parseExports` ignores non-exported declarations: private helpers are expected to be tested through the exports that use them. Object-literal methods inside functions are not reported as class methods.
 - `analyzeGaps` treats an export as tested when any tested name matches it case-insensitively or is a case-insensitive substring of the export name. This matching is loose and can produce false negatives (gaps that go unreported).
-- Severity rules: a missing `function`, `class`, or `method` is `high`. A missing `const` whose name starts with `use` is `high`. Every other missing export is `medium`. Only `catch` and `switch` branches are reported as logic-branch gaps, always as `medium`. No rule ever produces `low`.
-- `findTestFile` checks these locations in order, returning the first that exists: sibling `<name>{TEST_SUFFIXES}`, `__tests__/<name>.ts(x)`, `__tests__/<name>{TEST_SUFFIXES}`, and, for sources under `src/`, the mirror `src/__tests__/<same dirs>/<name>{TEST_SUFFIXES}`. `TEST_SUFFIXES` is `.test.ts`, `.test.tsx`, `.spec.ts`, `.spec.tsx`. The mirror resolves from `process.cwd()`, so run the CLI from the repository root.
-- Tests that do not mirror their source path are not found. For example, `src/app/[lang]/rephrase/[deck]/StudySession.tsx` is tested by `src/__tests__/components/StudySession.test.tsx`.
+- Severity rules: a missing `function`, `class`, or `method` is `high`. A missing `const` whose name starts with `use` is `high`. A missing `interface` or `type` is `low` (tsc already checks them). Every other missing export is `medium`. Only `catch` and `switch` branches are reported as logic-branch gaps, always as `medium`.
+- `findTestFile` checks these locations in order, returning the first that exists: sibling `<name>{TEST_SUFFIXES}`, `__tests__/<name>.ts(x)`, `__tests__/<name>{TEST_SUFFIXES}`, and, for sources under `src/`, the mirror `src/__tests__/<same dirs>/<name>{TEST_SUFFIXES}`; for sources under `src/app/`, also `src/__tests__/components/<name>{TEST_SUFFIXES}` (study sessions) and `src/__tests__/app/<name>{TEST_SUFFIXES}`. `TEST_SUFFIXES` is `.test.ts`, `.test.tsx`, `.spec.ts`, `.spec.tsx`. The mirror resolves from `process.cwd()`, so run the CLI from the repository root.
+- Tests named after a behaviour rather than their source file are not found. For example, route `page.tsx` / `layout.tsx` files are covered by `src/__tests__/app/localeValidation.test.tsx` and `listPageHeadings.test.tsx`, but the analyzer reports them as missing a test file.
 - In directory mode, the script skips dot-directories and `node_modules`, and it skips `*.test.*` and `*.spec.*` files. It only analyzes `.ts`, `.tsx`, `.js`, and `.jsx` files.
 - `runCLI` runs automatically only when the module is the process entry point (it compares `process.argv[1]` with `import.meta.url`). Importing the module in tests does not run the CLI.
 

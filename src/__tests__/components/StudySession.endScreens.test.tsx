@@ -167,3 +167,24 @@ describe('StudySession "Study again" practice replay (real SRS state)', () => {
     expect(screen.queryByRole('button', { name: 'studyAgain' })).toBeNull();
   });
 });
+
+describe('StudySession feedback announcement (real SRS state)', () => {
+  it('announces the answer feedback in exactly one live region', () => {
+    seed({ restaurant_0: FUTURE });
+    renderDaily();
+    act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
+    act(() => { fireEvent.click(screen.getByRole('button', { name: 'Thank you' })); });
+    expect(screen.getAllByRole('status')).toHaveLength(1);
+    expect(screen.getByRole('status')).toHaveTextContent('incorrect');
+  });
+});
+
+describe('StudySession uses the Rephrase level filter', () => {
+  it('follows {lang}-level-filter, not the Q&A filter', () => {
+    localStorage.setItem('it-level-filter', JSON.stringify(['A1']));
+    localStorage.setItem('it-qa-level-filter', JSON.stringify(['A2']));
+    localStorage.setItem('it-progress', JSON.stringify({ daily_1: FUTURE, restaurant_0: FUTURE }));
+    renderDaily(); // daily_0 is an A1 card
+    expect(screen.getByText('Ciao')).toBeInTheDocument();
+  });
+});

@@ -14,8 +14,8 @@ The layout generates the static params for the nested `[scenario]` route.
 - `page.tsx`
   - `default QABrowserPage()` (`'use client'`): reads `lang` from
     `useParams`, gets `hasProgress` from `useSRS(lang)`, and gets
-    `{ activeLevels, setActiveLevels }` from `useLevelFilter(lang, hasProgress)`.
-    Renders the `page.title` and `page.subtitle` messages,
+    `{ activeLevels, setActiveLevels }` from `useLevelFilter(lang, hasProgress, 'qa')`.
+    Renders the `page.scenarioTitle` and `page.scenarioSubtitle` messages,
     `<LevelFilterChips>`, and `<ScenarioGrid lang activeLevels>`.
 - Subdirectories
   - `[scenario]`: [./[scenario]/README.md](./[scenario]/README.md). Per-scenario
@@ -32,7 +32,7 @@ The layout generates the static params for the nested `[scenario]` route.
 ## Side Effects
 
 - Indirect only. `useSRS` and `useLevelFilter` read and write `localStorage`
-  (the level-filter key is `{lang}-level-filter`).
+  (the Q&A level-filter key is `{lang}-qa-level-filter`).
 
 ## Verification
 
