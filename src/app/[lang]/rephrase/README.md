@@ -14,28 +14,21 @@ for the nested `[deck]` route.
   - `default RephraseLayout({ children })`: renders `children` with no wrapper.
 - `page.tsx`
   - `default LangPage()` (`'use client'`): reads `lang` from `useParams`, gets
-    `{ isCardDueForDeck, hasProgress }` from `useSRS(lang)`, and gets
-    `{ activeLevels, setActiveLevels }` from `useLevelFilter`. Renders the page
-    title, `<LevelFilterChips>`, and the local `DeckGrid`.
-  - Module-private `DeckGrid({ lang, activeLevels, isCardDueForDeck })`: for
-    each entry in `deckMetadata` whose `lang` matches, links to
-    `/${lang}/rephrase/${deck.id}`. Each card shows a badge with the number of
-    due cards, or a check mark when none are due. Messages come from the
-    `decks` and `deckDescriptions` namespaces.
+    `hasProgress` from `useSRS(lang)`, and gets `{ activeLevels, setActiveLevels }`
+    from `useLevelFilter`. Renders the page title, `<LevelFilterChips>`, and
+    `<DeckGrid lang activeLevels>` from
+    [`@/components`](../../../components/README.md), which links each deck to
+    `/${lang}/rephrase/${deck.id}` with a due-count badge.
 - Subdirectories
   - `[deck]`: [./[deck]/README.md](./[deck]/README.md). Per-deck flashcard
     study session.
 
 ## Invariants
 
-- The due count only counts cards whose `level` is in `activeLevels` and for
-  which `isCardDueForDeck(deckId, index)` is true. Cards come from
-  `DECK_MAP[lang]?.[deck.id] ?? []`.
+- `LevelFilterChips` and `DeckGrid` receive the same `activeLevels` from this
+  page's single `useLevelFilter` call, so the badges follow the chips.
 - This layout's `generateStaticParams` and the one in `./[deck]/page.tsx`
   produce the same `{ lang, deck }` set. Update both together.
-- `page.tsx` defines its own `DeckGrid`, which is separate from
-  `@/components/DeckGrid`. Tests in `src/__tests__/components/DeckGrid.test.tsx`
-  target the component under `@/components`, not this local one.
 
 ## Side Effects
 

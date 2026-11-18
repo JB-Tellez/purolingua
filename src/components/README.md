@@ -19,7 +19,7 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 | `ActivityPicker` (`ActivityPicker.tsx`) | `{ lang }` | Links to `/{lang}/rephrase` and `/{lang}/qa`; i18n namespace `activities`. |
 | `AudioButton` (`AudioButton.tsx`) | `{ phrase: string; lang }` | Speaks `phrase` with `speechSynthesis`; i18n namespace `study` (`audio`). |
 | `ChoiceButton` (`ChoiceButton.tsx`) | `{ text; state: 'idle' \| 'correct' \| 'incorrect'; onClick; disabled?; onSpeak? }` | Quiz answer button with nested audio icon. |
-| `DeckGrid` (`DeckGrid.tsx`) | `{ lang }` | Cards from `@/data/decks:deckMetadata` filtered by `lang`, linking to `/{lang}/{deck.id}`; due badge from `useSRS` + `useLevelFilter`. Not imported by any route (only by `DeckGrid.test.tsx`); `src/app/[lang]/rephrase/page.tsx` uses its own private `DeckGrid`. Its links do not match the generated `/{lang}/rephrase/{deck}` routes. |
+| `DeckGrid` (`DeckGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One card per `@/data/decks:deckMetadata` entry for `lang`, linking to `/{lang}/rephrase/{deck.id}`; due badge from `useSRS`; i18n namespaces `decks`, `deckDescriptions`. Used by `src/app/[lang]/rephrase/page.tsx`. |
 | `FeedbackMessage` (`FeedbackMessage.tsx`) | `{ state: 'correct' \| 'incorrect' \| 'heard' \| 'notRecognized' \| null }` | `role="status"`, `aria-live="polite"`; i18n namespace `study`. |
 | `LevelFilterChips` (`LevelFilterChips.tsx`) | `{ lang; activeLevels: Level[]; setActiveLevels(levels: Level[] \| null) }` | Toggle chips for `A1` / `A2`; i18n namespace `filter`. `lang` is unused. |
 | `MicButton` (`MicButton.tsx`) | `{ state: 'idle' \| 'listening' \| 'error'; onPress }` | Class `mic-btn` plus `mic-btn--{state}` when not idle. |
@@ -30,9 +30,10 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 
 - **Due badges**: `DeckGrid` and `ScenarioGrid` render `✓` with class
   `deck-card-badge--done` when the due count is `0`, otherwise the count.
-  `DeckGrid` counts only cards whose `level` is in `activeLevels` from
-  `useLevelFilter(lang, hasProgress)`. `ScenarioGrid` takes `activeLevels` as
-  a prop and uses `useQASRS(...).dueCards.length`.
+  Both take `activeLevels` as a prop (the page's `useLevelFilter` state, shared
+  with `LevelFilterChips`), so badges follow the chips. `DeckGrid` counts cards
+  whose `level` is in `activeLevels` and `isCardDueForDeck` is true;
+  `ScenarioGrid` uses `useQASRS(...).dueCards.length`.
 - **Deck lookup**: `DeckGrid` gets cards from `@/data/deckMap:DECK_MAP[lang][deck.id]`
   and falls back to `[]` when missing. Indices are positional and passed to
   `isCardDueForDeck(deckId, index)`.

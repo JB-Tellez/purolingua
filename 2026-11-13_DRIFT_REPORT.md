@@ -33,7 +33,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 - **[FIXED 2026-11-17: one option per `LANG_META` entry; dropdown tests for both languages.]** **The language dropdown is wrong for `es`.** The first option always renders `LANG_META.it` but links to `/${lang}`; the second renders `LANG_META[OTHER_LANG[lang]]`. On `/es` both options read "Italiano" and Español never appears (`SiteHeader.tsx:77-90`).
 - The comment for the `SiteHeader` back link says "3+ segments: /lang/deck", but the code checks `segments.length >= 2` (`SiteHeader.tsx:26-28`). On `/it/rephrase/daily` the back link goes to `/it/rephrase`.
 - `SiteHeader` uses `next/link` and `next/navigation` rather than the locale-aware `@/i18n/navigation` helpers.
-- `DeckGrid` is dead and its links are wrong. No route imports it (only `DeckGrid.test.tsx`), and it links to `/${lang}/${deck.id}` (`DeckGrid.tsx:43`), which is not a generated route (the real route is `/${lang}/rephrase/${deck}`). `src/app/[lang]/rephrase/page.tsx` re-implements it privately with the correct link, so the tested component and the shipped one differ.
+- **[FIXED 2026-11-18: `@/components/DeckGrid` is now the shipped grid (`{ lang, activeLevels }`, correct links), imported by `rephrase/page.tsx`.]** `DeckGrid` is dead and its links are wrong. No route imports it (only `DeckGrid.test.tsx`), and it links to `/${lang}/${deck.id}` (`DeckGrid.tsx:43`), which is not a generated route (the real route is `/${lang}/rephrase/${deck}`). `src/app/[lang]/rephrase/page.tsx` re-implements it privately with the correct link, so the tested component and the shipped one differ.
 - Accessibility labels are hard-coded in English despite next-intl: `MicButton` (`'Listening…'`, `'Start speaking'`), `ChoiceButton` (`aria-label="audio"`), and `SiteHeader` (`aria-label="Change language"`).
 - `ChoiceButton` nests an interactive `<span role="button" tabIndex={0}>` inside a `<button>` (`ChoiceButton.tsx:15-38`). This nesting is invalid. Once the button is disabled after an answer, browsers usually stop delivering clicks to its children, so the 🔊 control stops working at that point. The contract describes the propagation guard but not this limitation.
 - [PARTLY FIXED 2026-11-13: `SiteHeader` now has reset and back-link tests.] `AudioButton`, `ChoiceButton`, `LevelFilterChips`, and `SiteHeader` have no tests in `src/__tests__/components/`. `SiteHeader` is where the reset, dropdown, and back-link defects above live.
@@ -67,7 +67,7 @@ No drift detected.
 
 ## src/app/[lang]/rephrase/README.md
 
-- This page duplicates `@/components/DeckGrid` almost line for line (only the `href` differs), so the shipped grid is untested and the tested one is unused (see `src/components`).
+- **[FIXED 2026-11-18: the page imports `@/components/DeckGrid`.]** This page duplicates `@/components/DeckGrid` almost line for line (only the `href` differs), so the shipped grid is untested and the tested one is unused (see `src/components`).
 
 ## src/app/[lang]/rephrase/[deck]/README.md
 
@@ -91,7 +91,7 @@ No drift detected.
 
 ## src/README.md
 
-- The stated layering (`app` → `components` → `hooks` → `lib` → `types`) holds for imports, but `app` duplicates logic that belongs lower down: a private `DeckGrid` and three copies of `speak`/`LANG_LOCALE`. The dependency map does not show this.
+- **[PARTLY FIXED 2026-11-18: the private `DeckGrid` is gone; the `speak`/`LANG_LOCALE` copies remain.]** The stated layering (`app` → `components` → `hooks` → `lib` → `types`) holds for imports, but `app` duplicates logic that belongs lower down: a private `DeckGrid` and three copies of `speak`/`LANG_LOCALE`. The dependency map does not show this.
 
 ## scripts/README.md
 
