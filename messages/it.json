@@ -1,6 +1,7 @@
 {
   "nav": {
     "logo": "Italiano",
+    "changeLanguage": "Cambia lingua",
     "back": "\u2190 Indietro",
     "reset": "Reset",
     "backToDecks": "Indietro"
@@ -61,6 +62,8 @@
     "backToDecks": "\u2190 Torna ai mazzi",
     "cardCounter": "Scheda {current} di {total}",
     "audio": "Ascolta",
+    "micStart": "Inizia a parlare",
+    "micListening": "In ascolto…",
     "heard": "Sentito",
     "notRecognized": "Non riconosciuto",
     "deckComplete": "Mazzo completato!",

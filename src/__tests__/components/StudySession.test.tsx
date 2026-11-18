@@ -116,7 +116,7 @@ describe('StudySession voice integration', () => {
 
     renderStudySession();
 
-    expect(screen.queryByRole('button', { name: /start speaking/i })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'micStart' })).toBeNull();
 
     // Restore
     Object.defineProperty(window, 'SpeechRecognition', {
@@ -132,7 +132,7 @@ describe('StudySession voice integration', () => {
     renderStudySession();
 
     // On card front (not yet flipped), there is exactly one mic button
-    const micBtns = screen.getAllByRole('button', { name: /start speaking/i });
+    const micBtns = screen.getAllByRole('button', { name: 'micStart' });
     // Only the front mic button should be present before flip
     expect(micBtns.length).toBe(1);
     const frontMicBtn = micBtns[0];
@@ -161,7 +161,7 @@ describe('StudySession voice integration', () => {
     renderStudySession();
 
     // On card front (not flipped), only one mic button
-    const micBtn = screen.getByRole('button', { name: /start speaking/i });
+    const micBtn = screen.getByRole('button', { name: 'micStart' });
 
     act(() => {
       micBtn.click();
@@ -198,7 +198,7 @@ describe('StudySession voice integration', () => {
 
     // After flip: both front and back mic buttons are in DOM
     // The back mic button is the second one (front is first in DOM order)
-    const micBtns = screen.getAllByRole('button', { name: /start speaking/i });
+    const micBtns = screen.getAllByRole('button', { name: 'micStart' });
     expect(micBtns.length).toBe(2);
     const backMicBtn = micBtns[1]; // card-back is second in DOM
 
@@ -237,7 +237,7 @@ describe('StudySession voice integration', () => {
     });
 
     // After flip: both front and back mic buttons
-    const micBtns = screen.getAllByRole('button', { name: /start speaking/i });
+    const micBtns = screen.getAllByRole('button', { name: 'micStart' });
     expect(micBtns.length).toBe(2);
     const backMicBtn = micBtns[1]; // card-back is second in DOM
 

@@ -1,6 +1,7 @@
 {
   "nav": {
     "logo": "Espa\u00f1ol",
+    "changeLanguage": "Cambiar idioma",
     "back": "\u2190 Atr\u00e1s",
     "reset": "Reiniciar",
     "backToDecks": "Volver"
@@ -61,6 +62,8 @@
     "backToDecks": "\u2190 Volver a los mazos",
     "cardCounter": "Tarjeta {current} de {total}",
     "audio": "Escuchar",
+    "micStart": "Empieza a hablar",
+    "micListening": "Escuchando…",
     "heard": "Escuchado",
     "notRecognized": "No reconocido",
     "deckComplete": "¡Mazo completado!",

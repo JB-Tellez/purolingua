@@ -66,7 +66,7 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
             <div className="language-selector">
               <button
                 className="language-btn"
-                aria-label="Change language"
+                aria-label={t('changeLanguage')}
                 onClick={() => setDropdownOpen((o) => !o)}
               >
                 {currentMeta.flag}

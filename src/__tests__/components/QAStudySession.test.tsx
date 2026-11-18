@@ -314,7 +314,7 @@ describe('QAStudySession', () => {
     renderQAStudySession('it');
 
     // MicButton renders when isSupported=true
-    const micBtn = screen.getByRole('button', { name: /start speaking/i });
+    const micBtn = screen.getByRole('button', { name: 'micStart' });
     expect(micBtn).toBeInTheDocument();
 
     // Click mic button
@@ -349,7 +349,7 @@ describe('QAStudySession', () => {
     vi.useFakeTimers();
     renderQAStudySession('it');
 
-    const micBtn = screen.getByRole('button', { name: /start speaking/i });
+    const micBtn = screen.getByRole('button', { name: 'micStart' });
     act(() => {
       micBtn.click();
     });
