@@ -38,7 +38,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
       )
   );
 
-  const { isSupported, isListening, startListening } = useVoiceRecognition(lang);
+  const { isSupported, isListening, startListening, stopListening } = useVoiceRecognition(lang);
 
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -145,8 +145,14 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
   const { originalIndex, card: currentCard } = currentEntry!;
 
+  // Pressing the mic while listening cancels (the button is a toggle: aria-pressed).
+  function cancelListening() {
+    stopListening();
+    setMicState('idle');
+  }
+
   function handleFrontMicPress() {
-    if (isListening) return;
+    if (isListening) return cancelListening();
     setMicState('listening');
     startListening(
       (transcript) => {
@@ -169,7 +175,8 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   }
 
   function handleBackMicPress() {
-    if (isListening || selectedChoice !== null) return;
+    if (isListening) return cancelListening();
+    if (selectedChoice !== null) return;
     setMicState('listening');
     startListening(
       (transcript) => {

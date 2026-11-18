@@ -102,20 +102,45 @@ describe('useVoiceRecognition', () => {
     });
   });
 
-  describe('stopListening', () => {
-    it('calls stop() on the recognition instance', () => {
-      const { result } = renderHook(() => useVoiceRecognition('it' as any));
-      const { startListening, stopListening } = result.current;
+  describe('stopListening (cancel)', () => {
+    function startThenCancel() {
+      const onResult = vi.fn();
+      const onError = vi.fn();
+      const hook = renderHook(() => useVoiceRecognition('it' as any));
+      act(() => { hook.result.current.startListening(onResult, onError); });
+      act(() => { mockRecognitionInstance.onstart?.(); });
+      mockRecognitionInstance.abort.mockClear();
+      act(() => { hook.result.current.stopListening(); });
+      return { hook, onResult, onError };
+    }
 
+    it('aborts recognition, which discards any pending result', () => {
+      startThenCancel();
+      expect(mockRecognitionInstance.abort).toHaveBeenCalledOnce();
+    });
+
+    it('stops listening immediately', () => {
+      const { hook } = startThenCancel();
+      expect(hook.result.current.isListening).toBe(false);
+    });
+
+    it('ignores a late result or the "aborted" error the browser fires after cancelling', () => {
+      const { onResult, onError } = startThenCancel();
       act(() => {
-        startListening(vi.fn(), vi.fn());
+        mockRecognitionInstance.onresult?.({ results: [[{ transcript: 'Ciao' }]] });
+        mockRecognitionInstance.onerror?.({ error: 'aborted' });
       });
+      expect(onResult).not.toHaveBeenCalled();
+      expect(onError).not.toHaveBeenCalled();
+    });
 
-      act(() => {
-        stopListening();
-      });
-
-      expect(mockRecognitionInstance.stop).toHaveBeenCalled();
+    it('a new session after cancelling delivers results normally', () => {
+      const { hook } = startThenCancel();
+      act(() => { mockRecognitionInstance.onend?.(); });
+      const onResult = vi.fn();
+      act(() => { hook.result.current.startListening(onResult, vi.fn()); });
+      act(() => { mockRecognitionInstance.onresult?.({ results: [[{ transcript: 'Ciao' }]] }); });
+      expect(onResult).toHaveBeenCalledWith('Ciao');
     });
 
     it('is safe to call when not listening', () => {

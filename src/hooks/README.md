@@ -34,6 +34,7 @@ and pages/sessions under `src/app/[lang]/` (including
   returns `{ activeLevels: Level[], setActiveLevels(levels: Level[] | null) }`.
 - `useVoiceRecognition(lang: Lang)` (`useVoiceRecognition.ts`) returns
   `{ isSupported, isListening, startListening(onResult: (transcript: string) => void, onError: () => void), stopListening() }`.
+  `stopListening` cancels: it calls `abort()` (discarding any pending result), sets `isListening` to `false` at once, and the cancelled session's late `onresult` / `onerror` (Chrome fires `"aborted"`) are ignored, so callers get neither callback.
 
 ## Invariants
 
@@ -82,7 +83,7 @@ and pages/sessions under `src/app/[lang]/` (including
   `useQASRS`; every `updateCard` reads, then writes, the full record) and on
   `"{lang}-level-filter"` (`useLevelFilter`; every accepted `setActiveLevels`).
 - `useVoiceRecognition` constructs `window.SpeechRecognition` (or
-  `webkitSpeechRecognition`), calls `start()` / `stop()`, and therefore triggers
+  `webkitSpeechRecognition`), calls `start()` / `abort()`, and therefore triggers
   the browser microphone permission flow. Exceptions from `start()` are
   swallowed.
 - `console.error('[SpeechRecognition] no results returned')` when a result

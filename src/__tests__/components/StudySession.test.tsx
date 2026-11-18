@@ -155,6 +155,24 @@ describe('StudySession voice integration', () => {
     vi.useRealTimers();
   });
 
+  it('pressing the mic again while listening cancels without error feedback', () => {
+    vi.useFakeTimers();
+    renderStudySession();
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
+    act(() => { mockRecognitionInstance.onstart?.(); });
+    mockRecognitionInstance.abort.mockClear();
+
+    act(() => { screen.getByRole('button', { name: 'micListening' }).click(); });
+    act(() => { mockRecognitionInstance.onerror?.({ error: 'aborted' }); }); // Chrome fires this on abort
+
+    expect(mockRecognitionInstance.abort).toHaveBeenCalledOnce();
+    const mic = screen.getByRole('button', { name: 'micStart' });
+    expect(mic).not.toHaveClass('mic-btn--listening');
+    expect(mic).not.toHaveClass('mic-btn--error');
+    expect(screen.queryByRole('status')).toBeNull();
+    vi.useRealTimers();
+  });
+
   // VOICE-12: transcript no-match on card front triggers error state
   it('VOICE-12: non-matching transcript on card front triggers mic error state', async () => {
     vi.useFakeTimers();

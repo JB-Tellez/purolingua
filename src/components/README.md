@@ -22,7 +22,7 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 | `DeckGrid` (`DeckGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One card per `@/data/decks:deckMetadata` entry for `lang`, linking to `/{lang}/rephrase/{deck.id}`; due badge from `useSRS`; i18n namespaces `decks`, `deckDescriptions`. Used by `src/app/[lang]/rephrase/page.tsx`. |
 | `FeedbackMessage` (`FeedbackMessage.tsx`) | `{ state: 'correct' \| 'incorrect' \| 'heard' \| 'notRecognized' \| null }` | `role="status"`, `aria-live="polite"`; i18n namespace `study`. |
 | `LevelFilterChips` (`LevelFilterChips.tsx`) | `{ lang; activeLevels: Level[]; setActiveLevels(levels: Level[] \| null) }` | One toggle chip per level in `@/lib/levels:LEVELS` (`A1`, `A2`); i18n namespace `filter`. `lang` is unused. |
-| `MicButton` (`MicButton.tsx`) | `{ state: 'idle' \| 'listening' \| 'error'; onPress }` | Class `mic-btn` plus `mic-btn--{state}` when not idle. Label `study.micListening` while listening, otherwise `study.micStart`. |
+| `MicButton` (`MicButton.tsx`) | `{ state: 'idle' \| 'listening' \| 'error'; onPress }` | Class `mic-btn` plus `mic-btn--{state}` when not idle. Label `study.micListening` while listening, otherwise `study.micStart`. A toggle (`aria-pressed`): both sessions cancel listening when it is pressed again. |
 | `ScenarioGrid` (`ScenarioGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One tile per `@/data/qa:scenarios`, linking to `/{lang}/qa/{scenario.id}`; due badge from `useQASRS`. |
 | `SiteHeader` (`SiteHeader.tsx`) | `{ lang }` | Logo, back link, progress reset, language dropdown (button labelled `nav.changeLanguage`); i18n namespace `nav`. |
 

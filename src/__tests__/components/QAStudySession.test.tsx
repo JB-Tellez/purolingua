@@ -135,12 +135,13 @@ function setupDefaultQASRSMock(overrides?: Partial<ReturnType<typeof useQASRS>>)
 }
 
 // Default useVoiceRecognition mock: isSupported=true, not listening
-function setupVoiceRecognitionMock(overrides?: Partial<{ isSupported: boolean; isListening: boolean; startListening: ReturnType<typeof vi.fn> }>) {
+function setupVoiceRecognitionMock(overrides?: Partial<{ isSupported: boolean; isListening: boolean; startListening: ReturnType<typeof vi.fn>; stopListening: ReturnType<typeof vi.fn> }>) {
   mockStartListening = vi.fn();
   (useVoiceRecognition as ReturnType<typeof vi.fn>).mockReturnValue({
     isSupported: true,
     isListening: false,
     startListening: mockStartListening,
+    stopListening: vi.fn(),
     ...overrides,
   });
 }
@@ -343,6 +344,16 @@ describe('QAStudySession', () => {
     expect(mockUpdateCard).toHaveBeenCalledWith('coffee_01', true);
 
     vi.useRealTimers();
+  });
+
+  it('pressing the mic while listening cancels instead of starting again', () => {
+    const stopListening = vi.fn();
+    setupVoiceRecognitionMock({ isListening: true, stopListening });
+    renderQAStudySession();
+    act(() => { document.querySelector<HTMLButtonElement>('.mic-btn')!.click(); });
+    expect(stopListening).toHaveBeenCalledOnce();
+    expect(mockStartListening).not.toHaveBeenCalled();
+    expect(document.querySelector('.mic-btn')).not.toHaveClass('mic-btn--listening');
   });
 
   it('spoken non-match sets notRecognized feedback, no SRS update', () => {
