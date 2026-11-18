@@ -83,6 +83,7 @@ describe('StudySession end screens (real SRS state)', () => {
     seed({ daily_1: FUTURE, restaurant_0: FUTURE });
     renderDaily();
     act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
+    act(() => { fireEvent.click(screen.getByRole('button', { name: /Hello/ })); });
     act(() => { fireEvent.click(screen.getByRole('button', { name: 'nextButton' })); });
     expect(screen.getByText('allDone')).toBeInTheDocument();
   });
@@ -93,5 +94,44 @@ describe('StudySession end screens (real SRS state)', () => {
     answer('Hello');
     expect(screen.getByText('deckComplete')).toBeInTheDocument();
     expect(screen.queryByText('allDone')).toBeNull();
+  });
+});
+
+describe('StudySession Next button (real SRS state)', () => {
+  const nextButton = () => screen.getByRole('button', { name: 'nextButton' });
+  const flip = () => act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
+  const choose = (text: string) =>
+    act(() => { fireEvent.click(screen.getByRole('button', { name: new RegExp(text) })); });
+  const saved = () => JSON.parse(localStorage.getItem('it-progress') ?? '{}');
+
+  it('is disabled until a choice is selected, so it cannot record an unanswered card', () => {
+    seed({ restaurant_0: FUTURE });
+    renderDaily();
+    flip();
+    expect(nextButton()).toBeDisabled();
+    act(() => { fireEvent.click(nextButton()); });
+    expect(saved().daily_0).toBeUndefined();
+    expect(screen.getByText('cardCounter({"current":1,"total":2})')).toBeInTheDocument();
+  });
+
+  it('records the selected wrong answer, not a correct one', () => {
+    seed({ restaurant_0: FUTURE, daily_0: { box: 2, nextReview: '2000-01-01' } });
+    renderDaily();
+    flip();
+    choose('Thank you');
+    act(() => { fireEvent.click(nextButton()); });
+    expect(saved().daily_0.box).toBe(1);
+  });
+
+  it('pressed during the feedback delay records the card once and does not skip the next card', () => {
+    seed({ restaurant_0: FUTURE });
+    renderDaily();
+    flip();
+    choose('Hello');
+    act(() => { fireEvent.click(nextButton()); });
+    act(() => { vi.advanceTimersByTime(600); });
+    expect(saved().daily_0.box).toBe(2);
+    expect(saved().daily_1).toBeUndefined();
+    expect(screen.getByText('cardCounter({"current":2,"total":2})')).toBeInTheDocument();
   });
 });

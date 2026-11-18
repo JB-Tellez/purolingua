@@ -318,7 +318,8 @@ describe('StudySession allDecksEmpty fix (BUGFIX-02)', () => {
     const cardContainer = document.querySelector('.card-container') as HTMLElement;
     act(() => { cardContainer.click(); });
 
-    // Click the primary "next" button to call handleAnswer(true) on the last card
+    // Answer, then press Next to finish the last card without waiting for the delay
+    act(() => { screen.getByRole('button', { name: /Hello/ }).click(); });
     const nextBtn = screen.getByRole('button', { name: /nextButton/i });
     act(() => { nextBtn.click(); });
 
@@ -361,6 +362,7 @@ describe('StudySession allDecksEmpty fix (BUGFIX-02)', () => {
     const cardContainer = document.querySelector('.card-container') as HTMLElement;
     act(() => { cardContainer.click(); });
 
+    act(() => { screen.getByRole('button', { name: /Hello/ }).click(); });
     const nextBtn = screen.getByRole('button', { name: /nextButton/i });
     act(() => { nextBtn.click(); });
 

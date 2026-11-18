@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { Card, DeckId, Lang } from '@/types';
@@ -64,6 +64,8 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
   const [feedbackState, setFeedbackState] = useState<'correct' | 'incorrect' | 'heard' | 'notRecognized' | null>(null);
+  // Pending auto-advance after a choice; Next cancels it so the card is recorded once.
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const backLink = `/${lang}/rephrase`;
 
@@ -202,6 +204,8 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   }
 
   function handleAnswer(isCorrect: boolean) {
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    advanceTimer.current = null;
     updateCard(deckId, originalIndex, isCorrect);
     setFlipped(false);
     setSelectedChoice(null);
@@ -218,7 +222,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     const isCorrect = choices[choiceIndex].isCorrect;
     setSelectedChoice(choiceIndex);
     setFeedbackState(isCorrect ? 'correct' : 'incorrect');
-    setTimeout(() => handleAnswer(isCorrect), 600);
+    advanceTimer.current = setTimeout(() => handleAnswer(isCorrect), 600);
   }
 
   const progressPercent = Math.round((index / dueCards.length) * 100);
@@ -288,7 +292,11 @@ export default function StudySession({ lang, deckId, cards }: Props) {
             <button className="btn secondary" onClick={() => setFlipped(false)}>
               {t('flipButton')}
             </button>
-            <button className="btn primary" onClick={() => handleAnswer(true)}>
+            <button
+              className="btn primary"
+              disabled={selectedChoice === null}
+              onClick={() => { if (selectedChoice !== null) handleAnswer(choices[selectedChoice].isCorrect); }}
+            >
               {t('nextButton')}
             </button>
           </div>
