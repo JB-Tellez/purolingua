@@ -29,4 +29,4 @@ Consumers import through `@/data/es` (used only by `../deckMap.ts`).
 - None. These are pure constant module exports with no runtime I/O.
 
 ## Verification
-- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). No test imports these modules directly. Tests that use deck data mock `@/data/deckMap` instead (`src/__tests__/components/DeckGrid.test.tsx`, `src/__tests__/components/StudySession.test.tsx`).
+- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). `src/__tests__/data/decks.test.ts` reads these arrays through the real `DECK_MAP` to check their length. Component tests (`DeckGrid.test.tsx`, `StudySession.test.tsx`) mock `@/data/deckMap` instead.

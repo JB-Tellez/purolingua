@@ -10,7 +10,7 @@ This directory holds the domain logic for PuroLingua study sessions. None of the
 - `locale.ts` / `speak.ts`: the speech locale per language, and text-to-speech.
 - `levels.ts`: the CEFR levels the app has content for.
 
-These modules are used by the hooks (`useSRS`, `useQASRS`, `useVoiceRecognition`), `AudioButton`, `SiteHeader`, and both study sessions. Domain types come from `@/types` ([`src/types`](../types/README.md)).
+These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `useVoiceRecognition`), `AudioButton`, `SiteHeader`, `LevelFilterChips`, and both study sessions. Domain types come from `@/types` ([`src/types`](../types/README.md)).
 
 ## Interface
 - `generateChoices.ts`
@@ -47,7 +47,7 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useVoiceRecognition`
 - `shuffleArray` copies its input before shuffling. Caller arrays are never mutated.
 - `matchesTranscript`: if the target normalizes to an empty string, it returns `false` unless the transcript also normalizes to an empty string (the exact-match check runs first). The word-overlap threshold is `>= 0.8` of the target words. Extra words in the transcript do not lower the score.
 - `normalize` uses `\w`, which is ASCII-only. Accented letters that decompose under NFD (`è`, `ñ`) reduce to their base letter. Non-ASCII letters that do not decompose (for example `ß`) become spaces (`"straße"` → `"stra e"`).
-- `getCardKey` / `getQACardKey` / `progressStorage`: the formats `"{deckId}_{cardIndex}"`, `"qa_{scenarioId}_{cardId}"`, and `{lang}-progress` must stay identical to v1.1, because existing `localStorage` progress uses it (see comments in `srs.ts` and `src/types/index.ts`).
+- `getCardKey` / `getQACardKey` / `progressStorage`: these persisted formats must not change, because existing `localStorage` progress uses them. `"{deckId}_{cardIndex}"` and `{lang}-progress` are v1.1's formats (the `vanilla` branch); `"qa_{scenarioId}_{cardId}"` was added after v1.1 with Q&A mode.
 - `advanceBox`: a correct answer moves the card up one box, capped at 3. An incorrect answer resets it to box 1. A missing `current` counts as box 1. So a new card answered correctly goes to box 2.
 - `isCardDue`: returns `true` for `undefined` progress (a new card) or when `progress.nextReview <= getTodayString()`. This relies on lexicographic comparison of ISO `YYYY-MM-DD` strings.
 - Dates are calculated in UTC (`toISOString`, `setUTCDate`), not the user's local time zone.

@@ -36,5 +36,5 @@ The layout generates the static params for the nested `[scenario]` route.
 
 ## Verification
 
-- Run: `npx vitest run src/__tests__/components/ScenarioGrid.test.tsx src/__tests__/hooks/useLevelFilter.test.tsx`
+- Run: `npx vitest run src/__tests__/components/ScenarioGrid.test.tsx src/__tests__/hooks/useLevelFilter.test.tsx src/__tests__/app/levelFilterPerActivity.test.tsx src/__tests__/app/listPageHeadings.test.tsx`
 - Full suite: `npm test`

@@ -6,9 +6,11 @@ Client-side React hooks (`'use client'`) that hold PuroLingua's per-language
 learner state and wrap browser speech APIs. Two hooks persist spaced-repetition
 (SRS) progress in `localStorage` (`useSRS` for Rephrase decks, `useQASRS` for
 Q&A scenarios), one persists the CEFR level filter (`useLevelFilter`), and one
-wraps the Web Speech recognition API (`useVoiceRecognition`). Box-advancement
-and due-date logic is delegated to `@/lib/srs` (`advanceBox`, `isCardDue`,
-`getCardKey`); these hooks only manage React state and storage.
+wraps the Web Speech recognition API (`useVoiceRecognition`). Box-advancement,
+due-date logic, and key formats come from `@/lib/srs` (`advanceBox`,
+`isCardDue`, `getCardKey`, `getQACardKey`); the progress record is read and
+written through `@/lib/progressStorage`; `useLevelFilter` validates with
+`@/lib/levels:isLevel`. These hooks only manage React state.
 
 Consumers: `src/components/DeckGrid.tsx`, `src/components/ScenarioGrid.tsx`,
 and pages/sessions under `src/app/[lang]/` (including

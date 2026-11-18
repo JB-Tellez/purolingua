@@ -2,7 +2,7 @@
 
 A browser-based language learning app built with Next.js and React. PuroLingua uses flashcard decks and a spaced repetition algorithm to help you build real conversational vocabulary — no backend required.
 
-**[Live Site](https://purolingua.com/?lang=it)** &nbsp;·&nbsp; **[GitHub](https://github.com/JB-Tellez/purolingua)**
+**[Live Site](https://purolingua.com/)** &nbsp;·&nbsp; **[GitHub](https://github.com/JB-Tellez/purolingua)**
 
 ---
 
@@ -15,6 +15,8 @@ A browser-based language learning app built with Next.js and React. PuroLingua u
 - **Voice Recognition** — Speak your answer and get instant feedback using the browser's speech recognition API.
 - **Multiple-Choice Quiz** — The card back presents randomized answer choices including plausible distractors.
 - **Q&A Study Mode** — Scenario-based questions answered by multiple choice (one correct answer, three distractors), by tap or by voice, alongside the flashcard decks.
+- **Level Filter** — Choose CEFR levels (A1, A2); Rephrase and Q&A each remember their own choice.
+- **Practice Replay** — "Study again" replays a finished session without changing your schedule.
 - **Persistent Progress** — Progress is saved per language to `localStorage` with no sign-up required.
 
 ---
@@ -75,11 +77,11 @@ purolingua/
 │   ├── app/[lang]/        # Locale root layout and routes (/qa, /rephrase)
 │   ├── components/        # React UI components
 │   ├── hooks/             # useSRS, useQASRS, useLevelFilter, useVoiceRecognition
-│   ├── lib/               # srs.ts (Leitner logic), generateChoices.ts, matchTranscript.ts
+│   ├── lib/               # srs.ts (Leitner logic), generateChoices.ts, matchTranscript.ts, levels.ts, storage/speech helpers
 │   ├── data/              # Vocabulary content: it/, es/, qa/
 │   ├── types/             # TypeScript types
 │   ├── i18n/              # next-intl routing (isLang) and request config
-│   └── __tests__/         # Vitest unit tests (components, hooks, lib)
+│   └── __tests__/         # Vitest unit tests (app, components, data, hooks, i18n, lib)
 ├── scripts/               # analyze-test-coverage.ts (static coverage-gap CLI)
 ├── messages/              # UI strings: it.json, es.json
 ├── next.config.ts
@@ -105,18 +107,18 @@ Request flow: `src/app/[lang]/layout.tsx` (a root layout that renders `<html lan
 ## Subdirectories & System Boundaries
 
 - src: [./src/README.md](./src/README.md) - All application source (intermediate blueprint).
-  - src/app: [./src/app/README.md](./src/app/README.md) - Root shell and home page; locale segment [./src/app/[lang]/README.md](./src/app/[lang]/README.md); deck browser [rephrase](./src/app/[lang]/rephrase/README.md) and session [rephrase/[deck]](./src/app/[lang]/rephrase/[deck]/README.md); scenario browser [qa](./src/app/[lang]/qa/README.md) and session [qa/[scenario]](./src/app/[lang]/qa/[scenario]/README.md).
+  - src/app: [./src/app/README.md](./src/app/README.md) - Two root layouts (`(home)` and `[lang]`) sharing `RootDocument`, the language picker, and the global 404; locale segment [./src/app/[lang]/README.md](./src/app/[lang]/README.md); deck browser [rephrase](./src/app/[lang]/rephrase/README.md) and session [rephrase/[deck]](./src/app/[lang]/rephrase/[deck]/README.md); scenario browser [qa](./src/app/[lang]/qa/README.md) and session [qa/[scenario]](./src/app/[lang]/qa/[scenario]/README.md).
   - src/components: [./src/components/README.md](./src/components/README.md) - Shared client UI (grids with due badges, quiz buttons, feedback, level chips, `SiteHeader`).
   - src/hooks: [./src/hooks/README.md](./src/hooks/README.md) - `useSRS`, `useQASRS`, `useLevelFilter`, `useVoiceRecognition`.
-  - src/lib: [./src/lib/README.md](./src/lib/README.md) - Pure SRS scheduling, distractor generation, transcript matching.
+  - src/lib: [./src/lib/README.md](./src/lib/README.md) - SRS scheduling and key formats, distractor generation, transcript matching, levels, and thin storage/speech helpers.
   - src/data: [./src/data/README.md](./src/data/README.md) - `deckMetadata`, `DECK_IDS`, `DECK_MAP`; [it](./src/data/it/README.md), [es](./src/data/es/README.md) decks; [qa](./src/data/qa/README.md) scenarios.
-  - src/i18n: [./src/i18n/README.md](./src/i18n/README.md) - next-intl `routing`, request config, navigation helpers.
+  - src/i18n: [./src/i18n/README.md](./src/i18n/README.md) - next-intl `routing`, `isLang`, and request config.
   - src/types: [./src/types/README.md](./src/types/README.md) - Domain types only.
 - scripts: [./scripts/README.md](./scripts/README.md) - `analyze-test-coverage.ts` static coverage-gap CLI.
 
 ## Global Invariants
 
-- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/lib/srs.ts:getQACardKey`), read and written through `src/lib/progressStorage.ts`; `{lang}-level-filter` holds the Rephrase level filter; Q&A has its own `{lang}-qa-level-filter` (added after v1.1), which starts from the Rephrase value until Q&A saves one. They match v1.1, the pre-Next.js app on the `vanilla` branch (`src/js/features/progress.js`), so existing users keep their progress.
+- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/lib/srs.ts:getQACardKey`), read and written through `src/lib/progressStorage.ts`; `{lang}-level-filter` holds the Rephrase level filter; Q&A has its own `{lang}-qa-level-filter` (added after v1.1), which starts from the Rephrase value until Q&A saves one. `{lang}-progress`, `{deckId}_{cardIndex}`, and `{lang}-level-filter` match v1.1, the pre-Next.js app on the `vanilla` branch (`src/js/features/progress.js`), so existing users keep their progress; the Q&A keys were added later and are this app's own contract.
 - **Card position and id are persisted identity.** Reordering or inserting cards mid-array in `src/data/it` / `src/data/es`, or renaming a Q&A `card.id` / scenario `id`, orphans stored progress.
 - **Deck size is hard-coded.** `src/data/decks.ts:deckMetadata` declares `cardCount: 40` for every deck; `src/__tests__/data/decks.test.ts` fails if it stops matching the `DECK_MAP` array lengths.
 - **The level filter is never empty.** `useLevelFilter.setActiveLevels(null | [])` is a no-op (FLTR-06); `LevelFilterChips` relies on this guard.
