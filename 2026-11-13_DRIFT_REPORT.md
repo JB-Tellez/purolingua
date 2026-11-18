@@ -17,7 +17,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 ## src/i18n/README.md
 
 - **[FIXED 2026-11-18: `navigation.ts` removed; the app uses `next/link` / `next/navigation` throughout.]** `navigation.ts` exports `Link`, `redirect`, `usePathname`, `useRouter`, and `getPathname`, but nothing imports `@/i18n/navigation`. `SiteHeader` uses `next/link` and `next/navigation` instead (see below), so its links bypass the locale-aware helpers. This is dead code or an unfinished migration.
-- `routing.ts` is declared the next-intl source of truth, but at least 8 other places hard-code the locale set (listed under Global Invariants in `README.md`). There is no shared derivation from `routing.locales`.
+- **[FIXED 2026-11-18: `Lang` is derived from `routing.locales`; per-language tables are `Record<Lang, …>`, so `tsc` flags each one.]** `routing.ts` is declared the next-intl source of truth, but at least 8 other places hard-code the locale set (listed under Global Invariants in `README.md`). There is no shared derivation from `routing.locales`.
 
 ## src/hooks/README.md
 
@@ -62,7 +62,7 @@ No drift detected.
 ## src/app/[lang]/README.md
 
 - **[FIXED 2026-11-17: activity picker and scenario list have their own `page.*` strings; tests in `src/__tests__/app/listPageHeadings.test.tsx`.]** **All three browser pages share one heading.** `[lang]/page.tsx`, `rephrase/page.tsx`, and `qa/page.tsx` each render `t('page.title')` / `t('page.subtitle')`, which are deck-specific strings ("Scegli un Mazzo" / "Seleziona una categoria per iniziare"; "Elige un Mazo"). The activity picker and the Q&A scenario list are therefore headed "Choose a Deck".
-- The layout's locale check casts to the literal `'it' | 'es'` (`layout.tsx:23`), adding another hard-coded copy of the locale set.
+- **[FIXED 2026-11-18: uses `isLang`.]** The layout's locale check casts to the literal `'it' | 'es'` (`layout.tsx:23`), adding another hard-coded copy of the locale set.
 - **[FIXED 2026-11-18: removed.]** The message keys `page.chooseLanguage`, `page.chooseDeck`, and the `deckCardCount` namespace in `messages/*.json` are not referenced anywhere in `src/` (dead strings).
 
 ## src/app/[lang]/rephrase/README.md
@@ -87,7 +87,7 @@ No drift detected.
 - **[FIXED 2026-11-17: "Study again" is now a practice replay that saves nothing, hidden when the session had no cards.]** "Study again" replays the same `sessionDueCards` snapshot. Same issue as Rephrase.
 - **[FIXED 2026-11-18: `getQACardKey` moved to `@/lib/srs` and shared.]** `isScenarioHasDue` re-implements the `qa_{scenarioId}_{cardId}` key format inline (`QAStudySession.tsx:59`) instead of sharing `getQACardKey` (which is private to `useQASRS.ts`). That makes a third copy of a persisted-key contract.
 - **[FIXED 2026-11-18: one `speak` in `src/lib/speak.ts`, one `LANG_LOCALE` in `src/lib/locale.ts`.]** `speak()` and `LANG_LOCALE` are copied in `QAStudySession.tsx`, `StudySession.tsx`, and `AudioButton.tsx`.
-- `page.tsx` validates `lang` with the literal `['it', 'es']` (line 24), while the sibling `rephrase/[deck]/page.tsx` uses `routing.locales`.
+- **[FIXED 2026-11-18: uses `isLang`, like every `[lang]` route.]** `page.tsx` validates `lang` with the literal `['it', 'es']` (line 24), while the sibling `rephrase/[deck]/page.tsx` uses `routing.locales`.
 
 ## src/README.md
 

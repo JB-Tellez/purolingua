@@ -2,7 +2,9 @@
 // Core domain types for PuroLingua v1.2
 // All downstream phases import from '@/types'
 
-export type Lang = 'it' | 'es';
+import type { routing } from '@/i18n/routing';
+
+export type Lang = (typeof routing.locales)[number];
 
 export type Level = 'A1' | 'A2';
 

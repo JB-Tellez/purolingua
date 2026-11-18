@@ -15,8 +15,8 @@ tapping or by voice.
   - `generateStaticParams()`: returns every `{ lang, deck }` pair from
     `routing.locales` x `DECK_IDS`, used for static export.
   - `default DeckPage({ params })` (async server component): awaits
-    `params: Promise<{ lang; deck }>`, calls `notFound()` when lang is not in
-    `routing.locales` or deck is not in `DECK_IDS`, calls
+    `params: Promise<{ lang; deck }>`, calls `notFound()` unless
+    `isLang(lang)` and deck is in `DECK_IDS`, calls
     `setRequestLocale(lang)`, and then renders
     `<StudySession lang deckId cards />` (imported from `./StudySessionNoSSR`).
   - Module-private: `getCards(lang, deckId)` returns

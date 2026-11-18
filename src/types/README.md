@@ -4,7 +4,7 @@
 This directory holds the core domain types for PuroLingua v1.2, all in `index.ts`. Other code imports them as `@/types`. They cover flashcard decks (the rephrase mode), Leitner progress records, and Q&A scenarios. The file contains types only and produces no runtime code.
 
 ## Interface
-- `type Lang = 'it' | 'es'`
+- `type Lang = (typeof routing.locales)[number]` (currently `'it' | 'es'`), via a type-only import of `@/i18n/routing`
 - `type Level = 'A1' | 'A2'`
 - `type DeckId = 'daily' | 'restaurant' | 'travel' | 'shopping' | 'hotel' | 'emergencies' | 'social' | 'weather'`
 - `interface Card { front: string; back: string; level: Level }`
@@ -18,7 +18,7 @@ This directory holds the core domain types for PuroLingua v1.2, all in `index.ts
 - `ProgressRecord` keys use the format `"{deckId}_{cardIndex}"` (for example `"daily_0"`). The key format must stay identical to v1.1, because existing `localStorage` data uses it. [`src/lib/srs.ts`](../lib/README.md) `getCardKey` produces these keys.
 - `Progress.nextReview` is a `YYYY-MM-DD` date string, matching the v1.1 `localStorage` format.
 - `QACard.foils` and `QACard.foilsEs` are fixed 3-tuples, so each Q&A card always has exactly 3 distractors per language. The `*Es` fields are parallel Spanish translations of the Italian fields.
-- The `Lang` literals must stay in sync with `routing.locales` in [`src/i18n/routing.ts`](../i18n/README.md).
+- `Lang` is derived from `routing.locales` in [`src/i18n/routing.ts`](../i18n/README.md), so the two cannot drift. The import is type-only and adds no runtime dependency.
 
 ## Side Effects
 - None. The file contains only types.

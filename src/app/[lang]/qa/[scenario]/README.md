@@ -15,8 +15,8 @@ synthesis, speech recognition).
   - `generateStaticParams()`: returns every `{ lang, scenario }` pair from
     `routing.locales` x `scenarios[].id`, used for static export.
   - `default QAStudyPage({ params })` (async server component): awaits
-    `params: Promise<{ lang; scenario }>`, calls `notFound()` for an invalid
-    lang or an unknown scenario id, calls `setRequestLocale(lang)`, and then
+    `params: Promise<{ lang; scenario }>`, calls `notFound()` unless
+    `isLang(lang)` and the scenario id exists, calls `setRequestLocale(lang)`, and then
     renders `<QAStudySessionNoSSR lang scenario={matchedScenario} />`.
 - `QAStudySessionNoSSR.tsx`
   - `default QAStudySessionNoSSR(props: { lang: Lang; scenario: Scenario })`:
@@ -37,8 +37,6 @@ synthesis, speech recognition).
 
 ## Invariants
 
-- `page.tsx` checks lang against the literal `['it', 'es']`, not
-  `routing.locales`. Keep the two lists in sync.
 - The session takes one snapshot of the due cards at mount
   (`useState(() => dueCards)` as `sessionDueCards`). Changes to SRS state during
   the session do not re-filter or re-index the cards.

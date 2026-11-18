@@ -1,9 +1,8 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
-import { routing } from '@/i18n/routing';
+import { routing, isLang } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
-import type { Lang } from '@/types';
 
 // Step 1: generateStaticParams — tell Next.js which locale paths to build
 export function generateStaticParams() {
@@ -20,7 +19,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { lang } = await params;
 
   // Validate locale
-  if (!routing.locales.includes(lang as 'it' | 'es')) {
+  if (!isLang(lang)) {
     notFound();
   }
 
@@ -32,7 +31,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <SiteHeader lang={lang as Lang} />
+      <SiteHeader lang={lang} />
       {children}
     </NextIntlClientProvider>
   );

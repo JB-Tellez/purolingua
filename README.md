@@ -121,7 +121,7 @@ Request flow: `src/app/[lang]/layout.tsx` validates the locale, loads messages, 
 - **Deck size is hard-coded.** `src/data/decks.ts:deckMetadata` declares `cardCount: 40` for every deck; nothing enforces that it matches `DECK_MAP` array lengths.
 - **The level filter is never empty.** `useLevelFilter.setActiveLevels(null | [])` is a no-op (FLTR-06); `LevelFilterChips` relies on this guard.
 - **Static params must agree.** Each dynamic segment's `layout.tsx` and `page.tsx` both export `generateStaticParams` (client pages cannot), and they must produce the same set.
-- **The locale set is duplicated, not derived.** `src/i18n/routing.ts:routing.locales` (`it`, `es`) must stay in sync with `src/types:Lang`, `messages/*.json`, `src/data/deckMap.ts:DECK_MAP`, `src/data/decks.ts:deckMetadata`, `src/app/page.tsx:LANGUAGES`, the literal `['it', 'es']` in `src/app/[lang]/qa/[scenario]/page.tsx`, `src/components/SiteHeader.tsx:LANG_META`, and `src/lib/locale.ts:LANG_LOCALE`.
+- **`routing.locales` is the one locale list.** `src/types:Lang` is derived from `src/i18n/routing.ts:routing.locales`, and routes validate with `isLang`. The per-language tables (`src/app/page.tsx:LANGUAGES`, `src/components/SiteHeader.tsx:LANG_META`, `src/data/deckMap.ts:DECK_MAP`, `src/lib/locale.ts:LANG_LOCALE`) are typed `Record<Lang, …>`, so `tsc` fails until each has the new locale. Not compiler-checked: `messages/*.json`, `src/data/decks.ts:deckMetadata`, and the Q&A `*It` / `*Es` fields.
 - **Dates are UTC `YYYY-MM-DD` strings**, compared lexicographically (`src/lib/srs.ts:isCardDue`).
 
 ## Global Side Effects
@@ -158,9 +158,9 @@ Progress is stored in `localStorage` under a per-language key, so switching lang
 ## Adding a New Language
 
 1. Add `messages/<code>.json` with translated UI strings.
-2. Add the locale to `routing.locales` in `src/i18n/routing.ts` and to the `Lang` type in `src/types/index.ts`.
+2. Add the locale to `routing.locales` in `src/i18n/routing.ts`. `Lang` follows automatically.
 3. Add vocabulary decks under `src/data/<code>/`, then register them in `src/data/deckMap.ts` (`DECK_MAP`) and `src/data/decks.ts` (`deckMetadata`).
-4. Update the other hard-coded locale lists: `LANGUAGES` in `src/app/page.tsx`, the `['it', 'es']` check in `src/app/[lang]/qa/[scenario]/page.tsx`, `LANG_LOCALE` in `src/lib/locale.ts`, and `LANG_META` in `src/components/SiteHeader.tsx`.
+4. Run `npx tsc --noEmit` and add the locale to each table it reports: `LANGUAGES` (`src/app/page.tsx`), `LANG_META` (`src/components/SiteHeader.tsx`), `DECK_MAP` (step 3), and `LANG_LOCALE` (`src/lib/locale.ts`).
 
 The language picker in `src/components/SiteHeader.tsx` lists every `LANG_META` entry, so it needs no other change. Q&A scenarios only carry Italian fields and parallel `*Es` fields; any non-`it` locale currently shows the Spanish fields.
 
