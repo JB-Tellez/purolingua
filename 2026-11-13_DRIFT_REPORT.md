@@ -96,12 +96,12 @@ No drift detected.
 
 ## scripts/README.md
 
-- **[FIXED 2026-11-13: mirror lookup now tries all four test suffixes; the `src/app/**` limitation remains.]** **The analyzer that AGENTS.md requires misreports coverage.** Its mirror lookup rewrites every `.ts`/`.tsx` to `.test.tsx` (`analyze-test-coverage.ts:170-171`). Real runs today:
+- **[FIXED 2026-11-13: mirror lookup now tries all four test suffixes. 2026-11-18: `src/app/**` sources are also looked up in `src/__tests__/components/` and `src/__tests__/app/`.]** **The analyzer that AGENTS.md requires misreports coverage.** Its mirror lookup rewrites every `.ts`/`.tsx` to `.test.tsx` (`analyze-test-coverage.ts:170-171`). Real runs today:
   - `node scripts/analyze-test-coverage.ts src/lib/` reports "Test file: _Not found_" for all 3 files, although `srs.test.ts` and `generateChoices.test.ts` exist.
   - `src/hooks/` misses `useVoiceRecognition.test.ts`.
   - It cannot find tests for `src/app/**` sessions, because `StudySession.test.tsx` and `QAStudySession.test.tsx` live in `src/__tests__/components/`, not in a mirror of `src/app/`.
-- `generateMarkdownReport` prints a "Low severity" count (`analyze-test-coverage.ts:309, 317`), but `analyzeGaps` never produces `low`, so that row is always 0.
-- `parseExports` matches non-exported `function` declarations (`analyze-test-coverage.ts:34`), so private helpers (e.g. `shuffleArray`, `addDays`) show up as untested "exports" with high severity.
+- **[FIXED 2026-11-18: exported interfaces and types are now `low`.]** `generateMarkdownReport` prints a "Low severity" count (`analyze-test-coverage.ts:309, 317`), but `analyzeGaps` never produces `low`, so that row is always 0.
+- **[FIXED 2026-11-18: only exported declarations count; `export default function` (missed before) now counts too.]** `parseExports` matches non-exported `function` declarations (`analyze-test-coverage.ts:34`), so private helpers (e.g. `shuffleArray`, `addDays`) show up as untested "exports" with high severity.
 
 ## README.md
 

@@ -43,11 +43,30 @@ describe('parseExports', () => {
     expect(result).toContainEqual({ kind: 'function', name: 'fetchUser', line: 1 });
   });
 
-  it('should extract a non-exported function', async () => {
+  it('ignores non-exported declarations (private helpers are tested through their exports)', async () => {
     const { parseExports } = await import('../analyze-test-coverage');
-    const source = 'function helper(): void {\n  return;\n}';
-    const result = parseExports(source);
-    expect(result).toContainEqual({ kind: 'function', name: 'helper', line: 1 });
+    const source = [
+      'function helper(): void {}',
+      'const LIMIT = 3;',
+      'interface Props { a: string }',
+      'type Mode = "a" | "b";',
+      'class Internal {',
+      '  run() {}',
+      '}',
+    ].join('\n');
+    expect(parseExports(source)).toEqual([]);
+  });
+
+  it('extracts a default-exported function (React components)', async () => {
+    const { parseExports } = await import('../analyze-test-coverage');
+    const source = 'export default function SiteHeader({ lang }: Props) {\n  return null;\n}';
+    expect(parseExports(source)).toContainEqual({ kind: 'function', name: 'SiteHeader', line: 1 });
+  });
+
+  it('does not report object-literal methods inside an exported function as class methods', async () => {
+    const { parseExports } = await import('../analyze-test-coverage');
+    const source = 'export function make() {\n  return {\n    start() {},\n  };\n}';
+    expect(parseExports(source).map((e: any) => e.name)).toEqual(['make']);
   });
 
   it('should extract an exported const', async () => {
@@ -273,6 +292,22 @@ describe('findTestFile', () => {
       expect(await findWith([sibling, mirror('lib', 'srs.test.ts')], src('lib', 'srs.ts'))).toBe(sibling);
     });
 
+    it('finds src/app session tests kept in src/__tests__/components', async () => {
+      const expected = mirror('components', 'StudySession.test.tsx');
+      const source = src('app', '[lang]', 'rephrase', '[deck]', 'StudySession.tsx');
+      expect(await findWith([expected], source)).toBe(expected);
+    });
+
+    it('finds src/app tests kept in src/__tests__/app', async () => {
+      const expected = mirror('app', 'homePage.test.tsx');
+      expect(await findWith([expected], src('app', 'homePage.tsx'))).toBe(expected);
+    });
+
+    it('does not look in src/__tests__/components for sources outside src/app', async () => {
+      const unrelated = mirror('components', 'srs.test.ts');
+      expect(await findWith([unrelated], src('lib', 'srs.ts'))).toBeNull();
+    });
+
     it('does not mirror sources outside src/', async () => {
       const outside = path.join(cwd, 'scripts', 'tool.ts');
       const bogus = path.join(cwd, 'src', '__tests__', '..', 'scripts', 'tool.test.ts');
@@ -353,15 +388,14 @@ describe('analyzeGaps', () => {
     );
   });
 
-  it('should flag medium-severity interfaces and types', async () => {
+  it('should flag interfaces and types as low severity (tsc already checks them)', async () => {
     const { analyzeGaps } = await import('../analyze-test-coverage');
     const exports = [
       { kind: 'interface', name: 'Config', line: 1 },
       { kind: 'type', name: 'Status', line: 3 },
     ];
     const gaps = analyzeGaps(exports, [], []);
-    const severities = gaps.map((g: any) => g.severity);
-    expect(severities).toContain('medium');
+    expect(gaps.map((g: any) => g.severity)).toEqual(['low', 'low']);
   });
 
   it('should flag catch and switch logic branches', async () => {

@@ -23,6 +23,22 @@ export function parseExports(source: string): Array<{ kind: string; name: string
   const exports: Array<{ kind: string; name: string; line: number }> = [];
   const lines = source.split('\n');
 
+  // Only exported declarations count: private helpers are tested through the
+  // exports that use them. Methods count only inside an exported class body.
+  const excludedMethods = new Set([
+    'constructor', 'render',
+    'useEffect', 'useState', 'useCallback', 'useMemo', 'useRef', 'useContext',
+    'useId', 'useTransition', 'useDeferredValue', 'useLayoutEffect',
+    'useInsertionEffect', 'useDebugValue', 'useSyncExternalStore', 'useReducer',
+    'useActionState', 'useFormStatus', 'useOptimistic',
+    // Control flow keywords that can appear indented inside methods
+    'if', 'else', 'for', 'while', 'switch', 'catch', 'return', 'throw',
+    'try', 'new', 'delete', 'typeof', 'void', 'debugger', 'with',
+    'await', 'yield',
+  ]);
+  let classDepth = 0; // brace depth inside an exported class; 0 = not in one
+  const braceDelta = (line: string) => (line.match(/{/g) ?? []).length - (line.match(/}/g) ?? []).length;
+
   lines.forEach((line, idx) => {
     const lineNum = idx + 1;
     const trimmed = line.trim();
@@ -30,57 +46,42 @@ export function parseExports(source: string): Array<{ kind: string; name: string
     // Skip comments
     if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return;
 
-    // export function name(...) or function name(...)
-    const fnMatch = line.match(/^\s*(?:export\s+)?(?:async\s+)?function\s+(\w+)/);
+    if (classDepth > 0) {
+      // Methods sit directly in the class body (depth 1).
+      const methodMatch = classDepth === 1 && line.match(/^\s+(\w+)\s*\([^)]*\)\s*(?::\s*\w+)?[\s{]/);
+      if (methodMatch && !excludedMethods.has(methodMatch[1])) {
+        exports.push({ kind: 'method', name: methodMatch[1], line: lineNum });
+      }
+      classDepth += braceDelta(line);
+      return;
+    }
+
+    // export [default] [async] function name(...)
+    const fnMatch = line.match(/^\s*export\s+(?:default\s+)?(?:async\s+)?function\s+(\w+)/);
     if (fnMatch) {
       exports.push({ kind: 'function', name: fnMatch[1], line: lineNum });
       return;
     }
 
     // export const/let/var name = ...
-    const constMatch = line.match(/^\s*export\s+(?:const|let|var)\s+(\w+)\s*[=(]/);
+    const constMatch = line.match(/^\s*export\s+(?:const|let|var)\s+(\w+)\s*[=(:]/);
     if (constMatch) {
       exports.push({ kind: 'const', name: constMatch[1], line: lineNum });
       return;
     }
 
-    // class ClassName
-    const classMatch = line.match(/^\s*(?:export\s+)?class\s+(\w+)/);
+    // export [default] class ClassName
+    const classMatch = line.match(/^\s*export\s+(?:default\s+)?class\s+(\w+)/);
     if (classMatch) {
       exports.push({ kind: 'class', name: classMatch[1], line: lineNum });
+      classDepth = braceDelta(line);
       return;
     }
 
-    // class methods: methodName(...) {
-    const methodMatch = line.match(/^\s{2,}(\w+)\s*\([^)]*\)\s*(?::\s*\w+)?[\s{]/);
-    if (methodMatch) {
-      const name = methodMatch[1];
-      // Filter out React hooks and JavaScript keywords
-      const excluded = new Set([
-        'constructor', 'render',
-        'useEffect', 'useState', 'useCallback', 'useMemo', 'useRef', 'useContext',
-        'useId', 'useTransition', 'useDeferredValue', 'useLayoutEffect',
-        'useInsertionEffect', 'useDebugValue', 'useSyncExternalStore', 'useReducer',
-        'useActionState', 'useFormStatus', 'useOptimistic',
-        // Control flow keywords that can appear indented inside methods
-        'if', 'else', 'for', 'while', 'switch', 'catch', 'return', 'throw',
-        'try', 'new', 'delete', 'typeof', 'void', 'debugger', 'with',
-        'await', 'yield',
-      ]);
-      if (!excluded.has(name)) {
-        exports.push({ kind: 'method', name, line: lineNum });
-      }
-    }
-
-    // interface / type
-    const ifaceMatch = line.match(/^\s*(?:export\s+)?(?:interface|type)\s+(\w+)/);
-    const keywordMatch = line.match(/^\s*(?:export\s+)?(interface|type)\s+(\w+)/);
+    // export interface / type
+    const keywordMatch = line.match(/^\s*export\s+(interface|type)\s+(\w+)/);
     if (keywordMatch) {
-      exports.push({
-        kind: keywordMatch[1],
-        name: keywordMatch[2],
-        line: lineNum,
-      });
+      exports.push({ kind: keywordMatch[1], name: keywordMatch[2], line: lineNum });
     }
   });
 
@@ -170,6 +171,13 @@ export function findTestFile(sourceFilePath: string): string | null {
         baseName
       );
       candidates.push(...withSuffixes(mirroredBase));
+      // Route components under src/app/ are tested from src/__tests__/components/
+      // (study sessions) or src/__tests__/app/ (pages), not a mirror of their route path.
+      if (relativePath.split(path.sep)[0] === 'app') {
+        for (const dir of ['components', 'app']) {
+          candidates.push(...withSuffixes(path.join(process.cwd(), 'src', '__tests__', dir, baseName)));
+        }
+      }
     }
   } catch (e) {
     // path.relative can throw on Windows; ignore
@@ -255,12 +263,15 @@ export function analyzeGaps(exports: Array<{ kind: string; name: string; line: n
     );
 
     if (!isTested) {
+      // Types and interfaces are already checked by tsc, so they rank lowest.
       const severity =
         exp.kind === 'function' || exp.kind === 'class' || exp.kind === 'method'
           ? 'high'
           : exp.kind === 'const' && exp.name.startsWith('use')
             ? 'high'
-            : 'medium';
+            : exp.kind === 'interface' || exp.kind === 'type'
+              ? 'low'
+              : 'medium';
 
       gaps.push({
         type: 'export',
