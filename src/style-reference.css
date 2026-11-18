@@ -762,6 +762,15 @@ h1 {
         0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* Disabled (e.g. Next before a choice): look inert and drop the hover/press motion. */
+.btn:disabled,
+.btn:disabled:hover,
+.btn:disabled:active {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 /* Feedback Message */
 .feedback-message {
     position: absolute;

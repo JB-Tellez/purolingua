@@ -271,11 +271,12 @@ export default function StudySession({ lang, deckId, cards }: Props) {
                   );
                 })}
               </div>
-              <FeedbackMessage state={feedbackState} />
             </div>
           </div>
         </div>
 
+        {/* One live region, outside the card: the back face is hidden while
+            the card is face-down, which is when front-mic feedback appears. */}
         <FeedbackMessage state={feedbackState} />
 
         {flipped && (

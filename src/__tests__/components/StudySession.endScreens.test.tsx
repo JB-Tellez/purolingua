@@ -167,3 +167,14 @@ describe('StudySession "Study again" practice replay (real SRS state)', () => {
     expect(screen.queryByRole('button', { name: 'studyAgain' })).toBeNull();
   });
 });
+
+describe('StudySession feedback announcement (real SRS state)', () => {
+  it('announces the answer feedback in exactly one live region', () => {
+    seed({ restaurant_0: FUTURE });
+    renderDaily();
+    act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
+    act(() => { fireEvent.click(screen.getByRole('button', { name: 'Thank you' })); });
+    expect(screen.getAllByRole('status')).toHaveLength(1);
+    expect(screen.getByRole('status')).toHaveTextContent('incorrect');
+  });
+});
