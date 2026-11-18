@@ -10,7 +10,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 ## src/lib/README.md
 
-- `generateChoices` excludes only foils whose `back` equals the correct answer; it does not de-duplicate foils against each other. `src/data/it/weather.ts` and `src/data/es/weather.ts` each contain 3 repeated `back` values (e.g. `'Cade la pioggia.'`, `'Il cielo è coperto.'`, `'La temperatura è alta.'`; `'Cae la lluvia.'`, `'El cielo está cubierto.'`, `'La temperatura es alta.'`), so a question can show two identical choices. The contract says nothing about this.
+- **[FIXED 2026-11-17: `generateChoices` now draws foils from distinct back texts.]** `generateChoices` excludes only foils whose `back` equals the correct answer; it does not de-duplicate foils against each other. `src/data/it/weather.ts` and `src/data/es/weather.ts` each contain 3 repeated `back` values (e.g. `'Cade la pioggia.'`, `'Il cielo è coperto.'`, `'La temperatura è alta.'`; `'Cae la lluvia.'`, `'El cielo está cubierto.'`, `'La temperatura es alta.'`), so a question can show two identical choices. The contract says nothing about this.
 - The header comment in `srs.ts` says "no side effects", but `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock. The contract documents this correctly; the source comment is the drift.
 - `matchTranscript.ts` has no unit test (`src/__tests__/lib/` covers only `generateChoices` and `srs`), even though it decides every voice answer in both study sessions.
 
@@ -45,11 +45,11 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 ## src/data/it/README.md
 
-- `weather.ts` repeats 3 `back` strings (`'Cade la pioggia.'`, `'Il cielo è coperto.'`, `'La temperatura è alta.'`). Paired with `generateChoices`, this can show duplicate answer options (see `src/lib`).
+- **[FIXED 2026-11-17: `generateChoices` now draws foils from distinct back texts.]** `weather.ts` repeats 3 `back` strings (`'Cade la pioggia.'`, `'Il cielo è coperto.'`, `'La temperatura è alta.'`). Paired with `generateChoices`, this can show duplicate answer options (see `src/lib`).
 
 ## src/data/es/README.md
 
-- `weather.ts` repeats 3 `back` strings (`'Cae la lluvia.'`, `'El cielo está cubierto.'`, `'La temperatura es alta.'`). Same consequence as the Italian deck.
+- **[FIXED 2026-11-17: `generateChoices` now draws foils from distinct back texts.]** `weather.ts` repeats 3 `back` strings (`'Cae la lluvia.'`, `'El cielo está cubierto.'`, `'La temperatura es alta.'`). Same consequence as the Italian deck.
 
 ## src/data/qa/README.md
 
