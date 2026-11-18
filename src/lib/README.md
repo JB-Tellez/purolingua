@@ -57,6 +57,6 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useVoiceRecognition`
 - Some results are non-deterministic. `generateChoices` and `shuffleArray` use `Math.random()`. `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock through `new Date()`.
 
 ## Verification
-- Run: `npx vitest run src/__tests__/lib` (`generateChoices`, `srs`, `progressStorage`, `levels`, `locale`, `speak`, and `reloadPage` tests).
+- Run: `npx vitest run src/__tests__/lib` (`generateChoices`, `matchTranscript`, `srs`, `progressStorage`, `levels`, `locale`, `speak`, and `reloadPage` tests).
 - Full suite: `npm test`. This runs `vitest`, which starts in watch mode in an interactive terminal. Use `npx vitest run` for a single pass.
-- `matchTranscript.ts` has no dedicated unit test under `src/__tests__/lib/`.
+- `matchTranscript.ts` is covered by `src/__tests__/lib/matchTranscript.test.ts` (normalization, the 80% word threshold, and the empty-target case).

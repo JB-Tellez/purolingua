@@ -12,7 +12,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 - **[FIXED 2026-11-17: `generateChoices` now draws foils from distinct back texts.]** `generateChoices` excludes only foils whose `back` equals the correct answer; it does not de-duplicate foils against each other. `src/data/it/weather.ts` and `src/data/es/weather.ts` each contain 3 repeated `back` values (e.g. `'Cade la pioggia.'`, `'Il cielo è coperto.'`, `'La temperatura è alta.'`; `'Cae la lluvia.'`, `'El cielo está cubierto.'`, `'La temperatura es alta.'`), so a question can show two identical choices. The contract says nothing about this.
 - The header comment in `srs.ts` says "no side effects", but `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock. The contract documents this correctly; the source comment is the drift.
-- `matchTranscript.ts` has no unit test (`src/__tests__/lib/` covers only `generateChoices` and `srs`), even though it decides every voice answer in both study sessions.
+- **[FIXED 2026-11-18: `src/__tests__/lib/matchTranscript.test.ts`.]** `matchTranscript.ts` has no unit test (`src/__tests__/lib/` covers only `generateChoices` and `srs`), even though it decides every voice answer in both study sessions.
 
 ## src/i18n/README.md
 
@@ -41,7 +41,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 ## src/data/README.md
 
 - The header comment of `deckMap.ts` lists its users as "DeckPage … and StudySession", but `src/app/[lang]/rephrase/page.tsx` and `src/components/DeckGrid.tsx` also import `DECK_MAP`. Minor stale comment; the contract's consumer list is correct.
-- No test checks that `deckMetadata[*].cardCount` (hard-coded `40` × 16) matches the `DECK_MAP` array lengths. It holds today (every deck has 40 cards: 20 A1 / 20 A2), but only by convention.
+- **[FIXED 2026-11-18: `src/__tests__/data/decks.test.ts`.]** No test checks that `deckMetadata[*].cardCount` (hard-coded `40` × 16) matches the `DECK_MAP` array lengths. It holds today (every deck has 40 cards: 20 A1 / 20 A2), but only by convention.
 
 ## src/data/it/README.md
 
