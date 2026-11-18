@@ -83,7 +83,7 @@ No drift detected.
 ## src/app/[lang]/qa/[scenario]/README.md
 
 - **[FIXED 2026-11-13: end screen now derived at render time; real-state tests in `QAStudySession.endScreens.test.tsx`.]** **The "all scenarios done" screen cannot be reached by finishing a session.** This is the same stale-closure defect as Rephrase: `handleAnswer` checks `isScenarioHasDue(progress, …)` with the `progress` captured before `updateCard` applies (`QAStudySession.tsx:157-176`). The last card counts as due, so `done` is always chosen.
-- **Wrong answers are never recorded.** `updateCard` is only ever called with `true` (`QAStudySession.tsx:185, 207`). Q&A cards never return to box 1, which contradicts the Leitner rule in the root README ("Incorrect (any box) → 1"). The contract states the behavior; the root README does not scope its rule to Rephrase.
+- **[FIXED 2026-11-17: a card missed before the correct retry is recorded as wrong; tests in `QAStudySession.endScreens.test.tsx`.]** **Wrong answers are never recorded.** `updateCard` is only ever called with `true` (`QAStudySession.tsx:185, 207`). Q&A cards never return to box 1, which contradicts the Leitner rule in the root README ("Incorrect (any box) → 1"). The contract states the behavior; the root README does not scope its rule to Rephrase.
 - "Study again" replays the same `sessionDueCards` snapshot. Same issue as Rephrase.
 - `isScenarioHasDue` re-implements the `qa_{scenarioId}_{cardId}` key format inline (`QAStudySession.tsx:59`) instead of sharing `getQACardKey` (which is private to `useQASRS.ts`). That makes a third copy of a persisted-key contract.
 - `speak()` and `LANG_LOCALE` are copied in `QAStudySession.tsx`, `StudySession.tsx`, and `AudioButton.tsx`.
@@ -104,6 +104,6 @@ No drift detected.
 
 ## README.md
 
-- "How the Spaced Repetition Works" states that a wrong answer resets a card to box 1. That is true for Rephrase only; Q&A never records wrong answers (see `qa/[scenario]`).
+- [FIXED 2026-11-17: Q&A now records misses, so the rule holds for both modes.] "How the Spaced Repetition Works" states that a wrong answer resets a card to box 1. That is true for Rephrase only; Q&A never records wrong answers (see `qa/[scenario]`).
 - The "Q&A Study Mode" feature line says "open-ended question-and-answer mode", but `QAStudySession` is strictly multiple choice (1 correct + 3 fixed foils) with optional voice selection.
 - [FIXED 2026-11-13] Global Side Effects describes the `SiteHeader` reset as clearing progress. In practice an active study session can write the old progress back (see `src/components`).

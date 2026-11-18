@@ -103,6 +103,8 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // updateCard, so the just-answered card would always look due.
   const [finished, setFinished] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
+  // A wrong choice lets the user retry, but the card is still recorded as wrong.
+  const [missedCurrent, setMissedCurrent] = useState(false);
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
   const [feedbackState, setFeedbackState] = useState<
     'correct' | 'incorrect' | 'heard' | 'notRecognized' | null
@@ -151,15 +153,17 @@ export default function QAStudySession({ lang, scenario }: Props) {
     setIndex(0);
     setFinished(false);
     setSelectedChoice(null);
+    setMissedCurrent(false);
     setMicState('idle');
     setFeedbackState(null);
   }
 
   function handleAnswer(isCorrect: boolean) {
     if (currentCard) {
-      updateCard(currentCard.id, isCorrect);
+      updateCard(currentCard.id, isCorrect && !missedCurrent);
     }
     setSelectedChoice(null);
+    setMissedCurrent(false);
     setFeedbackState(null);
 
     if (index + 1 < sessionDueCards.length) {
@@ -178,6 +182,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
       setTimeout(() => handleAnswer(true), 600);
     } else {
       // Wrong answer — show red/green feedback, then reset so user can retry
+      setMissedCurrent(true);
       setTimeout(() => {
         setSelectedChoice(null);
         setFeedbackState(null);
