@@ -6,7 +6,8 @@ vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key,
 }));
 
-const answerButton = () => screen.getByRole('button', { name: /Ciao/ });
+// Exact name: the speak icon's label must not leak into the answer's name.
+const answerButton = () => screen.getByRole('button', { name: 'Ciao' });
 const speakIcon = () => screen.getByRole('button', { name: 'audio' });
 
 describe('ChoiceButton', () => {
@@ -37,10 +38,18 @@ describe('ChoiceButton', () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
-  it.each(['Enter', ' '])('the speak icon responds to the %j key', (key) => {
+  it('the speak icon is a native button beside the answer, not nested inside it', () => {
+    render(<ChoiceButton text="Ciao" state="idle" onClick={vi.fn()} />);
+    expect(speakIcon().tagName).toBe('BUTTON');
+    expect(speakIcon()).toHaveAttribute('type', 'button');
+    expect(answerButton()).not.toContainElement(speakIcon());
+  });
+
+  it.each(['correct', 'incorrect'] as const)('the speak icon stays usable after answering (%s)', (state) => {
     const onSpeak = vi.fn();
-    render(<ChoiceButton text="Ciao" state="idle" onClick={vi.fn()} onSpeak={onSpeak} />);
-    fireEvent.keyDown(speakIcon(), { key });
+    render(<ChoiceButton text="Ciao" state={state} onClick={vi.fn()} onSpeak={onSpeak} />);
+    expect(speakIcon()).toBeEnabled();
+    fireEvent.click(speakIcon());
     expect(onSpeak).toHaveBeenCalledOnce();
   });
 });

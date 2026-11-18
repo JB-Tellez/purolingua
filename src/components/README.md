@@ -18,7 +18,7 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 | --- | --- | --- |
 | `ActivityPicker` (`ActivityPicker.tsx`) | `{ lang }` | Links to `/{lang}/rephrase` and `/{lang}/qa`; i18n namespace `activities`. |
 | `AudioButton` (`AudioButton.tsx`) | `{ phrase: string; lang }` | Speaks `phrase` with `speechSynthesis`; i18n namespace `study` (`audio`). |
-| `ChoiceButton` (`ChoiceButton.tsx`) | `{ text; state: 'idle' \| 'correct' \| 'incorrect'; onClick; disabled?; onSpeak? }` | Quiz answer button with nested audio icon labelled `study.audio`; i18n namespace `study`. |
+| `ChoiceButton` (`ChoiceButton.tsx`) | `{ text; state: 'idle' \| 'correct' \| 'incorrect'; onClick; disabled?; onSpeak? }` | A `.quiz-option` wrapper holding the answer button and, beside it, a speak button (`.quiz-audio-icon`, labelled `study.audio`); i18n namespace `study`. |
 | `DeckGrid` (`DeckGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One card per `@/data/decks:deckMetadata` entry for `lang`, linking to `/{lang}/rephrase/{deck.id}`; due badge from `useSRS`; i18n namespaces `decks`, `deckDescriptions`. Used by `src/app/[lang]/rephrase/page.tsx`. |
 | `FeedbackMessage` (`FeedbackMessage.tsx`) | `{ state: 'correct' \| 'incorrect' \| 'heard' \| 'notRecognized' \| null }` | `role="status"`, `aria-live="polite"`; i18n namespace `study`. |
 | `LevelFilterChips` (`LevelFilterChips.tsx`) | `{ lang; activeLevels: Level[]; setActiveLevels(levels: Level[] \| null) }` | Toggle chips for `A1` / `A2`; i18n namespace `filter`. `lang` is unused. |
@@ -39,9 +39,11 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
   `isCardDueForDeck(deckId, index)`.
 - **Scenario theming**: `ScenarioGrid` assigns themes cyclically from
   `SCENARIO_THEMES` by array index, and titles from `titleIt` / `titleEs` by `lang`.
-- **ChoiceButton is locked after answering**: it is disabled when `disabled`
-  is true or `state !== 'idle'`. The audio icon stops click propagation, so
-  `onSpeak` fires without triggering `onClick` (also on `Enter` / space).
+- **ChoiceButton is locked after answering**: the answer button is disabled
+  when `disabled` is true or `state !== 'idle'`. The speak button is a sibling,
+  never nested, so it stays enabled and clickable after answering; it calls
+  `onSpeak` without triggering `onClick`. The answer button's accessible name
+  is just `text`.
 - **Click propagation**: `AudioButton` and `MicButton` call
   `e.stopPropagation()` before acting, so they can sit inside clickable cards.
 - **LevelFilterChips relies on the FLTR-06 guard**: deselecting the last
