@@ -6,6 +6,7 @@
 'use client';
 import { useState, useCallback } from 'react';
 import type { Lang, Level } from '@/types';
+import { isLevel } from '@/lib/levels';
 
 function getFilterKey(lang: Lang): string {
   return `${lang}-level-filter`;
@@ -17,7 +18,9 @@ function loadFilter(lang: Lang): Level[] | null {
     const saved = localStorage.getItem(getFilterKey(lang));
     if (saved) {
       const parsed = JSON.parse(saved) as unknown;
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed as Level[];
+      // Keep only known levels: a stale or hand-edited value like ["B1"] would hide every card.
+      const levels = Array.isArray(parsed) ? [...new Set(parsed.filter(isLevel))] : [];
+      if (levels.length > 0) return levels;
     }
   } catch {
     // corrupted JSON — fall through to null

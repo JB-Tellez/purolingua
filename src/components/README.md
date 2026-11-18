@@ -21,7 +21,7 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 | `ChoiceButton` (`ChoiceButton.tsx`) | `{ text; state: 'idle' \| 'correct' \| 'incorrect'; onClick; disabled?; onSpeak? }` | A `.quiz-option` wrapper holding the answer button and, beside it, a speak button (`.quiz-audio-icon`, labelled `study.audio`); i18n namespace `study`. |
 | `DeckGrid` (`DeckGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One card per `@/data/decks:deckMetadata` entry for `lang`, linking to `/{lang}/rephrase/{deck.id}`; due badge from `useSRS`; i18n namespaces `decks`, `deckDescriptions`. Used by `src/app/[lang]/rephrase/page.tsx`. |
 | `FeedbackMessage` (`FeedbackMessage.tsx`) | `{ state: 'correct' \| 'incorrect' \| 'heard' \| 'notRecognized' \| null }` | `role="status"`, `aria-live="polite"`; i18n namespace `study`. |
-| `LevelFilterChips` (`LevelFilterChips.tsx`) | `{ lang; activeLevels: Level[]; setActiveLevels(levels: Level[] \| null) }` | Toggle chips for `A1` / `A2`; i18n namespace `filter`. `lang` is unused. |
+| `LevelFilterChips` (`LevelFilterChips.tsx`) | `{ lang; activeLevels: Level[]; setActiveLevels(levels: Level[] \| null) }` | One toggle chip per level in `@/lib/levels:LEVELS` (`A1`, `A2`); i18n namespace `filter`. `lang` is unused. |
 | `MicButton` (`MicButton.tsx`) | `{ state: 'idle' \| 'listening' \| 'error'; onPress }` | Class `mic-btn` plus `mic-btn--{state}` when not idle. Label `study.micListening` while listening, otherwise `study.micStart`. |
 | `ScenarioGrid` (`ScenarioGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One tile per `@/data/qa:scenarios`, linking to `/{lang}/qa/{scenario.id}`; due badge from `useQASRS`. |
 | `SiteHeader` (`SiteHeader.tsx`) | `{ lang }` | Logo, back link, progress reset, language dropdown (button labelled `nav.changeLanguage`); i18n namespace `nav`. |
@@ -84,6 +84,5 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 - Targeted, single run: `npx vitest run src/__tests__/components`
   (tests live in the mirror tree `src/__tests__/components/`. That directory
   also holds tests for `QAStudySession` and `StudySession`, which live under
-  `src/app/[lang]/`). `AudioButton` and `LevelFilterChips`
-  have no tests yet.
+  `src/app/[lang]/`). `AudioButton` has no tests yet.
 - Coverage gaps: `node scripts/analyze-test-coverage.ts src/components/`

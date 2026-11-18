@@ -59,8 +59,9 @@ and pages/sessions under `src/app/[lang]/` (including
   `setActiveLevels([])` are silent no-ops (`useLevelFilter.ts:setActiveLevels`).
 - **Level filter default**: when no valid saved filter exists, the initial
   value is `['A1', 'A2']` if `hasProgress` is true, otherwise `['A1']`. A saved
-  value is accepted only if it parses as a non-empty array
-  (`useLevelFilter.ts:loadFilter`); element values are not validated.
+  value keeps only known levels (`@/lib/levels:isLevel`), without duplicates;
+  if nothing valid is left (e.g. `["B1"]`, `[42]`, a non-array), the default
+  applies (`useLevelFilter.ts:loadFilter`).
 - **Corrupt or missing storage is non-fatal**: JSON parse failures and missing
   keys yield `{}` (SRS hooks) or `null` (level filter); `localStorage.setItem`
   failures (quota, private browsing) are swallowed.
@@ -94,5 +95,6 @@ and pages/sessions under `src/app/[lang]/` (including
 - Targeted, single run: `npx vitest run src/__tests__/hooks`
   (tests live in the mirror tree `src/__tests__/hooks/`).
 - Coverage gaps: `node scripts/analyze-test-coverage.ts src/hooks/`
-- Notes on `useLevelFilter` test coverage: see
-  `docs/handoff-coverage-work.md` before changing its tests.
+- `useLevelFilter` has no "window is undefined" (SSR) tests on purpose: React
+  19 cannot render under jsdom without `window`. See the comment at the top of
+  `src/__tests__/hooks/useLevelFilter.test.tsx`.

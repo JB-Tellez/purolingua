@@ -8,6 +8,7 @@ This directory holds the domain logic for PuroLingua study sessions. None of the
 - `srs.ts`: Leitner spaced-repetition scheduling (box changes and next-review dates) and progress key formats.
 - `progressStorage.ts`: reads, writes, and clears the `{lang}-progress` record.
 - `locale.ts` / `speak.ts`: the speech locale per language, and text-to-speech.
+- `levels.ts`: the CEFR levels the app has content for.
 
 These modules are used by the hooks (`useSRS`, `useQASRS`, `useVoiceRecognition`), `AudioButton`, `SiteHeader`, and both study sessions. Domain types come from `@/types` ([`src/types`](../types/README.md)).
 
@@ -31,6 +32,9 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useVoiceRecognition`
   - `loadProgress(lang): ProgressRecord`: parses `{lang}-progress`; `{}` when missing, unparsable, or on the server.
   - `saveProgress(lang, record): void`: writes it as JSON; storage errors (quota, private browsing) are swallowed.
   - `clearProgress(lang): void`: removes it. Used by `SiteHeader`'s reset.
+- `levels.ts`
+  - `LEVELS: Level[]`: `['A1', 'A2']`, in order. Backed by a `Record<Level, …>`, so `tsc` fails if `Level` gains a member this list lacks. Used by `LevelFilterChips`.
+  - `isLevel(value: unknown): value is Level`. Used by `useLevelFilter` to validate the saved filter.
 - `locale.ts`
   - `LANG_LOCALE: Record<Lang, string>`: `it -> it-IT`, `es -> es-ES`. The one copy, used by `speak` and `useVoiceRecognition`.
 - `speak.ts`
@@ -53,6 +57,6 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useVoiceRecognition`
 - Some results are non-deterministic. `generateChoices` and `shuffleArray` use `Math.random()`. `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock through `new Date()`.
 
 ## Verification
-- Run: `npx vitest run src/__tests__/lib` (`generateChoices`, `srs`, `progressStorage`, `locale`, `speak`, and `reloadPage` tests).
+- Run: `npx vitest run src/__tests__/lib` (`generateChoices`, `srs`, `progressStorage`, `levels`, `locale`, `speak`, and `reloadPage` tests).
 - Full suite: `npm test`. This runs `vitest`, which starts in watch mode in an interactive terminal. Use `npx vitest run` for a single pass.
 - `matchTranscript.ts` has no dedicated unit test under `src/__tests__/lib/`.

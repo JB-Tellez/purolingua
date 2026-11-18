@@ -44,6 +44,22 @@ describe('useLevelFilter default values', () => {
     const { result } = renderHook(() => useLevelFilter('it', false));
     expect(result.current.activeLevels).toEqual(['A1']);
   });
+
+  it.each([
+    ['only unknown levels', ['B1']],
+    ['non-string entries', [42, null]],
+    ['a non-array value', { A1: true }],
+  ])('a saved filter with %s falls back to the default', (_label, saved) => {
+    localStorage.setItem('it-level-filter', JSON.stringify(saved));
+    const { result } = renderHook(() => useLevelFilter('it', true));
+    expect(result.current.activeLevels).toEqual(['A1', 'A2']);
+  });
+
+  it('unknown and duplicate entries are dropped from an otherwise valid filter', () => {
+    localStorage.setItem('it-level-filter', JSON.stringify(['A2', 'B1', 'A2']));
+    const { result } = renderHook(() => useLevelFilter('it', false));
+    expect(result.current.activeLevels).toEqual(['A2']);
+  });
 });
 
 describe('useLevelFilter FLTR-06 guard', () => {

@@ -24,7 +24,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 - **[FIXED 2026-11-13: `updateCard` re-reads storage before writing.]** **Concurrent writers can overwrite each other.** `useSRS` and `useQASRS` each hold a private in-memory snapshot of `{lang}-progress`, and every `updateCard` writes the whole snapshot back (`{ ...prev, [key]: ... }`, `useSRS.ts:38`, `useQASRS.ts:67`). Two writers mounted at the same time would erase each other's keys. The contract says instances "do not observe each other's writes"; it does not mention that they overwrite each other.
 - **[FIXED 2026-11-18: moved to `src/lib/progressStorage.ts`.]** `loadFromStorage`, `saveToStorage`, and `getStorageKey` are copied verbatim in `useSRS.ts` and `useQASRS.ts`. The shared key is a convention between two copies, not a shared module.
 - `useVoiceRecognition` returns `stopListening`, but no consumer calls it (`StudySession.tsx:55` and `QAStudySession.tsx:98` take only `isSupported`, `isListening`, `startListening`). A user cannot cancel listening.
-- `useLevelFilter` accepts any non-empty saved array without checking its elements (`useLevelFilter.ts:20`). A stored `["B1"]` would hide every card. The contract notes the missing validation; nothing guards against it.
+- **[FIXED 2026-11-18: the saved filter keeps only known levels (`@/lib/levels:isLevel`) and falls back to the default when none remain.]** `useLevelFilter` accepts any non-empty saved array without checking its elements (`useLevelFilter.ts:20`). A stored `["B1"]` would hide every card. The contract notes the missing validation; nothing guards against it.
 - Rephrase and Q&A share one `{lang}-level-filter` value, because `rephrase/page.tsx`, `qa/page.tsx`, and both sessions call `useLevelFilter(lang, …)` with the same key. No contract states that the filter is shared between activities.
 
 ## src/components/README.md
@@ -75,6 +75,7 @@ No drift detected.
 - **[FIXED 2026-11-17: Next is disabled until a choice is made, records that choice, and cancels the pending auto-advance; tests in `StudySession.endScreens.test.tsx`.]** **"Next" records a correct answer without a quiz answer.** The `nextButton` control calls `handleAnswer(true)` directly (`StudySession.tsx:289`). A user can flip and press Next to promote every card. Pressing Next inside the 600 ms window after choosing also runs `handleAnswer` twice: two `updateCard` calls and a skipped card.
 - **[FIXED 2026-11-17: "Study again" is now a practice replay that saves nothing, hidden when the session had no cards.]** **"Study again" replays the same snapshot.** `resetSession` resets `index` but not the `dueCards` snapshot (`StudySession.tsx:83-91`). A second pass re-answers cards already reviewed and advances their boxes again on the same day. When the session mounted with zero due cards, the button does nothing.
 - `FeedbackMessage` is rendered twice, once inside the card back and once below the card (`StudySession.tsx:277, 282`). This gives two `role="status"` live regions with the same text.
+- (Found 2026-11-18 while checking the `ChoiceButton` fix in Chrome.) The Next button is `disabled` until a choice is made, but `.btn` has no disabled style: it keeps full opacity and a pointer cursor, so it looks clickable when it is not.
 
 ## src/app/[lang]/qa/README.md
 
