@@ -7,7 +7,7 @@ This directory holds the core domain types for PuroLingua v1.2, all in `index.ts
 - `type Lang = (typeof routing.locales)[number]` (currently `'it' | 'es'`), via a type-only import of `@/i18n/routing`
 - `type Level = 'A1' | 'A2'`
 - `type DeckId = 'daily' | 'restaurant' | 'travel' | 'shopping' | 'hotel' | 'emergencies' | 'social' | 'weather'`
-- `interface Card { front: string; back: string; level: Level }`
+- `interface Card { front: string; back: string; level: Level }`. `back` is the answer: in Rephrase decks, a same-language paraphrase of `front`, not a translation.
 - `interface Progress { box: number; nextReview: string }`
 - `type ProgressRecord = Record<string, Progress>`
 - `type ScenarioId = 'coffee' | 'hotel' | 'restaurant' | 'street' | 'introductions' | 'shop' | 'train'`

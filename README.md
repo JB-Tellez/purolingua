@@ -14,7 +14,7 @@ A browser-based language learning app built with Next.js and React. PuroLingua u
 - **Audio Playback** — Hear any card read aloud via the Web Speech API.
 - **Voice Recognition** — Speak your answer and get instant feedback using the browser's speech recognition API.
 - **Multiple-Choice Quiz** — The card back presents randomized answer choices including plausible distractors.
-- **Q&A Study Mode** — An open-ended question-and-answer mode with voice recognition, alongside the flashcard decks.
+- **Q&A Study Mode** — Scenario-based questions answered by multiple choice (one correct answer, three distractors), by tap or by voice, alongside the flashcard decks.
 - **Persistent Progress** — Progress is saved per language to `localStorage` with no sign-up required.
 
 ---
@@ -116,7 +116,7 @@ Request flow: `src/app/[lang]/layout.tsx` (a root layout that renders `<html lan
 
 ## Global Invariants
 
-- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/lib/srs.ts:getQACardKey`), read and written through `src/lib/progressStorage.ts`; `{lang}-level-filter` holds the level filter. Source comments state these keys must match v1.1.
+- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/lib/srs.ts:getQACardKey`), read and written through `src/lib/progressStorage.ts`; `{lang}-level-filter` holds the level filter. They match v1.1, the pre-Next.js app on the `vanilla` branch (`src/js/features/progress.js`), so existing users keep their progress.
 - **Card position and id are persisted identity.** Reordering or inserting cards mid-array in `src/data/it` / `src/data/es`, or renaming a Q&A `card.id` / scenario `id`, orphans stored progress.
 - **Deck size is hard-coded.** `src/data/decks.ts:deckMetadata` declares `cardCount: 40` for every deck; `src/__tests__/data/decks.test.ts` fails if it stops matching the `DECK_MAP` array lengths.
 - **The level filter is never empty.** `useLevelFilter.setActiveLevels(null | [])` is a no-op (FLTR-06); `LevelFilterChips` relies on this guard.

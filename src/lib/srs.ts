@@ -1,6 +1,7 @@
 // src/lib/srs.ts
-// Pure Leitner SRS functions — no localStorage, no React, no side effects.
-// Ported from v1.1 src/js/features/progress.js (main branch).
+// Leitner SRS functions — no localStorage, no React. The date helpers read the
+// system clock (getTodayString and everything built on it).
+// Ported from v1.1 src/js/features/progress.js (on the `vanilla` branch).
 import type { DeckId, Progress, ScenarioId } from '@/types';
 
 /** Card key format matches v1.1 exactly: "{deckId}_{cardIndex}" */

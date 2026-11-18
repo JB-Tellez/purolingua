@@ -1,6 +1,6 @@
 // src/lib/generateChoices.ts
 // Multiple-choice distractor generation.
-// Ported from v1.1 src/js/utils/deck-utils.js (main branch).
+// Ported from v1.1 src/js/utils/deck-utils.js (on the `vanilla` branch).
 // Upgrade: uses Fisher-Yates shuffle (v1.1 used biased .sort(() => 0.5 - Math.random())).
 import type { Card } from '@/types';
 

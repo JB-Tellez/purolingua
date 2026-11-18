@@ -5,13 +5,13 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 ## src/types/README.md
 
 - **[FIXED 2026-11-18: removed.]** `Deck` (`src/types/index.ts:26`) is documented as part of the interface but is never imported anywhere in `src/` (dead type).
-- `Card.back` is commented "translation/answer" (`src/types/index.ts:22`), but every Rephrase deck stores a same-language paraphrase in `back` (e.g. `src/data/it/daily.ts`: `'Ho perso il treno.'` → `'Non sono arrivato in tempo alla stazione.'`). The source comment is stale, and the contract does not state the field's meaning.
-- Source comments reference v1.1 files that do not exist in this repo (`src/locales/it/decks.js` at `index.ts:9`, `src/js/features/progress.js` at `index.ts:34`). The v1.1 compatibility claim cannot be verified from this repository.
+- **[FIXED 2026-11-18: comment now says it is a same-language paraphrase.]** `Card.back` is commented "translation/answer" (`src/types/index.ts:22`), but every Rephrase deck stores a same-language paraphrase in `back` (e.g. `src/data/it/daily.ts`: `'Ho perso il treno.'` → `'Non sono arrivato in tempo alla stazione.'`). The source comment is stale, and the contract does not state the field's meaning.
+- **[FIXED 2026-11-18: the files are on the `vanilla` branch, not missing; comments now say so, and its storage keys were checked to match.]** Source comments reference v1.1 files that do not exist in this repo (`src/locales/it/decks.js` at `index.ts:9`, `src/js/features/progress.js` at `index.ts:34`). The v1.1 compatibility claim cannot be verified from this repository.
 
 ## src/lib/README.md
 
 - **[FIXED 2026-11-17: `generateChoices` now draws foils from distinct back texts.]** `generateChoices` excludes only foils whose `back` equals the correct answer; it does not de-duplicate foils against each other. `src/data/it/weather.ts` and `src/data/es/weather.ts` each contain 3 repeated `back` values (e.g. `'Cade la pioggia.'`, `'Il cielo è coperto.'`, `'La temperatura è alta.'`; `'Cae la lluvia.'`, `'El cielo está cubierto.'`, `'La temperatura es alta.'`), so a question can show two identical choices. The contract says nothing about this.
-- The header comment in `srs.ts` says "no side effects", but `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock. The contract documents this correctly; the source comment is the drift.
+- **[FIXED 2026-11-18.]** The header comment in `srs.ts` says "no side effects", but `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock. The contract documents this correctly; the source comment is the drift.
 - **[FIXED 2026-11-18: `src/__tests__/lib/matchTranscript.test.ts`.]** `matchTranscript.ts` has no unit test (`src/__tests__/lib/` covers only `generateChoices` and `srs`), even though it decides every voice answer in both study sessions.
 
 ## src/i18n/README.md
@@ -31,7 +31,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 - **[FIXED 2026-11-13: reproduced by hook tests; fixed in the hooks, and reset now reloads the page.]** **Reset probably does not survive the next answer (not confirmed by running).** `SiteHeader.handleReset` only calls `localStorage.removeItem('{lang}-progress')` and `router.refresh()` (`SiteHeader.tsx:31-36`). It is rendered in the persistent `[lang]` layout, and `router.refresh()` keeps client `useState`. A study session mounted at that moment keeps its old progress snapshot, and its next `updateCard` writes the full pre-reset record back to storage (see the hooks finding above). Badges on a browser page also stay stale until remount.
 - **[FIXED 2026-11-17: one option per `LANG_META` entry; dropdown tests for both languages.]** **The language dropdown is wrong for `es`.** The first option always renders `LANG_META.it` but links to `/${lang}`; the second renders `LANG_META[OTHER_LANG[lang]]`. On `/es` both options read "Italiano" and Español never appears (`SiteHeader.tsx:77-90`).
-- The comment for the `SiteHeader` back link says "3+ segments: /lang/deck", but the code checks `segments.length >= 2` (`SiteHeader.tsx:26-28`). On `/it/rephrase/daily` the back link goes to `/it/rephrase`.
+- **[FIXED 2026-11-18: comment now matches the 2+ segment rule.]** The comment for the `SiteHeader` back link says "3+ segments: /lang/deck", but the code checks `segments.length >= 2` (`SiteHeader.tsx:26-28`). On `/it/rephrase/daily` the back link goes to `/it/rephrase`.
 - **[RESOLVED 2026-11-18: the unused helpers were removed instead.]** `SiteHeader` uses `next/link` and `next/navigation` rather than the locale-aware `@/i18n/navigation` helpers.
 - **[FIXED 2026-11-18: `@/components/DeckGrid` is now the shipped grid (`{ lang, activeLevels }`, correct links), imported by `rephrase/page.tsx`.]** `DeckGrid` is dead and its links are wrong. No route imports it (only `DeckGrid.test.tsx`), and it links to `/${lang}/${deck.id}` (`DeckGrid.tsx:43`), which is not a generated route (the real route is `/${lang}/rephrase/${deck}`). `src/app/[lang]/rephrase/page.tsx` re-implements it privately with the correct link, so the tested component and the shipped one differ.
 - **[FIXED 2026-11-18: labels come from `study.micStart` / `study.micListening` / `study.audio` / `nav.changeLanguage`; tested with real messages in `a11yLabels.test.tsx`.]** Accessibility labels are hard-coded in English despite next-intl: `MicButton` (`'Listening…'`, `'Start speaking'`), `ChoiceButton` (`aria-label="audio"`), and `SiteHeader` (`aria-label="Change language"`).
@@ -40,7 +40,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 ## src/data/README.md
 
-- The header comment of `deckMap.ts` lists its users as "DeckPage … and StudySession", but `src/app/[lang]/rephrase/page.tsx` and `src/components/DeckGrid.tsx` also import `DECK_MAP`. Minor stale comment; the contract's consumer list is correct.
+- **[FIXED 2026-11-18.]** The header comment of `deckMap.ts` lists its users as "DeckPage … and StudySession", but `src/app/[lang]/rephrase/page.tsx` and `src/components/DeckGrid.tsx` also import `DECK_MAP`. Minor stale comment; the contract's consumer list is correct.
 - **[FIXED 2026-11-18: `src/__tests__/data/decks.test.ts`.]** No test checks that `deckMetadata[*].cardCount` (hard-coded `40` × 16) matches the `DECK_MAP` array lengths. It holds today (every deck has 40 cards: 20 A1 / 20 A2), but only by convention.
 
 ## src/data/it/README.md
@@ -106,5 +106,5 @@ No drift detected.
 ## README.md
 
 - [FIXED 2026-11-17: Q&A now records misses, so the rule holds for both modes.] "How the Spaced Repetition Works" states that a wrong answer resets a card to box 1. That is true for Rephrase only; Q&A never records wrong answers (see `qa/[scenario]`).
-- The "Q&A Study Mode" feature line says "open-ended question-and-answer mode", but `QAStudySession` is strictly multiple choice (1 correct + 3 fixed foils) with optional voice selection.
+- **[FIXED 2026-11-18: README now says multiple choice, by tap or voice.]** The "Q&A Study Mode" feature line says "open-ended question-and-answer mode", but `QAStudySession` is strictly multiple choice (1 correct + 3 fixed foils) with optional voice selection.
 - [FIXED 2026-11-13] Global Side Effects describes the `SiteHeader` reset as clearing progress. In practice an active study session can write the old progress back (see `src/components`).
