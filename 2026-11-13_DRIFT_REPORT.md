@@ -61,7 +61,7 @@ No drift detected.
 
 ## src/app/[lang]/README.md
 
-- **All three browser pages share one heading.** `[lang]/page.tsx`, `rephrase/page.tsx`, and `qa/page.tsx` each render `t('page.title')` / `t('page.subtitle')`, which are deck-specific strings ("Scegli un Mazzo" / "Seleziona una categoria per iniziare"; "Elige un Mazo"). The activity picker and the Q&A scenario list are therefore headed "Choose a Deck".
+- **[FIXED 2026-11-17: activity picker and scenario list have their own `page.*` strings; tests in `src/__tests__/app/listPageHeadings.test.tsx`.]** **All three browser pages share one heading.** `[lang]/page.tsx`, `rephrase/page.tsx`, and `qa/page.tsx` each render `t('page.title')` / `t('page.subtitle')`, which are deck-specific strings ("Scegli un Mazzo" / "Seleziona una categoria per iniziare"; "Elige un Mazo"). The activity picker and the Q&A scenario list are therefore headed "Choose a Deck".
 - The layout's locale check casts to the literal `'it' | 'es'` (`layout.tsx:23`), adding another hard-coded copy of the locale set.
 - The message keys `page.chooseLanguage`, `page.chooseDeck`, and the `deckCardCount` namespace in `messages/*.json` are not referenced anywhere in `src/` (dead strings).
 
