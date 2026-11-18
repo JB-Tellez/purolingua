@@ -116,7 +116,7 @@ Request flow: `src/app/[lang]/layout.tsx` (a root layout that renders `<html lan
 
 ## Global Invariants
 
-- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/lib/srs.ts:getQACardKey`), read and written through `src/lib/progressStorage.ts`; `{lang}-level-filter` holds the level filter. They match v1.1, the pre-Next.js app on the `vanilla` branch (`src/js/features/progress.js`), so existing users keep their progress.
+- **Persisted storage keys are a compatibility contract.** `{lang}-progress` holds one `ProgressRecord` shared by Rephrase (`{deckId}_{cardIndex}`, `src/lib/srs.ts:getCardKey`) and Q&A (`qa_{scenarioId}_{cardId}`, `src/lib/srs.ts:getQACardKey`), read and written through `src/lib/progressStorage.ts`; `{lang}-level-filter` holds the Rephrase level filter; Q&A has its own `{lang}-qa-level-filter` (added after v1.1), which starts from the Rephrase value until Q&A saves one. They match v1.1, the pre-Next.js app on the `vanilla` branch (`src/js/features/progress.js`), so existing users keep their progress.
 - **Card position and id are persisted identity.** Reordering or inserting cards mid-array in `src/data/it` / `src/data/es`, or renaming a Q&A `card.id` / scenario `id`, orphans stored progress.
 - **Deck size is hard-coded.** `src/data/decks.ts:deckMetadata` declares `cardCount: 40` for every deck; `src/__tests__/data/decks.test.ts` fails if it stops matching the `DECK_MAP` array lengths.
 - **The level filter is never empty.** `useLevelFilter.setActiveLevels(null | [])` is a no-op (FLTR-06); `LevelFilterChips` relies on this guard.
@@ -126,7 +126,7 @@ Request flow: `src/app/[lang]/layout.tsx` (a root layout that renders `<html lan
 
 ## Global Side Effects
 
-- Browser `localStorage`: read/write `{lang}-progress` and `{lang}-level-filter`. SRS writes always re-read the stored record first. `SiteHeader` reset removes `{lang}-progress` (both Rephrase and Q&A progress), but not `{lang}-level-filter`, then reloads the page.
+- Browser `localStorage`: read/write `{lang}-progress`, `{lang}-level-filter` (Rephrase), and `{lang}-qa-level-filter` (Q&A). SRS writes always re-read the stored record first. `SiteHeader` reset removes `{lang}-progress` (both Rephrase and Q&A progress), but not the level filters, then reloads the page.
 - Web Speech API: `speechSynthesis` playback (`src/lib/speak.ts`, used by `AudioButton` and both sessions) and `SpeechRecognition` / `webkitSpeechRecognition` microphone capture (`useVoiceRecognition`).
 - Network: Google Fonts from `fonts.googleapis.com` / `fonts.gstatic.com` (`src/app/RootDocument.tsx`); no other runtime network calls.
 - Build time: `package.json` imported for the version footer; `messages/<locale>.json` loaded by `src/i18n/request.ts`; static output written to `out/`.

@@ -25,7 +25,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 - **[FIXED 2026-11-18: moved to `src/lib/progressStorage.ts`.]** `loadFromStorage`, `saveToStorage`, and `getStorageKey` are copied verbatim in `useSRS.ts` and `useQASRS.ts`. The shared key is a convention between two copies, not a shared module.
 - **[FIXED 2026-11-18: pressing the mic while listening cancels in both sessions; `stopListening` aborts and suppresses the cancelled session's events.]** `useVoiceRecognition` returns `stopListening`, but no consumer calls it (`StudySession.tsx:55` and `QAStudySession.tsx:98` take only `isSupported`, `isListening`, `startListening`). A user cannot cancel listening.
 - **[FIXED 2026-11-18: the saved filter keeps only known levels (`@/lib/levels:isLevel`) and falls back to the default when none remain.]** `useLevelFilter` accepts any non-empty saved array without checking its elements (`useLevelFilter.ts:20`). A stored `["B1"]` would hide every card. The contract notes the missing validation; nothing guards against it.
-- Rephrase and Q&A share one `{lang}-level-filter` value, because `rephrase/page.tsx`, `qa/page.tsx`, and both sessions call `useLevelFilter(lang, …)` with the same key. No contract states that the filter is shared between activities.
+- **[FIXED 2026-11-18 (owner chose to split): Rephrase keeps `{lang}-level-filter`, Q&A uses `{lang}-qa-level-filter` and carries over the old shared value; `useLevelFilter` now requires an `activity`.]** Rephrase and Q&A share one `{lang}-level-filter` value, because `rephrase/page.tsx`, `qa/page.tsx`, and both sessions call `useLevelFilter(lang, …)` with the same key. No contract states that the filter is shared between activities.
 
 ## src/components/README.md
 

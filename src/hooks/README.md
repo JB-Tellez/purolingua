@@ -30,8 +30,10 @@ and pages/sessions under `src/app/[lang]/` (including
   - `dueCards`: memoized subset of `cards` whose `level` is in `activeLevels`
     and that are due per `isCardDue`.
   - `updateCard(cardId: string, isCorrect: boolean)`, `isCardDueForScenario(cardId: string): boolean`.
-- `useLevelFilter(lang: Lang, hasProgress: boolean)` (`useLevelFilter.ts`)
-  returns `{ activeLevels: Level[], setActiveLevels(levels: Level[] | null) }`.
+- `useLevelFilter(lang: Lang, hasProgress: boolean, activity: Activity)` (`useLevelFilter.ts`;
+  `type Activity = 'rephrase' | 'qa'`) returns
+  `{ activeLevels: Level[], setActiveLevels(levels: Level[] | null) }`.
+  `activity` is required so no caller shares a filter by accident.
 - `useVoiceRecognition(lang: Lang)` (`useVoiceRecognition.ts`) returns
   `{ isSupported, isListening, startListening(onResult: (transcript: string) => void, onError: () => void), stopListening() }`.
   `stopListening` cancels: it calls `abort()` (discarding any pending result), sets `isListening` to `false` at once, and the cancelled session's late `onresult` / `onerror` (Chrome fires `"aborted"`) are ignored, so callers get neither callback.
@@ -46,6 +48,11 @@ and pages/sessions under `src/app/[lang]/` (including
 - **Storage key formats are compatibility contracts**: comments in `useSRS.ts`
   and `useLevelFilter.ts` state the `"{lang}-progress"` and
   `"{lang}-level-filter"` keys match v1.1 for user data continuity.
+- **One level filter per activity**: Rephrase reads and writes
+  `"{lang}-level-filter"` (the v1.1 key); Q&A writes `"{lang}-qa-level-filter"`
+  and, until that exists, reads the Rephrase value as its starting point
+  (both activities shared one filter before the split). Changing one never
+  changes the other.
 - **Writes start from current storage**: `updateCard` re-reads
   `"{lang}-progress"`, changes one key, writes it back, then sets state. It
   never writes the in-memory snapshot, so a reset or another writer (a second
@@ -81,7 +88,8 @@ and pages/sessions under `src/app/[lang]/` (including
 
 - `localStorage.getItem` / `setItem` on `"{lang}-progress"` (`useSRS`,
   `useQASRS`; every `updateCard` reads, then writes, the full record) and on
-  `"{lang}-level-filter"` (`useLevelFilter`; every accepted `setActiveLevels`).
+  `"{lang}-level-filter"` / `"{lang}-qa-level-filter"` (`useLevelFilter`; every
+  accepted `setActiveLevels` writes its activity's key).
 - `useVoiceRecognition` constructs `window.SpeechRecognition` (or
   `webkitSpeechRecognition`), calls `start()` / `abort()`, and therefore triggers
   the browser microphone permission flow. Exceptions from `start()` are

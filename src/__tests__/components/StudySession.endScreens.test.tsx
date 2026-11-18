@@ -178,3 +178,13 @@ describe('StudySession feedback announcement (real SRS state)', () => {
     expect(screen.getByRole('status')).toHaveTextContent('incorrect');
   });
 });
+
+describe('StudySession uses the Rephrase level filter', () => {
+  it('follows {lang}-level-filter, not the Q&A filter', () => {
+    localStorage.setItem('it-level-filter', JSON.stringify(['A1']));
+    localStorage.setItem('it-qa-level-filter', JSON.stringify(['A2']));
+    localStorage.setItem('it-progress', JSON.stringify({ daily_1: FUTURE, restaurant_0: FUTURE }));
+    renderDaily(); // daily_0 is an A1 card
+    expect(screen.getByText('Ciao')).toBeInTheDocument();
+  });
+});

@@ -60,7 +60,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // the level filter is shared, so every page and session must default the same way.
   const [bootstrapHasProgress] = useState(() => Object.keys(loadProgress(lang)).length > 0);
 
-  const { activeLevels } = useLevelFilter(lang, bootstrapHasProgress);
+  const { activeLevels } = useLevelFilter(lang, bootstrapHasProgress, 'qa');
 
   const { dueCards, updateCard, progress } = useQASRS(
     lang,

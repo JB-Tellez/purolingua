@@ -12,7 +12,7 @@ export default function QABrowserPage() {
   const lang = params.lang as Lang;
   const t = useTranslations('page');
   const { hasProgress } = useSRS(lang);
-  const { activeLevels, setActiveLevels } = useLevelFilter(lang, hasProgress);
+  const { activeLevels, setActiveLevels } = useLevelFilter(lang, hasProgress, 'qa');
 
   return (
     <main>

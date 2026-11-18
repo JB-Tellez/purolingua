@@ -69,7 +69,7 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
   page reload via `reloadPage()` (`@/lib/reloadPage`), so mounted grids and
   study sessions drop their in-memory progress. This key holds both Rephrase
   and Q&A progress (see `../hooks/README.md`), so both are cleared.
-  `"{lang}-level-filter"` and the other language's progress are not touched.
+  The level filters and the other language's progress are not touched.
 - `AudioButton`: `window.speechSynthesis.cancel()` then `speak(utterance)`
   (audio output).
 - `DeckGrid` and `ScenarioGrid` read `localStorage` indirectly via `useSRS`,

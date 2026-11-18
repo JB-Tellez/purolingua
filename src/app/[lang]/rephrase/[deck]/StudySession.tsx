@@ -24,7 +24,7 @@ interface Props {
 
 export default function StudySession({ lang, deckId, cards }: Props) {
   const { isCardDueForDeck, updateCard, hasProgress } = useSRS(lang);
-  const { activeLevels } = useLevelFilter(lang, hasProgress);
+  const { activeLevels } = useLevelFilter(lang, hasProgress, 'rephrase');
   const t = useTranslations('study');
 
   // Snapshot due cards once at session start — prevents re-filtering as SRS state updates
