@@ -88,7 +88,7 @@ No drift detected. (Checked against the real data: 16 decks of 40 cards, 20 A1 /
 
 ## README.md
 
-- **`npm start` does not work.** The Scripts table says it serves the production build, but `next start` exits with `Error: "next start" does not work with "output: export" configuration. Use "npx serve@latest out" instead.` (checked by running it). The `start` script in `package.json` is dead under static export.
+- **[FIXED 2026-11-18: `start` now runs `serve out` (pinned devDependency); checked that every route and the 404 are served.]** **`npm start` does not work.** The Scripts table says it serves the production build, but `next start` exits with `Error: "next start" does not work with "output: export" configuration. Use "npx serve@latest out" instead.` (checked by running it). The `start` script in `package.json` is dead under static export.
 - The Live Site link is `https://purolingua.com/?lang=it`. The `?lang=` query parameter is v1.1's scheme; the Next app routes by path (`/it/`), and `/` ignores the parameter and shows the language picker.
 - The Global Invariant on storage keys ends "They match v1.1", after listing the Q&A key `qa_{scenarioId}_{cardId}`. Only `{lang}-progress`, `{deckId}_{cardIndex}`, and `{lang}-level-filter` exist in v1.1; Q&A keys (like `{lang}-qa-level-filter`, which the sentence does flag) were added later.
 - Project Structure: the `lib/` line lists only `srs.ts`, `generateChoices.ts`, `matchTranscript.ts` (five more modules exist), and the `__tests__/` line says "(components, hooks, lib)" though tests now also live in `app/`, `data/`, and `i18n/`.

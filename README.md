@@ -61,7 +61,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 |---|---|
 | `npm run dev` | Start local dev server |
 | `npm run build` | Build for production (static export to `out/`) |
-| `npm start` | Serve the production build |
+| `npm start` | Serve the static export in `out/` with `serve` (run `npm run build` first) |
 | `npm test` | Run unit tests (Vitest) |
 
 ---
