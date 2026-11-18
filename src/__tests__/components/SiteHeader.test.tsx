@@ -82,3 +82,27 @@ describe('SiteHeader back link', () => {
     expect(screen.getByText('back').closest('a')).toHaveAttribute('href', '/it/rephrase');
   });
 });
+
+describe('SiteHeader language dropdown', () => {
+  const openDropdown = () => fireEvent.click(screen.getByLabelText('Change language'));
+
+  it.each(['it', 'es'] as const)('on /%s lists each language once, linking to its own home', (lang) => {
+    pathname = `/${lang}`;
+    render(<SiteHeader lang={lang} />);
+    openDropdown();
+    expect(screen.getByText('Italiano').closest('a')).toHaveAttribute('href', '/it');
+    expect(screen.getByText('Español').closest('a')).toHaveAttribute('href', '/es');
+    expect(screen.getAllByText(/Italiano|Español/)).toHaveLength(2);
+  });
+
+  it.each([
+    ['it', 'Italiano', 'Español'],
+    ['es', 'Español', 'Italiano'],
+  ] as const)('on /%s marks only %s as active', (lang, current, other) => {
+    pathname = `/${lang}`;
+    render(<SiteHeader lang={lang} />);
+    openDropdown();
+    expect(screen.getByText(current).closest('a')).toHaveClass('active');
+    expect(screen.getByText(other).closest('a')).not.toHaveClass('active');
+  });
+});

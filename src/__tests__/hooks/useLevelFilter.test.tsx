@@ -4,6 +4,10 @@ import { useLevelFilter } from '@/hooks/useLevelFilter';
 
 beforeEach(() => localStorage.clear());
 
+// No "window is undefined" (SSR) tests here: removing window breaks React 19's
+// react-dom inside render() (bare `window.event` read), so they can't run under
+// jsdom. The hook's `typeof window` guard is covered by its window-present branch.
+
 // Standalone localStorage mock (duplicated from setup.ts for tests that need to
 // replace it entirely — e.g. quota-throw scenarios).
 const makeStorageMock = (): Storage => {

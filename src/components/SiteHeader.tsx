@@ -12,8 +12,6 @@ const LANG_META: Record<Lang, { flag: string; name: string }> = {
   es: { flag: '🇪🇸', name: 'Español' },
 };
 
-const OTHER_LANG: Record<Lang, Lang> = { it: 'es', es: 'it' };
-
 interface SiteHeaderProps {
   lang: Lang;
 }
@@ -37,8 +35,6 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
     }
   }
 
-  const other = OTHER_LANG[lang];
-  const otherMeta = LANG_META[other];
   const currentMeta = LANG_META[lang];
 
   return (
@@ -76,20 +72,16 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
               </button>
               {dropdownOpen && (
                 <div className="language-dropdown" onClick={() => setDropdownOpen(false)}>
-                  <Link
-                    href={`/${lang}`}
-                    className={`language-option${lang === 'it' ? ' active' : ''}`}
-                  >
-                    <span className="flag">{LANG_META.it.flag}</span>
-                    <span>{LANG_META.it.name}</span>
-                  </Link>
-                  <Link
-                    href={`/${other}`}
-                    className={`language-option${lang === 'es' ? ' active' : ''}`}
-                  >
-                    <span className="flag">{otherMeta.flag}</span>
-                    <span>{otherMeta.name}</span>
-                  </Link>
+                  {(Object.keys(LANG_META) as Lang[]).map((code) => (
+                    <Link
+                      key={code}
+                      href={`/${code}`}
+                      className={`language-option${code === lang ? ' active' : ''}`}
+                    >
+                      <span className="flag">{LANG_META[code].flag}</span>
+                      <span>{LANG_META[code].name}</span>
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
