@@ -23,12 +23,6 @@ export interface Card {
   level: Level;    // CEFR level
 }
 
-export interface Deck {
-  id: DeckId;
-  lang: Lang;
-  cards: Card[];
-}
-
 // Progress stored in localStorage keyed by "{deckId}_{cardIndex}"
 // e.g., "daily_0", "restaurant_12"
 // Key format MUST match v1.1 exactly — see src/js/features/progress.js on main branch

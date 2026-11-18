@@ -11,9 +11,7 @@
     "activityTitle": "Scegli un'Attività",
     "activitySubtitle": "Come vuoi esercitarti oggi?",
     "scenarioTitle": "Scegli uno Scenario",
-    "scenarioSubtitle": "Seleziona una situazione per iniziare",
-    "chooseLanguage": "Scegli una lingua",
-    "chooseDeck": "Scegli un mazzo"
+    "scenarioSubtitle": "Seleziona una situazione per iniziare"
   },
   "decks": {
     "daily": "Vita Quotidiana",
@@ -35,7 +33,6 @@
     "social": "Presentarsi e parlare con le persone.",
     "weather": "Parlare del meteo e delle stagioni."
   },
-  "deckCardCount": "{count} carte",
   "filter": {
     "label": "Livello",
     "chips": {

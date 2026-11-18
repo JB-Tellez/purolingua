@@ -1,7 +1,7 @@
 # i18n
 
 ## Overview
-This directory holds the [next-intl](https://next-intl.dev) configuration. It defines the supported locales, the per-request locale and message loading, and locale-aware navigation helpers.
+This directory holds the [next-intl](https://next-intl.dev) configuration. It defines the supported locales, and the per-request locale and message loading.
 
 `next.config.ts` registers `request.ts` with `createNextIntlPlugin('./src/i18n/request.ts')`. Several files under `src/app/[lang]/` import `routing` from `@/i18n/routing`.
 
@@ -10,9 +10,6 @@ This directory holds the [next-intl](https://next-intl.dev) configuration. It de
   - `routing`: the result of `defineRouting({ locales: ['it', 'es'] as const, defaultLocale: 'it' })`.
 - `request.ts`
   - The default export is `getRequestConfig(async ({ requestLocale }) => ({ locale, messages }))`. next-intl uses it to resolve the locale and messages for each request.
-- `navigation.ts`
-  - `Link`, `redirect`, `usePathname`, `useRouter`, and `getPathname`, all destructured from `createNavigation(routing)`.
-  - No file in `src/` imports `@/i18n/navigation` right now.
 
 ## Invariants
 - The supported locales are exactly `'it'` and `'es'`, and the default is `'it'`. These match the `Lang` type in [`src/types`](../types/README.md) and the files `messages/it.json` and `messages/es.json`.
@@ -22,9 +19,9 @@ This directory holds the [next-intl](https://next-intl.dev) configuration. It de
 
 ## Side Effects
 - `request.ts` dynamically imports a locale message JSON file each time it resolves request config. That file is loaded through the module system.
-- `navigation.ts` and `routing.ts` only create configuration objects or helpers when imported. They have no other side effects.
+- `routing.ts` only creates a configuration object when imported. It has no other side effects.
 
 ## Verification
 - There are no unit tests for this directory.
-- Type-check: `npx tsc --noEmit`. This reports no errors in `src/i18n/`, but the repository currently has 3 existing type errors in files under `src/__tests__/`.
+- Type-check: `npx tsc --noEmit`. It reports no errors.
 - Full suite: `npx vitest run` (or `npm test`, which runs `vitest` in watch mode in an interactive terminal).

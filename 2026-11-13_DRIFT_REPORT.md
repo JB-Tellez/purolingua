@@ -4,7 +4,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 ## src/types/README.md
 
-- `Deck` (`src/types/index.ts:26`) is documented as part of the interface but is never imported anywhere in `src/` (dead type).
+- **[FIXED 2026-11-18: removed.]** `Deck` (`src/types/index.ts:26`) is documented as part of the interface but is never imported anywhere in `src/` (dead type).
 - `Card.back` is commented "translation/answer" (`src/types/index.ts:22`), but every Rephrase deck stores a same-language paraphrase in `back` (e.g. `src/data/it/daily.ts`: `'Ho perso il treno.'` → `'Non sono arrivato in tempo alla stazione.'`). The source comment is stale, and the contract does not state the field's meaning.
 - Source comments reference v1.1 files that do not exist in this repo (`src/locales/it/decks.js` at `index.ts:9`, `src/js/features/progress.js` at `index.ts:34`). The v1.1 compatibility claim cannot be verified from this repository.
 
@@ -16,7 +16,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 
 ## src/i18n/README.md
 
-- `navigation.ts` exports `Link`, `redirect`, `usePathname`, `useRouter`, and `getPathname`, but nothing imports `@/i18n/navigation`. `SiteHeader` uses `next/link` and `next/navigation` instead (see below), so its links bypass the locale-aware helpers. This is dead code or an unfinished migration.
+- **[FIXED 2026-11-18: `navigation.ts` removed; the app uses `next/link` / `next/navigation` throughout.]** `navigation.ts` exports `Link`, `redirect`, `usePathname`, `useRouter`, and `getPathname`, but nothing imports `@/i18n/navigation`. `SiteHeader` uses `next/link` and `next/navigation` instead (see below), so its links bypass the locale-aware helpers. This is dead code or an unfinished migration.
 - `routing.ts` is declared the next-intl source of truth, but at least 8 other places hard-code the locale set (listed under Global Invariants in `README.md`). There is no shared derivation from `routing.locales`.
 
 ## src/hooks/README.md
@@ -32,7 +32,7 @@ Scope: the 18 EGM contracts created or corrected by `egm-bootstrap` on 2026-11-1
 - **[FIXED 2026-11-13: reproduced by hook tests; fixed in the hooks, and reset now reloads the page.]** **Reset probably does not survive the next answer (not confirmed by running).** `SiteHeader.handleReset` only calls `localStorage.removeItem('{lang}-progress')` and `router.refresh()` (`SiteHeader.tsx:31-36`). It is rendered in the persistent `[lang]` layout, and `router.refresh()` keeps client `useState`. A study session mounted at that moment keeps its old progress snapshot, and its next `updateCard` writes the full pre-reset record back to storage (see the hooks finding above). Badges on a browser page also stay stale until remount.
 - **[FIXED 2026-11-17: one option per `LANG_META` entry; dropdown tests for both languages.]** **The language dropdown is wrong for `es`.** The first option always renders `LANG_META.it` but links to `/${lang}`; the second renders `LANG_META[OTHER_LANG[lang]]`. On `/es` both options read "Italiano" and Español never appears (`SiteHeader.tsx:77-90`).
 - The comment for the `SiteHeader` back link says "3+ segments: /lang/deck", but the code checks `segments.length >= 2` (`SiteHeader.tsx:26-28`). On `/it/rephrase/daily` the back link goes to `/it/rephrase`.
-- `SiteHeader` uses `next/link` and `next/navigation` rather than the locale-aware `@/i18n/navigation` helpers.
+- **[RESOLVED 2026-11-18: the unused helpers were removed instead.]** `SiteHeader` uses `next/link` and `next/navigation` rather than the locale-aware `@/i18n/navigation` helpers.
 - **[FIXED 2026-11-18: `@/components/DeckGrid` is now the shipped grid (`{ lang, activeLevels }`, correct links), imported by `rephrase/page.tsx`.]** `DeckGrid` is dead and its links are wrong. No route imports it (only `DeckGrid.test.tsx`), and it links to `/${lang}/${deck.id}` (`DeckGrid.tsx:43`), which is not a generated route (the real route is `/${lang}/rephrase/${deck}`). `src/app/[lang]/rephrase/page.tsx` re-implements it privately with the correct link, so the tested component and the shipped one differ.
 - Accessibility labels are hard-coded in English despite next-intl: `MicButton` (`'Listening…'`, `'Start speaking'`), `ChoiceButton` (`aria-label="audio"`), and `SiteHeader` (`aria-label="Change language"`).
 - `ChoiceButton` nests an interactive `<span role="button" tabIndex={0}>` inside a `<button>` (`ChoiceButton.tsx:15-38`). This nesting is invalid. Once the button is disabled after an answer, browsers usually stop delivering clicks to its children, so the 🔊 control stops working at that point. The contract describes the propagation guard but not this limitation.
@@ -63,7 +63,7 @@ No drift detected.
 
 - **[FIXED 2026-11-17: activity picker and scenario list have their own `page.*` strings; tests in `src/__tests__/app/listPageHeadings.test.tsx`.]** **All three browser pages share one heading.** `[lang]/page.tsx`, `rephrase/page.tsx`, and `qa/page.tsx` each render `t('page.title')` / `t('page.subtitle')`, which are deck-specific strings ("Scegli un Mazzo" / "Seleziona una categoria per iniziare"; "Elige un Mazo"). The activity picker and the Q&A scenario list are therefore headed "Choose a Deck".
 - The layout's locale check casts to the literal `'it' | 'es'` (`layout.tsx:23`), adding another hard-coded copy of the locale set.
-- The message keys `page.chooseLanguage`, `page.chooseDeck`, and the `deckCardCount` namespace in `messages/*.json` are not referenced anywhere in `src/` (dead strings).
+- **[FIXED 2026-11-18: removed.]** The message keys `page.chooseLanguage`, `page.chooseDeck`, and the `deckCardCount` namespace in `messages/*.json` are not referenced anywhere in `src/` (dead strings).
 
 ## src/app/[lang]/rephrase/README.md
 

@@ -8,7 +8,6 @@ This directory holds the core domain types for PuroLingua v1.2, all in `index.ts
 - `type Level = 'A1' | 'A2'`
 - `type DeckId = 'daily' | 'restaurant' | 'travel' | 'shopping' | 'hotel' | 'emergencies' | 'social' | 'weather'`
 - `interface Card { front: string; back: string; level: Level }`
-- `interface Deck { id: DeckId; lang: Lang; cards: Card[] }`
 - `interface Progress { box: number; nextReview: string }`
 - `type ProgressRecord = Record<string, Progress>`
 - `type ScenarioId = 'coffee' | 'hotel' | 'restaurant' | 'street' | 'introductions' | 'shop' | 'train'`
@@ -26,5 +25,5 @@ This directory holds the core domain types for PuroLingua v1.2, all in `index.ts
 
 ## Verification
 - There are no unit tests for this directory. Type correctness is enforced by the compiler.
-- Type-check: `npx tsc --noEmit`. This reports no errors in `src/types/`, but the repository currently has 3 existing type errors in files under `src/__tests__/`.
+- Type-check: `npx tsc --noEmit`. It reports no errors.
 - Full suite: `npx vitest run` (or `npm test`).
