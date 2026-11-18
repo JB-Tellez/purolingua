@@ -31,7 +31,7 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useVoiceRecognition`
 - `progressStorage.ts`
   - `loadProgress(lang): ProgressRecord`: parses `{lang}-progress`; `{}` when missing, unparsable, or on the server.
   - `saveProgress(lang, record): void`: writes it as JSON; storage errors (quota, private browsing) are swallowed.
-  - `clearProgress(lang): void`: removes it. Used by `SiteHeader`'s reset.
+  - `clearProgress(lang): void`: removes it; storage errors (blocked site data) are swallowed, like load and save. Used by `SiteHeader`'s reset.
 - `levels.ts`
   - `LEVELS: Level[]`: `['A1', 'A2']`, in order. Backed by a `Record<Level, …>`, so `tsc` fails if `Level` gains a member this list lacks. Used by `LevelFilterChips`.
   - `isLevel(value: unknown): value is Level`. Used by `useLevelFilter` to validate the saved filter.

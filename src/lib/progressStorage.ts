@@ -26,5 +26,9 @@ export function saveProgress(lang: Lang, record: ProgressRecord): void {
 }
 
 export function clearProgress(lang: Lang): void {
-  localStorage.removeItem(getStorageKey(lang));
+  try {
+    localStorage.removeItem(getStorageKey(lang));
+  } catch {
+    // localStorage unavailable (blocked site data) — nothing to clear
+  }
 }

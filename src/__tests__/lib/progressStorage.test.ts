@@ -45,3 +45,10 @@ describe('clearProgress', () => {
     expect(localStorage.getItem('it-level-filter')).toBe('["A2"]');
   });
 });
+
+describe('clearProgress when storage is unavailable', () => {
+  it('does not throw (blocked site data), like load and save', () => {
+    vi.spyOn(window.localStorage, 'removeItem').mockImplementation(() => { throw new DOMException('denied', 'SecurityError'); });
+    expect(() => clearProgress('it')).not.toThrow();
+  });
+});

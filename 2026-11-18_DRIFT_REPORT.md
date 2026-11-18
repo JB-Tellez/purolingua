@@ -11,7 +11,7 @@ Scope: the 18 EGM contracts (`README.md` plus 17 child `README.md` files), each 
 
 - The key-format invariant says `"qa_{scenarioId}_{cardId}"` "must stay identical to v1.1". Q&A did not exist in v1.1: the `vanilla` branch has no `qa_` keys. Only `"{deckId}_{cardIndex}"` and `{lang}-progress` are v1.1 formats. The Q&A format is this app's own persisted contract.
 - The header comment of `reloadPage.ts` says it is "the only browser side effect in src/lib" (`reloadPage.ts:2`). `progressStorage.ts` (`localStorage`) and `speak.ts` (`speechSynthesis`) are now in `src/lib` too, as the contract's Overview states.
-- `clearProgress` calls `localStorage.removeItem` without a `try`, while `loadProgress` and `saveProgress` swallow storage errors (`progressStorage.ts:28-30`). When storage access throws (blocked site data), reset throws. The contract documents the swallowing for save only and says nothing about clear.
+- **[FIXED 2026-11-18: `clearProgress` swallows storage errors; test in `progressStorage.test.ts`.]** `clearProgress` calls `localStorage.removeItem` without a `try`, while `loadProgress` and `saveProgress` swallow storage errors (`progressStorage.ts:28-30`). When storage access throws (blocked site data), reset throws. The contract documents the swallowing for save only and says nothing about clear.
 - The consumer list ("the hooks (`useSRS`, `useQASRS`, `useVoiceRecognition`), `AudioButton`, `SiteHeader`, and both study sessions") omits `useLevelFilter` (`isLevel`) and `LevelFilterChips` (`LEVELS`).
 
 ## src/hooks/README.md
