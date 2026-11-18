@@ -95,7 +95,7 @@ describe('useVoiceRecognition', () => {
       });
 
       act(() => {
-        mockRecognitionInstance.onerror?.();
+        mockRecognitionInstance.onerror?.({ error: 'no-speech' });
       });
 
       expect(onError).toHaveBeenCalled();
