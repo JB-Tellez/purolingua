@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { Card, DeckId, Lang } from '@/types';
@@ -56,12 +56,18 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [done, setDone] = useState(false);
-  const [allDone, setAllDone] = useState(false);
+  // Which end screen to show is derived at render time (below), not decided in
+  // handleAnswer: the handler's closure still sees progress from before
+  // updateCard, so the just-answered card would always look due.
+  const [finished, setFinished] = useState(false);
+  // "Study again" replays the session as practice: answers are not saved.
+  const [practice, setPractice] = useState(false);
   // selectedChoice: null = not answered, index of selected choice once answered
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
   const [feedbackState, setFeedbackState] = useState<'correct' | 'incorrect' | 'heard' | 'notRecognized' | null>(null);
+  // Pending auto-advance after a choice; Next cancels it so the card is recorded once.
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const backLink = `/${lang}/rephrase`;
 
@@ -83,14 +89,27 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   function resetSession() {
     setIndex(0);
     setFlipped(false);
-    setDone(false);
-    setAllDone(false);
+    setFinished(false);
+    setPractice(true);
     setSelectedChoice(null);
     setMicState('idle');
     setFeedbackState(null);
   }
 
-  if (allDone || dueCards.length === 0) {
+  function allDecksEmpty(): boolean {
+    return deckMetadata
+      .filter((d) => d.lang === lang)
+      .every(({ id }) =>
+        (DECK_MAP[lang]?.[id] ?? [])
+          .map((card, i) => ({ card, i }))
+          .filter(({ card }) => activeLevels.includes(card.level))
+          .every(({ i }) => !isCardDueForDeck(id, i))
+      );
+  }
+
+  const allDone = dueCards.length === 0 || (finished && allDecksEmpty());
+
+  if (allDone) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
@@ -104,7 +123,9 @@ export default function StudySession({ lang, deckId, cards }: Props) {
                 <Link href={backLink}>
                   <button className="btn secondary" type="button">{t('backToDecks')}</button>
                 </Link>
-                <button className="btn primary" type="button" onClick={resetSession}>{t('studyAgain')}</button>
+                {dueCards.length > 0 && (
+                  <button className="btn primary" type="button" onClick={resetSession}>{t('studyAgain')}</button>
+                )}
               </div>
             </div>
           </div>
@@ -113,7 +134,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     );
   }
 
-  if (done) {
+  if (finished) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
@@ -188,26 +209,16 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   }
 
   function handleAnswer(isCorrect: boolean) {
-    updateCard(deckId, originalIndex, isCorrect);
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    advanceTimer.current = null;
+    if (!practice) updateCard(deckId, originalIndex, isCorrect);
     setFlipped(false);
     setSelectedChoice(null);
     setFeedbackState(null);
     if (index + 1 < dueCards.length) {
       setIndex((i) => i + 1);
     } else {
-      const langDecks = deckMetadata.filter(d => d.lang === lang);
-      const allDecksEmpty = langDecks.every(({ id }) => {
-        const deckCards = DECK_MAP[lang]?.[id] ?? [];
-        return deckCards
-          .map((card, i) => ({ card, i }))
-          .filter(({ card }) => activeLevels.includes(card.level))
-          .every(({ i }) => !isCardDueForDeck(id, i));
-      });
-      if (allDecksEmpty) {
-        setAllDone(true);
-      } else {
-        setDone(true);
-      }
+      setFinished(true);
     }
   }
 
@@ -216,7 +227,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     const isCorrect = choices[choiceIndex].isCorrect;
     setSelectedChoice(choiceIndex);
     setFeedbackState(isCorrect ? 'correct' : 'incorrect');
-    setTimeout(() => handleAnswer(isCorrect), 600);
+    advanceTimer.current = setTimeout(() => handleAnswer(isCorrect), 600);
   }
 
   const progressPercent = Math.round((index / dueCards.length) * 100);
@@ -286,7 +297,11 @@ export default function StudySession({ lang, deckId, cards }: Props) {
             <button className="btn secondary" onClick={() => setFlipped(false)}>
               {t('flipButton')}
             </button>
-            <button className="btn primary" onClick={() => handleAnswer(true)}>
+            <button
+              className="btn primary"
+              disabled={selectedChoice === null}
+              onClick={() => { if (selectedChoice !== null) handleAnswer(choices[selectedChoice].isCorrect); }}
+            >
               {t('nextButton')}
             </button>
           </div>

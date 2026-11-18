@@ -52,4 +52,24 @@ describe('generateChoices', () => {
     const texts = choices.map(c => c.text);
     expect(new Set(texts).size).toBe(texts.length);
   });
+
+  describe('when several cards share the same back text', () => {
+    const card = (back: string, i: number): Card => ({ front: `front-${i}`, back, level: 'A1' });
+
+    it('offers each foil text at most once', () => {
+      const correct = card('right', 0);
+      const pool = [correct, card('same', 1), card('same', 2), card('other', 3)];
+      const texts = generateChoices(correct, pool).map(c => c.text).sort();
+      expect(texts).toEqual(['other', 'right', 'same']);
+    });
+
+    it('still fills 4 choices when enough distinct texts exist', () => {
+      const correct = card('right', 0);
+      const pool = [correct, card('same', 1), card('same', 2), card('same', 3), card('a', 4), card('b', 5)];
+      for (let run = 0; run < 50; run++) {
+        const texts = generateChoices(correct, pool).map(c => c.text);
+        expect(new Set(texts).size).toBe(4);
+      }
+    });
+  });
 });

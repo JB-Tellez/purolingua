@@ -8,6 +8,10 @@
   "page": {
     "title": "Scegli un Mazzo",
     "subtitle": "Seleziona una categoria per iniziare",
+    "activityTitle": "Scegli un'Attività",
+    "activitySubtitle": "Come vuoi esercitarti oggi?",
+    "scenarioTitle": "Scegli uno Scenario",
+    "scenarioSubtitle": "Seleziona una situazione per iniziare",
     "chooseLanguage": "Scegli una lingua",
     "chooseDeck": "Scegli un mazzo"
   },

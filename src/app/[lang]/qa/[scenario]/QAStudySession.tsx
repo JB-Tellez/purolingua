@@ -70,12 +70,14 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // Since useLevelFilter's hasProgress param only sets the DEFAULT levels (localStorage wins),
   // we bootstrap with hasProgress=false and let useQASRS's returned hasProgress update on rerender.
   // For the first render this means new users get A1 (correct), returning users get their saved filter.
+  // Any progress counts (Rephrase or Q&A), matching useSRS/useQASRS `hasProgress`:
+  // the level filter is shared, so every page and session must default the same way.
   const [bootstrapHasProgress] = useState(() => {
     try {
       const saved = localStorage.getItem(`${lang}-progress`);
       if (!saved) return false;
       const parsed = JSON.parse(saved) as Record<string, unknown>;
-      return Object.keys(parsed).some((k) => k.startsWith('qa_'));
+      return Object.keys(parsed).length > 0;
     } catch {
       return false;
     }
@@ -98,9 +100,15 @@ export default function QAStudySession({ lang, scenario }: Props) {
   const { isSupported, isListening, startListening } = useVoiceRecognition(lang);
 
   const [index, setIndex] = useState(0);
-  const [done, setDone] = useState(false);
-  const [allDone, setAllDone] = useState(false);
+  // Which end screen to show is derived at render time (below), not decided in
+  // handleAnswer: the handler's closure still sees progress from before
+  // updateCard, so the just-answered card would always look due.
+  const [finished, setFinished] = useState(false);
+  // "Study again" replays the session as practice: answers are not saved.
+  const [practice, setPractice] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
+  // A wrong choice lets the user retry, but the card is still recorded as wrong.
+  const [missedCurrent, setMissedCurrent] = useState(false);
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
   const [feedbackState, setFeedbackState] = useState<
     'correct' | 'incorrect' | 'heard' | 'notRecognized' | null
@@ -147,32 +155,26 @@ export default function QAStudySession({ lang, scenario }: Props) {
 
   function resetSession() {
     setIndex(0);
-    setDone(false);
-    setAllDone(false);
+    setFinished(false);
+    setPractice(true);
     setSelectedChoice(null);
+    setMissedCurrent(false);
     setMicState('idle');
     setFeedbackState(null);
   }
 
   function handleAnswer(isCorrect: boolean) {
-    if (currentCard) {
-      updateCard(currentCard.id, isCorrect);
+    if (currentCard && !practice) {
+      updateCard(currentCard.id, isCorrect && !missedCurrent);
     }
     setSelectedChoice(null);
+    setMissedCurrent(false);
     setFeedbackState(null);
 
     if (index + 1 < sessionDueCards.length) {
       setIndex((i) => i + 1);
     } else {
-      // Check all 7 scenarios for any remaining due cards using live progress state
-      const anyScenarioHasDue = allScenarios.some((sc) =>
-        isScenarioHasDue(progress, sc.id, sc.cards, activeLevels)
-      );
-      if (anyScenarioHasDue) {
-        setDone(true);
-      } else {
-        setAllDone(true);
-      }
+      setFinished(true);
     }
   }
 
@@ -185,6 +187,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
       setTimeout(() => handleAnswer(true), 600);
     } else {
       // Wrong answer — show red/green feedback, then reset so user can retry
+      setMissedCurrent(true);
       setTimeout(() => {
         setSelectedChoice(null);
         setFeedbackState(null);
@@ -228,8 +231,14 @@ export default function QAStudySession({ lang, scenario }: Props) {
     );
   }
 
-  // All-done screen (shown when 0 due cards at mount OR after all scenarios exhausted)
-  if (allDone || sessionDueCards.length === 0) {
+  // All-done screen (shown when 0 due cards at mount OR after all scenarios exhausted).
+  // `progress` here is post-updateCard, so the just-answered card is counted correctly.
+  const allDone =
+    sessionDueCards.length === 0 ||
+    (finished &&
+      !allScenarios.some((sc) => isScenarioHasDue(progress, sc.id, sc.cards, activeLevels)));
+
+  if (allDone) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
@@ -261,9 +270,11 @@ export default function QAStudySession({ lang, scenario }: Props) {
                     {t('backToScenarios')}
                   </button>
                 </Link>
-                <button className="btn primary" type="button" onClick={resetSession}>
-                  {t('studyAgain')}
-                </button>
+                {sessionDueCards.length > 0 && (
+                  <button className="btn primary" type="button" onClick={resetSession}>
+                    {t('studyAgain')}
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -273,7 +284,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
   }
 
   // Scenario-done screen (shown after last card in this scenario, but other scenarios have due cards)
-  if (done) {
+  if (finished) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>

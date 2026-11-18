@@ -33,12 +33,15 @@ export function useSRS(lang: Lang) {
 
   const updateCard = useCallback(
     (deckId: DeckId, cardIndex: number, isCorrect: boolean) => {
-      setProgress(prev => {
-        const key = getCardKey(deckId, cardIndex);
-        const updated = { ...prev, [key]: advanceBox(prev[key], isCorrect) };
-        saveToStorage(lang, updated);
-        return updated;
-      });
+      // Re-read storage instead of using in-memory state: a reset or another
+      // writer may have changed the shared key since this hook mounted.
+      // Kept outside the setState updater so StrictMode's double-invoke can't
+      // advance the box twice.
+      const current = loadFromStorage(lang);
+      const key = getCardKey(deckId, cardIndex);
+      const updated = { ...current, [key]: advanceBox(current[key], isCorrect) };
+      saveToStorage(lang, updated);
+      setProgress(updated);
     },
     [lang]
   );

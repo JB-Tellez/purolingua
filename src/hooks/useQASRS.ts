@@ -62,12 +62,15 @@ export function useQASRS(
 
   const updateCard = useCallback(
     (cardId: string, isCorrect: boolean) => {
-      setProgress(prev => {
-        const key = getQACardKey(scenarioId, cardId);
-        const updated = { ...prev, [key]: advanceBox(prev[key], isCorrect) };
-        saveToStorage(lang, updated);
-        return updated;
-      });
+      // Re-read storage instead of using in-memory state: a reset or useSRS
+      // may have changed the shared key since this hook mounted.
+      // Kept outside the setState updater so StrictMode's double-invoke can't
+      // advance the box twice.
+      const current = loadFromStorage(lang);
+      const key = getQACardKey(scenarioId, cardId);
+      const updated = { ...current, [key]: advanceBox(current[key], isCorrect) };
+      saveToStorage(lang, updated);
+      setProgress(updated);
     },
     [lang, scenarioId]
   );

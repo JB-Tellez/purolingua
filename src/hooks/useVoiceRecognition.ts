@@ -52,6 +52,10 @@ export function useVoiceRecognition(lang: Lang) {
       rec.onstart = () => setIsListening(true);
       rec.onend = () => setIsListening(false);
       rec.onresult = (e) => {
+        if (e.results.length === 0) {
+          console.error('[SpeechRecognition] no results returned');
+          return;
+        }
         const transcript = e.results[0][0].transcript;
         onResult(transcript);
       };

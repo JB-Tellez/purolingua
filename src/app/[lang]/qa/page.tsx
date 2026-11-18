@@ -17,8 +17,8 @@ export default function QABrowserPage() {
   return (
     <main>
       <div className="section-header">
-        <h1>{t('title')}</h1>
-        <p className="subtitle">{t('subtitle')}</p>
+        <h1>{t('scenarioTitle')}</h1>
+        <p className="subtitle">{t('scenarioSubtitle')}</p>
       </div>
       <LevelFilterChips lang={lang} activeLevels={activeLevels} setActiveLevels={setActiveLevels} />
       <ScenarioGrid lang={lang} activeLevels={activeLevels} />

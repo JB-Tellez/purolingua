@@ -16,8 +16,8 @@ export default function LangPage() {
   return (
     <main>
       <div className="section-header">
-        <h1>{t('title')}</h1>
-        <p className="subtitle">{t('subtitle')}</p>
+        <h1>{t('activityTitle')}</h1>
+        <p className="subtitle">{t('activitySubtitle')}</p>
       </div>
       <ActivityPicker lang={lang} />
     </main>
