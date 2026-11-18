@@ -3,8 +3,7 @@
     "logo": "Italiano",
     "changeLanguage": "Cambia lingua",
     "back": "\u2190 Indietro",
-    "reset": "Reset",
-    "backToDecks": "Indietro"
+    "reset": "Reset"
   },
   "page": {
     "title": "Scegli un Mazzo",
@@ -53,7 +52,6 @@
   },
   "study": {
     "tapToReveal": "Tocca per rivelare",
-    "revealAnswer": "Rivela la risposta",
     "correct": "Corretto",
     "incorrect": "Sbagliato",
     "flipButton": "Gira",

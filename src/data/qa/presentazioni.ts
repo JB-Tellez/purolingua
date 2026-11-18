@@ -7,7 +7,6 @@ export const presentazioni: Scenario = {
   icon: '👋',
   titleIt: 'Presentazioni',
   titleEs: 'Presentaciones',
-  level: 'A1',
   cards: [
     {
       id: 'introductions_01',

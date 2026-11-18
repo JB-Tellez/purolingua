@@ -3,8 +3,7 @@
     "logo": "Espa\u00f1ol",
     "changeLanguage": "Cambiar idioma",
     "back": "\u2190 Atr\u00e1s",
-    "reset": "Reiniciar",
-    "backToDecks": "Volver"
+    "reset": "Reiniciar"
   },
   "page": {
     "title": "Elige un Mazo",
@@ -53,7 +52,6 @@
   },
   "study": {
     "tapToReveal": "Toca para revelar",
-    "revealAnswer": "Revelar respuesta",
     "correct": "Correcto",
     "incorrect": "Incorrecto",
     "flipButton": "Girar",

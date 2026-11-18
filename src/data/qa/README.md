@@ -8,7 +8,7 @@ Static content for Q&A mode. Each scenario file exports one `Scenario` (from `@/
 - `caffe`, `albergo`, `ristorante`, `strada`, `presentazioni`, `negozio`, `treno`: one `Scenario` each.
 - `scenarios`: an array of those seven scenarios in canonical display order: `[caffe, albergo, ristorante, strada, presentazioni, negozio, treno]`. Per the comment in `index.ts`, A1 scenarios come first and A2 scenarios last.
 
-| Export | File | `id` (`ScenarioId`) | `titleIt` / `titleEs` | `level` | Cards |
+| Export | File | `id` (`ScenarioId`) | `titleIt` / `titleEs` | Card level | Cards |
 | --- | --- | --- | --- | --- | --- |
 | `caffe` | `caffe.ts` | `'coffee'` | Al Caffè / En el Café | `A1` | 8 (`coffee_01`..`coffee_08`) |
 | `albergo` | `albergo.ts` | `'hotel'` | In Albergo / En el Hotel | `A1` | 8 (`hotel_01`..`hotel_08`) |
@@ -23,12 +23,12 @@ Consumers: `src/app/[lang]/qa/layout.tsx` and `src/app/[lang]/qa/[scenario]/page
 ## Invariants
 - Each scenario must satisfy `Scenario` from `@/types`. `id` must be a `ScenarioId` literal. `foils` and `foilsEs` are fixed 3-tuples (`[string, string, string]`).
 - Scenario `id` values are route segments: pages are generated from `scenarios.map((s) => ({ lang, scenario: s.id }))` and resolved with `scenarios.find`. They must be unique and stable.
-- Card `id`s use the form `"{scenarioId}_NN"`. Progress is looked up by `getQACardKey(scenarioId, card.id)` (`src/hooks/useQASRS.ts`). Renaming a card `id` orphans any stored progress for that card.
-- In the current data, every card's `level` matches its scenario's `level`.
+- Card `id`s use the form `"{scenarioId}_NN"`. Progress is looked up by `getQACardKey(scenarioId, card.id)` (`src/lib/srs.ts`, used by `useQASRS` and `QAStudySession`). Renaming a card `id` orphans any stored progress for that card.
+- Levels are per card. In the current data all 8 cards of a scenario share one level, which is what the `A1`-before-`A2` display order follows.
 - The `scenarios` array order is the display order (A1 before A2). A new scenario must be added both to the `export { ... }` list and to the `scenarios` array.
 
 ## Side Effects
 - None. These are pure constant module exports with no runtime I/O.
 
 ## Verification
-- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). No test imports these modules directly. `src/__tests__/components/QAStudySession.test.tsx` mocks `@/data/qa`, and `src/__tests__/hooks/useQASRS.test.tsx` uses an inline fixture.
+- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). `src/__tests__/app/localeValidation.test.tsx` imports the real `scenarios` to build a valid route. `src/__tests__/components/QAStudySession.test.tsx` mocks `@/data/qa`, and `src/__tests__/hooks/useQASRS.test.tsx` uses an inline fixture.

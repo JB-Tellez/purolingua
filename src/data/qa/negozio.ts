@@ -7,7 +7,6 @@ export const negozio: Scenario = {
   icon: '🛍️',
   titleIt: 'Al Negozio',
   titleEs: 'En la Tienda',
-  level: 'A2',
   cards: [
     {
       id: 'shop_01',

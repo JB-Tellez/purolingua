@@ -48,16 +48,10 @@ function isScenarioHasDue(
 }
 
 export default function QAStudySession({ lang, scenario }: Props) {
-  // useLevelFilter called first; hasProgress defaults to false if no localStorage entry.
-  // In practice, useLevelFilter reads its own saved filter from localStorage, so
-  // hasProgress only affects the default when there is NO saved filter.
-  // We derive hasProgress from the progress object returned by useQASRS after initial render.
-  // The dependency chain: useLevelFilter(hasProgress) → activeLevels → useQASRS(activeLevels)
-  // Since useLevelFilter's hasProgress param only sets the DEFAULT levels (localStorage wins),
-  // we bootstrap with hasProgress=false and let useQASRS's returned hasProgress update on rerender.
-  // For the first render this means new users get A1 (correct), returning users get their saved filter.
-  // Any progress counts (Rephrase or Q&A), matching useSRS/useQASRS `hasProgress`:
-  // the level filter is shared, so every page and session must default the same way.
+  // useLevelFilter needs hasProgress before useQASRS can run (useQASRS needs
+  // activeLevels), so read it straight from storage once. It only picks the
+  // default levels when no Q&A filter is saved. Any progress counts (Rephrase
+  // or Q&A), matching the Q&A list page, so both default to the same levels.
   const [bootstrapHasProgress] = useState(() => Object.keys(loadProgress(lang)).length > 0);
 
   const { activeLevels } = useLevelFilter(lang, bootstrapHasProgress, 'qa');

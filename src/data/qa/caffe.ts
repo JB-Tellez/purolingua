@@ -7,7 +7,6 @@ export const caffe: Scenario = {
   icon: '☕',
   titleIt: 'Al Caffè',
   titleEs: 'En el Café',
-  level: 'A1',
   cards: [
     {
       id: 'coffee_01',

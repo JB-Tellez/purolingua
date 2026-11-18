@@ -32,6 +32,7 @@ content is under the `[lang]` segment.
     a link home. Needed because no `app/layout.tsx` wraps a 404; enabled by
     `experimental.globalNotFound` in `next.config.ts`.
 - `globals.css`: imports `tailwindcss` and `../style-reference.css`.
+- `favicon.ico`: the site icon; Next serves it as a metadata file (`out/favicon.ico`).
 - Subdirectories
   - `[lang]`: [./[lang]/README.md](./[lang]/README.md). Locale validation,
     the next-intl provider, the site header, the activity picker, and the `qa`

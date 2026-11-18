@@ -6,9 +6,11 @@ Client-side React hooks (`'use client'`) that hold PuroLingua's per-language
 learner state and wrap browser speech APIs. Two hooks persist spaced-repetition
 (SRS) progress in `localStorage` (`useSRS` for Rephrase decks, `useQASRS` for
 Q&A scenarios), one persists the CEFR level filter (`useLevelFilter`), and one
-wraps the Web Speech recognition API (`useVoiceRecognition`). Box-advancement
-and due-date logic is delegated to `@/lib/srs` (`advanceBox`, `isCardDue`,
-`getCardKey`); these hooks only manage React state and storage.
+wraps the Web Speech recognition API (`useVoiceRecognition`). Box-advancement,
+due-date logic, and key formats come from `@/lib/srs` (`advanceBox`,
+`isCardDue`, `getCardKey`, `getQACardKey`); the progress record is read and
+written through `@/lib/progressStorage`; `useLevelFilter` validates with
+`@/lib/levels:isLevel`. These hooks only manage React state.
 
 Consumers: `src/components/DeckGrid.tsx`, `src/components/ScenarioGrid.tsx`,
 and pages/sessions under `src/app/[lang]/` (including
@@ -18,7 +20,7 @@ and pages/sessions under `src/app/[lang]/` (including
 ## Interface
 
 - `useSRS(lang: Lang)` (`useSRS.ts`) returns
-  `{ progress, updateCard, isCardDueForDeck, hasProgress }`.
+  `{ updateCard, isCardDueForDeck, hasProgress }`.
   - `updateCard(deckId: DeckId, cardIndex: number, isCorrect: boolean)`: advances
     the card's box via `advanceBox` and persists.
   - `isCardDueForDeck(deckId: DeckId, cardIndex: number): boolean`: `isCardDue`
@@ -26,10 +28,11 @@ and pages/sessions under `src/app/[lang]/` (including
   - `hasProgress`: `true` when the progress record has at least one key.
 - `useQASRS(lang: Lang, scenarioId: ScenarioId, cards: QACard[], activeLevels: Level[])`
   (`useQASRS.ts`) returns
-  `{ dueCards, updateCard, isCardDueForScenario, hasProgress, progress }`.
+  `{ dueCards, updateCard, progress }`. (`QAStudySession` reads `progress` for its
+  cross-scenario end-screen check.)
   - `dueCards`: memoized subset of `cards` whose `level` is in `activeLevels`
     and that are due per `isCardDue`.
-  - `updateCard(cardId: string, isCorrect: boolean)`, `isCardDueForScenario(cardId: string): boolean`.
+  - `updateCard(cardId: string, isCorrect: boolean)`.
 - `useLevelFilter(lang: Lang, hasProgress: boolean, activity: Activity)` (`useLevelFilter.ts`;
   `type Activity = 'rephrase' | 'qa'`) returns
   `{ activeLevels: Level[], setActiveLevels(levels: Level[] | null) }`.
@@ -59,8 +62,8 @@ and pages/sessions under `src/app/[lang]/` (including
   instance, the other SRS hook, another tab) is not overwritten. The
   read-modify-write runs outside the `setState` updater so StrictMode's
   double-invoke cannot advance a box twice.
-- **Reads are a per-mount snapshot**: `progress`, `dueCards`, and the `isCardDue*`
-  helpers reflect storage as loaded at mount plus this instance's own writes.
+- **Reads are a per-mount snapshot**: `progress`, `dueCards`, and
+  `isCardDueForDeck` reflect storage as loaded at mount plus this instance's own writes.
   Changes made elsewhere appear after this instance's next `updateCard` or a
   remount.
 - **Level filter never empty (FLTR-06)**: `setActiveLevels(null)` and

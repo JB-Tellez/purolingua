@@ -35,5 +35,5 @@ export function useSRS(lang: Lang) {
 
   const hasProgress = Object.keys(progress).length > 0;
 
-  return { progress, updateCard, isCardDueForDeck, hasProgress };
+  return { updateCard, isCardDueForDeck, hasProgress };
 }

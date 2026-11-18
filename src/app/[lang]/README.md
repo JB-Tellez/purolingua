@@ -21,7 +21,7 @@ picker. The two activities are under `qa/` and `rephrase/`.
   - `metadata`: same as `(home)/layout.tsx`.
 - `page.tsx`
   - `default LangPage()` (`'use client'`): reads `lang` from `useParams` and
-    renders the `page.title` and `page.subtitle` messages and
+    renders the `page.activityTitle` and `page.activitySubtitle` messages and
     `<ActivityPicker lang>`.
 - Subdirectories
   - `qa`: [./qa/README.md](./qa/README.md). Scenario browser and the
@@ -46,5 +46,5 @@ picker. The two activities are under `qa/` and `rephrase/`.
 
 ## Verification
 
-- Run: `npx vitest run src/__tests__/components/ActivityPicker.test.tsx`
+- Run: `npx vitest run src/__tests__/components/ActivityPicker.test.tsx src/__tests__/app` (`localeValidation`: the layout 404s unknown locales; `htmlLang`: `<html lang>`; `listPageHeadings`: the picker heading).
 - Full suite: `npm test`

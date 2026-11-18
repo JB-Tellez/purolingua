@@ -35,8 +35,8 @@ vi.mock('@/data/qa', () => {
   });
   return {
     scenarios: [
-      { id: 'coffee', icon: '', titleIt: '', titleEs: '', level: 'A1', cards: [card('coffee_01', 'Un caffè')] },
-      { id: 'hotel', icon: '', titleIt: '', titleEs: '', level: 'A1', cards: [card('hotel_01', 'Una camera')] },
+      { id: 'coffee', icon: '', titleIt: '', titleEs: '', cards: [card('coffee_01', 'Un caffè')] },
+      { id: 'hotel', icon: '', titleIt: '', titleEs: '', cards: [card('hotel_01', 'Una camera')] },
     ],
   };
 });

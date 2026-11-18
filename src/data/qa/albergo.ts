@@ -7,7 +7,6 @@ export const albergo: Scenario = {
   icon: '🏨',
   titleIt: 'In Albergo',
   titleEs: 'En el Hotel',
-  level: 'A1',
   cards: [
     {
       id: 'hotel_01',

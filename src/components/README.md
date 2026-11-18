@@ -54,26 +54,23 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
   are documented in [`../lib/README.md`](../lib/README.md)). It does nothing if
   `window.speechSynthesis` is absent.
 - **SiteHeader back link**: shown when the pathname has 2 or more segments
-  (`segments.length >= 2`), pointing to the path with its last segment removed.
-  The inline comment says "3+ segments", but the code checks `>= 2`.
-- **SiteHeader language dropdown**: the first option is always labeled with
-  `LANG_META.it` (Italiano) but links to `/{lang}`. The second is labeled with
-  `LANG_META[OTHER_LANG[lang]]` and links to `/{other}`. For `lang === 'it'`
-  this gives Italiano -> `/it` and Español -> `/es`. For `lang === 'es'`, both
-  options are labeled Italiano (linking to `/es` and `/it`), and no Español
-  option is shown. This is current code behavior, not a design guarantee.
+  (`segments.length >= 2`), pointing to the path with its last segment removed
+  (e.g. `/it/rephrase` → `/it`).
+- **SiteHeader language dropdown**: one option per `LANG_META` entry, in
+  `LANG_META` order, each linking to its own `/{code}` and marked `active` for
+  the current language. Adding a locale to `LANG_META` adds its option.
 
 ## Side Effects
 
-- `SiteHeader` reset: `localStorage.removeItem('{lang}-progress')`, then a full
+- `SiteHeader` reset: `clearProgress(lang)` (`@/lib/progressStorage`), then a full
   page reload via `reloadPage()` (`@/lib/reloadPage`), so mounted grids and
   study sessions drop their in-memory progress. This key holds both Rephrase
   and Q&A progress (see `../hooks/README.md`), so both are cleared.
   The level filters and the other language's progress are not touched.
 - `AudioButton`: `window.speechSynthesis.cancel()` then `speak(utterance)`
   (audio output).
-- `DeckGrid` and `ScenarioGrid` read `localStorage` indirectly via `useSRS`,
-  `useLevelFilter`, and `useQASRS`. `ScenarioGrid` mounts one `useQASRS`
+- `DeckGrid` and `ScenarioGrid` read `localStorage` indirectly via `useSRS` and
+  `useQASRS` (their `activeLevels` comes from the page as a prop). `ScenarioGrid` mounts one `useQASRS`
   instance per scenario tile.
 - All other components are pure render plus callback props.
 

@@ -50,9 +50,15 @@ tapping or by voice.
 - The `filteredCards` choice pool is computed once (empty deps) from
   `activeLevels`. `choices` is memoized on `[currentEntry, filteredCards]`.
 - A click is ignored while `selectedChoice !== null`. Each choice, correct or
-  not, calls `handleAnswer(isCorrect)` after 600 ms, which calls
+  not, schedules `handleAnswer(isCorrect)` after 600 ms, which calls
   `updateCard(deckId, originalIndex, isCorrect)` and advances. The "next"
-  control calls `handleAnswer(true)` directly.
+  control is disabled until a choice is selected; pressing it runs
+  `handleAnswer` with that choice's correctness at once and cancels the pending
+  600 ms timer, so each card is recorded once.
+- "Study again" (on both end screens) replays the session's due-card snapshot
+  as practice: `practice` is set, and `handleAnswer` skips `updateCard`, so
+  boxes and review dates stay as the real session left them. It is hidden on
+  the all-done screen when the session started with no due cards.
 - Mic on the front of the card: a transcript that matches `card.front` flips
   the card and shows `heard`. Mic on the back: a transcript that matches a
   choice's text selects that choice. A transcript that matches nothing, or a

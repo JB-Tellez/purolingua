@@ -25,9 +25,10 @@ export interface Card {
   level: Level;    // CEFR level
 }
 
-// Progress stored in localStorage keyed by "{deckId}_{cardIndex}"
-// e.g., "daily_0", "restaurant_12"
-// Key format MUST match v1.1 exactly — see src/js/features/progress.js on the `vanilla` branch
+// Progress stored in localStorage, one ProgressRecord per language, with two key formats:
+//   Rephrase "{deckId}_{cardIndex}" (e.g. "daily_0") — MUST match v1.1 exactly, see
+//     src/js/features/progress.js on the `vanilla` branch
+//   Q&A "qa_{scenarioId}_{cardId}" (e.g. "qa_coffee_coffee_01") — added after v1.1
 export interface Progress {
   box: number;
   nextReview: string; // YYYY-MM-DD date string; matches v1.1 localStorage format exactly
@@ -62,6 +63,5 @@ export interface Scenario {
   icon: string;      // emoji
   titleIt: string;   // e.g. "Al Caffè"
   titleEs: string;   // e.g. "En el Café"
-  level: Level;      // scenario-level tag for Phase 18 filter
   cards: QACard[];
 }
