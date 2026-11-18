@@ -7,7 +7,6 @@ export const strada: Scenario = {
   icon: '🗺️',
   titleIt: 'Per Strada',
   titleEs: 'En la Calle',
-  level: 'A1',
   cards: [
     {
       id: 'street_01',

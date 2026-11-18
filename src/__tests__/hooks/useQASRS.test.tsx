@@ -30,13 +30,6 @@ const mockCards: QACard[] = [
 beforeEach(() => localStorage.clear());
 
 describe('useQASRS initial state', () => {
-  it('starts with empty progress (hasProgress = false)', () => {
-    const { result } = renderHook(() =>
-      useQASRS('it', 'coffee', mockCards, ['A1', 'A2'])
-    );
-    expect(result.current.hasProgress).toBe(false);
-  });
-
   it('all cards are dueCards for a new user with no progress', () => {
     const { result } = renderHook(() =>
       useQASRS('it', 'coffee', mockCards, ['A1', 'A2'])
@@ -98,14 +91,6 @@ describe('useQASRS updateCard', () => {
     expect(stored['qa_coffee_test_01'].box).toBe(1);
   });
 
-  it('after updateCard, hasProgress becomes true', () => {
-    const { result } = renderHook(() =>
-      useQASRS('it', 'coffee', mockCards, ['A1', 'A2'])
-    );
-    act(() => { result.current.updateCard('test_01', true); });
-    expect(result.current.hasProgress).toBe(true);
-  });
-
   it('answered card is removed from dueCards (nextReview in future)', () => {
     const { result } = renderHook(() =>
       useQASRS('it', 'coffee', mockCards, ['A1', 'A2'])
@@ -135,7 +120,7 @@ describe('useQASRS key isolation', () => {
       useQASRS('es', 'coffee', mockCards, ['A1', 'A2'])
     );
     act(() => { itHook.current.updateCard('test_01', true); });
-    expect(esHook.current.hasProgress).toBe(false);
+    expect(esHook.current.dueCards).toHaveLength(2);
     expect(localStorage.getItem('es-progress')).toBeNull();
   });
 });
@@ -153,7 +138,7 @@ describe('useQASRS writes are based on current storage, not a stale snapshot', (
 
     act(() => { result.current.updateCard('test_02', true); });
     expect(storedKeys()).toEqual(['qa_coffee_test_02']);
-    expect(result.current.isCardDueForScenario('test_01')).toBe(true);
+    expect(result.current.dueCards.map(c => c.id)).toContain('test_01');
   });
 
   it('does not erase Rephrase progress written to the shared key after mount', () => {

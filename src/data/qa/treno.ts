@@ -7,7 +7,6 @@ export const treno: Scenario = {
   icon: '🚄',
   titleIt: 'In Treno',
   titleEs: 'En el Tren',
-  level: 'A2',
   cards: [
     {
       id: 'train_01',

@@ -34,7 +34,6 @@ vi.mock('@/data/qa', () => ({
       icon: '☕',
       titleIt: 'Al Caffè',
       titleEs: 'En el Café',
-      level: 'A1',
       cards: [
         {
           id: 'coffee_01',
@@ -53,7 +52,6 @@ vi.mock('@/data/qa', () => ({
       icon: '🏨',
       titleIt: 'All\'Albergo',
       titleEs: 'En el Hotel',
-      level: 'A1',
       cards: [
         {
           id: 'hotel_01',
@@ -85,7 +83,6 @@ import { useQASRS } from '@/hooks/useQASRS';
 import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
 
 const mockUpdateCard = vi.fn();
-const mockIsCardDueForScenario = vi.fn(() => true);
 let mockStartListening: ReturnType<typeof vi.fn>;
 
 // ---------------------------------------------------------------------------
@@ -97,7 +94,6 @@ const mockScenario: Scenario = {
   icon: '☕',
   titleIt: 'Al Caffè',
   titleEs: 'En el Café',
-  level: 'A1',
   cards: [
     {
       id: 'coffee_01',
@@ -127,8 +123,6 @@ function setupDefaultQASRSMock(overrides?: Partial<ReturnType<typeof useQASRS>>)
   (useQASRS as ReturnType<typeof vi.fn>).mockReturnValue({
     dueCards: mockScenario.cards,
     updateCard: mockUpdateCard,
-    isCardDueForScenario: mockIsCardDueForScenario,
-    hasProgress: false,
     progress: {},
     ...overrides,
   });
@@ -153,7 +147,6 @@ function renderQAStudySession(lang: 'it' | 'es' = 'it') {
 beforeEach(() => {
   vi.clearAllMocks();
   isCardDueImpl = () => true;
-  mockIsCardDueForScenario.mockReturnValue(true);
   setupDefaultQASRSMock();
   setupVoiceRecognitionMock();
 });
@@ -398,8 +391,6 @@ describe('QAStudySession', () => {
     (useQASRS as ReturnType<typeof vi.fn>).mockReturnValue({
       dueCards: [mockScenario.cards[0]],
       updateCard: mockUpdateCard,
-      isCardDueForScenario: mockIsCardDueForScenario,
-      hasProgress: false,
       progress: {},
     });
 
@@ -446,8 +437,6 @@ describe('QAStudySession', () => {
     (useQASRS as ReturnType<typeof vi.fn>).mockReturnValue({
       dueCards: [mockScenario.cards[0]],
       updateCard: mockUpdateCard,
-      isCardDueForScenario: mockIsCardDueForScenario,
-      hasProgress: true,
       progress: progressWithAllDone,
     });
 
@@ -482,8 +471,6 @@ describe('QAStudySession', () => {
     (useQASRS as ReturnType<typeof vi.fn>).mockReturnValue({
       dueCards: [],
       updateCard: mockUpdateCard,
-      isCardDueForScenario: mockIsCardDueForScenario,
-      hasProgress: false,
       progress: {},
     });
 
@@ -503,8 +490,6 @@ describe('QAStudySession', () => {
     (useQASRS as ReturnType<typeof vi.fn>).mockReturnValue({
       dueCards: [mockScenario.cards[0]],
       updateCard: mockUpdateCard,
-      isCardDueForScenario: mockIsCardDueForScenario,
-      hasProgress: false,
       progress: {},
     });
 

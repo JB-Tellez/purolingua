@@ -18,7 +18,7 @@ and pages/sessions under `src/app/[lang]/` (including
 ## Interface
 
 - `useSRS(lang: Lang)` (`useSRS.ts`) returns
-  `{ progress, updateCard, isCardDueForDeck, hasProgress }`.
+  `{ updateCard, isCardDueForDeck, hasProgress }`.
   - `updateCard(deckId: DeckId, cardIndex: number, isCorrect: boolean)`: advances
     the card's box via `advanceBox` and persists.
   - `isCardDueForDeck(deckId: DeckId, cardIndex: number): boolean`: `isCardDue`
@@ -26,10 +26,11 @@ and pages/sessions under `src/app/[lang]/` (including
   - `hasProgress`: `true` when the progress record has at least one key.
 - `useQASRS(lang: Lang, scenarioId: ScenarioId, cards: QACard[], activeLevels: Level[])`
   (`useQASRS.ts`) returns
-  `{ dueCards, updateCard, isCardDueForScenario, hasProgress, progress }`.
+  `{ dueCards, updateCard, progress }`. (`QAStudySession` reads `progress` for its
+  cross-scenario end-screen check.)
   - `dueCards`: memoized subset of `cards` whose `level` is in `activeLevels`
     and that are due per `isCardDue`.
-  - `updateCard(cardId: string, isCorrect: boolean)`, `isCardDueForScenario(cardId: string): boolean`.
+  - `updateCard(cardId: string, isCorrect: boolean)`.
 - `useLevelFilter(lang: Lang, hasProgress: boolean, activity: Activity)` (`useLevelFilter.ts`;
   `type Activity = 'rephrase' | 'qa'`) returns
   `{ activeLevels: Level[], setActiveLevels(levels: Level[] | null) }`.
@@ -59,8 +60,8 @@ and pages/sessions under `src/app/[lang]/` (including
   instance, the other SRS hook, another tab) is not overwritten. The
   read-modify-write runs outside the `setState` updater so StrictMode's
   double-invoke cannot advance a box twice.
-- **Reads are a per-mount snapshot**: `progress`, `dueCards`, and the `isCardDue*`
-  helpers reflect storage as loaded at mount plus this instance's own writes.
+- **Reads are a per-mount snapshot**: `progress`, `dueCards`, and
+  `isCardDueForDeck` reflect storage as loaded at mount plus this instance's own writes.
   Changes made elsewhere appear after this instance's next `updateCard` or a
   remount.
 - **Level filter never empty (FLTR-06)**: `setActiveLevels(null)` and

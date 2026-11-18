@@ -4,8 +4,8 @@ Scope: the 18 EGM contracts (`README.md` plus 17 child `README.md` files), each 
 
 ## src/types/README.md
 
-- The `ProgressRecord` invariant says keys use the format `"{deckId}_{cardIndex}"`, and the source comment above `Progress` says the same (`src/types/index.ts:28-30`). The same record also stores Q&A keys `qa_{scenarioId}_{cardId}` (`src/lib/srs.ts:getQACardKey`, written by `useQASRS`). Neither the contract nor the comment mentions the second format.
-- `Scenario.level` is documented as a field and commented "scenario-level tag for Phase 18 filter" (`index.ts:65`), but nothing reads it. Level filtering is per card (`QACard.level`) in `useQASRS` and `QAStudySession`. The field is dead, and the comment describes a filter that does not use it.
+- **[FIXED 2026-11-18.]** The `ProgressRecord` invariant says keys use the format `"{deckId}_{cardIndex}"`, and the source comment above `Progress` says the same (`src/types/index.ts:28-30`). The same record also stores Q&A keys `qa_{scenarioId}_{cardId}` (`src/lib/srs.ts:getQACardKey`, written by `useQASRS`). Neither the contract nor the comment mentions the second format.
+- **[FIXED 2026-11-18: removed from the type, the 7 scenarios, and test fixtures.]** `Scenario.level` is documented as a field and commented "scenario-level tag for Phase 18 filter" (`index.ts:65`), but nothing reads it. Level filtering is per card (`QACard.level`) in `useQASRS` and `QAStudySession`. The field is dead, and the comment describes a filter that does not use it.
 
 ## src/lib/README.md
 
@@ -16,7 +16,7 @@ Scope: the 18 EGM contracts (`README.md` plus 17 child `README.md` files), each 
 
 ## src/hooks/README.md
 
-- Three documented return values have no consumer. `useSRS(...).progress` is never read: `DeckGrid`, both list pages, and `StudySession` use only `isCardDueForDeck`, `updateCard`, and `hasProgress`. `useQASRS(...).hasProgress` and `useQASRS(...).isCardDueForScenario` are never read: `ScenarioGrid` uses `dueCards`, and `QAStudySession` uses `dueCards`, `updateCard`, and `progress`. `QAStudySession` computes its own `bootstrapHasProgress` because it needs the flag before calling `useQASRS`, so the hook's `hasProgress` cannot serve that caller.
+- **[FIXED 2026-11-18: removed; tests now check `dueCards` instead.]** Three documented return values have no consumer. `useSRS(...).progress` is never read: `DeckGrid`, both list pages, and `StudySession` use only `isCardDueForDeck`, `updateCard`, and `hasProgress`. `useQASRS(...).hasProgress` and `useQASRS(...).isCardDueForScenario` are never read: `ScenarioGrid` uses `dueCards`, and `QAStudySession` uses `dueCards`, `updateCard`, and `progress`. `QAStudySession` computes its own `bootstrapHasProgress` because it needs the flag before calling `useQASRS`, so the hook's `hasProgress` cannot serve that caller.
 - The Overview says box and due-date logic is delegated to `@/lib/srs` "(`advanceBox`, `isCardDue`, `getCardKey`)". `useQASRS` also uses `getQACardKey`, both SRS hooks delegate storage to `@/lib/progressStorage`, and `useLevelFilter` validates with `@/lib/levels:isLevel`. The list predates those modules.
 
 ## src/components/README.md
@@ -28,7 +28,7 @@ Scope: the 18 EGM contracts (`README.md` plus 17 child `README.md` files), each 
 
 ## src/i18n/README.md
 
-- Two message keys in both `messages/it.json` and `messages/es.json` are not referenced anywhere in `src/`: `study.revealAnswer` and `nav.backToDecks`. `SiteHeader` (the only `nav` consumer) uses `logo`, `back`, `reset`, and `changeLanguage`, and the sessions use `study.backToDecks`. (The two files have identical key sets, 53 keys each.)
+- **[FIXED 2026-11-18: removed.]** Two message keys in both `messages/it.json` and `messages/es.json` are not referenced anywhere in `src/`: `study.revealAnswer` and `nav.backToDecks`. `SiteHeader` (the only `nav` consumer) uses `logo`, `back`, `reset`, and `changeLanguage`, and the sessions use `study.backToDecks`. (The two files have identical key sets, 53 keys each.)
 - `request.ts` validates with `hasLocale(routing.locales, requested)` directly instead of the new `isLang` helper, so there are two ways to check a locale. Both behave the same; the contract lists `isLang`'s users as the three route files only, which is accurate, but does not say why `request.ts` differs.
 
 ## src/data/README.md
@@ -97,6 +97,6 @@ No drift detected. (Checked against the real data: 16 decks of 40 cards, 20 A1 /
 
 ## Files no contract covers
 
-- `public/` holds only `create-next-app` leftovers that nothing references: `file.svg`, `globe.svg`, `next.svg`, `vercel.svg`, and `window.svg` (no `src/` file uses any of them). They are copied into `out/` and served.
-- `src/data/.gitkeep`, `src/hooks/.gitkeep`, and `src/lib/.gitkeep` are scaffolding placeholders in directories that now contain files.
+- **[FIXED 2026-11-18: removed.]** `public/` holds only `create-next-app` leftovers that nothing references: `file.svg`, `globe.svg`, `next.svg`, `vercel.svg`, and `window.svg` (no `src/` file uses any of them). They are copied into `out/` and served.
+- **[FIXED 2026-11-18: removed.]** `src/data/.gitkeep`, `src/hooks/.gitkeep`, and `src/lib/.gitkeep` are scaffolding placeholders in directories that now contain files.
 - `src/app/favicon.ico` (noted under `src/app/README.md`).

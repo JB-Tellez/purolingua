@@ -12,10 +12,10 @@ This directory holds the core domain types for PuroLingua v1.2, all in `index.ts
 - `type ProgressRecord = Record<string, Progress>`
 - `type ScenarioId = 'coffee' | 'hotel' | 'restaurant' | 'street' | 'introductions' | 'shop' | 'train'`
 - `interface QACard { id; question; correct; foils: [string, string, string]; questionEs; correctEs; foilsEs: [string, string, string]; level: Level }`
-- `interface Scenario { id: ScenarioId; icon: string; titleIt: string; titleEs: string; level: Level; cards: QACard[] }`
+- `interface Scenario { id: ScenarioId; icon: string; titleIt: string; titleEs: string; cards: QACard[] }`. Levels are per card (`QACard.level`); level filtering never looks at the scenario.
 
 ## Invariants
-- `ProgressRecord` keys use the format `"{deckId}_{cardIndex}"` (for example `"daily_0"`). The key format must stay identical to v1.1, because existing `localStorage` data uses it. [`src/lib/srs.ts`](../lib/README.md) `getCardKey` produces these keys.
+- `ProgressRecord` holds two key formats in one record: Rephrase `"{deckId}_{cardIndex}"` (for example `"daily_0"`, `getCardKey`), which must stay identical to v1.1 because existing `localStorage` data uses it, and Q&A `"qa_{scenarioId}_{cardId}"` (`getQACardKey`, added after v1.1). Both come from [`src/lib/srs.ts`](../lib/README.md).
 - `Progress.nextReview` is a `YYYY-MM-DD` date string, matching the v1.1 `localStorage` format.
 - `QACard.foils` and `QACard.foilsEs` are fixed 3-tuples, so each Q&A card always has exactly 3 distractors per language. The `*Es` fields are parallel Spanish translations of the Italian fields.
 - `Lang` is derived from `routing.locales` in [`src/i18n/routing.ts`](../i18n/README.md), so the two cannot drift. The import is type-only and adds no runtime dependency.

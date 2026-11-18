@@ -49,13 +49,5 @@ export function useQASRS(
     [lang, scenarioId]
   );
 
-  const isCardDueForScenario = useCallback(
-    (cardId: string): boolean =>
-      isCardDue(progress[getQACardKey(scenarioId, cardId)]),
-    [progress, scenarioId]
-  );
-
-  const hasProgress = Object.keys(progress).length > 0;
-
-  return { dueCards, updateCard, isCardDueForScenario, hasProgress, progress };
+  return { dueCards, updateCard, progress };
 }
