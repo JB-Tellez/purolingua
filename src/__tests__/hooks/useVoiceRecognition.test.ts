@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
-import { mockRecognitionInstance } from '@/__tests__/setup';
+import { mockRecognitionInstance, MockSpeechRecognition } from '@/__tests__/setup';
 
 describe('useVoiceRecognition', () => {
   beforeEach(() => {
@@ -151,24 +151,54 @@ describe('useVoiceRecognition', () => {
     });
   });
 
-  describe('idempotent start', () => {
-    it('does not create a second instance when already listening', () => {
+  describe('one recognizer at a time', () => {
+    // The shared mock returns one object; these tests need a distinct recognizer per start.
+    function makeRecognizer() {
+      return {
+        start: vi.fn(), stop: vi.fn(), abort: vi.fn(),
+        lang: '', continuous: false, interimResults: false,
+        onstart: null as (() => void) | null,
+        onend: null as (() => void) | null,
+        onresult: null as ((e: { results: [[{ transcript: string }]] }) => void) | null,
+        onerror: null as ((e: { error: string }) => void) | null,
+      };
+    }
+
+    it('a second start while the first is still starting creates no second recognizer', () => {
       const { result } = renderHook(() => useVoiceRecognition('it' as any));
-      const { startListening } = result.current;
+      act(() => { result.current.startListening(vi.fn(), vi.fn()); });
+      act(() => { result.current.startListening(vi.fn(), vi.fn()); }); // before onstart
+      expect(MockSpeechRecognition).toHaveBeenCalledOnce();
+    });
 
-      act(() => {
-        startListening(vi.fn(), vi.fn());
-      });
+    it("a cancelled session's late end or error does not stop the next session", () => {
+      const first = makeRecognizer();
+      const second = makeRecognizer();
+      MockSpeechRecognition.mockImplementationOnce(function () { return first; })
+        .mockImplementationOnce(function () { return second; });
+      const { result } = renderHook(() => useVoiceRecognition('it' as any));
+      act(() => { result.current.startListening(vi.fn(), vi.fn()); });
+      act(() => { first.onstart?.(); });
+      act(() => { result.current.stopListening(); });
+      act(() => { result.current.startListening(vi.fn(), vi.fn()); });
+      act(() => { second.onstart?.(); });
 
-      const initialListen = result.current.isListening;
-      const callCount = vi.mocked((globalThis as any).SpeechRecognition).mock?.calls?.length ?? 0;
+      act(() => { first.onerror?.({ error: 'aborted' }); first.onend?.(); });
 
-      act(() => {
-        startListening(vi.fn(), vi.fn());
-      });
+      expect(result.current.isListening).toBe(true);
+    });
 
-      expect(result.current.isListening).toBe(initialListen);
-      expect(vi.mocked((globalThis as any).SpeechRecognition).mock?.calls?.length).toBe(callCount + 1);
+    it('unmounting aborts the recognizer and ignores its late result', () => {
+      const onResult = vi.fn();
+      const { result, unmount } = renderHook(() => useVoiceRecognition('it' as any));
+      act(() => { result.current.startListening(onResult, vi.fn()); });
+      act(() => { mockRecognitionInstance.onstart?.(); });
+
+      unmount();
+      mockRecognitionInstance.onresult?.({ results: [[{ transcript: 'Ciao' }]] });
+
+      expect(mockRecognitionInstance.abort).toHaveBeenCalledOnce();
+      expect(onResult).not.toHaveBeenCalled();
     });
   });
 });

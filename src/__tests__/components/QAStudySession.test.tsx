@@ -339,16 +339,6 @@ describe('QAStudySession', () => {
     vi.useRealTimers();
   });
 
-  it('pressing the mic while listening cancels instead of starting again', () => {
-    const stopListening = vi.fn();
-    setupVoiceRecognitionMock({ isListening: true, stopListening });
-    renderQAStudySession();
-    act(() => { document.querySelector<HTMLButtonElement>('.mic-btn')!.click(); });
-    expect(stopListening).toHaveBeenCalledOnce();
-    expect(mockStartListening).not.toHaveBeenCalled();
-    expect(document.querySelector('.mic-btn')).not.toHaveClass('mic-btn--listening');
-  });
-
   // A late voice result after a tap would answer the card a second time (and,
   // after a wrong tap, use a stale "not missed" flag). Tapping ends the attempt;
   // useVoiceRecognition ignores a cancelled session's results.
@@ -384,6 +374,20 @@ describe('QAStudySession', () => {
 
     expect(screen.getByRole('status').textContent).toBe('notRecognized');
     expect(screen.getByRole('button', { name: 'Un caffè.' })).not.toHaveClass('correct');
+  });
+
+  // The toggle follows the button's own state: the hook's isListening only
+  // turns true once the browser fires onstart, so it can't be what decides.
+  it('pressing the mic again cancels instead of starting again, even before listening has started', () => {
+    const stopListening = vi.fn();
+    setupVoiceRecognitionMock({ stopListening }); // isListening stays false until onstart
+    renderQAStudySession();
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
+    act(() => { screen.getByRole('button', { name: 'micListening' }).click(); });
+
+    expect(mockStartListening).toHaveBeenCalledOnce();
+    expect(stopListening).toHaveBeenCalledOnce();
+    expect(document.querySelector('.mic-btn')).not.toHaveClass('mic-btn--listening');
   });
 
   it('spoken non-match sets notRecognized feedback, no SRS update', () => {

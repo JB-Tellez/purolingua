@@ -175,6 +175,18 @@ describe('StudySession voice integration', () => {
     vi.useRealTimers();
   });
 
+  it('pressing the mic again before listening has started cancels instead of starting a second recognizer', () => {
+    mockRecognitionInstance.abort.mockClear();
+    renderStudySession();
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
+    // no onstart yet: the browser has not started listening
+    act(() => { screen.getByRole('button', { name: 'micListening' }).click(); });
+
+    expect(MockSpeechRecognition).toHaveBeenCalledOnce();
+    expect(mockRecognitionInstance.abort).toHaveBeenCalledOnce();
+    expect(screen.getByRole('button', { name: 'micStart' })).not.toHaveClass('mic-btn--listening');
+  });
+
   // VOICE-12: transcript no-match on card front triggers error state
   it('VOICE-12: non-matching transcript on card front triggers mic error state', async () => {
     vi.useFakeTimers();

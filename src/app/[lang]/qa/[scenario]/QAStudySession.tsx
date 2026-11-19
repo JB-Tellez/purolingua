@@ -68,7 +68,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
   // Snapshot due cards once at session start — prevents re-filtering mid-session
   const [sessionDueCards] = useState(() => dueCards);
 
-  const { isSupported, isListening, startListening, stopListening } = useVoiceRecognition(lang);
+  const { isSupported, startListening, stopListening } = useVoiceRecognition(lang);
 
   const [index, setIndex] = useState(0);
   // Which end screen to show is derived at render time (below), not decided in
@@ -176,7 +176,8 @@ export default function QAStudySession({ lang, scenario }: Props) {
 
   function handleMicPress() {
     // Pressing the mic while listening cancels (the button is a toggle: aria-pressed).
-    if (isListening) return cancelListening();
+    // micState, not the hook's isListening: that turns true only once the browser starts.
+    if (micState === 'listening') return cancelListening();
     if (selectedChoice !== null) return;
     setMicState('listening');
     startListening(

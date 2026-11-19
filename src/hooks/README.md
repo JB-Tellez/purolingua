@@ -39,7 +39,7 @@ and pages/sessions under `src/app/[lang]/` (including
   `activity` is required so no caller shares a filter by accident.
 - `useVoiceRecognition(lang: Lang)` (`useVoiceRecognition.ts`) returns
   `{ isSupported, isListening, startListening(onResult: (transcript: string) => void, onError: () => void), stopListening() }`.
-  `stopListening` cancels: it calls `abort()` (discarding any pending result), sets `isListening` to `false` at once, and the cancelled session's late `onresult` / `onerror` (Chrome fires `"aborted"`) are ignored, so callers get neither callback.
+  `stopListening` cancels: it calls `abort()` (discarding any pending result), sets `isListening` to `false` at once, and the cancelled session's late `onresult` / `onerror` / `onend` (Chrome fires `"aborted"`) are ignored, so callers get neither callback and a newer session's `isListening` is untouched. Unmounting cancels the same way.
 
 ## Invariants
 
@@ -80,8 +80,10 @@ and pages/sessions under `src/app/[lang]/` (including
   `useVoiceRecognition` resolves `isSupported` in a `useEffect`, so it is
   `false` on the first render and during SSR.
 - **Single active recognition**: `startListening` returns without action if no
-  `SpeechRecognition` / `webkitSpeechRecognition` constructor exists or if
-  `isListening` is already true. Each start creates a new recognizer with
+  `SpeechRecognition` / `webkitSpeechRecognition` constructor exists or if the
+  current session is neither cancelled nor ended (tracked in a ref, so a start
+  still waiting for `onstart` counts; `isListening` turns true only at
+  `onstart`). Each start creates a new recognizer with
   `continuous = false`, `interimResults = false`, and locale `it-IT` / `es-ES`
   (`LANG_LOCALE`).
 - **Recognition results**: `onResult` receives only `results[0][0].transcript`;

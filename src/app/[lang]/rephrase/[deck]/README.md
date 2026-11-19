@@ -38,7 +38,7 @@ tapping or by voice.
 
 ## Invariants
 
-- Pressing the mic while listening cancels (`stopListening`) and returns the mic to idle with no feedback message. Tapping a choice while listening cancels the same way, so a voice result that arrives after the tap cannot answer the card a second time.
+- Pressing the mic while listening cancels (`stopListening`) and returns the mic to idle with no feedback message. "Listening" is the session's `micState`, set at the first press, so a second press cancels even before the browser has started (`onstart`). Leaving the page cancels too (the hook aborts on unmount). Tapping a choice while listening cancels the same way, so a voice result that arrives after the tap cannot answer the card a second time.
 - Answer and mic feedback render in one `FeedbackMessage` (one `role="status"` live region), below the card rather than on its back face, so it is visible and announced once whichever side is up.
 - The Next button is disabled until a choice is selected; `.btn:disabled` styles it as inert.
 - The session takes one snapshot of the due cards at mount (`useState`
