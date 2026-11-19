@@ -37,7 +37,7 @@ synthesis, speech recognition).
 
 ## Invariants
 
-- Pressing the mic while listening cancels (`stopListening`) and returns the mic to idle with no feedback message.
+- Pressing the mic while listening cancels (`stopListening`) and returns the mic to idle with no feedback message. Tapping a choice while listening cancels the same way, so a voice result that arrives after the tap cannot answer the card a second time or record a missed card as correct.
 - The session takes one snapshot of the due cards at mount
   (`useState(() => dueCards)` as `sessionDueCards`). Changes to SRS state during
   the session do not re-filter or re-index the cards.

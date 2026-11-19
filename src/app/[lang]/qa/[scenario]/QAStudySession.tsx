@@ -151,6 +151,9 @@ export default function QAStudySession({ lang, scenario }: Props) {
 
   function handleChoiceClick(choiceIndex: number) {
     if (selectedChoice !== null) return; // already answered
+    // A tap ends a voice attempt in progress, so its late result can't answer
+    // again (or record a missed card as correct).
+    if (micState === 'listening') cancelListening();
     const isCorrect = choices[choiceIndex].isCorrect;
     setSelectedChoice(choiceIndex);
     setFeedbackState(isCorrect ? 'correct' : 'incorrect');
@@ -166,13 +169,14 @@ export default function QAStudySession({ lang, scenario }: Props) {
     }
   }
 
+  function cancelListening() {
+    stopListening();
+    setMicState('idle');
+  }
+
   function handleMicPress() {
     // Pressing the mic while listening cancels (the button is a toggle: aria-pressed).
-    if (isListening) {
-      stopListening();
-      setMicState('idle');
-      return;
-    }
+    if (isListening) return cancelListening();
     if (selectedChoice !== null) return;
     setMicState('listening');
     startListening(

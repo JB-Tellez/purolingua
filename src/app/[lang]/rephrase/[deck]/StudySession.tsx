@@ -217,6 +217,8 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
   function handleChoiceClick(choiceIndex: number) {
     if (selectedChoice !== null) return; // already answered
+    // A tap ends a voice attempt in progress, so its late result can't answer again.
+    if (micState === 'listening') cancelListening();
     const isCorrect = choices[choiceIndex].isCorrect;
     setSelectedChoice(choiceIndex);
     setFeedbackState(isCorrect ? 'correct' : 'incorrect');

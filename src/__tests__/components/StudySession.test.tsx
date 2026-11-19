@@ -18,11 +18,12 @@ vi.mock('next-intl', () => ({
 // Controllable isCardDueForDeck: tests set this function before rendering.
 // Default: always return true (all cards due, voice integration tests behavior).
 let isDueImpl: (id: string, i: number) => boolean = () => true;
+const { mockUpdateCard } = vi.hoisted(() => ({ mockUpdateCard: vi.fn() }));
 
 vi.mock('@/hooks/useSRS', () => ({
   useSRS: () => ({
     isCardDueForDeck: (id: string, i: number) => isDueImpl(id, i),
-    updateCard: vi.fn(),
+    updateCard: mockUpdateCard,
     hasProgress: false,
   }),
 }));
@@ -97,6 +98,7 @@ function fireOnResult(transcript: string) {
 // Reset isDueImpl to default before each test
 beforeEach(() => {
   isDueImpl = () => true;
+  mockUpdateCard.mockClear();
 });
 
 // ---------------------------------------------------------------------------
@@ -276,6 +278,24 @@ describe('StudySession voice integration', () => {
 
     expect(backMicBtn).not.toHaveClass('mic-btn--error');
 
+    vi.useRealTimers();
+  });
+
+  it('tapping a choice while listening cancels the voice attempt, so a late match does not answer again', () => {
+    vi.useFakeTimers();
+    renderStudySession();
+    act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
+    act(() => { screen.getAllByRole('button', { name: 'micStart' })[1].click(); });
+    act(() => { mockRecognitionInstance.onstart?.(); });
+
+    act(() => { screen.getByRole('button', { name: 'Hello' }).click(); }); // the correct choice
+    act(() => { fireOnResult('Hello'); }); // the result arrives after the tap
+    act(() => { screen.getByRole('button', { name: 'nextButton' }).click(); });
+    act(() => { vi.advanceTimersByTime(600); });
+
+    expect(mockUpdateCard).toHaveBeenCalledOnce();
+    expect(mockUpdateCard).toHaveBeenCalledWith('daily', 0, true);
+    expect(screen.getByText('cardCounter({"current":2,"total":4})')).toBeInTheDocument();
     vi.useRealTimers();
   });
 });

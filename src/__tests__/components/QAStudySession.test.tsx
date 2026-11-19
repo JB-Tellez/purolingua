@@ -349,6 +349,26 @@ describe('QAStudySession', () => {
     expect(document.querySelector('.mic-btn')).not.toHaveClass('mic-btn--listening');
   });
 
+  // A late voice result after a tap would answer the card a second time (and,
+  // after a wrong tap, use a stale "not missed" flag). Tapping ends the attempt;
+  // useVoiceRecognition ignores a cancelled session's results.
+  it.each([
+    ['correct', 'Un caffè, grazie.'],
+    ['wrong', 'No, grazie.'],
+  ])('tapping a %s choice while listening cancels the voice attempt', (_kind, text) => {
+    vi.useFakeTimers();
+    const stopListening = vi.fn();
+    setupVoiceRecognitionMock({ stopListening });
+    renderQAStudySession('it');
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
+
+    act(() => { screen.getByRole('button', { name: text }).click(); });
+
+    expect(stopListening).toHaveBeenCalledOnce();
+    expect(document.querySelector('.mic-btn')).not.toHaveClass('mic-btn--listening');
+    vi.useRealTimers();
+  });
+
   it('spoken non-match sets notRecognized feedback, no SRS update', () => {
     vi.useFakeTimers();
     renderQAStudySession('it');
