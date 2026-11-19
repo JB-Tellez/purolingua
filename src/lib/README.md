@@ -22,7 +22,7 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
   - `shuffle<T>(array: T[]): T[]`: Fisher-Yates; returns a shuffled copy. Used by `generateChoices` and `QAStudySession`.
 - `matchTranscript.ts`
   - `normalize(s: string): string`: lowercases the string, applies NFD, strips combining diacritics (U+0300 to U+036F), turns every non-`\w`/non-whitespace character into a space, collapses repeated whitespace, and trims.
-  - `matchesTranscript(transcript: string, target: string): boolean`: returns `true` if the two strings are equal after `normalize`. Otherwise it returns `true` when the word overlap `2 × shared / (transcript words + target words)` is at least `0.85`.
+  - `matchesTranscript(transcript: string, target: string): boolean`: returns `true` if the two strings are equal after `normalize`. Otherwise it returns `true` when the word overlap `2 × shared / (transcript words + target words)` is at least `0.85`. `shared` is a multiset intersection: each transcript word matches at most one target word, so a repeated word counts only as often as it was said, and the score never exceeds 1.
   - `bestMatch(transcript: string, targets: string[]): number`: the index of the target with the highest score that passes `matchesTranscript`'s threshold; `-1` when none passes or the top score is tied. An exact match always wins. Used by both sessions to pick the spoken choice.
   - `matchScore` (the score above) and `MATCH_THRESHOLD` are module-private.
 - `srs.ts`

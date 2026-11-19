@@ -49,6 +49,11 @@ describe('matchesTranscript', () => {
     expect(matchesTranscript('ho perso il treno ieri', 'Ho perso il treno.')).toBe(true);
   });
 
+  it('matches a repeated target word only as often as the transcript says it', () => {
+    // 2 shared words (il, bus) of 2 + 4: overlap 0.67
+    expect(matchesTranscript('il bus', 'Il, il, il bus.')).toBe(false);
+  });
+
   it('does not match an unrelated phrase', () => {
     expect(matchesTranscript('buongiorno a tutti', 'Ho perso il treno.')).toBe(false);
   });
@@ -66,6 +71,12 @@ describe('bestMatch', () => {
 
   it('returns -1 when no target matches', () => {
     expect(bestMatch('buongiorno a tutti', ['Ho perso il treno.', 'Piove.'])).toBe(-1);
+  });
+
+  // Each transcript word matches at most one target word, so a target that
+  // repeats a word can't out-score the exact answer.
+  it('prefers the exact match over a target that repeats one of its words', () => {
+    expect(bestMatch('il treno', ['Il treno.', 'Il treno, il.'])).toBe(0);
   });
 
   it('returns -1 when two targets match equally well', () => {
