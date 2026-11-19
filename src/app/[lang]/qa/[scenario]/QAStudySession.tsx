@@ -9,6 +9,7 @@ import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
 import { isCardDue, getQACardKey } from '@/lib/srs';
 import { loadProgress } from '@/lib/progressStorage';
 import { bestMatch } from '@/lib/matchTranscript';
+import { shuffle } from '@/lib/shuffle';
 import { speak } from '@/lib/speak';
 import { scenarios as allScenarios } from '@/data/qa';
 import AudioButton from '@/components/AudioButton';
@@ -19,16 +20,6 @@ import MicButton from '@/components/MicButton';
 interface Props {
   lang: Lang;
   scenario: Scenario;
-}
-
-/** Fisher-Yates shuffle — returns a new array */
-function shuffle<T>(arr: T[]): T[] {
-  const result = [...arr];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
 }
 
 /**

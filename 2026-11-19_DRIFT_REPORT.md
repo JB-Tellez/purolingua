@@ -21,7 +21,7 @@ How findings were checked: every contract and source file was read in full. Two 
 
 ## src/components/README.md
 
-- `SiteHeader` names its back-link flag `onDeckPage` (`SiteHeader.tsx:27`). It is true on every page with 2+ segments, including `/it/rephrase` and `/it/qa`, as the comment above it and the contract both say. The name describes the old rule.
+- **[FIXED 2026-11-19: renamed `showBackLink`.]** `SiteHeader` names its back-link flag `onDeckPage` (`SiteHeader.tsx:27`). It is true on every page with 2+ segments, including `/it/rephrase` and `/it/qa`, as the comment above it and the contract both say. The name describes the old rule.
 
 ## src/i18n/README.md
 
@@ -48,7 +48,7 @@ No drift detected. (Checked: 7 scenarios × 8 cards, ids `{scenarioId}_01`..`_08
 
 ## src/app/[lang]/README.md
 
-- `src/app/[lang]/page.tsx` and `src/app/[lang]/rephrase/page.tsx` both name their default export `LangPage`, and the rephrase contract documents it as `LangPage`. The rephrase one is the deck browser. Its sibling is `QABrowserPage`.
+- **[FIXED 2026-11-19: the deck browser's export is now `RephraseBrowserPage`.]** `src/app/[lang]/page.tsx` and `src/app/[lang]/rephrase/page.tsx` both name their default export `LangPage`, and the rephrase contract documents it as `LangPage`. The rephrase one is the deck browser. Its sibling is `QABrowserPage`.
 
 ## src/app/[lang]/rephrase/README.md
 
@@ -67,7 +67,7 @@ No drift detected.
 ## src/app/[lang]/qa/[scenario]/README.md
 
 - **[FIXED 2026-11-19: tapping a choice while listening cancels the voice attempt, and `useVoiceRecognition` ignores a cancelled session's result; tests in `QAStudySession.test.tsx`.]** **A tap plus a matching voice result advances the card two boxes** (not reproduced). The mic result callback has no `selectedChoice` guard, and it uses the `missedCurrent` from the render where the mic was pressed. Tap the correct choice while listening, then let a matching transcript arrive: two `handleAnswer(true)` timers run. `updateCard` re-reads storage each time, so the card goes up two boxes, and `index` jumps by 2. Tap a *wrong* choice while listening, then speak the correct answer: the stale `missedCurrent` is `false`, so the card is recorded as correct. This contradicts "a card missed before the correct retry is recorded as wrong" and "recorded once".
-- `shuffle` here is a second copy of the Fisher-Yates `shuffleArray` in `lib/generateChoices.ts`, which the lib contract calls module-private. The two are identical.
+- **[FIXED 2026-11-19: both use `@/lib/shuffle`; tests in `shuffle.test.ts`.]** `shuffle` here is a second copy of the Fisher-Yates `shuffleArray` in `lib/generateChoices.ts`, which the lib contract calls module-private. The two are identical.
 
 ## src/app/README.md
 
@@ -92,4 +92,4 @@ No drift detected.
 
 ## Files no contract covers
 
-- `messages/.gitkeep` is a scaffolding placeholder in a directory that holds `it.json` and `es.json` (the same kind of leftover removed from `src/data`, `src/hooks`, and `src/lib` in PR #5).
+- **[FIXED 2026-11-19: removed.]** `messages/.gitkeep` is a scaffolding placeholder in a directory that holds `it.json` and `es.json` (the same kind of leftover removed from `src/data`, `src/hooks`, and `src/lib` in PR #5).

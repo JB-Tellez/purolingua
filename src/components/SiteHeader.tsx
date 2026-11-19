@@ -24,7 +24,7 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
 
   // Show a back link (one level up) on every page below the language home: 2+ segments, e.g. /it/rephrase → /it
   const segments = pathname.split('/').filter(Boolean);
-  const onDeckPage = segments.length >= 2;
+  const showBackLink = segments.length >= 2;
   const backHref = '/' + segments.slice(0, -1).join('/');
 
   function handleReset() {
@@ -46,7 +46,7 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
           <span>{t('logo')}</span>
         </div>
         <ul className="nav-links">
-          {onDeckPage && (
+          {showBackLink && (
             <li>
               <Link href={backHref} className="nav-back-btn">
                 {t('back')}

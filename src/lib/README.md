@@ -4,6 +4,7 @@
 This directory holds the domain logic for PuroLingua study sessions. None of these functions use React. Most are pure; the browser-facing exceptions are `progressStorage.ts` (`localStorage`), `speak.ts` (`speechSynthesis`), and `reloadPage.ts`, a one-line helper isolated here so tests can mock it.
 
 - `generateChoices.ts`: builds multiple-choice answers (one correct answer plus distractors).
+- `shuffle.ts`: the uniform shuffle used for answer choices.
 - `matchTranscript.ts`: checks a speech-recognition transcript against a target phrase, ignoring accents and punctuation.
 - `srs.ts`: Leitner spaced-repetition scheduling (box changes and next-review dates) and progress key formats.
 - `progressStorage.ts`: reads, writes, and clears the `{lang}-progress` record.
@@ -16,7 +17,9 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
 - `generateChoices.ts`
   - `interface Choice { text: string; isCorrect: boolean }`
   - `generateChoices(correctCard: Card, filteredCards: Card[]): Choice[]`: returns the correct answer (`correctCard.back`) plus up to 3 foils drawn from `filteredCards`, in shuffled order.
-  - `shuffleArray<T>` is a module-private Fisher-Yates helper. It is not exported.
+  - Shuffles with `@/lib/shuffle`.
+- `shuffle.ts`
+  - `shuffle<T>(array: T[]): T[]`: Fisher-Yates; returns a shuffled copy. Used by `generateChoices` and `QAStudySession`.
 - `matchTranscript.ts`
   - `normalize(s: string): string`: lowercases the string, applies NFD, strips combining diacritics (U+0300 to U+036F), turns every non-`\w`/non-whitespace character into a space, collapses repeated whitespace, and trims.
   - `matchesTranscript(transcript: string, target: string): boolean`: returns `true` if the two strings are equal after `normalize`. Otherwise it returns `true` when the word overlap `2 × shared / (transcript words + target words)` is at least `0.85`.
@@ -46,7 +49,7 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
 
 ## Invariants
 - `generateChoices`: foils are drawn from the distinct `back` texts other than `correctCard.back`, so every choice text appears exactly once. Cards with the same `front` as `correctCard` never supply a foil: decks repeat some fronts at both levels with different paraphrases, and each paraphrase is a right answer. You get at most 4 choices, and fewer if `filteredCards` has fewer than 3 distinct-`back` foils. The caller must pre-filter `filteredCards` to the active level(s) (doc comment in `generateChoices.ts`).
-- `shuffleArray` copies its input before shuffling. Caller arrays are never mutated.
+- `shuffle` copies its input before shuffling. Caller arrays are never mutated.
 - `matchesTranscript`: if the target normalizes to an empty string, it returns `false` unless the transcript also normalizes to an empty string (the exact-match check runs first). Missing and extra words both lower the score, so one dropped or extra word passes on phrases of 5+ words, while a wrong word in 5 (`"113"` for `"115"`) or an added `"non"` on a short phrase does not.
 - `normalize` uses `\w`, which is ASCII-only. Accented letters that decompose under NFD (`è`, `ñ`) reduce to their base letter. Non-ASCII letters that do not decompose (for example `ß`) become spaces (`"straße"` → `"stra e"`).
 - `getCardKey` / `getQACardKey` / `progressStorage`: these persisted formats must not change, because existing `localStorage` progress uses them. `"{deckId}_{cardIndex}"` and `{lang}-progress` are v1.1's formats (the `vanilla` branch); `"qa_{scenarioId}_{cardId}"` was added after v1.1 with Q&A mode.
@@ -56,9 +59,9 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
 
 ## Side Effects
 - `progressStorage` reads and writes `localStorage`, `speak` uses `window.speechSynthesis`, and `reloadPage` reloads the page. The other functions do no I/O and mutate no shared state.
-- Some results are non-deterministic. `generateChoices` and `shuffleArray` use `Math.random()`. `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock through `new Date()`.
+- Some results are non-deterministic. `generateChoices` and `shuffle` use `Math.random()`. `getTodayString`, `getNextReviewDate`, `isCardDue`, and `advanceBox` read the system clock through `new Date()`.
 
 ## Verification
-- Run: `npx vitest run src/__tests__/lib` (`generateChoices`, `matchTranscript`, `srs`, `progressStorage`, `levels`, `locale`, `speak`, and `reloadPage` tests).
+- Run: `npx vitest run src/__tests__/lib` (`generateChoices`, `shuffle`, `matchTranscript`, `srs`, `progressStorage`, `levels`, `locale`, `speak`, and `reloadPage` tests).
 - Full suite: `npm test`. This runs `vitest`, which starts in watch mode in an interactive terminal. Use `npx vitest run` for a single pass.
 - `matchTranscript.ts` is covered by `src/__tests__/lib/matchTranscript.test.ts` (normalization, the overlap threshold, extra words, `bestMatch` ties, and the empty-target case).

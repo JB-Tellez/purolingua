@@ -26,11 +26,10 @@ synthesis, speech recognition).
     session UI. It has three screens: all-done (`allScenariosDone`), scenario
     done (`scenarioDone`), and the active question with choices, mic, and
     feedback.
-  - Module-private helpers: `shuffle<T>(arr)` (Fisher-Yates, returns a new array)
-    and `isScenarioHasDue(progress, scenarioId, cards, activeLevels)`.
+  - Module-private helper: `isScenarioHasDue(progress, scenarioId, cards, activeLevels)`.
   - Dependencies: `useQASRS`, `useLevelFilter`, `useVoiceRecognition`
     (`@/hooks`), `isCardDue` and `getQACardKey` (`@/lib/srs`), `loadProgress`
-    (`@/lib/progressStorage`), `speak` (`@/lib/speak`), `bestMatch`
+    (`@/lib/progressStorage`), `shuffle` (`@/lib/shuffle`), `speak` (`@/lib/speak`), `bestMatch`
     (`@/lib/matchTranscript`), `scenarios` (`@/data/qa`), and
     `AudioButton`, `ChoiceButton`, `FeedbackMessage`, `MicButton`
     (`@/components`).

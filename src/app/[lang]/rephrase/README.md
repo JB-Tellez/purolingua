@@ -13,7 +13,7 @@ for the nested `[deck]` route.
     `routing.locales` x `DECK_IDS` (`@/data/decks`).
   - `default RephraseLayout({ children })`: renders `children` with no wrapper.
 - `page.tsx`
-  - `default LangPage()` (`'use client'`): reads `lang` from `useParams`, gets
+  - `default RephraseBrowserPage()` (`'use client'`): reads `lang` from `useParams`, gets
     `hasProgress` from `useSRS(lang)`, and gets `{ activeLevels, setActiveLevels }`
     from `useLevelFilter(lang, hasProgress, 'rephrase')`. Renders the page title, then `<LevelFilterChips>` and
     `<DeckGrid lang activeLevels>` inside `<ClientOnly>`, all from
