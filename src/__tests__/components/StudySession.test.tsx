@@ -187,6 +187,16 @@ describe('StudySession voice integration', () => {
     expect(screen.getByRole('button', { name: 'micStart' })).not.toHaveClass('mic-btn--listening');
   });
 
+  it('leaves the mic idle when listening could not start', () => {
+    mockRecognitionInstance.start.mockImplementationOnce(() => { throw new Error('InvalidStateError'); });
+    renderStudySession();
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
+
+    const mic = screen.getByRole('button', { name: 'micStart' });
+    expect(mic).not.toHaveClass('mic-btn--listening');
+    expect(mic).toHaveAttribute('aria-pressed', 'false');
+  });
+
   // VOICE-12: transcript no-match on card front triggers error state
   it('VOICE-12: non-matching transcript on card front triggers mic error state', async () => {
     vi.useFakeTimers();

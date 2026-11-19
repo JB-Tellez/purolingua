@@ -154,8 +154,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
 
   function handleFrontMicPress() {
     if (micState === 'listening') return cancelListening();
-    setMicState('listening');
-    startListening(
+    const started = startListening(
       (transcript) => {
         setMicState('idle');
         if (matchesTranscript(transcript, currentCard.front)) {
@@ -173,13 +172,13 @@ export default function StudySession({ lang, deckId, cards }: Props) {
         setTimeout(() => setMicState('idle'), 800);
       }
     );
+    if (started) setMicState('listening'); // a refused start must not look like listening
   }
 
   function handleBackMicPress() {
     if (micState === 'listening') return cancelListening();
     if (selectedChoice !== null) return;
-    setMicState('listening');
-    startListening(
+    const started = startListening(
       (transcript) => {
         setMicState('idle');
         const matchedIndex = bestMatch(transcript, choices.map((c) => c.text));
@@ -198,6 +197,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
         setTimeout(() => setMicState('idle'), 800);
       }
     );
+    if (started) setMicState('listening'); // a refused start must not look like listening
   }
 
   function advance() {

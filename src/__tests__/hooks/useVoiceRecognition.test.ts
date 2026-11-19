@@ -13,6 +13,9 @@ describe('useVoiceRecognition', () => {
     mockRecognitionInstance.onresult = null;
     mockRecognitionInstance.onerror = null;
     vi.clearAllMocks();
+    // Drop any queued mockImplementationOnce a test left unused.
+    MockSpeechRecognition.mockReset();
+    MockSpeechRecognition.mockImplementation(function () { return mockRecognitionInstance; });
   });
 
   describe('initial state', () => {
@@ -186,6 +189,43 @@ describe('useVoiceRecognition', () => {
       act(() => { first.onerror?.({ error: 'aborted' }); first.onend?.(); });
 
       expect(result.current.isListening).toBe(true);
+    });
+
+    it('returns true when it starts, and false while a session is still listening', () => {
+      const { result } = renderHook(() => useVoiceRecognition('it' as any));
+      let first: boolean | undefined, second: boolean | undefined;
+      act(() => { first = result.current.startListening(vi.fn(), vi.fn()); });
+      act(() => { second = result.current.startListening(vi.fn(), vi.fn()); });
+      expect([first, second]).toEqual([true, false]);
+    });
+
+    it("a session that has delivered its result doesn't block a new start, and its late end is ignored", () => {
+      const first = makeRecognizer();
+      const second = makeRecognizer();
+      MockSpeechRecognition.mockImplementationOnce(function () { return first; })
+        .mockImplementationOnce(function () { return second; });
+      const { result } = renderHook(() => useVoiceRecognition('it' as any));
+      act(() => { result.current.startListening(vi.fn(), vi.fn()); });
+      act(() => { first.onstart?.(); first.onresult?.({ results: [[{ transcript: 'Ciao' }]] }); });
+
+      let started: boolean | undefined;
+      act(() => { started = result.current.startListening(vi.fn(), vi.fn()); }); // before first's onend
+      act(() => { second.onstart?.(); });
+      act(() => { first.onend?.(); });
+
+      expect(started).toBe(true);
+      expect(result.current.isListening).toBe(true);
+    });
+
+    it('returns false when start() throws, and the next start works', () => {
+      const first = makeRecognizer();
+      first.start.mockImplementation(() => { throw new Error('InvalidStateError'); });
+      MockSpeechRecognition.mockImplementationOnce(function () { return first; });
+      const { result } = renderHook(() => useVoiceRecognition('it' as any));
+      let a: boolean | undefined, b: boolean | undefined;
+      act(() => { a = result.current.startListening(vi.fn(), vi.fn()); });
+      act(() => { b = result.current.startListening(vi.fn(), vi.fn()); });
+      expect([a, b]).toEqual([false, true]);
     });
 
     it('unmounting aborts the recognizer and ignores its late result', () => {

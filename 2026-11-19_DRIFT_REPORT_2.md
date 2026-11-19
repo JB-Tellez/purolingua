@@ -15,7 +15,7 @@ No drift detected.
 
 ## src/hooks/README.md
 
-- **`startListening` can return without starting, while both sessions already show the mic as listening** (not reproduced). The new guard blocks a start while the current session is neither cancelled nor ended. A session ends only at `onend` or `onerror`, so:
+- **[FIXED 2026-11-19: `startListening` returns whether it started and the sessions show "listening" only then; a session ends at its result or a throwing `start()`; an older session's late `onend` is ignored. Tests in `useVoiceRecognition.test.ts` and both session tests.]** **`startListening` can return without starting, while both sessions already show the mic as listening** (not reproduced). The new guard blocks a start while the current session is neither cancelled nor ended. A session ends only at `onend` or `onerror`, so:
   - Between a result and its `onend`, a new start is refused. For example, the front-mic transcript matches, the card flips, and the user presses the back mic at once.
   - If `rec.start()` throws (swallowed, per Side Effects), the session never ends, and every later start is refused until a cancel or unmount.
 

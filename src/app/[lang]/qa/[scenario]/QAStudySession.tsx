@@ -175,8 +175,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
     // micState, not the hook's isListening: that turns true only once the browser starts.
     if (micState === 'listening') return cancelListening();
     if (selectedChoice !== null) return;
-    setMicState('listening');
-    startListening(
+    const started = startListening(
       (transcript) => {
         setMicState('idle');
         // Best match over every choice: a transcript closer to a foil is not correct.
@@ -206,6 +205,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
         }, 800);
       }
     );
+    if (started) setMicState('listening'); // a refused start must not look like listening
   }
 
   // All-done screen (shown when 0 due cards at mount OR after all scenarios exhausted).

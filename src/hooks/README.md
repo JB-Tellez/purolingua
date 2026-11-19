@@ -38,7 +38,8 @@ and pages/sessions under `src/app/[lang]/` (including
   `{ activeLevels: Level[], setActiveLevels(levels: Level[] | null) }`.
   `activity` is required so no caller shares a filter by accident.
 - `useVoiceRecognition(lang: Lang)` (`useVoiceRecognition.ts`) returns
-  `{ isSupported, isListening, startListening(onResult: (transcript: string) => void, onError: () => void), stopListening() }`.
+  `{ isSupported, isListening, startListening(onResult: (transcript: string) => void, onError: () => void): boolean, stopListening() }`.
+  `startListening` returns whether listening started (`false` when refused or when `start()` throws), so callers show "listening" only when it did.
   `stopListening` cancels: it calls `abort()` (discarding any pending result), sets `isListening` to `false` at once, and the cancelled session's late `onresult` / `onerror` / `onend` (Chrome fires `"aborted"`) are ignored, so callers get neither callback and a newer session's `isListening` is untouched. Unmounting cancels the same way.
 
 ## Invariants
@@ -83,7 +84,10 @@ and pages/sessions under `src/app/[lang]/` (including
   `SpeechRecognition` / `webkitSpeechRecognition` constructor exists or if the
   current session is neither cancelled nor ended (tracked in a ref, so a start
   still waiting for `onstart` counts; `isListening` turns true only at
-  `onstart`). Each start creates a new recognizer with
+  `onstart`). A session ends at its result (one per session), `onerror`,
+  `onend`, or a `start()` that throws, so a finished session never blocks the
+  next start. Only the newest session changes `isListening`: an older one's
+  late `onend` is ignored. Each start creates a new recognizer with
   `continuous = false`, `interimResults = false`, and locale `it-IT` / `es-ES`
   (`LANG_LOCALE`).
 - **Recognition results**: `onResult` receives only `results[0][0].transcript`;
@@ -97,8 +101,8 @@ and pages/sessions under `src/app/[lang]/` (including
   accepted `setActiveLevels` writes its activity's key).
 - `useVoiceRecognition` constructs `window.SpeechRecognition` (or
   `webkitSpeechRecognition`), calls `start()` / `abort()`, and therefore triggers
-  the browser microphone permission flow. Exceptions from `start()` are
-  swallowed.
+  the browser microphone permission flow. An exception from `start()` is
+  caught: `startListening` returns `false`.
 - `console.error('[SpeechRecognition] no results returned')` when a result
   event has no results.
 

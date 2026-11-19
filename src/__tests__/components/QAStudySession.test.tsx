@@ -130,7 +130,7 @@ function setupDefaultQASRSMock(overrides?: Partial<ReturnType<typeof useQASRS>>)
 
 // Default useVoiceRecognition mock: isSupported=true, not listening
 function setupVoiceRecognitionMock(overrides?: Partial<{ isSupported: boolean; isListening: boolean; startListening: ReturnType<typeof vi.fn>; stopListening: ReturnType<typeof vi.fn> }>) {
-  mockStartListening = vi.fn();
+  mockStartListening = vi.fn(() => true); // started
   (useVoiceRecognition as ReturnType<typeof vi.fn>).mockReturnValue({
     isSupported: true,
     isListening: false,
@@ -401,6 +401,16 @@ describe('QAStudySession', () => {
     act(() => { vi.advanceTimersByTime(600); });
     expect(mockUpdateCard).toHaveBeenCalledOnce();
     vi.useRealTimers();
+  });
+
+  it('leaves the mic idle when listening could not start', () => {
+    setupVoiceRecognitionMock({ startListening: vi.fn(() => false) });
+    renderQAStudySession();
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
+
+    const mic = screen.getByRole('button', { name: 'micStart' });
+    expect(mic).not.toHaveClass('mic-btn--listening');
+    expect(mic).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('spoken non-match sets notRecognized feedback, no SRS update', () => {
