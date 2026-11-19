@@ -38,7 +38,7 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
   - `saveProgress(lang, record): void`: writes it as JSON; storage errors (quota, private browsing) are swallowed.
   - `clearProgress(lang): void`: removes it; storage errors (blocked site data) are swallowed, like load and save. Used by `SiteHeader`'s reset.
 - `levels.ts`
-  - `LEVELS: Level[]`: `['A1', 'A2']`, in order. Backed by a `Record<Level, …>`, so `tsc` fails if `Level` gains a member this list lacks. Used by `LevelFilterChips`.
+  - `LEVELS: Level[]`: `['A1', 'A2']`, in order. Backed by a `Record<Level, …>`, so `tsc` fails if `Level` gains a member this list lacks. Used by `LevelFilterChips` and by `useLevelFilter` (the returning-user default).
   - `isLevel(value: unknown): value is Level`. Used by `useLevelFilter` to validate the saved filter.
 - `locale.ts`
   - `LANG_LOCALE: Record<Lang, string>`: `it -> it-IT`, `es -> es-ES`. The one copy, used by `speak` and `useVoiceRecognition`.

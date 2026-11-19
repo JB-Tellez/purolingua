@@ -11,7 +11,7 @@ No drift detected.
 ## src/lib/README.md
 
 - **[FIXED 2026-11-19: shared words are a multiset intersection; tests in `matchTranscript.test.ts`. The content scan is unchanged: 4 near-synonym pairs, and every answer picks itself.]** **`matchScore` counts a repeated target word once per occurrence, so a score can exceed 1 and beat an exact match** (confirmed). `shared` counts every target word found in the transcript's *set*, so a target that repeats a word gets credit for each repeat, while the transcript's single copy is counted once in the denominator. `bestMatch('il treno', ['Il treno.', 'Il treno, il.'])` returns `1`: the non-exact target scores `2 × 3 / (2 + 3) = 1.2`, above the exact match's `1`. This contradicts the contract ("the word overlap `2 × shared / (transcript words + target words)`", "An exact match always wins"). 74 of the 1,054 distinct answers in the decks and scenarios repeat a word after normalization (e.g. "Cerco il luogo dove prendere il bus.", "Né grande né piccolo."). Counting shared words as a multiset intersection would keep the score at most 1.
-- `LEVELS` is documented as "Used by `LevelFilterChips`". `useLevelFilter` now uses it too (the returning-user default).
+- **[FIXED 2026-11-19: now names `useLevelFilter` too.]** `LEVELS` is documented as "Used by `LevelFilterChips`". `useLevelFilter` now uses it too (the returning-user default).
 
 ## src/hooks/README.md
 
@@ -20,11 +20,11 @@ No drift detected.
   - If `rec.start()` throws (swallowed, per Side Effects), the session never ends, and every later start is refused until a cancel or unmount.
 
   `startListening` returns nothing, so the session has already set `micState` to `'listening'`. The button shows listening (with `aria-pressed`) while nothing runs, no callback ever arrives, and only a second press (which cancels) clears it.
-- The Overview says `useLevelFilter` "validates with `@/lib/levels:isLevel`". It also takes its returning-user default from `LEVELS`.
+- **[FIXED 2026-11-19: the Overview names `LEVELS` too.]** The Overview says `useLevelFilter` "validates with `@/lib/levels:isLevel`". It also takes its returning-user default from `LEVELS`.
 
 ## src/components/README.md
 
-- `AudioButton` has no tests, and the contract says so ("`AudioButton` has no tests yet"). `AGENTS.md` treats untested exports as gaps to close before changing code, and the analyzer reports it as a high-severity gap (`node scripts/analyze-test-coverage.ts src/components/`). It is the only component without a test file.
+- **[FIXED 2026-11-19: `AudioButton.test.tsx` covers the label, `speak(phrase, lang)`, and `stopPropagation` (checked by removing it).]** `AudioButton` has no tests, and the contract says so ("`AudioButton` has no tests yet"). `AGENTS.md` treats untested exports as gaps to close before changing code, and the analyzer reports it as a high-severity gap (`node scripts/analyze-test-coverage.ts src/components/`). It is the only component without a test file.
 
 ## src/i18n/README.md
 
@@ -32,7 +32,7 @@ No drift detected.
 
 ## src/data/README.md
 
-- Verification says `DeckGrid.test.tsx` and `StudySession.test.tsx` "mock `@/data/decks` and `@/data/deckMap`". `StudySession.test.tsx` mocks only `@/data/deckMap`; `StudySession.endScreens.test.tsx` is the one that mocks both, and the contract does not mention it.
+- **[FIXED 2026-11-19: Verification names the right files.]** Verification says `DeckGrid.test.tsx` and `StudySession.test.tsx` "mock `@/data/decks` and `@/data/deckMap`". `StudySession.test.tsx` mocks only `@/data/deckMap`; `StudySession.endScreens.test.tsx` is the one that mocks both, and the contract does not mention it.
 
 ## src/data/it/README.md
 
@@ -76,12 +76,12 @@ No drift detected.
 
 ## scripts/README.md
 
-- Every CLI run prints Node's `MODULE_TYPELESS_PACKAGE_JSON` warning to stderr ("Module type of …analyze-test-coverage.ts is not specified … Reparsing as ES module"), because `package.json` has no `"type"` and the file uses ES module syntax. The output is still correct, but the contract's Side Effects list only the script's own warnings and errors. Renaming the script `.mts` (or adding `"type": "module"`) would silence it, but both change things the contract and `AGENTS.md` reference.
+- **[FIXED 2026-11-19: documented in Side Effects, with why it is left as is.]** Every CLI run prints Node's `MODULE_TYPELESS_PACKAGE_JSON` warning to stderr ("Module type of …analyze-test-coverage.ts is not specified … Reparsing as ES module"), because `package.json` has no `"type"` and the file uses ES module syntax. The output is still correct, but the contract's Side Effects list only the script's own warnings and errors. Renaming the script `.mts` (or adding `"type": "module"`) would silence it, but both change things the contract and `AGENTS.md` reference.
 
 ## README.md
 
-- The "Static params must agree" global invariant says "Each dynamic segment's `layout.tsx` and `page.tsx` both export `generateStaticParams` (client pages cannot)", which contradicts itself and the code. `[lang]` has the export in `layout.tsx` only (its `page.tsx` is a client page). `rephrase` / `qa` declare their children's params in `layout.tsx`, and the server pages `[deck]/page.tsx` / `[scenario]/page.tsx` repeat them.
-- Project Structure's `lib/` line and the `src/lib` entry under Subdirectories list the modules but not `shuffle.ts`, added in the last round ("storage/speech helpers" does not cover it). `src/README.md` and `src/lib/README.md` do list it.
+- **[FIXED 2026-11-19: rewritten to match the layouts and server pages.]** The "Static params must agree" global invariant says "Each dynamic segment's `layout.tsx` and `page.tsx` both export `generateStaticParams` (client pages cannot)", which contradicts itself and the code. `[lang]` has the export in `layout.tsx` only (its `page.tsx` is a client page). `rephrase` / `qa` declare their children's params in `layout.tsx`, and the server pages `[deck]/page.tsx` / `[scenario]/page.tsx` repeat them.
+- **[FIXED 2026-11-19: both now list `shuffle.ts` / shuffling.]** Project Structure's `lib/` line and the `src/lib` entry under Subdirectories list the modules but not `shuffle.ts`, added in the last round ("storage/speech helpers" does not cover it). `src/README.md` and `src/lib/README.md` do list it.
 
 ## Files no contract covers
 

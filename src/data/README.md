@@ -27,4 +27,4 @@ Consumers: `src/components/DeckGrid.tsx`, `src/app/[lang]/rephrase/layout.tsx`, 
 - None. These are pure constant module exports with no runtime I/O.
 
 ## Verification
-- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). `src/__tests__/data/decks.test.ts` checks the real `deckMetadata` against `DECK_MAP`. `src/__tests__/components/DeckGrid.test.tsx` and `src/__tests__/components/StudySession.test.tsx` mock `@/data/decks` and `@/data/deckMap`.
+- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). `src/__tests__/data/decks.test.ts` checks the real `deckMetadata` against `DECK_MAP`. `src/__tests__/components/DeckGrid.test.tsx` and `src/__tests__/components/StudySession.endScreens.test.tsx` mock `@/data/decks` and `@/data/deckMap`; `src/__tests__/components/StudySession.test.tsx` mocks `@/data/deckMap` only.

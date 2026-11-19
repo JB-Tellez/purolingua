@@ -82,5 +82,5 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 - Targeted, single run: `npx vitest run src/__tests__/components`
   (tests live in the mirror tree `src/__tests__/components/`. That directory
   also holds tests for `QAStudySession` and `StudySession`, which live under
-  `src/app/[lang]/`). `AudioButton` has no tests yet.
+  `src/app/[lang]/`).
 - Coverage gaps: `node scripts/analyze-test-coverage.ts src/components/`

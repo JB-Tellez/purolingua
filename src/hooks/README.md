@@ -10,7 +10,7 @@ wraps the Web Speech recognition API (`useVoiceRecognition`). Box-advancement,
 due-date logic, and key formats come from `@/lib/srs` (`advanceBox`,
 `isCardDue`, `getCardKey`, `getQACardKey`); the progress record is read and
 written through `@/lib/progressStorage`; `useLevelFilter` validates with
-`@/lib/levels:isLevel`. These hooks only manage React state.
+`@/lib/levels:isLevel` and builds its default from `LEVELS`. These hooks only manage React state.
 
 Consumers: `src/components/DeckGrid.tsx`, `src/components/ScenarioGrid.tsx`,
 and pages/sessions under `src/app/[lang]/` (including

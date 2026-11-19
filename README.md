@@ -77,7 +77,7 @@ purolingua/
 │   ├── app/[lang]/        # Locale root layout and routes (/qa, /rephrase)
 │   ├── components/        # React UI components
 │   ├── hooks/             # useSRS, useQASRS, useLevelFilter, useVoiceRecognition
-│   ├── lib/               # srs.ts (Leitner logic), generateChoices.ts, matchTranscript.ts, levels.ts, storage/speech helpers
+│   ├── lib/               # srs.ts (Leitner logic), generateChoices.ts, shuffle.ts, matchTranscript.ts, levels.ts, storage/speech helpers
 │   ├── data/              # Vocabulary content: it/, es/, qa/
 │   ├── types/             # TypeScript types
 │   ├── i18n/              # next-intl routing (isLang) and request config
@@ -110,7 +110,7 @@ Request flow: `src/app/[lang]/layout.tsx` (a root layout that renders `<html lan
   - src/app: [./src/app/README.md](./src/app/README.md) - Two root layouts (`(home)` and `[lang]`) sharing `RootDocument`, the language picker, and the global 404; locale segment [./src/app/[lang]/README.md](./src/app/[lang]/README.md); deck browser [rephrase](./src/app/[lang]/rephrase/README.md) and session [rephrase/[deck]](./src/app/[lang]/rephrase/[deck]/README.md); scenario browser [qa](./src/app/[lang]/qa/README.md) and session [qa/[scenario]](./src/app/[lang]/qa/[scenario]/README.md).
   - src/components: [./src/components/README.md](./src/components/README.md) - Shared client UI (grids with due badges, quiz buttons, feedback, level chips, `SiteHeader`).
   - src/hooks: [./src/hooks/README.md](./src/hooks/README.md) - `useSRS`, `useQASRS`, `useLevelFilter`, `useVoiceRecognition`.
-  - src/lib: [./src/lib/README.md](./src/lib/README.md) - SRS scheduling and key formats, distractor generation, transcript matching, levels, and thin storage/speech helpers.
+  - src/lib: [./src/lib/README.md](./src/lib/README.md) - SRS scheduling and key formats, distractor generation and shuffling, transcript matching, levels, and thin storage/speech helpers.
   - src/data: [./src/data/README.md](./src/data/README.md) - `deckMetadata`, `DECK_IDS`, `DECK_MAP`; [it](./src/data/it/README.md), [es](./src/data/es/README.md) decks; [qa](./src/data/qa/README.md) scenarios.
   - src/i18n: [./src/i18n/README.md](./src/i18n/README.md) - next-intl `routing`, `isLang`, and request config.
   - src/types: [./src/types/README.md](./src/types/README.md) - Domain types only.
@@ -122,7 +122,7 @@ Request flow: `src/app/[lang]/layout.tsx` (a root layout that renders `<html lan
 - **Card position and id are persisted identity.** Reordering or inserting cards mid-array in `src/data/it` / `src/data/es`, or renaming a Q&A `card.id` / scenario `id`, orphans stored progress.
 - **Every deck has 40 cards, 20 per level.** `src/__tests__/data/decks.test.ts` checks the real `DECK_MAP`, and that `DECK_IDS` lists every deck.
 - **The level filter is never empty.** `useLevelFilter.setActiveLevels(null | [])` is a no-op (FLTR-06); `LevelFilterChips` relies on this guard.
-- **Static params must agree.** Each dynamic segment's `layout.tsx` and `page.tsx` both export `generateStaticParams` (client pages cannot), and they must produce the same set.
+- **Static params must agree.** Client pages cannot export `generateStaticParams`, so `[lang]/layout.tsx` declares `[lang]`'s params, and `rephrase/layout.tsx` / `qa/layout.tsx` declare their children's. The server pages `[deck]/page.tsx` and `[scenario]/page.tsx` repeat them; each pair must produce the same set.
 - **`routing.locales` is the one locale list.** `src/types:Lang` is derived from `src/i18n/routing.ts:routing.locales`, and routes validate with `isLang`. The per-language tables (`src/app/(home)/page.tsx:LANGUAGES`, `src/components/SiteHeader.tsx:LANG_META`, `src/data/deckMap.ts:DECK_MAP`, `src/lib/locale.ts:LANG_LOCALE`) are typed `Record<Lang, …>`, so `tsc` fails until each has the new locale. Not compiler-checked: `messages/*.json`, `src/data/decks.ts:deckMetadata`, and the Q&A `*It` / `*Es` fields.
 - **Dates are UTC `YYYY-MM-DD` strings**, compared lexicographically (`src/lib/srs.ts:isCardDue`).
 

@@ -32,6 +32,7 @@ This directory holds developer tooling scripts. Right now it contains one script
 ## Side Effects
 - Reads the filesystem synchronously (`fs.readFileSync`, `fs.existsSync`, `fs.statSync`, `fs.readdirSync`).
 - Writes the report to stdout with `console.log`, and writes warnings and errors with `console.warn` and `console.error`.
+- Node itself prints a `MODULE_TYPELESS_PACKAGE_JSON` warning to stderr on every run: `package.json` has no `"type"`, so Node reparses this ES-module file. It is harmless; silencing it would mean renaming the script `.mts` (changing the command `AGENTS.md` gives) or adding `"type": "module"` to `package.json` (changing how the app's config files load).
 - `runCLI` calls `process.exit(1)` when no argument is given, the path does not exist, or the path is neither a file nor a directory.
 - It never writes files.
 
