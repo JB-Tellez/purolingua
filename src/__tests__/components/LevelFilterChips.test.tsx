@@ -46,3 +46,10 @@ describe('LevelFilterChips', () => {
     expect(set).toHaveBeenCalledWith([]);
   });
 });
+
+describe('LevelFilterChips label', () => {
+  it('names the chip group, so screen readers announce the filter label', () => {
+    renderChips(['A1']);
+    expect(screen.getByRole('group', { name: 'label' })).toBeInTheDocument();
+  });
+});

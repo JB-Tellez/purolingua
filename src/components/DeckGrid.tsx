@@ -16,6 +16,7 @@ interface Props {
 export default function DeckGrid({ lang, activeLevels }: Props) {
   const t = useTranslations('decks');
   const td = useTranslations('deckDescriptions');
+  const tb = useTranslations('badge');
   const { isCardDueForDeck } = useSRS(lang);
 
   const decks = deckMetadata.filter((d) => d.lang === lang);
@@ -44,7 +45,7 @@ export default function DeckGrid({ lang, activeLevels }: Props) {
               <h3>{t(deck.id)}</h3>
               <p>{td(deck.id)}</p>
               <span className={`deck-card-badge${due === 0 ? ' deck-card-badge--done' : ''}`}>
-                {due === 0 ? '✓' : due}
+                {due === 0 ? tb('done') : tb('due', { count: due })}
               </span>
             </div>
           </Link>

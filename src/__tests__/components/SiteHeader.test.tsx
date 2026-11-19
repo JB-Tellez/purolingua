@@ -31,6 +31,24 @@ beforeEach(() => {
 });
 
 describe('SiteHeader reset', () => {
+  // Reset deletes all progress for the language, so it asks first (as v1.1 did).
+  beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true); });
+
+  it('asks for confirmation with the resetConfirm message', () => {
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(screen.getByText('reset'));
+    expect(window.confirm).toHaveBeenCalledWith('resetConfirm');
+  });
+
+  it('keeps the progress and does not reload when the user cancels', () => {
+    vi.mocked(window.confirm).mockReturnValue(false);
+    localStorage.setItem('it-progress', progress);
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(screen.getByText('reset'));
+    expect(localStorage.getItem('it-progress')).toBe(progress);
+    expect(reloadPage).not.toHaveBeenCalled();
+  });
+
   it('removes the current language progress key', () => {
     localStorage.setItem('it-progress', progress);
     render(<SiteHeader lang="it" />);
@@ -104,5 +122,37 @@ describe('SiteHeader language dropdown', () => {
     openDropdown();
     expect(screen.getByText(current).closest('a')).toHaveClass('active');
     expect(screen.getByText(other).closest('a')).not.toHaveClass('active');
+  });
+});
+
+describe('SiteHeader language dropdown closing', () => {
+  const button = () => screen.getByLabelText('changeLanguage');
+
+  it('reports whether it is open (aria-expanded)', () => {
+    render(<SiteHeader lang="it" />);
+    expect(button()).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(button());
+    expect(button()).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('closes on a click outside it, as v1.1 did', () => {
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(button());
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByText('Español')).toBeNull();
+  });
+
+  it('closes on Escape', () => {
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(button());
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByText('Español')).toBeNull();
+  });
+
+  it('stays open when clicking inside it', () => {
+    render(<SiteHeader lang="it" />);
+    fireEvent.click(button());
+    fireEvent.mouseDown(screen.getByText('Español'));
+    expect(screen.getByText('Español')).toBeInTheDocument();
   });
 });

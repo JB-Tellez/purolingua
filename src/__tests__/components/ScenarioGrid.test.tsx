@@ -7,6 +7,11 @@ import type { Level } from '@/types';
 const mockUseQASRS = vi.fn((..._args: unknown[]) => ({ dueCards: [{ id: 'c1' }, { id: 'c2' }, { id: 'c3' }] }));
 vi.mock('@/hooks/useQASRS', () => ({ useQASRS: (...args: unknown[]) => mockUseQASRS(...args) }));
 
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string, params?: Record<string, unknown>) =>
+    params ? `${key}(${JSON.stringify(params)})` : key,
+}));
+
 vi.mock('next/link', () => ({
   default: ({ href, children }: { href: string; children: React.ReactNode }) => (
     <a href={href}>{children}</a>
@@ -33,16 +38,16 @@ describe('ScenarioGrid', () => {
   it('shows due count badge when dueCards.length > 0', () => {
     mockUseQASRS.mockReturnValue({ dueCards: [{ id: 'c1' }, { id: 'c2' }] });
     render(<ScenarioGrid lang="it" activeLevels={activeLevels} />);
-    // Should show "2" for each tile (all tiles use same mock)
-    const badges = screen.getAllByText('2');
-    expect(badges.length).toBeGreaterThan(0);
+    // Each tile uses the same mock
+    expect(screen.getAllByText('due({"count":2})')).toHaveLength(7);
   });
 
-  it('shows checkmark badge when dueCards.length === 0', () => {
+  it('says each scenario is done, with the done style, when dueCards.length === 0', () => {
     mockUseQASRS.mockReturnValue({ dueCards: [] });
     render(<ScenarioGrid lang="it" activeLevels={activeLevels} />);
-    const checkmarks = screen.getAllByText('✓');
-    expect(checkmarks).toHaveLength(7);
+    const done = screen.getAllByText('done');
+    expect(done).toHaveLength(7);
+    done.forEach((b) => expect(b).toHaveClass('deck-card-badge--done'));
   });
 
   it('tile links point to /it/qa/[scenarioId]', () => {

@@ -35,7 +35,6 @@ export function useVoiceRecognition(lang: Lang) {
   // the caller has had its one callback.
   const sessionRef = useRef<{ cancelled: boolean; ended: boolean; settled: boolean } | null>(null);
 
-
   useEffect(() => {
     setIsSupported(!!getSpeechRecognition());
   }, []);
@@ -65,11 +64,13 @@ export function useVoiceRecognition(lang: Lang) {
       rec.onresult = (e) => {
         if (session.cancelled) return;
         session.ended = true; // one result per session: a new start may begin now
+        session.settled = true;
         if (e.results.length === 0) {
-          console.error('[SpeechRecognition] no results returned'); // onend reports it
+          // Report now, not at onend: a new start may already be running by then.
+          console.error('[SpeechRecognition] no results returned');
+          onError();
           return;
         }
-        session.settled = true;
         const transcript = e.results[0][0].transcript;
         onResult(transcript);
       };

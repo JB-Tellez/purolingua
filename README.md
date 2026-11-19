@@ -128,7 +128,7 @@ Request flow: `src/app/[lang]/layout.tsx` (a root layout that renders `<html lan
 
 ## Global Side Effects
 
-- Browser `localStorage`: read/write `{lang}-progress`, `{lang}-level-filter` (Rephrase), and `{lang}-qa-level-filter` (Q&A). SRS writes always re-read the stored record first. `SiteHeader` reset removes `{lang}-progress` (both Rephrase and Q&A progress), but not the level filters, then reloads the page.
+- Browser `localStorage`: read/write `{lang}-progress`, `{lang}-level-filter` (Rephrase), and `{lang}-qa-level-filter` (Q&A). SRS writes always re-read the stored record first. `SiteHeader` reset asks for confirmation, then removes `{lang}-progress` (both Rephrase and Q&A progress), but not the level filters, and reloads the page.
 - Web Speech API: `speechSynthesis` playback (`src/lib/speak.ts`, used by `AudioButton` and both sessions) and `SpeechRecognition` / `webkitSpeechRecognition` microphone capture (`useVoiceRecognition`).
 - Network: Google Fonts from `fonts.googleapis.com` / `fonts.gstatic.com` (`src/app/RootDocument.tsx`); no other runtime network calls.
 - Build time: `package.json` imported for the version footer; `messages/<locale>.json` loaded by `src/i18n/request.ts`; static output written to `out/`.

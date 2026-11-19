@@ -8,7 +8,8 @@ import type { Level } from '@/types';
 // ---------------------------------------------------------------------------
 
 vi.mock('next-intl', () => ({
-  useTranslations: () => (key: string) => key,
+  useTranslations: () => (key: string, params?: Record<string, unknown>) =>
+    params ? `${key}(${JSON.stringify(params)})` : key,
 }));
 
 vi.mock('next/link', () => ({
@@ -62,27 +63,27 @@ describe('DeckGrid badge', () => {
   it('A: shows the live due count, not the deck size', () => {
     isDueImpl = (_id, i) => i === 0;
     render(<DeckGrid lang="it" activeLevels={A1} />);
-    expect(screen.getByText('1')).toBeTruthy();
-    expect(screen.queryByText('2')).toBeNull();
+    expect(screen.getByText('due({"count":1})')).toBeTruthy();
+    expect(screen.queryByText('due({"count":2})')).toBeNull();
   });
 
   it('B: counts every due card in the active levels', () => {
     render(<DeckGrid lang="it" activeLevels={A1} />);
-    expect(screen.getByText('2')).toBeTruthy();
+    expect(screen.getByText('due({"count":2})')).toBeTruthy();
   });
 
-  it('C: shows a checkmark (✓) when 0 cards are due', () => {
+  it('C: says the deck is done, with the done style, when 0 cards are due', () => {
     isDueImpl = () => false;
     render(<DeckGrid lang="it" activeLevels={A1} />);
-    expect(screen.getByText('✓')).toBeTruthy();
-    expect(screen.queryByText('0')).toBeNull();
+    expect(screen.getByText('done')).toHaveClass('deck-card-badge', 'deck-card-badge--done');
+    expect(screen.queryByText('due({"count":0})')).toBeNull();
   });
 
   it('D: follows the activeLevels prop, so the filter chips update the badge', () => {
     const { rerender } = render(<DeckGrid lang="it" activeLevels={A1} />);
-    expect(screen.getByText('2')).toBeTruthy();
+    expect(screen.getByText('due({"count":2})')).toBeTruthy();
     rerender(<DeckGrid lang="it" activeLevels={['A1', 'A2']} />);
-    expect(screen.getByText('3')).toBeTruthy();
+    expect(screen.getByText('due({"count":3})')).toBeTruthy();
   });
 });
 

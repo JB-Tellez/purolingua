@@ -3,7 +3,8 @@
     "logo": "Italiano",
     "changeLanguage": "Cambia lingua",
     "back": "\u2190 Indietro",
-    "reset": "Reset"
+    "reset": "Reset",
+    "resetConfirm": "Sei sicuro di voler resettare tutto il progresso? Questa azione non può essere annullata."
   },
   "page": {
     "title": "Scegli un Mazzo",
@@ -22,6 +23,10 @@
     "emergencies": "Emergenze",
     "social": "Vita Sociale",
     "weather": "Il Tempo"
+  },
+  "badge": {
+    "due": "{count, plural, one {# carta} other {# carte}}",
+    "done": "Completato"
   },
   "deckDescriptions": {
     "daily": "Frasi utili per la vita di tutti i giorni.",

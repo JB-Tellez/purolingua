@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -21,6 +21,22 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const selectorRef = useRef<HTMLDivElement>(null);
+
+  // An open dropdown closes on a click outside it or on Escape (v1.1 closed on outside clicks).
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const onPointer = (e: MouseEvent) => {
+      if (!selectorRef.current?.contains(e.target as Node)) setDropdownOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setDropdownOpen(false); };
+    document.addEventListener('mousedown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [dropdownOpen]);
 
   // Show a back link (one level up) on every page below the language home: 2+ segments, e.g. /it/rephrase → /it
   const segments = pathname.split('/').filter(Boolean);
@@ -28,7 +44,8 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
   const backHref = '/' + segments.slice(0, -1).join('/');
 
   function handleReset() {
-    if (typeof window !== 'undefined') {
+    // Deletes all progress for this language with no undo, so ask first (as v1.1 did).
+    if (typeof window !== 'undefined' && window.confirm(t('resetConfirm'))) {
       clearProgress(lang);
       // Full reload, not router.refresh(): refresh keeps client state, so mounted
       // grids and study sessions would keep showing (and re-saving) old progress.
@@ -63,10 +80,11 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
             </a>
           </li>
           <li>
-            <div className="language-selector">
+            <div className="language-selector" ref={selectorRef}>
               <button
                 className="language-btn"
                 aria-label={t('changeLanguage')}
+                aria-expanded={dropdownOpen}
                 onClick={() => setDropdownOpen((o) => !o)}
               >
                 {currentMeta.flag}

@@ -22,7 +22,7 @@ export default function LevelFilterChips({ lang: _lang, activeLevels, setActiveL
   }
 
   return (
-    <div className="level-filter" aria-label={t('label')}>
+    <div className="level-filter" role="group" aria-label={t('label')}>
       {LEVELS.map((level) => (
         <button
           key={level}

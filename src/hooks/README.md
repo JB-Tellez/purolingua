@@ -41,7 +41,7 @@ and pages/sessions under `src/app/[lang]/` (including
   `{ isSupported, startListening(onResult: (transcript: string) => void, onError: () => void): boolean, stopListening() }`.
   There is no listening state: callers keep their own, set when `startListening` returns `true`.
   `startListening` returns whether listening started (`false` when refused or when `start()` throws), so callers show "listening" only when it did.
-  Each start that is not cancelled calls back exactly once: `onResult` with the transcript, or `onError` for an error or for a session that ends with no usable result (an empty result list, or `onend` with neither result nor error).
+  Each start that is not cancelled calls back exactly once: `onResult` with the transcript, or `onError` for an error or for a session with no usable result (an empty result list, reported at once, or `onend` with neither result nor error).
   `stopListening` cancels: it calls `abort()` (discarding any pending result), and the cancelled session's late `onresult` / `onerror` / `onend` (Chrome fires `"aborted"`) are ignored, so callers get no callback; a new start is accepted at once. Unmounting cancels the same way.
 
 ## Invariants
@@ -92,8 +92,8 @@ and pages/sessions under `src/app/[lang]/` (including
   `continuous = false`, `interimResults = false`, and locale `it-IT` / `es-ES`
   (`LANG_LOCALE`).
 - **Recognition results**: `onResult` receives only `results[0][0].transcript`;
-  an empty `results` list logs an error and does not call `onResult`; the
-  session's `onend` then calls `onError`.
+  an empty `results` list logs an error and calls `onError` at once (not at
+  `onend`, when a new start may already be running).
 
 ## Side Effects
 

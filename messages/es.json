@@ -3,7 +3,8 @@
     "logo": "Espa\u00f1ol",
     "changeLanguage": "Cambiar idioma",
     "back": "\u2190 Atr\u00e1s",
-    "reset": "Reiniciar"
+    "reset": "Reiniciar",
+    "resetConfirm": "¿Estás seguro de que quieres reiniciar todo el progreso? Esta acción no se puede deshacer."
   },
   "page": {
     "title": "Elige un Mazo",
@@ -22,6 +23,10 @@
     "emergencies": "Emergencias",
     "social": "Vida Social",
     "weather": "El Tiempo"
+  },
+  "badge": {
+    "due": "{count, plural, one {# tarjeta} other {# tarjetas}}",
+    "done": "Completado"
   },
   "deckDescriptions": {
     "daily": "Frases \u00fatiles para el d\u00eda a d\u00eda.",

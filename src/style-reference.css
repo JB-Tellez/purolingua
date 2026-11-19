@@ -245,6 +245,15 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Nothing due: dark green (about 6:1 on white; --color-success is too light for this size) */
+.deck-card-badge--done {
+    color: #1D6F42;
+}
+
+.deck-card-badge--done::before {
+    content: "✓ ";
+}
+
 /* Theme Colors */
 .deck-card.theme-teal {
     background-color: var(--color-teal);

@@ -133,6 +133,22 @@ describe('useVoiceRecognition', () => {
       expect(onResult).not.toHaveBeenCalled();
     });
 
+    it("an empty result list calls onError at once, so a new start isn't hit by a late one", () => {
+      const firstError = vi.fn();
+      const secondError = vi.fn();
+      const { result } = renderHook(() => useVoiceRecognition('it' as any));
+      act(() => { result.current.startListening(vi.fn(), firstError); });
+      act(() => { mockRecognitionInstance.onresult?.({ results: [] } as any); });
+      expect(firstError).toHaveBeenCalledOnce(); // before onend
+
+      const first = { onend: mockRecognitionInstance.onend };
+      act(() => { result.current.startListening(vi.fn(), secondError); }); // before the old onend
+      act(() => { first.onend?.(); });
+
+      expect(firstError).toHaveBeenCalledOnce();
+      expect(secondError).not.toHaveBeenCalled();
+    });
+
     it('an error, then the end, calls onError once', () => {
       const { onError } = start();
       act(() => {

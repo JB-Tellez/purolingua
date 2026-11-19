@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { scenarios } from '@/data/qa';
 import { useQASRS } from '@/hooks/useQASRS';
 import type { Lang, Level, Scenario } from '@/types';
@@ -19,6 +20,7 @@ interface ScenarioTileProps {
 }
 
 function ScenarioTile({ scenario, lang, activeLevels, index }: ScenarioTileProps) {
+  const t = useTranslations('badge');
   const { dueCards } = useQASRS(lang, scenario.id, scenario.cards, activeLevels);
   const due = dueCards.length;
   const title = lang === 'it' ? scenario.titleIt : scenario.titleEs;
@@ -33,7 +35,7 @@ function ScenarioTile({ scenario, lang, activeLevels, index }: ScenarioTileProps
         <div className="deck-icon-circle">{scenario.icon}</div>
         <h3>{title}</h3>
         <span className={`deck-card-badge${due === 0 ? ' deck-card-badge--done' : ''}`}>
-          {due === 0 ? '✓' : due}
+          {due === 0 ? t('done') : t('due', { count: due })}
         </span>
       </div>
     </Link>
