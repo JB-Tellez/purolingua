@@ -72,4 +72,17 @@ describe('generateChoices', () => {
       }
     });
   });
+
+  // Decks repeat a front at both levels with different paraphrases
+  // ("Quanto costa questo?"): the other paraphrase is also right, not a foil.
+  it("never offers another card's back for the same front as a foil", () => {
+    const correct: Card = { front: 'Quanto costa questo?', back: 'Chiedo il prezzo di un articolo.', level: 'A1' };
+    const sameFront: Card = { front: 'Quanto costa questo?', back: 'Qual è il prezzo di questo articolo?', level: 'A2' };
+    const pool = [correct, sameFront, ...makeCards(3)];
+    for (let run = 0; run < 50; run++) {
+      const texts = generateChoices(correct, pool).map(c => c.text);
+      expect(texts).not.toContain(sameFront.back);
+      expect(texts).toHaveLength(4);
+    }
+  });
 });

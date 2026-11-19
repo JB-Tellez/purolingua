@@ -35,12 +35,12 @@ How findings were checked: every contract and source file was read in full. Two 
 
 ## src/data/it/README.md
 
-- Two cards share a `front` with *different* `back`s: "Quanto costa questo?" (`shopping.ts:4`, A2, and `:24`, A1) and "C'è il sole." (`weather.ts:13`, A2, and `:27`, A1). With both levels active, one card's correct paraphrase can appear as a wrong choice for the other. `generateChoices` draws foils from every active card's `back`. The contract describes each card as a phrase plus its paraphrase and says nothing about repeated fronts.
-- "È nuvoloso." → "Il cielo è coperto." appears twice, identically, as A2 (`weather.ts:9`) and A1 (`:28`). With both levels active it is studied twice per session, under two progress keys.
+- **[FIXED 2026-11-19: `generateChoices` never takes a foil from a card with the same front; test in `generateChoices.test.ts`.]** Two cards share a `front` with *different* `back`s: "Quanto costa questo?" (`shopping.ts:4`, A2, and `:24`, A1) and "C'è il sole." (`weather.ts:13`, A2, and `:27`, A1). With both levels active, one card's correct paraphrase can appear as a wrong choice for the other. `generateChoices` draws foils from every active card's `back`. The contract describes each card as a phrase plus its paraphrase and says nothing about repeated fronts.
+- **[WON'T FIX 2026-11-19: being asked twice is harmless; replacing a card would hand its saved progress to a new phrase.]** "È nuvoloso." → "Il cielo è coperto." appears twice, identically, as A2 (`weather.ts:9`) and A1 (`:28`). With both levels active it is studied twice per session, under two progress keys.
 
 ## src/data/es/README.md
 
-- Same issue as Italian. Repeated fronts with different backs: "¿Cuánto cuesta esto?" (`shopping.ts:4` and `:24`) and "¿De dónde eres?" (`social.ts:6` and `:28`). Exact duplicate card: "Está nublado." → "El cielo está cubierto." (`weather.ts:9` and `:28`).
+- **[Repeated fronts FIXED 2026-11-19 by the same `generateChoices` change. The exact duplicate card: WON'T FIX, as for Italian.]** Same issue as Italian. Repeated fronts with different backs: "¿Cuánto cuesta esto?" (`shopping.ts:4` and `:24`) and "¿De dónde eres?" (`social.ts:6` and `:28`). Exact duplicate card: "Está nublado." → "El cielo está cubierto." (`weather.ts:9` and `:28`).
 
 ## src/data/qa/README.md
 

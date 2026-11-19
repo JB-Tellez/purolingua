@@ -28,10 +28,13 @@ function shuffleArray<T>(array: T[]): T[] {
  * Caller is responsible for pre-filtering filteredCards to the active level(s).
  * The correct card must be included in filteredCards for completeness but its
  * back text is excluded from the foil pool. Cards sharing a back text count once.
+ * Cards with the same front are excluded too: their back is also a right answer.
  */
 export function generateChoices(correctCard: Card, filteredCards: Card[]): Choice[] {
   // Distinct texts only: some decks give several cards the same back.
-  const foilPool = [...new Set(filteredCards.map(c => c.back))].filter(back => back !== correctCard.back);
+  const foilPool = [...new Set(
+    filteredCards.filter(c => c.front !== correctCard.front).map(c => c.back)
+  )].filter(back => back !== correctCard.back);
   const foils = shuffleArray(foilPool).slice(0, 3);
   const choices: Choice[] = [
     { text: correctCard.back, isCorrect: true },
