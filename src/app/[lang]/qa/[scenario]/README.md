@@ -30,7 +30,7 @@ synthesis, speech recognition).
     and `isScenarioHasDue(progress, scenarioId, cards, activeLevels)`.
   - Dependencies: `useQASRS`, `useLevelFilter`, `useVoiceRecognition`
     (`@/hooks`), `isCardDue` and `getQACardKey` (`@/lib/srs`), `loadProgress`
-    (`@/lib/progressStorage`), `speak` (`@/lib/speak`), `matchesTranscript`
+    (`@/lib/progressStorage`), `speak` (`@/lib/speak`), `bestMatch`
     (`@/lib/matchTranscript`), `scenarios` (`@/data/qa`), and
     `AudioButton`, `ChoiceButton`, `FeedbackMessage`, `MicButton`
     (`@/components`).
@@ -60,8 +60,9 @@ synthesis, speech recognition).
 - "Study again" (on both end screens) replays `sessionDueCards` as practice:
   `practice` is set and `handleAnswer` skips `updateCard`. It is hidden on the
   all-done screen when the session started with no due cards.
-- Mic input: a transcript that matches `correctText` selects the correct choice
-  and advances. A transcript that does not match, or a recognition error, shows
+- Mic input: the transcript is matched against every choice (`bestMatch`). If
+  the best match is the correct choice, it is selected and the card advances.
+  A best match on a foil, no match, a tie, or a recognition error shows
   `notRecognized` for 800 ms and does not update SRS.
 - After the last card, the session shows the scenario-done screen if any
   scenario in `@/data/qa` still has due cards at the active levels. Otherwise

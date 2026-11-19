@@ -32,7 +32,7 @@ tapping or by voice.
   - Speaks choices with `speak` from `@/lib/speak`.
   - Dependencies: `useSRS`, `useLevelFilter`, `useVoiceRecognition`
     (`@/hooks`), `generateChoices` (`@/lib/generateChoices`),
-    `matchesTranscript` (`@/lib/matchTranscript`), `deckMetadata`
+    `matchesTranscript` and `bestMatch` (`@/lib/matchTranscript`), `deckMetadata`
     (`@/data/decks`), `DECK_MAP` (`@/data/deckMap`), and `AudioButton`,
     `ChoiceButton`, `FeedbackMessage`, `MicButton` (`@/components`).
 
@@ -60,8 +60,9 @@ tapping or by voice.
   boxes and review dates stay as the real session left them. It is hidden on
   the all-done screen when the session started with no due cards.
 - Mic on the front of the card: a transcript that matches `card.front` flips
-  the card and shows `heard`. Mic on the back: a transcript that matches a
-  choice's text selects that choice. A transcript that matches nothing, or a
+  the card and shows `heard`. Mic on the back: the choice the transcript
+  matches best (`bestMatch`) is selected; when two choices match equally
+  well, it counts as no match. A transcript that matches nothing, or a
   recognition error, shows `notRecognized` and sets the mic to `error` for
   800 ms.
 - After the last card, the session shows the all-done screen if no deck for

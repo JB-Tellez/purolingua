@@ -369,6 +369,23 @@ describe('QAStudySession', () => {
     vi.useRealTimers();
   });
 
+  it('a spoken foil that contains the whole correct answer is not counted as correct', () => {
+    const card = {
+      ...mockScenario.cards[0],
+      correct: 'Un caffè.',
+      foils: ['Un caffè macchiato.', 'Il conto, per favore.', 'No, grazie.'] as [string, string, string],
+    };
+    setupDefaultQASRSMock({ dueCards: [card] });
+    render(<QAStudySession lang="it" scenario={{ ...mockScenario, cards: [card] }} />);
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
+
+    const [[onResult]] = mockStartListening.mock.calls;
+    act(() => { onResult('un caffè macchiato'); });
+
+    expect(screen.getByRole('status').textContent).toBe('notRecognized');
+    expect(screen.getByRole('button', { name: 'Un caffè.' })).not.toHaveClass('correct');
+  });
+
   it('spoken non-match sets notRecognized feedback, no SRS update', () => {
     vi.useFakeTimers();
     renderQAStudySession('it');

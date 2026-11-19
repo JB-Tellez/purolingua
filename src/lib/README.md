@@ -19,7 +19,9 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
   - `shuffleArray<T>` is a module-private Fisher-Yates helper. It is not exported.
 - `matchTranscript.ts`
   - `normalize(s: string): string`: lowercases the string, applies NFD, strips combining diacritics (U+0300 to U+036F), turns every non-`\w`/non-whitespace character into a space, collapses repeated whitespace, and trims.
-  - `matchesTranscript(transcript: string, target: string): boolean`: returns `true` if the two strings are equal after `normalize`. Otherwise it returns `true` when at least 80% of the target's words appear in the transcript.
+  - `matchesTranscript(transcript: string, target: string): boolean`: returns `true` if the two strings are equal after `normalize`. Otherwise it returns `true` when the word overlap `2 × shared / (transcript words + target words)` is at least `0.85`.
+  - `bestMatch(transcript: string, targets: string[]): number`: the index of the target with the highest score that passes `matchesTranscript`'s threshold; `-1` when none passes or the top score is tied. An exact match always wins. Used by both sessions to pick the spoken choice.
+  - `matchScore` (the score above) and `MATCH_THRESHOLD` are module-private.
 - `srs.ts`
   - `getCardKey(deckId: DeckId, cardIndex: number): string`: returns `"{deckId}_{cardIndex}"`.
   - `getQACardKey(scenarioId: ScenarioId, cardId: string): string`: returns `"qa_{scenarioId}_{cardId}"`.
@@ -45,7 +47,7 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
 ## Invariants
 - `generateChoices`: foils are drawn from the distinct `back` texts other than `correctCard.back`, so every choice text appears exactly once. You get at most 4 choices, and fewer if `filteredCards` has fewer than 3 distinct-`back` foils. The caller must pre-filter `filteredCards` to the active level(s) (doc comment in `generateChoices.ts`).
 - `shuffleArray` copies its input before shuffling. Caller arrays are never mutated.
-- `matchesTranscript`: if the target normalizes to an empty string, it returns `false` unless the transcript also normalizes to an empty string (the exact-match check runs first). The word-overlap threshold is `>= 0.8` of the target words. Extra words in the transcript do not lower the score.
+- `matchesTranscript`: if the target normalizes to an empty string, it returns `false` unless the transcript also normalizes to an empty string (the exact-match check runs first). Missing and extra words both lower the score, so one dropped or extra word passes on phrases of 5+ words, while a wrong word in 5 (`"113"` for `"115"`) or an added `"non"` on a short phrase does not.
 - `normalize` uses `\w`, which is ASCII-only. Accented letters that decompose under NFD (`è`, `ñ`) reduce to their base letter. Non-ASCII letters that do not decompose (for example `ß`) become spaces (`"straße"` → `"stra e"`).
 - `getCardKey` / `getQACardKey` / `progressStorage`: these persisted formats must not change, because existing `localStorage` progress uses them. `"{deckId}_{cardIndex}"` and `{lang}-progress` are v1.1's formats (the `vanilla` branch); `"qa_{scenarioId}_{cardId}"` was added after v1.1 with Q&A mode.
 - `advanceBox`: a correct answer moves the card up one box, capped at 3. An incorrect answer resets it to box 1. A missing `current` counts as box 1. So a new card answered correctly goes to box 2.
@@ -59,4 +61,4 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
 ## Verification
 - Run: `npx vitest run src/__tests__/lib` (`generateChoices`, `matchTranscript`, `srs`, `progressStorage`, `levels`, `locale`, `speak`, and `reloadPage` tests).
 - Full suite: `npm test`. This runs `vitest`, which starts in watch mode in an interactive terminal. Use `npx vitest run` for a single pass.
-- `matchTranscript.ts` is covered by `src/__tests__/lib/matchTranscript.test.ts` (normalization, the 80% word threshold, and the empty-target case).
+- `matchTranscript.ts` is covered by `src/__tests__/lib/matchTranscript.test.ts` (normalization, the overlap threshold, extra words, `bestMatch` ties, and the empty-target case).

@@ -6,7 +6,7 @@ import type { Card, DeckId, Lang } from '@/types';
 import { useSRS } from '@/hooks/useSRS';
 import { useLevelFilter } from '@/hooks/useLevelFilter';
 import { generateChoices } from '@/lib/generateChoices';
-import { matchesTranscript } from '@/lib/matchTranscript';
+import { bestMatch, matchesTranscript } from '@/lib/matchTranscript';
 import { speak } from '@/lib/speak';
 import AudioButton from '@/components/AudioButton';
 import ChoiceButton from '@/components/ChoiceButton';
@@ -181,9 +181,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     startListening(
       (transcript) => {
         setMicState('idle');
-        const matchedIndex = choices.findIndex(
-          (c) => matchesTranscript(transcript, c.text)
-        );
+        const matchedIndex = bestMatch(transcript, choices.map((c) => c.text));
         if (matchedIndex !== -1) {
           setFeedbackState('heard');
           handleChoiceClick(matchedIndex);

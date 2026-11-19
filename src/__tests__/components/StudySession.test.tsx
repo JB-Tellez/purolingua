@@ -281,6 +281,30 @@ describe('StudySession voice integration', () => {
     vi.useRealTimers();
   });
 
+  it('voice on the back selects the best-matching choice, not the first one that partly matches', () => {
+    vi.useFakeTimers();
+    // Math.random() = 0 makes the shuffle deterministic: the partial match
+    // "Ho perso il treno." is listed before the exact answer.
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    const cards: Card[] = [
+      { front: 'Ieri il treno è partito senza di me.', back: 'Ho perso il treno ieri.', level: 'A1' },
+      { front: 'Il treno è partito senza di me.', back: 'Ho perso il treno.', level: 'A1' },
+      { front: 'Grazie', back: 'Thank you', level: 'A1' },
+      { front: 'Per favore', back: 'Please', level: 'A1' },
+    ];
+    render(<StudySession lang="it" deckId="daily" cards={cards} />);
+    act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
+    const texts = [...document.querySelectorAll('.quiz-btn')].map((b) => b.textContent);
+    expect(texts.indexOf('Ho perso il treno.')).toBeLessThan(texts.indexOf('Ho perso il treno ieri.'));
+
+    act(() => { screen.getAllByRole('button', { name: 'micStart' })[1].click(); });
+    act(() => { fireOnResult('ho perso il treno ieri'); });
+
+    expect(screen.getByRole('button', { name: 'Ho perso il treno ieri.' })).toHaveClass('correct');
+    expect(screen.getByRole('button', { name: 'Ho perso il treno.' })).not.toHaveClass('incorrect');
+    vi.useRealTimers();
+  });
+
   it('tapping a choice while listening cancels the voice attempt, so a late match does not answer again', () => {
     vi.useFakeTimers();
     renderStudySession();

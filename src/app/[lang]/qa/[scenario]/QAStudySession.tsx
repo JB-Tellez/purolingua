@@ -8,7 +8,7 @@ import { useLevelFilter } from '@/hooks/useLevelFilter';
 import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
 import { isCardDue, getQACardKey } from '@/lib/srs';
 import { loadProgress } from '@/lib/progressStorage';
-import { matchesTranscript } from '@/lib/matchTranscript';
+import { bestMatch } from '@/lib/matchTranscript';
 import { speak } from '@/lib/speak';
 import { scenarios as allScenarios } from '@/data/qa';
 import AudioButton from '@/components/AudioButton';
@@ -182,14 +182,12 @@ export default function QAStudySession({ lang, scenario }: Props) {
     startListening(
       (transcript) => {
         setMicState('idle');
-        if (matchesTranscript(transcript, correctText)) {
-          // Matched correct answer — find correct choice and trigger click
-          const correctIndex = choices.findIndex((c) => c.isCorrect);
-          if (correctIndex !== -1) {
-            setSelectedChoice(correctIndex);
-            setFeedbackState('correct');
-            setTimeout(() => handleAnswer(true), 600);
-          }
+        // Best match over every choice: a transcript closer to a foil is not correct.
+        const matchedIndex = bestMatch(transcript, choices.map((c) => c.text));
+        if (matchedIndex !== -1 && choices[matchedIndex].isCorrect) {
+          setSelectedChoice(matchedIndex);
+          setFeedbackState('correct');
+          setTimeout(() => handleAnswer(true), 600);
         } else {
           // Non-match: notRecognized, no SRS update, choices remain available
           setFeedbackState('notRecognized');
