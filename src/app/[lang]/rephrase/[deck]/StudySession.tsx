@@ -43,7 +43,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   // Which end screen to show is derived at render time (below), not decided in
-  // handleAnswer: the handler's closure still sees progress from before
+  // `advance()`: its closure still sees progress from before
   // updateCard, so the just-answered card would always look due.
   const [finished, setFinished] = useState(false);
   // "Study again" replays the session as practice: answers are not saved.
@@ -52,7 +52,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [micState, setMicState] = useState<'idle' | 'listening' | 'error'>('idle');
   const [feedbackState, setFeedbackState] = useState<'correct' | 'incorrect' | 'heard' | 'notRecognized' | null>(null);
-  // Pending auto-advance after a choice; Next cancels it so the card is recorded once.
+  // Pending auto-advance after a choice; Next cancels it and advances at once.
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const backLink = `/${lang}/rephrase`;
@@ -200,10 +200,9 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     );
   }
 
-  function handleAnswer(isCorrect: boolean) {
+  function advance() {
     if (advanceTimer.current) clearTimeout(advanceTimer.current);
     advanceTimer.current = null;
-    if (!practice) updateCard(deckId, originalIndex, isCorrect);
     setFlipped(false);
     setSelectedChoice(null);
     setFeedbackState(null);
@@ -221,7 +220,10 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     const isCorrect = choices[choiceIndex].isCorrect;
     setSelectedChoice(choiceIndex);
     setFeedbackState(isCorrect ? 'correct' : 'incorrect');
-    advanceTimer.current = setTimeout(() => handleAnswer(isCorrect), 600);
+    // Recorded at the tap, not when the card advances: leaving the page during
+    // the 600 ms delay must not leave the answer to a timer.
+    if (!practice) updateCard(deckId, originalIndex, isCorrect);
+    advanceTimer.current = setTimeout(advance, 600);
   }
 
   const progressPercent = Math.round((index / dueCards.length) * 100);
@@ -295,7 +297,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
             <button
               className="btn primary"
               disabled={selectedChoice === null}
-              onClick={() => { if (selectedChoice !== null) handleAnswer(choices[selectedChoice].isCorrect); }}
+              onClick={() => { if (selectedChoice !== null) advance(); }}
             >
               {t('nextButton')}
             </button>

@@ -317,6 +317,20 @@ describe('StudySession voice integration', () => {
     vi.useRealTimers();
   });
 
+  it('records the answer at the tap, so leaving before the 600 ms advance still saves it once', () => {
+    vi.useFakeTimers();
+    const { unmount } = renderStudySession();
+    act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
+    act(() => { screen.getByRole('button', { name: 'Hello' }).click(); });
+
+    unmount();
+    expect(mockUpdateCard).toHaveBeenCalledOnce();
+    expect(mockUpdateCard).toHaveBeenCalledWith('daily', 0, true);
+    act(() => { vi.advanceTimersByTime(600); });
+    expect(mockUpdateCard).toHaveBeenCalledOnce();
+    vi.useRealTimers();
+  });
+
   it('tapping a choice while listening cancels the voice attempt, so a late match does not answer again', () => {
     vi.useFakeTimers();
     renderStudySession();

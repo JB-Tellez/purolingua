@@ -53,12 +53,14 @@ synthesis, speech recognition).
   while a card is shown.
 - A click is ignored while `selectedChoice !== null`. A wrong answer sets
   `missedCurrent` and resets the selection after 800 ms so the user can retry.
-  A correct answer advances after 600 ms and calls
-  `updateCard(card.id, isCorrect && !missedCurrent)`: a card missed before the
-  correct retry is recorded as wrong (box 1). The card is recorded once, when
-  it advances. Covered by `QAStudySession.endScreens.test.tsx`.
+  A correct answer (tapped or spoken) calls
+  `updateCard(card.id, !missedCurrent)` at once, then advances after 600 ms:
+  a card missed before the correct retry is recorded as wrong (box 1).
+  Recording at the answer means leaving the page during the delay still saves
+  it, and no timer writes progress after the page is gone. The card is
+  recorded once. Covered by `QAStudySession.endScreens.test.tsx`.
 - "Study again" (on both end screens) replays `sessionDueCards` as practice:
-  `practice` is set and `handleAnswer` skips `updateCard`. It is hidden on the
+  `practice` is set and a correct answer skips `updateCard`. It is hidden on the
   all-done screen when the session started with no due cards.
 - Mic input: the transcript is matched against every choice (`bestMatch`). If
   the best match is the correct choice, it is selected and the card advances.
@@ -66,7 +68,7 @@ synthesis, speech recognition).
   `notRecognized` for 800 ms and does not update SRS.
 - After the last card, the session shows the scenario-done screen if any
   scenario in `@/data/qa` still has due cards at the active levels. Otherwise
-  it shows the all-done screen. `handleAnswer` only sets `finished`; the
+  it shows the all-done screen. `advance()` only sets `finished`; the
   screen is chosen at render time from the post-`updateCard` `progress`, so the
   just-answered card is counted. Covered with real SRS state by
   `src/__tests__/components/QAStudySession.endScreens.test.tsx`.

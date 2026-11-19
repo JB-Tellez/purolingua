@@ -50,13 +50,14 @@ tapping or by voice.
 - The `filteredCards` choice pool is computed once (empty deps) from
   `activeLevels`. `choices` is memoized on `[currentEntry, filteredCards]`.
 - A click is ignored while `selectedChoice !== null`. Each choice, correct or
-  not, schedules `handleAnswer(isCorrect)` after 600 ms, which calls
-  `updateCard(deckId, originalIndex, isCorrect)` and advances. The "next"
-  control is disabled until a choice is selected; pressing it runs
-  `handleAnswer` with that choice's correctness at once and cancels the pending
-  600 ms timer, so each card is recorded once.
+  not, calls `updateCard(deckId, originalIndex, isCorrect)` at once and
+  schedules `advance()` after 600 ms. Recording at the tap means leaving the
+  page during the delay still saves the answer, and no timer writes progress
+  after the page is gone. The "next" control is disabled until a choice is
+  selected; pressing it cancels the pending timer and advances at once. Each
+  card is recorded once.
 - "Study again" (on both end screens) replays the session's due-card snapshot
-  as practice: `practice` is set, and `handleAnswer` skips `updateCard`, so
+  as practice: `practice` is set, and a choice skips `updateCard`, so
   boxes and review dates stay as the real session left them. It is hidden on
   the all-done screen when the session started with no due cards.
 - Mic on the front of the card: a transcript that matches `card.front` flips
@@ -67,7 +68,7 @@ tapping or by voice.
   800 ms.
 - After the last card, the session shows the all-done screen if no deck for
   this `lang` in `deckMetadata` has due cards at the active levels. Otherwise
-  it shows the deck-complete screen. `handleAnswer` only sets `finished`; the
+  it shows the deck-complete screen. `advance()` only sets `finished`; the
   screen is chosen at render time (`allDecksEmpty()`), after `updateCard` has
   applied, so the just-answered card is counted. Covered with real SRS state by
   `src/__tests__/components/StudySession.endScreens.test.tsx`.

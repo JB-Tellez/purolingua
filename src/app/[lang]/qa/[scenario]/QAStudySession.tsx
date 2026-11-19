@@ -72,7 +72,7 @@ export default function QAStudySession({ lang, scenario }: Props) {
 
   const [index, setIndex] = useState(0);
   // Which end screen to show is derived at render time (below), not decided in
-  // handleAnswer: the handler's closure still sees progress from before
+  // `advance()`: its closure still sees progress from before
   // updateCard, so the just-answered card would always look due.
   const [finished, setFinished] = useState(false);
   // "Study again" replays the session as practice: answers are not saved.
@@ -134,10 +134,14 @@ export default function QAStudySession({ lang, scenario }: Props) {
     setFeedbackState(null);
   }
 
-  function handleAnswer(isCorrect: boolean) {
-    if (currentCard && !practice) {
-      updateCard(currentCard.id, isCorrect && !missedCurrent);
-    }
+  // Recorded when the correct answer is given, not when the card advances:
+  // leaving the page during the 600 ms delay must not leave it to a timer.
+  // A card missed before the correct retry counts as wrong.
+  function recordCorrectAnswer() {
+    if (currentCard && !practice) updateCard(currentCard.id, !missedCurrent);
+  }
+
+  function advance() {
     setSelectedChoice(null);
     setMissedCurrent(false);
     setFeedbackState(null);
@@ -158,7 +162,8 @@ export default function QAStudySession({ lang, scenario }: Props) {
     setSelectedChoice(choiceIndex);
     setFeedbackState(isCorrect ? 'correct' : 'incorrect');
     if (isCorrect) {
-      setTimeout(() => handleAnswer(true), 600);
+      recordCorrectAnswer();
+      setTimeout(advance, 600);
     } else {
       // Wrong answer — show red/green feedback, then reset so user can retry
       setMissedCurrent(true);
@@ -188,7 +193,8 @@ export default function QAStudySession({ lang, scenario }: Props) {
         if (matchedIndex !== -1 && choices[matchedIndex].isCorrect) {
           setSelectedChoice(matchedIndex);
           setFeedbackState('correct');
-          setTimeout(() => handleAnswer(true), 600);
+          recordCorrectAnswer();
+          setTimeout(advance, 600);
         } else {
           // Non-match: notRecognized, no SRS update, choices remain available
           setFeedbackState('notRecognized');

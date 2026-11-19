@@ -390,6 +390,19 @@ describe('QAStudySession', () => {
     expect(document.querySelector('.mic-btn')).not.toHaveClass('mic-btn--listening');
   });
 
+  it('records the answer at the tap, so leaving before the 600 ms advance still saves it once', () => {
+    vi.useFakeTimers();
+    const { unmount } = renderQAStudySession('it');
+    act(() => { screen.getByRole('button', { name: 'Un caffè, grazie.' }).click(); });
+
+    unmount();
+    expect(mockUpdateCard).toHaveBeenCalledOnce();
+    expect(mockUpdateCard).toHaveBeenCalledWith('coffee_01', true);
+    act(() => { vi.advanceTimersByTime(600); });
+    expect(mockUpdateCard).toHaveBeenCalledOnce();
+    vi.useRealTimers();
+  });
+
   it('spoken non-match sets notRecognized feedback, no SRS update', () => {
     vi.useFakeTimers();
     renderQAStudySession('it');
