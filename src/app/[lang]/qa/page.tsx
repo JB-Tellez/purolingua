@@ -1,6 +1,7 @@
 'use client';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import ClientOnly from '@/components/ClientOnly';
 import LevelFilterChips from '@/components/LevelFilterChips';
 import ScenarioGrid from '@/components/ScenarioGrid';
 import { useSRS } from '@/hooks/useSRS';
@@ -20,8 +21,11 @@ export default function QABrowserPage() {
         <h1>{t('scenarioTitle')}</h1>
         <p className="subtitle">{t('scenarioSubtitle')}</p>
       </div>
-      <LevelFilterChips lang={lang} activeLevels={activeLevels} setActiveLevels={setActiveLevels} />
-      <ScenarioGrid lang={lang} activeLevels={activeLevels} />
+      {/* Chips and badges come from localStorage: render them after hydration. */}
+      <ClientOnly>
+        <LevelFilterChips lang={lang} activeLevels={activeLevels} setActiveLevels={setActiveLevels} />
+        <ScenarioGrid lang={lang} activeLevels={activeLevels} />
+      </ClientOnly>
     </main>
   );
 }

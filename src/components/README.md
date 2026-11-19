@@ -18,6 +18,7 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 | --- | --- | --- |
 | `ActivityPicker` (`ActivityPicker.tsx`) | `{ lang }` | Links to `/{lang}/rephrase` and `/{lang}/qa`; i18n namespace `activities`. |
 | `AudioButton` (`AudioButton.tsx`) | `{ phrase: string; lang }` | Speaks `phrase` with `speechSynthesis`; i18n namespace `study` (`audio`). |
+| `ClientOnly` (`ClientOnly.tsx`) | `{ children }` | Renders `children` only in the browser after hydration (`useSyncExternalStore`: `false` on the server and during hydration). Nothing in prerendered HTML. Used by the two list pages around UI built from `localStorage`. |
 | `ChoiceButton` (`ChoiceButton.tsx`) | `{ text; state: 'idle' \| 'correct' \| 'incorrect'; onClick; disabled?; onSpeak? }` | A `.quiz-option` wrapper holding the answer button and, beside it, a speak button (`.quiz-audio-icon`, labelled `study.audio`); i18n namespace `study`. |
 | `DeckGrid` (`DeckGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One card per `@/data/decks:deckMetadata` entry for `lang`, linking to `/{lang}/rephrase/{deck.id}`; due badge from `useSRS`; i18n namespaces `decks`, `deckDescriptions`. Used by `src/app/[lang]/rephrase/page.tsx`. |
 | `FeedbackMessage` (`FeedbackMessage.tsx`) | `{ state: 'correct' \| 'incorrect' \| 'heard' \| 'notRecognized' \| null }` | `role="status"`, `aria-live="polite"`; i18n namespace `study`. |

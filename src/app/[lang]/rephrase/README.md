@@ -15,8 +15,8 @@ for the nested `[deck]` route.
 - `page.tsx`
   - `default LangPage()` (`'use client'`): reads `lang` from `useParams`, gets
     `hasProgress` from `useSRS(lang)`, and gets `{ activeLevels, setActiveLevels }`
-    from `useLevelFilter(lang, hasProgress, 'rephrase')`. Renders the page title, `<LevelFilterChips>`, and
-    `<DeckGrid lang activeLevels>` from
+    from `useLevelFilter(lang, hasProgress, 'rephrase')`. Renders the page title, then `<LevelFilterChips>` and
+    `<DeckGrid lang activeLevels>` inside `<ClientOnly>`, all from
     [`@/components`](../../../components/README.md), which links each deck to
     `/${lang}/rephrase/${deck.id}` with a due-count badge.
 - Subdirectories
@@ -25,6 +25,11 @@ for the nested `[deck]` route.
 
 ## Invariants
 
+- The chips and badges come from `localStorage`, which the prerendered HTML
+  cannot know, so they render only after hydration (`ClientOnly`). The static
+  HTML holds the heading; rendering them during hydration made React report a
+  hydration mismatch for returning visitors
+  (`src/__tests__/app/listPageHydration.test.tsx`).
 - `LevelFilterChips` and `DeckGrid` receive the same `activeLevels` from this
   page's single `useLevelFilter` call, so the badges follow the chips.
 - This layout's `generateStaticParams` and the one in `./[deck]/page.tsx`
@@ -36,5 +41,5 @@ for the nested `[deck]` route.
 
 ## Verification
 
-- Run: `npx vitest run src/__tests__/hooks/useSRS.test.tsx src/__tests__/hooks/useLevelFilter.test.tsx src/__tests__/components/DeckGrid.test.tsx src/__tests__/app/levelFilterPerActivity.test.tsx src/__tests__/app/listPageHeadings.test.tsx`
+- Run: `npx vitest run src/__tests__/hooks/useSRS.test.tsx src/__tests__/hooks/useLevelFilter.test.tsx src/__tests__/components/DeckGrid.test.tsx src/__tests__/app/levelFilterPerActivity.test.tsx src/__tests__/app/listPageHeadings.test.tsx src/__tests__/app/listPageHydration.test.tsx`
 - Full suite: `npm test`
