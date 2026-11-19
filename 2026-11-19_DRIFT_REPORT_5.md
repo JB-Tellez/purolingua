@@ -1,0 +1,26 @@
+# EGM Drift Report — 2026-11-19 (fifth run)
+
+Scope: the 18 EGM contracts (`README.md` plus 17 child `README.md` files), compared against the source at `fb5e8b3`, after every finding in `2026-11-19_DRIFT_REPORT_4.md` was fixed and Reset became a `<button>`. Only divergences are listed.
+
+How findings were checked: run in the same session that wrote the recent fixes, so it again concentrated on angles no earlier round covered: message keys against their uses (none unused), CSS classes defined against classes used, live-region and accessible-name behaviour, page metadata, and a content scan of the real Q&A data (a throwaway Vitest file, deleted afterwards). The Reset button change was checked against its contract. Baseline: `npx vitest run` passes (40 files, 367 tests), `tsc --noEmit` is clean.
+
+## src/components/README.md
+
+- **Feedback may not be announced: the live region appears together with its message.** `FeedbackMessage` returns `null` when `state` is `null` and renders `<p role="status" aria-live="polite">` only with a message. Screen readers watch live regions that already exist; a region inserted with its text already inside is often not announced (behaviour varies by browser and screen reader). The Rephrase session contract states the feedback is "visible and announced once whichever side is up", and the components contract only says it "renders nothing when `state === null`". Keeping the `role="status"` element mounted and changing only its text would make announcements reliable. Not checked with a screen reader.
+- **The four speak buttons beside the answer choices share one name.** Every `ChoiceButton`'s speak button is labelled `study.audio` ("Ascolta" / "Escuchar"), as is `AudioButton`. On a question, a screen reader user hears the same name four times, with only DOM order (each sits just before its answer button) to tell which answer it plays. The contract documents the label but not the ambiguity. Including the choice text in the name (for example "Ascolta: …") would fix it.
+
+## src/data/qa/README.md
+
+- **The correct answer is usually the longest choice.** In 65 of the 112 language/card combinations (58%), the correct answer is strictly longer than all three foils; with four options and no length bias that would be about 25%. A learner can often pick the right answer without understanding it. This is content, not code: shortening some correct answers or lengthening some foils would fix it, and the scan could become a data test. The contract describes the foils' shape (fixed 3-tuples) but sets no rule for them.
+
+## src/README.md
+
+- `style-reference.css` (described here as "global CSS custom properties and component classes") still defines 12 v1.1 classes that no component uses: the modal set (`modal`, `modal-overlay`, `modal-content`, `modal-header`, `modal-footer`), the language modal (`language-modal-content`, `language-choices`, `language-choice`), `due-badge`, `feedback-message`, `icon-btn`, and `profile-link`. They ship in every page's CSS. (The 8 `theme-*` classes also look unused to a text search but are built at runtime, `theme-${theme}`.)
+
+## src/app/README.md
+
+- Every page has the same `<title>`, "PuroLingua", from the two root layouts and the 404 (`metadata: { title: 'PuroLingua' }`): the language picker, the deck and scenario lists, every study session, and the 404 page. Tabs, history, and screen readers' page announcements cannot tell them apart. The `description` is the English "Language learning flashcards" on the Italian and Spanish pages too. The contract documents the shared metadata as an invariant ("Both root layouts export the same `metadata`") without noting the cost.
+
+## Contracts with no drift detected
+
+`README.md`, `src/types`, `src/lib`, `src/hooks`, `src/i18n`, `src/data`, `src/data/it`, `src/data/es`, `src/app/[lang]`, `src/app/[lang]/rephrase`, `src/app/[lang]/rephrase/[deck]` (apart from the announcement claim above), `src/app/[lang]/qa`, `src/app/[lang]/qa/[scenario]`, `scripts`. No files fall outside a contract.
