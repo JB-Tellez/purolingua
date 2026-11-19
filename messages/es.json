@@ -65,6 +65,7 @@
     "backToDecks": "\u2190 Volver a los mazos",
     "cardCounter": "Tarjeta {current} de {total}",
     "audio": "Escuchar",
+    "audioChoice": "Escuchar: {text}",
     "micStart": "Empieza a hablar",
     "micListening": "Escuchando…",
     "heard": "Escuchado",

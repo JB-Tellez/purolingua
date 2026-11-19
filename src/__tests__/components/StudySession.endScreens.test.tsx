@@ -56,7 +56,7 @@ function renderDaily() {
 }
 
 function answer(text: string) {
-  act(() => { fireEvent.click(screen.getByRole('button', { name: new RegExp(text) })); });
+  act(() => { fireEvent.click(screen.getByRole('button', { name: new RegExp(`^${text}`) })); });
   act(() => { vi.advanceTimersByTime(600); });
 }
 
@@ -83,7 +83,7 @@ describe('StudySession end screens (real SRS state)', () => {
     seed({ daily_1: FUTURE, restaurant_0: FUTURE });
     renderDaily();
     act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
-    act(() => { fireEvent.click(screen.getByRole('button', { name: /Hello/ })); });
+    act(() => { fireEvent.click(screen.getByRole('button', { name: /^Hello/ })); });
     act(() => { fireEvent.click(screen.getByRole('button', { name: 'nextButton' })); });
     expect(screen.getByText('allDone')).toBeInTheDocument();
   });
@@ -101,7 +101,7 @@ describe('StudySession Next button (real SRS state)', () => {
   const nextButton = () => screen.getByRole('button', { name: 'nextButton' });
   const flip = () => act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
   const choose = (text: string) =>
-    act(() => { fireEvent.click(screen.getByRole('button', { name: new RegExp(text) })); });
+    act(() => { fireEvent.click(screen.getByRole('button', { name: new RegExp(`^${text}`) })); });
   const saved = () => JSON.parse(localStorage.getItem('it-progress') ?? '{}');
 
   it('is disabled until a choice is selected, so it cannot record an unanswered card', () => {

@@ -17,17 +17,15 @@ const COLOR_CLASS: Record<Exclude<FeedbackState, null>, string> = {
 export default function FeedbackMessage({ state }: Props) {
   const t = useTranslations('study');
 
-  if (state === null) return null;
-
-  const colorClass = COLOR_CLASS[state];
-
+  // The region stays mounted (empty when there is nothing to say): screen
+  // readers announce changes to an existing live region, not a new one.
   return (
     <p
       role="status"
       aria-live="polite"
-      className={`text-sm font-medium text-center ${colorClass}`}
+      className={`text-sm font-medium text-center${state ? ` ${COLOR_CLASS[state]}` : ''}`}
     >
-      {t(state)}
+      {state ? t(state) : ''}
     </p>
   );
 }

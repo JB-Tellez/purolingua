@@ -53,7 +53,7 @@ function renderCoffee() {
 }
 
 function answerCorrectly() {
-  act(() => { fireEvent.click(screen.getByRole('button', { name: /Un caffè/ })); });
+  act(() => { fireEvent.click(screen.getByRole('button', { name: /^Un caffè/ })); });
   act(() => { vi.advanceTimersByTime(600); });
 }
 
@@ -83,9 +83,9 @@ describe('QAStudySession answer recording (real SRS state)', () => {
   const saved = () => JSON.parse(localStorage.getItem('it-progress') ?? '{}');
 
   function missThenRetry(foil: string, correct: string) {
-    act(() => { fireEvent.click(screen.getByRole('button', { name: new RegExp(foil) })); });
+    act(() => { fireEvent.click(screen.getByRole('button', { name: new RegExp(`^${foil}`) })); });
     act(() => { vi.advanceTimersByTime(800); }); // choices reset for a retry
-    act(() => { fireEvent.click(screen.getByRole('button', { name: new RegExp(correct) })); });
+    act(() => { fireEvent.click(screen.getByRole('button', { name: new RegExp(`^${correct}`) })); });
     act(() => { vi.advanceTimersByTime(600); });
   }
 
@@ -108,7 +108,7 @@ describe('QAStudySession answer recording (real SRS state)', () => {
     const twoCards = { ...scenarios[0], cards: [scenarios[0].cards[0], scenarios[1].cards[0]] } as Scenario;
     render(<QAStudySession lang="it" scenario={twoCards} />);
     missThenRetry('coffee_01 foil 1', 'Un caffè');
-    act(() => { fireEvent.click(screen.getByRole('button', { name: /Una camera/ })); });
+    act(() => { fireEvent.click(screen.getByRole('button', { name: /^Una camera/ })); });
     act(() => { vi.advanceTimersByTime(600); });
     expect(saved().qa_coffee_coffee_01.box).toBe(1);
     expect(saved().qa_coffee_hotel_01.box).toBe(3);
@@ -124,7 +124,7 @@ describe('QAStudySession "Study again" practice replay (real SRS state)', () => 
     renderCoffee();
     answerCorrectly();
     studyAgain();
-    expect(screen.getByRole('button', { name: /Un caffè/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Un caffè/ })).toBeInTheDocument();
   });
 
   it('does not save answers given during the replay', () => {
@@ -133,7 +133,7 @@ describe('QAStudySession "Study again" practice replay (real SRS state)', () => 
     answerCorrectly();
     const afterSession = saved();
     studyAgain();
-    act(() => { fireEvent.click(screen.getByRole('button', { name: /coffee_01 foil 1/ })); });
+    act(() => { fireEvent.click(screen.getByRole('button', { name: /^coffee_01 foil 1/ })); });
     act(() => { vi.advanceTimersByTime(800); });
     answerCorrectly();
     expect(saved()).toEqual(afterSession);
@@ -153,7 +153,7 @@ describe('QAStudySession default level filter (real storage)', () => {
     localStorage.setItem('it-progress', JSON.stringify({ daily_0: FUTURE })); // no saved level filter
     const a2Scenario = { ...scenarios[0], cards: [{ ...scenarios[0].cards[0], level: 'A2' }] } as Scenario;
     render(<QAStudySession lang="it" scenario={a2Scenario} />);
-    expect(screen.getByRole('button', { name: /Un caffè/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Un caffè/ })).toBeInTheDocument();
   });
 });
 
@@ -164,6 +164,6 @@ describe('QAStudySession uses the Q&A level filter', () => {
     localStorage.setItem('it-progress', JSON.stringify({}));
     const a2Scenario = { ...scenarios[0], cards: [{ ...scenarios[0].cards[0], level: 'A2' }] } as Scenario;
     render(<QAStudySession lang="it" scenario={a2Scenario} />);
-    expect(screen.getByRole('button', { name: /Un caffè/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Un caffè/ })).toBeInTheDocument();
   });
 });

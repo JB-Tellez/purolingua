@@ -455,7 +455,7 @@ describe('QAStudySession', () => {
       vi.advanceTimersByTime(800);
     });
     expect(micBtn).not.toHaveClass('mic-btn--error');
-    expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
 
     vi.useRealTimers();
   });

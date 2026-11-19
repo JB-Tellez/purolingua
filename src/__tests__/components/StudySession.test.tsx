@@ -171,7 +171,7 @@ describe('StudySession voice integration', () => {
     const mic = screen.getByRole('button', { name: 'micStart' });
     expect(mic).not.toHaveClass('mic-btn--listening');
     expect(mic).not.toHaveClass('mic-btn--error');
-    expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
     vi.useRealTimers();
   });
 
@@ -431,7 +431,7 @@ describe('StudySession allDecksEmpty fix (BUGFIX-02)', () => {
     act(() => { cardContainer.click(); });
 
     // Answer, then press Next to finish the last card without waiting for the delay
-    act(() => { screen.getByRole('button', { name: /Hello/ }).click(); });
+    act(() => { screen.getByRole('button', { name: /^Hello/ }).click(); });
     const nextBtn = screen.getByRole('button', { name: /nextButton/i });
     act(() => { nextBtn.click(); });
 
@@ -474,7 +474,7 @@ describe('StudySession allDecksEmpty fix (BUGFIX-02)', () => {
     const cardContainer = document.querySelector('.card-container') as HTMLElement;
     act(() => { cardContainer.click(); });
 
-    act(() => { screen.getByRole('button', { name: /Hello/ }).click(); });
+    act(() => { screen.getByRole('button', { name: /^Hello/ }).click(); });
     const nextBtn = screen.getByRole('button', { name: /nextButton/i });
     act(() => { nextBtn.click(); });
 

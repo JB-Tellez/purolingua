@@ -3,12 +3,14 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import ChoiceButton from '@/components/ChoiceButton';
 
 vi.mock('next-intl', () => ({
-  useTranslations: () => (key: string) => key,
+  useTranslations: () => (key: string, params?: Record<string, unknown>) =>
+    params ? `${key}(${JSON.stringify(params)})` : key,
 }));
 
-// Exact name: the speak icon's label must not leak into the answer's name.
+// Exact names: the speak icon's label must not leak into the answer's name, and
+// it names its own answer so four speak buttons are not all just "Ascolta".
 const answerButton = () => screen.getByRole('button', { name: 'Ciao' });
-const speakIcon = () => screen.getByRole('button', { name: 'audio' });
+const speakIcon = () => screen.getByRole('button', { name: 'audioChoice({"text":"Ciao"})' });
 
 describe('ChoiceButton', () => {
   it('shows the answer text and reports a click', () => {

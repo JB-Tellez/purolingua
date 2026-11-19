@@ -65,6 +65,7 @@
     "backToDecks": "\u2190 Torna ai mazzi",
     "cardCounter": "Scheda {current} di {total}",
     "audio": "Ascolta",
+    "audioChoice": "Ascolta: {text}",
     "micStart": "Inizia a parlare",
     "micListening": "In ascolto…",
     "heard": "Sentito",

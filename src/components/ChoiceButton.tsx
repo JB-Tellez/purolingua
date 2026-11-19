@@ -21,7 +21,7 @@ export default function ChoiceButton({ text, state, onClick, disabled, onSpeak }
       <button
         type="button"
         className="quiz-audio-icon"
-        aria-label={t('audio')}
+        aria-label={t('audioChoice', { text })}
         onClick={(e) => {
           e.stopPropagation();
           onSpeak?.();

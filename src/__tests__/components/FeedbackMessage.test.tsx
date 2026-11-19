@@ -8,9 +8,22 @@ vi.mock('next-intl', () => ({
 import FeedbackMessage from '@/components/FeedbackMessage';
 
 describe('FeedbackMessage', () => {
-  it('renders nothing when state is null', () => {
-    const { container } = render(<FeedbackMessage state={null} />);
-    expect(container.firstChild).toBeNull();
+  // Screen readers announce changes to a live region that already exists; one
+  // inserted together with its text is often not read out.
+  it('keeps an empty status region on the page when state is null', () => {
+    render(<FeedbackMessage state={null} />);
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
+
+  it('changes the text of the same region when a message appears and clears', () => {
+    const { rerender } = render(<FeedbackMessage state={null} />);
+    const region = screen.getByRole('status');
+    rerender(<FeedbackMessage state="correct" />);
+    expect(screen.getByRole('status')).toBe(region);
+    expect(region).toHaveTextContent('correct');
+    rerender(<FeedbackMessage state={null} />);
+    expect(screen.getByRole('status')).toBe(region);
+    expect(region).toBeEmptyDOMElement();
   });
 
   it('renders correct text when state is correct', () => {

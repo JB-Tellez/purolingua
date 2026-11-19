@@ -44,9 +44,9 @@ describe.each(['it', 'es'] as const)('translated accessible names (%s)', (locale
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', m.study.micListening);
   });
 
-  it('ChoiceButton: the speak icon uses the same label as AudioButton', () => {
+  it('ChoiceButton: the speak icon names the answer it plays', () => {
     renderIn(locale, <ChoiceButton text="Ciao" state="idle" onClick={vi.fn()} />);
-    expect(document.querySelector('.quiz-audio-icon')).toHaveAttribute('aria-label', m.study.audio);
+    expect(document.querySelector('.quiz-audio-icon')).toHaveAttribute('aria-label', m.study.audioChoice.replace('{text}', 'Ciao'));
   });
 
   it('SiteHeader: language menu button', () => {
