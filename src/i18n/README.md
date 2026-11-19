@@ -23,6 +23,7 @@ This directory holds the [next-intl](https://next-intl.dev) configuration. It de
 - `routing.ts` only creates a configuration object when imported. It has no other side effects.
 
 ## Verification
-- Run: `npx vitest run src/__tests__/i18n` (`isLang`). Route-level locale validation is covered by `src/__tests__/app/localeValidation.test.tsx`.
+- Run: `npx vitest run src/__tests__/i18n` (`isLang`, and `request.test.ts` for the locale fallback and message loading). Route-level locale validation is covered by `src/__tests__/app/localeValidation.test.tsx`.
+- `request.test.ts` mocks `next-intl/server`'s `getRequestConfig` as the identity: under Vitest the package resolves to its client build, which throws. The analyzer cannot see `request.ts` (its only export is an anonymous call), so it reports no gap either way.
 - Type-check: `npx tsc --noEmit`. It reports no errors.
 - Full suite: `npx vitest run` (or `npm test`, which runs `vitest` in watch mode in an interactive terminal).

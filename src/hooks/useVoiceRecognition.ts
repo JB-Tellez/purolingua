@@ -7,7 +7,6 @@ interface SpeechRecognitionInstance {
   lang: string;
   continuous: boolean;
   interimResults: boolean;
-  onstart: (() => void) | null;
   onend: (() => void) | null;
   onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
   onerror: (() => void) | null;
@@ -31,11 +30,11 @@ export function useVoiceRecognition(lang: Lang) {
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   // Per-session flags: once cancelled, that session's late events are ignored;
-  // a session that is neither cancelled nor ended blocks a second start. With
-  // continuous = false a session is done once it delivers its result.
-  const sessionRef = useRef<{ cancelled: boolean; ended: boolean } | null>(null);
+  // a session that is neither cancelled nor ended blocks a second start (with
+  // continuous = false it is done once it delivers its result); settled means
+  // the caller has had its one callback.
+  const sessionRef = useRef<{ cancelled: boolean; ended: boolean; settled: boolean } | null>(null);
 
-  const [isListening, setIsListening] = useState(false);
 
   useEffect(() => {
     setIsSupported(!!getSpeechRecognition());
@@ -45,38 +44,39 @@ export function useVoiceRecognition(lang: Lang) {
   const startListening = useCallback(
     (onResult: (transcript: string) => void, onError: () => void): boolean => {
       const RecognitionClass = getSpeechRecognition();
-      // Checked through the ref, not isListening: that turns true only at onstart.
+      // Checked through the session ref, so a start still waiting for the browser counts.
       const current = sessionRef.current;
       if (!RecognitionClass || (current && !current.cancelled && !current.ended)) return false;
       const rec = new RecognitionClass();
       rec.lang = LANG_LOCALE[lang];
       rec.continuous = false;
       rec.interimResults = false;
-      const session = { cancelled: false, ended: false };
+      const session = { cancelled: false, ended: false, settled: false };
       sessionRef.current = session;
 
-      // Only the newest session may change isListening: an older one that a new
-      // start replaced (after its result) still fires onend.
-      const isCurrent = () => sessionRef.current === session && !session.cancelled;
-      rec.onstart = () => { if (isCurrent()) setIsListening(true); };
       rec.onend = () => {
         session.ended = true;
-        if (isCurrent()) setIsListening(false); // a cancelled session already reset it
+        // Ended with neither a usable result nor an error: still report back.
+        if (!session.cancelled && !session.settled) {
+          session.settled = true;
+          onError();
+        }
       };
       rec.onresult = (e) => {
         if (session.cancelled) return;
         session.ended = true; // one result per session: a new start may begin now
         if (e.results.length === 0) {
-          console.error('[SpeechRecognition] no results returned');
+          console.error('[SpeechRecognition] no results returned'); // onend reports it
           return;
         }
+        session.settled = true;
         const transcript = e.results[0][0].transcript;
         onResult(transcript);
       };
       rec.onerror = () => {
-        if (session.cancelled) return; // e.g. the "aborted" error that follows a cancel
+        if (session.cancelled || session.settled) return; // e.g. the "aborted" error that follows a cancel
         session.ended = true;
-        if (isCurrent()) setIsListening(false);
+        session.settled = true;
         onError();
       };
 
@@ -96,7 +96,6 @@ export function useVoiceRecognition(lang: Lang) {
   const stopListening = useCallback(() => {
     if (sessionRef.current) sessionRef.current.cancelled = true;
     recognitionRef.current?.abort();
-    setIsListening(false);
   }, []);
 
   // Leaving the page cancels too, so a late result never reaches an unmounted caller.
@@ -105,5 +104,5 @@ export function useVoiceRecognition(lang: Lang) {
     recognitionRef.current?.abort();
   }, []);
 
-  return { isSupported, isListening, startListening, stopListening };
+  return { isSupported, startListening, stopListening };
 }

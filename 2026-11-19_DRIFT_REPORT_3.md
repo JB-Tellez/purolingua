@@ -14,8 +14,8 @@ No drift detected.
 
 ## src/hooks/README.md
 
-- **`useVoiceRecognition(...).isListening` has no consumer.** Both sessions now decide the mic toggle from their own `micState` (their comments say why: `isListening` turns true only at `onstart`), and nothing else reads it: outside the hook and its tests, `isListening` appears only in those two comments. The contract documents it as a return value, and the hook keeps `setIsListening` calls and an `isCurrent()` guard in four handlers just to maintain it. Earlier rounds removed unused hook return values (`useSRS().progress`, `useQASRS().hasProgress`) for the same reason.
-- **When recognition ends with neither a result nor an error, the session never hears back, and the mic stays "listening"** (not reproduced). `startListening` reports back only through `onResult` and `onError`. An empty result list ends the session, logs an error, and calls neither (documented), and a browser that fires `onend` without `onresult` or `onerror` behaves the same. Both sessions leave `micState` at `'listening'` until the user presses the mic again (which cancels). The contract describes the empty-results case but not that the caller is left waiting.
+- **[FIXED 2026-11-19: removed, with its setters and the `isCurrent` guard; the tests that checked it now check what callers can observe.]** **`useVoiceRecognition(...).isListening` has no consumer.** Both sessions now decide the mic toggle from their own `micState` (their comments say why: `isListening` turns true only at `onstart`), and nothing else reads it: outside the hook and its tests, `isListening` appears only in those two comments. The contract documents it as a return value, and the hook keeps `setIsListening` calls and an `isCurrent()` guard in four handlers just to maintain it. Earlier rounds removed unused hook return values (`useSRS().progress`, `useQASRS().hasProgress`) for the same reason.
+- **[FIXED 2026-11-19: each start that is not cancelled calls back exactly once; a session ending with no usable result calls `onError`, which the sessions show as `notRecognized`. Tests in `useVoiceRecognition.test.ts`.]** **When recognition ends with neither a result nor an error, the session never hears back, and the mic stays "listening"** (not reproduced). `startListening` reports back only through `onResult` and `onError`. An empty result list ends the session, logs an error, and calls neither (documented), and a browser that fires `onend` without `onresult` or `onerror` behaves the same. Both sessions leave `micState` at `'listening'` until the user presses the mic again (which cancels). The contract describes the empty-results case but not that the caller is left waiting.
 
 ## src/components/README.md
 
@@ -23,7 +23,7 @@ No drift detected.
 
 ## src/i18n/README.md
 
-- `request.ts` has no test. Its invariant ("Any unsupported or missing locale falls back to `routing.defaultLocale`") is checked nowhere: no test imports `src/i18n/request.ts`, `src/__tests__/i18n` covers `isLang` only, and `localeValidation.test.tsx` covers the route files. The coverage analyzer reports 0 gaps because the file's only export is an anonymous `getRequestConfig(...)` call. The Verification section does not say the fallback is untested.
+- **[FIXED 2026-11-19: `src/__tests__/i18n/request.test.ts` covers a supported locale and the fallback for an unsupported or missing one (checked by breaking the fallback).]** `request.ts` has no test. Its invariant ("Any unsupported or missing locale falls back to `routing.defaultLocale`") is checked nowhere: no test imports `src/i18n/request.ts`, `src/__tests__/i18n` covers `isLang` only, and `localeValidation.test.tsx` covers the route files. The coverage analyzer reports 0 gaps because the file's only export is an anonymous `getRequestConfig(...)` call. The Verification section does not say the fallback is untested.
 
 ## src/data/README.md
 

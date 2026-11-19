@@ -19,7 +19,7 @@ vi.mock('next/link', () => ({
 }));
 
 vi.mock('@/hooks/useVoiceRecognition', () => ({
-  useVoiceRecognition: () => ({ isSupported: false, isListening: false, startListening: vi.fn() }),
+  useVoiceRecognition: () => ({ isSupported: false, startListening: vi.fn() }),
 }));
 
 vi.mock('@/data/qa', () => {

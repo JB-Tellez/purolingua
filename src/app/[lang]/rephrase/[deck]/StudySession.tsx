@@ -146,7 +146,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
   const { originalIndex, card: currentCard } = currentEntry!;
 
   // Pressing the mic while listening cancels (the button is a toggle: aria-pressed).
-  // micState, not the hook's isListening: that turns true only once the browser starts.
+  // micState is the session's own listening state, set only when listening starts.
   function cancelListening() {
     stopListening();
     setMicState('idle');

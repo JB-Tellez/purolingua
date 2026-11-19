@@ -129,11 +129,10 @@ function setupDefaultQASRSMock(overrides?: Partial<ReturnType<typeof useQASRS>>)
 }
 
 // Default useVoiceRecognition mock: isSupported=true, not listening
-function setupVoiceRecognitionMock(overrides?: Partial<{ isSupported: boolean; isListening: boolean; startListening: ReturnType<typeof vi.fn>; stopListening: ReturnType<typeof vi.fn> }>) {
+function setupVoiceRecognitionMock(overrides?: Partial<{ isSupported: boolean; startListening: ReturnType<typeof vi.fn>; stopListening: ReturnType<typeof vi.fn> }>) {
   mockStartListening = vi.fn(() => true); // started
   (useVoiceRecognition as ReturnType<typeof vi.fn>).mockReturnValue({
     isSupported: true,
-    isListening: false,
     startListening: mockStartListening,
     stopListening: vi.fn(),
     ...overrides,
@@ -376,11 +375,10 @@ describe('QAStudySession', () => {
     expect(screen.getByRole('button', { name: 'Un caffè.' })).not.toHaveClass('correct');
   });
 
-  // The toggle follows the button's own state: the hook's isListening only
-  // turns true once the browser fires onstart, so it can't be what decides.
+  // The toggle follows the button's own state, set when listening starts.
   it('pressing the mic again cancels instead of starting again, even before listening has started', () => {
     const stopListening = vi.fn();
-    setupVoiceRecognitionMock({ stopListening }); // isListening stays false until onstart
+    setupVoiceRecognitionMock({ stopListening });
     renderQAStudySession();
     act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
     act(() => { screen.getByRole('button', { name: 'micListening' }).click(); });

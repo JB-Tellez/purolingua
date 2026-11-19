@@ -64,7 +64,7 @@ tapping or by voice.
   the card and shows `heard`. Mic on the back: the choice the transcript
   matches best (`bestMatch`) is selected; when two choices match equally
   well, it counts as no match. A transcript that matches nothing, or a
-  recognition error, shows `notRecognized` and sets the mic to `error` for
+  recognition error (including recognition that ends with no result), shows `notRecognized` and sets the mic to `error` for
   800 ms. The reset (`resetMicError`) clears only an error still showing, so a
   new attempt started within the 800 ms keeps listening.
 - After the last card, the session shows the all-done screen if no deck for

@@ -38,9 +38,11 @@ and pages/sessions under `src/app/[lang]/` (including
   `{ activeLevels: Level[], setActiveLevels(levels: Level[] | null) }`.
   `activity` is required so no caller shares a filter by accident.
 - `useVoiceRecognition(lang: Lang)` (`useVoiceRecognition.ts`) returns
-  `{ isSupported, isListening, startListening(onResult: (transcript: string) => void, onError: () => void): boolean, stopListening() }`.
+  `{ isSupported, startListening(onResult: (transcript: string) => void, onError: () => void): boolean, stopListening() }`.
+  There is no listening state: callers keep their own, set when `startListening` returns `true`.
   `startListening` returns whether listening started (`false` when refused or when `start()` throws), so callers show "listening" only when it did.
-  `stopListening` cancels: it calls `abort()` (discarding any pending result), sets `isListening` to `false` at once, and the cancelled session's late `onresult` / `onerror` / `onend` (Chrome fires `"aborted"`) are ignored, so callers get neither callback and a newer session's `isListening` is untouched. Unmounting cancels the same way.
+  Each start that is not cancelled calls back exactly once: `onResult` with the transcript, or `onError` for an error or for a session that ends with no usable result (an empty result list, or `onend` with neither result nor error).
+  `stopListening` cancels: it calls `abort()` (discarding any pending result), and the cancelled session's late `onresult` / `onerror` / `onend` (Chrome fires `"aborted"`) are ignored, so callers get no callback; a new start is accepted at once. Unmounting cancels the same way.
 
 ## Invariants
 
@@ -83,15 +85,15 @@ and pages/sessions under `src/app/[lang]/` (including
 - **Single active recognition**: `startListening` returns without action if no
   `SpeechRecognition` / `webkitSpeechRecognition` constructor exists or if the
   current session is neither cancelled nor ended (tracked in a ref, so a start
-  still waiting for `onstart` counts; `isListening` turns true only at
-  `onstart`). A session ends at its result (one per session), `onerror`,
-  `onend`, or a `start()` that throws, so a finished session never blocks the
-  next start. Only the newest session changes `isListening`: an older one's
-  late `onend` is ignored. Each start creates a new recognizer with
+  still waiting for the browser counts). A session ends at its result (one per
+  session), `onerror`, `onend`, or a `start()` that throws, so a finished
+  session never blocks the next start, and an older session's late events never
+  affect a newer one. Each start creates a new recognizer with
   `continuous = false`, `interimResults = false`, and locale `it-IT` / `es-ES`
   (`LANG_LOCALE`).
 - **Recognition results**: `onResult` receives only `results[0][0].transcript`;
-  an empty `results` list logs an error and does not call `onResult`.
+  an empty `results` list logs an error and does not call `onResult`; the
+  session's `onend` then calls `onError`.
 
 ## Side Effects
 

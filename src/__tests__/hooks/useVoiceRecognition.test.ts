@@ -22,25 +22,24 @@ describe('useVoiceRecognition', () => {
     it('returns isSupported: true when browser supports SpeechRecognition', () => {
       const { result } = renderHook(() => useVoiceRecognition('it' as any));
       expect(result.current.isSupported).toBe(true);
-      expect(result.current.isListening).toBe(false);
+    });
+
+    // Callers track "listening" themselves (isListening would turn true only at
+    // onstart), so the hook exposes no listening state.
+    it('returns only isSupported, startListening, and stopListening', () => {
+      const { result } = renderHook(() => useVoiceRecognition('it' as any));
+      expect(Object.keys(result.current).sort()).toEqual(['isSupported', 'startListening', 'stopListening']);
     });
   });
 
   describe('startListening', () => {
-    it('creates a recognition instance and sets isListening: true', () => {
+    it('creates one recognizer per start, single-shot without interim results', () => {
       const { result } = renderHook(() => useVoiceRecognition('it' as any));
-      const { startListening } = result.current;
-
-      act(() => {
-        startListening(vi.fn(), vi.fn());
-      });
-
-      // Trigger onstart to simulate the browser calling it
-      act(() => {
-        mockRecognitionInstance.onstart?.();
-      });
-
-      expect(result.current.isListening).toBe(true);
+      act(() => { result.current.startListening(vi.fn(), vi.fn()); });
+      expect(MockSpeechRecognition).toHaveBeenCalledOnce();
+      expect(mockRecognitionInstance.continuous).toBe(false);
+      expect(mockRecognitionInstance.interimResults).toBe(false);
+      expect(mockRecognitionInstance.start).toHaveBeenCalledOnce();
     });
 
     it('sets the language from the lang prop', () => {
@@ -88,7 +87,7 @@ describe('useVoiceRecognition', () => {
       expect(onResult).not.toHaveBeenCalled();
     });
 
-    it('calls onError and sets isListening: false on error', () => {
+    it('calls onError on error', () => {
       const { result } = renderHook(() => useVoiceRecognition('it' as any));
       const onError = vi.fn();
       const { startListening } = result.current;
@@ -102,6 +101,55 @@ describe('useVoiceRecognition', () => {
       });
 
       expect(onError).toHaveBeenCalled();
+    });
+  });
+
+  // Every start that is not cancelled reports back exactly once, through onResult
+  // or onError, so a caller showing "listening" is never left waiting.
+  describe('exactly one callback per start', () => {
+    function start() {
+      const onResult = vi.fn();
+      const onError = vi.fn();
+      const { result } = renderHook(() => useVoiceRecognition('it' as any));
+      act(() => { result.current.startListening(onResult, onError); });
+      act(() => { mockRecognitionInstance.onstart?.(); });
+      return { onResult, onError };
+    }
+
+    it('ending with neither a result nor an error calls onError', () => {
+      const { onResult, onError } = start();
+      act(() => { mockRecognitionInstance.onend?.(); });
+      expect(onError).toHaveBeenCalledOnce();
+      expect(onResult).not.toHaveBeenCalled();
+    });
+
+    it('an empty result list, then the end, calls onError once', () => {
+      const { onResult, onError } = start();
+      act(() => {
+        mockRecognitionInstance.onresult?.({ results: [] } as any);
+        mockRecognitionInstance.onend?.();
+      });
+      expect(onError).toHaveBeenCalledOnce();
+      expect(onResult).not.toHaveBeenCalled();
+    });
+
+    it('an error, then the end, calls onError once', () => {
+      const { onError } = start();
+      act(() => {
+        mockRecognitionInstance.onerror?.({ error: 'no-speech' });
+        mockRecognitionInstance.onend?.();
+      });
+      expect(onError).toHaveBeenCalledOnce();
+    });
+
+    it('a result, then the end, calls only onResult', () => {
+      const { onResult, onError } = start();
+      act(() => {
+        mockRecognitionInstance.onresult?.({ results: [[{ transcript: 'Ciao' }]] });
+        mockRecognitionInstance.onend?.();
+      });
+      expect(onResult).toHaveBeenCalledOnce();
+      expect(onError).not.toHaveBeenCalled();
     });
   });
 
@@ -122,9 +170,11 @@ describe('useVoiceRecognition', () => {
       expect(mockRecognitionInstance.abort).toHaveBeenCalledOnce();
     });
 
-    it('stops listening immediately', () => {
+    it('a new start is accepted right after cancelling, without waiting for the end', () => {
       const { hook } = startThenCancel();
-      expect(hook.result.current.isListening).toBe(false);
+      let started: boolean | undefined;
+      act(() => { started = hook.result.current.startListening(vi.fn(), vi.fn()); });
+      expect(started).toBe(true);
     });
 
     it('ignores a late result or the "aborted" error the browser fires after cancelling', () => {
@@ -174,21 +224,26 @@ describe('useVoiceRecognition', () => {
       expect(MockSpeechRecognition).toHaveBeenCalledOnce();
     });
 
-    it("a cancelled session's late end or error does not stop the next session", () => {
+    it("a cancelled session's late end or error reaches no callback and leaves the next session running", () => {
       const first = makeRecognizer();
       const second = makeRecognizer();
       MockSpeechRecognition.mockImplementationOnce(function () { return first; })
         .mockImplementationOnce(function () { return second; });
+      const firstError = vi.fn();
+      const secondResult = vi.fn();
       const { result } = renderHook(() => useVoiceRecognition('it' as any));
-      act(() => { result.current.startListening(vi.fn(), vi.fn()); });
-      act(() => { first.onstart?.(); });
+      act(() => { result.current.startListening(vi.fn(), firstError); });
       act(() => { result.current.stopListening(); });
-      act(() => { result.current.startListening(vi.fn(), vi.fn()); });
-      act(() => { second.onstart?.(); });
+      act(() => { result.current.startListening(secondResult, vi.fn()); });
 
       act(() => { first.onerror?.({ error: 'aborted' }); first.onend?.(); });
 
-      expect(result.current.isListening).toBe(true);
+      expect(firstError).not.toHaveBeenCalled();
+      let third: boolean | undefined;
+      act(() => { third = result.current.startListening(vi.fn(), vi.fn()); });
+      expect(third).toBe(false); // the second session is still listening
+      act(() => { second.onresult?.({ results: [[{ transcript: 'Ciao' }]] }); });
+      expect(secondResult).toHaveBeenCalledWith('Ciao');
     });
 
     it('returns true when it starts, and false while a session is still listening', () => {
@@ -199,7 +254,7 @@ describe('useVoiceRecognition', () => {
       expect([first, second]).toEqual([true, false]);
     });
 
-    it("a session that has delivered its result doesn't block a new start, and its late end is ignored", () => {
+    it("a session that has delivered its result doesn't block a new start, and its late end doesn't end the new one", () => {
       const first = makeRecognizer();
       const second = makeRecognizer();
       MockSpeechRecognition.mockImplementationOnce(function () { return first; })
@@ -210,11 +265,12 @@ describe('useVoiceRecognition', () => {
 
       let started: boolean | undefined;
       act(() => { started = result.current.startListening(vi.fn(), vi.fn()); }); // before first's onend
-      act(() => { second.onstart?.(); });
       act(() => { first.onend?.(); });
 
       expect(started).toBe(true);
-      expect(result.current.isListening).toBe(true);
+      let third: boolean | undefined;
+      act(() => { third = result.current.startListening(vi.fn(), vi.fn()); });
+      expect(third).toBe(false); // the first session's late end did not end the second
     });
 
     it('returns false when start() throws, and the next start works', () => {
