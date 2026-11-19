@@ -39,7 +39,7 @@ A browser-based language learning app built with Next.js and React. PuroLingua u
 
 ## Getting Started
 
-**Prerequisites:** Node.js 20+ and npm
+**Prerequisites:** Node.js 22.18+ and npm (`node scripts/analyze-test-coverage.ts` runs TypeScript directly, which needs Node's built-in type stripping; `package.json` `engines` says the same)
 
 ```bash
 # Clone the repository

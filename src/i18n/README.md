@@ -16,7 +16,7 @@ This directory holds the [next-intl](https://next-intl.dev) configuration. It de
 - The supported locales are exactly `'it'` and `'es'`, and the default is `'it'`. `Lang` in [`src/types`](../types/README.md) is derived from them; they must also match the files `messages/it.json` and `messages/es.json`.
 - `request.ts` checks the requested locale with `hasLocale(routing.locales, requested)`. Any unsupported or missing locale falls back to `routing.defaultLocale`. It calls `hasLocale` directly, not `isLang`, because `requestLocale` can be `undefined` and `isLang` takes a `string`.
 - Every locale in `routing.locales` needs a matching `messages/<locale>.json` file at the repository root. `request.ts` loads it with a dynamic `import(\`../../messages/${locale}.json\`)`.
-- Per-language tables elsewhere (`LANGUAGES`, `LANG_META`, `DECK_MAP`, `LANG_LOCALE`) are typed `Record<Lang, …>`, so adding a locale here makes `tsc` list each one to fill in. See "Adding a New Language" in the [root README](../../README.md).
+- Per-language tables elsewhere (`LANGUAGES`, `LANG_META`, `DECK_MAP`, `LANG_LOCALE`) are typed `Record<Lang, …>`, so adding a locale here makes `tsc` list each one to fill in. Not checked by `tsc`: Q&A text is chosen with `lang === 'it' ? … : …Es` (`ScenarioGrid.tsx`, `QAStudySession.tsx`), so a new locale silently shows the Spanish fields, and `messages/<locale>.json` must exist. See "Adding a New Language" in the [root README](../../README.md).
 
 ## Side Effects
 - `request.ts` dynamically imports a locale message JSON file each time it resolves request config. That file is loaded through the module system.

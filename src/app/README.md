@@ -46,6 +46,7 @@ content is under the `[lang]` segment.
   `[lang]` page. Do not add an `app/layout.tsx`: it would become the single
   root layout and nest a second `<html>`.
 - Both root layouts export the same `metadata`; keep them in sync.
+- Navigating between the two root layouts (`/` ↔ `/it`, or from the 404 page to `/`) is a full page load, not a client transition: Next.js cannot swap root layouts in place. Links within `[lang]` (including the language switcher, `/it` → `/es`) stay client-side.
 
 ## Side Effects
 

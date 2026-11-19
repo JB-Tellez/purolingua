@@ -1,7 +1,7 @@
 # types
 
 ## Overview
-This directory holds the core domain types for PuroLingua v1.2, all in `index.ts`. Other code imports them as `@/types`. They cover flashcard decks (the rephrase mode), Leitner progress records, and Q&A scenarios. The file contains types only and produces no runtime code.
+This directory holds the core domain types for PuroLingua 0.1.2 (the `package.json` version, shown in the footer; v1.1 is the pre-Next.js app on the `vanilla` branch), all in `index.ts`. Other code imports them as `@/types`. They cover flashcard decks (the rephrase mode), Leitner progress records, and Q&A scenarios. The file contains types only and produces no runtime code.
 
 ## Interface
 - `type Lang = (typeof routing.locales)[number]` (currently `'it' | 'es'`), via a type-only import of `@/i18n/routing`

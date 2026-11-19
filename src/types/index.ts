@@ -1,5 +1,5 @@
 // src/types/index.ts
-// Core domain types for PuroLingua v1.2
+// Core domain types for PuroLingua 0.1.2 (package.json; v1.1 is the `vanilla` branch)
 // All downstream phases import from '@/types'
 
 import type { routing } from '@/i18n/routing';

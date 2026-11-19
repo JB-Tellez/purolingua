@@ -6,7 +6,7 @@ How findings were checked: every contract and source file was read in full. Two 
 
 ## src/types/README.md
 
-- The Overview and the header comment of `src/types/index.ts:2` say "PuroLingua v1.2". `package.json` is version `0.1.2`, and that is what the footer shows (`RootDocument.tsx`: `v${pkg.version}`). v1.1 is the `vanilla` branch. So the app has two version numbers, and neither doc says which is current.
+- **[FIXED 2026-11-19: both say 0.1.2, the `package.json` version, and name v1.1 as the `vanilla` branch.]** The Overview and the header comment of `src/types/index.ts:2` say "PuroLingua v1.2". `package.json` is version `0.1.2`, and that is what the footer shows (`RootDocument.tsx`: `v${pkg.version}`). v1.1 is the `vanilla` branch. So the app has two version numbers, and neither doc says which is current.
 
 ## src/lib/README.md
 
@@ -25,7 +25,7 @@ How findings were checked: every contract and source file was read in full. Two 
 
 ## src/i18n/README.md
 
-- The invariant on per-language tables lists only the `Record<Lang, …>` tables that `tsc` checks. It does not mention the code that picks Q&A text by `lang === 'it' ? … : …Es` (`ScenarioGrid.tsx:24`, three places in `QAStudySession.tsx`). Adding a locale gives no compile error there: the new locale silently gets the Spanish text. The root README notes this under "Not compiler-checked"; this contract, which owns "adding a locale", does not.
+- **[FIXED 2026-11-19: the invariant now names the Q&A text choice and `messages/` as not checked by `tsc`.]** The invariant on per-language tables lists only the `Record<Lang, …>` tables that `tsc` checks. It does not mention the code that picks Q&A text by `lang === 'it' ? … : …Es` (`ScenarioGrid.tsx:24`, three places in `QAStudySession.tsx`). Adding a locale gives no compile error there: the new locale silently gets the Spanish text. The root README notes this under "Not compiler-checked"; this contract, which owns "adding a locale", does not.
 
 ## src/data/README.md
 
@@ -71,7 +71,7 @@ No drift detected.
 
 ## src/app/README.md
 
-- Navigating between the two root layouts (`/` ↔ `/it`, or the 404 page → `/`) is a full page load in Next.js, not a client transition. The contract explains why there are two root layouts but not this cost.
+- **[FIXED 2026-11-19: documented as an invariant.]** Navigating between the two root layouts (`/` ↔ `/it`, or the 404 page → `/`) is a full page load in Next.js, not a client transition. The contract explains why there are two root layouts but not this cost.
 
 ## src/README.md
 
@@ -87,7 +87,7 @@ No drift detected.
 
 ## README.md
 
-- Getting Started requires "Node.js 20+", but `AGENTS.md` requires `node scripts/analyze-test-coverage.ts`, and running a `.ts` file directly needs Node's built-in type stripping (Node 22.18+, or 23.6+, without a flag). The Docker build uses `node:22-alpine`, and `@types/node` is `^20`. No `engines` field states the real minimum.
+- **[FIXED 2026-11-19: README says Node.js 22.18+, and `package.json` has `engines.node: ">=22.18"`.]** Getting Started requires "Node.js 20+", but `AGENTS.md` requires `node scripts/analyze-test-coverage.ts`, and running a `.ts` file directly needs Node's built-in type stripping (Node 22.18+, or 23.6+, without a flag). The Docker build uses `node:22-alpine`, and `@types/node` is `^20`. No `engines` field states the real minimum.
 - **[FIXED 2026-11-19: rewritten around the 40-card, 20-per-level test.]** The "Deck size is hard-coded" global invariant presents `cardCount` as a checked contract; see `src/data/README.md` above: nothing but the test reads it.
 
 ## Files no contract covers
