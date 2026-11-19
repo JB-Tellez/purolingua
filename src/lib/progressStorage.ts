@@ -11,7 +11,9 @@ export function loadProgress(lang: Lang): ProgressRecord {
   if (typeof window === 'undefined') return {};
   try {
     const saved = localStorage.getItem(getStorageKey(lang));
-    return saved ? (JSON.parse(saved) as ProgressRecord) : {};
+    const parsed: unknown = saved ? JSON.parse(saved) : null;
+    // Valid JSON that is not an object (null, an array, a number) counts as no progress.
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as ProgressRecord) : {};
   } catch {
     return {};
   }

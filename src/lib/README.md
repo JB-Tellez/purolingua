@@ -31,7 +31,7 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
   - `advanceBox(current: Progress | undefined, isCorrect: boolean): Progress`
   - `addDays` is module-private. It is not exported.
 - `progressStorage.ts`
-  - `loadProgress(lang): ProgressRecord`: parses `{lang}-progress`; `{}` when missing, unparsable, or on the server.
+  - `loadProgress(lang): ProgressRecord`: parses `{lang}-progress`; `{}` when missing, unparsable, not a JSON object (`null`, an array, a number), or on the server.
   - `saveProgress(lang, record): void`: writes it as JSON; storage errors (quota, private browsing) are swallowed.
   - `clearProgress(lang): void`: removes it; storage errors (blocked site data) are swallowed, like load and save. Used by `SiteHeader`'s reset.
 - `levels.ts`

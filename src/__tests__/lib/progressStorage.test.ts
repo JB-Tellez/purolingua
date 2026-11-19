@@ -20,6 +20,12 @@ describe('loadProgress', () => {
     localStorage.setItem('it-progress', '{not json');
     expect(loadProgress('it')).toEqual({});
   });
+
+  // Callers index into the record (record[key]); null would make them throw.
+  it.each(['null', '[]', '42', '"text"'])('returns {} when the saved JSON is %s, not an object', (saved) => {
+    localStorage.setItem('it-progress', saved);
+    expect(loadProgress('it')).toEqual({});
+  });
 });
 
 describe('saveProgress', () => {
