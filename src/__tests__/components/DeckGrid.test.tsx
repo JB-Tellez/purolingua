@@ -20,7 +20,7 @@ vi.mock('next/link', () => ({
 // One Italian deck
 vi.mock('@/data/decks', () => ({
   deckMetadata: [
-    { id: 'daily', lang: 'it', i18nKey: 'daily', icon: '☀️', theme: 'yellow', cardCount: 3 },
+    { id: 'daily', lang: 'it', icon: '☀️', theme: 'yellow' },
   ],
 }));
 
@@ -59,7 +59,7 @@ beforeEach(() => { isDueImpl = () => true; });
 // ---------------------------------------------------------------------------
 
 describe('DeckGrid badge', () => {
-  it('A: shows the live due count, not the static cardCount', () => {
+  it('A: shows the live due count, not the deck size', () => {
     isDueImpl = (_id, i) => i === 0;
     render(<DeckGrid lang="it" activeLevels={A1} />);
     expect(screen.getByText('1')).toBeTruthy();

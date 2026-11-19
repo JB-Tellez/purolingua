@@ -8,7 +8,7 @@
 'use client';
 import { useState, useCallback } from 'react';
 import type { Lang, Level } from '@/types';
-import { isLevel } from '@/lib/levels';
+import { isLevel, LEVELS } from '@/lib/levels';
 
 export type Activity = 'rephrase' | 'qa';
 
@@ -42,7 +42,8 @@ export function useLevelFilter(lang: Lang, hasProgress: boolean, activity: Activ
   const [activeLevels, setActiveLevelsState] = useState<Level[]>(() => {
     const saved = loadFilter(lang, activity);
     if (saved) return saved;
-    return hasProgress ? ['A1', 'A2'] : ['A1'];
+    // Returning users get every level; new users start at the lowest.
+    return hasProgress ? [...LEVELS] : [LEVELS[0]];
   });
 
   const setActiveLevels = useCallback(

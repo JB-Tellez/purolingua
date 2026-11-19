@@ -485,6 +485,47 @@ describe('generateMarkdownReport', () => {
 // 7. CLI behavior
 // ---------------------------------------------------------------------------
 
+describe('suggested test path (no test file found)', () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  const gap = { type: 'export', kind: 'function', name: 'Foo', line: 1, severity: 'high' };
+  const report = async (source: string) => {
+    const { generateMarkdownReport } = await import('../analyze-test-coverage');
+    return generateMarkdownReport(path.join(process.cwd(), source), null, [], [], [gap]);
+  };
+
+  it('suggests the src/__tests__ mirror for a source under src/, keeping .tsx', async () => {
+    expect(await report('src/components/Foo.tsx')).toContain(path.join('src', '__tests__', 'components', 'Foo.test.tsx'));
+  });
+
+  it('suggests .test.ts for a .ts source', async () => {
+    expect(await report('src/lib/foo.ts')).toContain(path.join('src', '__tests__', 'lib', 'foo.test.ts'));
+  });
+
+  it('suggests a sibling test file outside src/', async () => {
+    expect(await report('scripts/foo.ts')).toContain(path.join('scripts', 'foo.test.ts'));
+  });
+});
+
+describe('isEntryPoint', () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it('matches the script path even when it contains a space (URL-escaped in import.meta.url)', async () => {
+    const { isEntryPoint } = await import('../analyze-test-coverage');
+    expect(isEntryPoint('/tmp/my dir/script.ts', 'file:///tmp/my%20dir/script.ts')).toBe(true);
+  });
+
+  it('does not match another script or a missing argv[1]', async () => {
+    const { isEntryPoint } = await import('../analyze-test-coverage');
+    expect(isEntryPoint('/tmp/other.ts', 'file:///tmp/script.ts')).toBe(false);
+    expect(isEntryPoint(undefined, 'file:///tmp/script.ts')).toBe(false);
+  });
+});
+
 describe('CLI entry point', () => {
   beforeEach(() => {
     vi.resetModules();

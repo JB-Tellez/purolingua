@@ -14,6 +14,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 // ---------------------------------------------------------------------------
 // 1. Parsing helpers — extract exports, classes, methods, logic branches
@@ -384,10 +385,7 @@ export function generateMarkdownReport(sourcePath: string, testPath: string | nu
     lines.push('');
     lines.push('No corresponding test file found. Suggested path:');
     lines.push('');
-    const baseDir = path.dirname(sourcePath);
-    const baseName = path.basename(sourcePath, path.extname(sourcePath));
-    const suggestedTestPath = path.join(baseDir, `${baseName}.test.ts`);
-    lines.push(`  \`${suggestedTestPath}\``);
+    lines.push(`  \`${suggestTestPath(sourcePath)}\``);
     lines.push('');
   }
 
@@ -397,6 +395,17 @@ export function generateMarkdownReport(sourcePath: string, testPath: string | nu
 // ---------------------------------------------------------------------------
 // 5. Main entry point
 // ---------------------------------------------------------------------------
+
+// Where a new test should go: the src/__tests__ mirror for sources under src/
+// (the repository's convention), otherwise a sibling. Keeps .tsx for components.
+function suggestTestPath(sourcePath: string): string {
+  const ext = path.extname(sourcePath) === '.tsx' ? '.test.tsx' : '.test.ts';
+  const relative = path.relative(process.cwd(), path.resolve(sourcePath));
+  const baseName = path.basename(relative, path.extname(relative));
+  const [top, ...rest] = path.dirname(relative).split(path.sep);
+  if (top === 'src') return path.join('src', '__tests__', ...rest, `${baseName}${ext}`);
+  return path.join(path.dirname(relative), `${baseName}${ext}`);
+}
 
 function runOnFile(filePath: string) {
   if (!/\.(ts|tsx|js|jsx)$/.test(filePath)) {
@@ -538,8 +547,13 @@ export function runCLI(argv: string[] = process.argv.slice(2)): void {
   }
 }
 
+// True when this module is the process entry point. fileURLToPath decodes the
+// URL, so a path with spaces (%20 in import.meta.url) still matches.
+export function isEntryPoint(argv1: string | undefined, metaUrl: string): boolean {
+  return !!argv1 && path.resolve(argv1) === path.resolve(fileURLToPath(metaUrl));
+}
+
 // Execute when run directly (not imported by tests)
-const __filename = new URL(import.meta.url).pathname;
-if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(__filename)) {
+if (isEntryPoint(process.argv[1], import.meta.url)) {
   runCLI();
 }

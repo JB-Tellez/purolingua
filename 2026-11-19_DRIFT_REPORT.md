@@ -17,7 +17,7 @@ How findings were checked: every contract and source file was read in full. Two 
 
 - **[FIXED 2026-11-19: the start guard uses a per-session ref, a cancelled session's `onend`/`onerror` leave `isListening` alone, and the sessions toggle on `micState`; tests in `useVoiceRecognition.test.ts` and both session tests.]** **Single active recognition is not guaranteed** (reproduced by the tests). `startListening` guards on `isListening`, but that only turns true in `onstart`, which fires asynchronously. A second press before then creates a second recognizer. The sessions set `micState` to `'listening'` (and `aria-pressed` to true) right away, so the button looks pressed while a press still starts another session instead of cancelling. Also, a cancelled session's `onend` is not ignored (`rec.onend = () => setIsListening(false)`, no `session.cancelled` check), and `onerror` sets `isListening` to false *before* its check. If you cancel and quickly start again, the old recognizer's late `onend` or `"aborted"` error can set `isListening` to false while the new one is running. The contract says late `onresult` and `onerror` are ignored, which holds only for the callbacks, not for `isListening`.
 - **[FIXED 2026-11-19: unmount cancels and aborts; test in `useVoiceRecognition.test.ts`.]** Nothing stops recognition on unmount: there is no cleanup effect calling `abort()`. Leaving a session page while listening leaves the recognizer running until the browser ends it, and its callbacks call into the unmounted session. The contract does not mention unmount.
-- `useLevelFilter`'s default with progress is the literal `['A1', 'A2']` (`useLevelFilter.ts:45`), not `LEVELS`. `lib/levels.ts` makes `tsc` fail if `Level` gains a member `LEVELS` lacks, but this default would quietly keep leaving the new level out.
+- **[FIXED 2026-11-19: the default is built from `LEVELS`; test in `useLevelFilter.levels.test.tsx`.]** `useLevelFilter`'s default with progress is the literal `['A1', 'A2']` (`useLevelFilter.ts:45`), not `LEVELS`. `lib/levels.ts` makes `tsc` fail if `Level` gains a member `LEVELS` lacks, but this default would quietly keep leaving the new level out.
 
 ## src/components/README.md
 
@@ -29,9 +29,9 @@ How findings were checked: every contract and source file was read in full. Two 
 
 ## src/data/README.md
 
-- `DeckMeta.cardCount` is read only by `src/__tests__/data/decks.test.ts`, which checks that it equals the array length. No app code uses it (`DeckGrid` shows live due counts). It is a hard-coded copy of `DECK_MAP[lang][id].length` that exists only so a test can keep it in sync. The contract and the root README's "Deck size is hard-coded" invariant both describe it as meaningful.
-- `DeckMeta.i18nKey` equals `id` in all 16 entries, and its comment says it keys the `decks` namespace only, but `DeckGrid` also uses it for `deckDescriptions`.
-- The invariant "`DECK_IDS` must list every `DeckId` literal exactly once" is not enforced. `DECK_IDS` is typed `DeckId[]`, which allows a missing ID, and `decks.test.ts` compares `deckMetadata` with `DECK_IDS`, not with `DeckId` or the keys of `DECK_MAP`. A new deck added to `DeckId` and `DECK_MAP` but not `DECK_IDS` would get no route, and no test would fail.
+- **[FIXED 2026-11-19: removed; `decks.test.ts` now checks 40 cards, 20 per level, against `DECK_MAP`.]** `DeckMeta.cardCount` is read only by `src/__tests__/data/decks.test.ts`, which checks that it equals the array length. No app code uses it (`DeckGrid` shows live due counts). It is a hard-coded copy of `DECK_MAP[lang][id].length` that exists only so a test can keep it in sync. The contract and the root README's "Deck size is hard-coded" invariant both describe it as meaningful.
+- **[FIXED 2026-11-19: removed; `DeckGrid` uses `id`.]** `DeckMeta.i18nKey` equals `id` in all 16 entries, and its comment says it keys the `decks` namespace only, but `DeckGrid` also uses it for `deckDescriptions`.
+- **[FIXED 2026-11-19: `decks.test.ts` compares `DECK_IDS` with the keys of `DECK_MAP` (checked by temporarily removing a deck).]** The invariant "`DECK_IDS` must list every `DeckId` literal exactly once" is not enforced. `DECK_IDS` is typed `DeckId[]`, which allows a missing ID, and `decks.test.ts` compares `deckMetadata` with `DECK_IDS`, not with `DeckId` or the keys of `DECK_MAP`. A new deck added to `DeckId` and `DECK_MAP` but not `DECK_IDS` would get no route, and no test would fail.
 
 ## src/data/it/README.md
 
@@ -79,14 +79,16 @@ No drift detected.
 
 ## scripts/README.md
 
-- **Logic-branch gaps ignore the tests.** `analyzeGaps` reports every `catch` and `switch` as a medium gap without looking at `testedNames`, so a fully tested `catch` is always flagged. The Overview says the script finds "logic branches with no matching test file or test reference". Branches are never matched against tests.
-- The CLI never runs from a path that contains a space or other URL-escaped characters. It compares `path.resolve(process.argv[1])` with `new URL(import.meta.url).pathname`, which stays percent-encoded (`%20`), so the comparison fails and the script exits silently with no report. `fileURLToPath` would decode it.
-- With no test file, single-file mode suggests a sibling `<name>.test.ts` (`generateMarkdownReport`). This repository keeps tests in the `src/__tests__/` mirror, uses `.tsx` for components, and `findTestFile` looks in the mirror first.
+- **[FIXED 2026-11-19 in the docs: a regex scan cannot tell whether a branch is tested, so the contract now calls these reminders and the Overview no longer claims they are matched against tests.]** **Logic-branch gaps ignore the tests.** `analyzeGaps` reports every `catch` and `switch` as a medium gap without looking at `testedNames`, so a fully tested `catch` is always flagged. The Overview says the script finds "logic branches with no matching test file or test reference". Branches are never matched against tests.
+- **[FIXED 2026-11-19: `isEntryPoint` uses `fileURLToPath`; tests in `analyze-test-coverage.test.ts`; checked by running a copy from a folder with a space (the old version printed nothing).]** The CLI never runs from a path that contains a space or other URL-escaped characters. It compares `path.resolve(process.argv[1])` with `new URL(import.meta.url).pathname`, which stays percent-encoded (`%20`), so the comparison fails and the script exits silently with no report. `fileURLToPath` would decode it.
+- **[FIXED 2026-11-19: it suggests the `src/__tests__` mirror (keeping `.tsx`) for sources under `src/`; tests in `analyze-test-coverage.test.ts`.]** With no test file, single-file mode suggests a sibling `<name>.test.ts` (`generateMarkdownReport`). This repository keeps tests in the `src/__tests__/` mirror, uses `.tsx` for components, and `findTestFile` looks in the mirror first.
+
+- **[Found and FIXED 2026-11-19 while fixing the items above.]** The main suite never ran the script's tests. `vitest.config.ts` included `scripts/__tests__/**/*.{test,spec}.{ts}`, and the one-item brace `{ts}` is not expanded, so `npx vitest run` and `npm test` ran only the 35 files under `src/` (`npx vitest run scripts/__tests__` reported "No test files found"). Both the root README and this contract said they ran. The pattern is now `*.{test,spec}.ts`, and the main suite runs 36 files (the 53 script tests included).
 
 ## README.md
 
 - Getting Started requires "Node.js 20+", but `AGENTS.md` requires `node scripts/analyze-test-coverage.ts`, and running a `.ts` file directly needs Node's built-in type stripping (Node 22.18+, or 23.6+, without a flag). The Docker build uses `node:22-alpine`, and `@types/node` is `^20`. No `engines` field states the real minimum.
-- The "Deck size is hard-coded" global invariant presents `cardCount` as a checked contract; see `src/data/README.md` above: nothing but the test reads it.
+- **[FIXED 2026-11-19: rewritten around the 40-card, 20-per-level test.]** The "Deck size is hard-coded" global invariant presents `cardCount` as a checked contract; see `src/data/README.md` above: nothing but the test reads it.
 
 ## Files no contract covers
 

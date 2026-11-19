@@ -21,7 +21,7 @@ Consumers import through `@/data/it` (used only by `../deckMap.ts`).
 
 ## Invariants
 - Each element must satisfy `Card` (`front: string`, `back: string`, `level: 'A1' | 'A2'`) from `@/types`.
-- Each array has 40 cards. This must match the hard-coded `cardCount: 40` for `lang: 'it'` in `../decks.ts` (`deckMetadata`); `src/__tests__/data/decks.test.ts` fails if they differ.
+- Each array has 40 cards, 20 per level; `src/__tests__/data/decks.test.ts` fails otherwise.
 - Do not reorder, insert, or remove cards in the middle of an array. Stored progress is keyed by `"{deckId}_{cardIndex}"` (see the `Progress` comment in `src/types/index.ts`), so array position is the card's identity.
 - Each export name must stay in sync with `index.ts` and the imports in `../deckMap.ts`.
 
@@ -29,4 +29,4 @@ Consumers import through `@/data/it` (used only by `../deckMap.ts`).
 - None. These are pure constant module exports with no runtime I/O.
 
 ## Verification
-- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). `src/__tests__/data/decks.test.ts` reads these arrays through the real `DECK_MAP` to check their length. Component tests (`DeckGrid.test.tsx`, `StudySession.test.tsx`) mock `@/data/deckMap` instead.
+- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). `src/__tests__/data/decks.test.ts` reads these arrays through the real `DECK_MAP` to check their length and levels. Component tests (`DeckGrid.test.tsx`, `StudySession.test.tsx`) mock `@/data/deckMap` instead.

@@ -69,7 +69,7 @@ and pages/sessions under `src/app/[lang]/` (including
 - **Level filter never empty (FLTR-06)**: `setActiveLevels(null)` and
   `setActiveLevels([])` are silent no-ops (`useLevelFilter.ts:setActiveLevels`).
 - **Level filter default**: when no valid saved filter exists, the initial
-  value is `['A1', 'A2']` if `hasProgress` is true, otherwise `['A1']`. A saved
+  value is every level in `@/lib/levels:LEVELS` (`['A1', 'A2']`) if `hasProgress` is true, otherwise the lowest (`['A1']`). A saved
   value keeps only known levels (`@/lib/levels:isLevel`), without duplicates;
   if nothing valid is left (e.g. `["B1"]`, `[42]`, a non-array), the default
   applies (`useLevelFilter.ts:loadFilter`).

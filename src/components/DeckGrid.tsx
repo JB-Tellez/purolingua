@@ -41,8 +41,8 @@ export default function DeckGrid({ lang, activeLevels }: Props) {
           >
             <div className={`deck-card theme-${deck.theme}`} style={{ height: '100%' }}>
               <div className="deck-icon-circle">{deck.icon}</div>
-              <h3>{t(deck.i18nKey)}</h3>
-              <p>{td(deck.i18nKey)}</p>
+              <h3>{t(deck.id)}</h3>
+              <p>{td(deck.id)}</p>
               <span className={`deck-card-badge${due === 0 ? ' deck-card-badge--done' : ''}`}>
                 {due === 0 ? '✓' : due}
               </span>

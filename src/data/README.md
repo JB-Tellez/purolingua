@@ -5,8 +5,8 @@ Static, build-time content for PuroLingua. This directory holds the Rephrase-mod
 
 ## Interface
 - `decks.ts`
-  - `interface DeckMeta { id: DeckId; lang: Lang; i18nKey: DeckId; icon: string; theme: string; cardCount: number }`. `i18nKey` indexes the `decks` namespace in `messages/{lang}.json`.
-  - `deckMetadata: DeckMeta[]`: 16 entries, one for each of the 8 deck IDs for both `it` and `es`. Every entry has `cardCount: 40`.
+  - `interface DeckMeta { id: DeckId; lang: Lang; icon: string; theme: string }`. `id` also keys the `decks` and `deckDescriptions` namespaces in `messages/{lang}.json`.
+  - `deckMetadata: DeckMeta[]`: 16 entries, one for each of the 8 deck IDs for both `it` and `es`.
   - `DECK_IDS: DeckId[]`: the 8 language-neutral deck IDs in display order: `daily`, `restaurant`, `travel`, `shopping`, `hotel`, `emergencies`, `social`, `weather`.
 - `deckMap.ts`
   - `DECK_MAP: Record<Lang, Record<DeckId, Card[]>>`: maps `it` and `es` to the arrays exported by `./it` and `./es`. Used for route-parameter lookup and for cross-deck checks (per the file header).
@@ -19,8 +19,8 @@ Consumers: `src/components/DeckGrid.tsx`, `src/app/[lang]/rephrase/layout.tsx`, 
 
 ## Invariants
 - `DECK_MAP` must have an entry for every `Lang` × `DeckId` combination. The `Record<Lang, Record<DeckId, Card[]>>` type enforces this at compile time.
-- `deckMetadata[*].cardCount` is hard-coded (40) and must match the length of the corresponding `DECK_MAP[lang][id]` array. `src/__tests__/data/decks.test.ts` enforces this, and that `deckMetadata` has exactly one entry per locale × deck.
-- `DECK_IDS` must list every `DeckId` literal from `@/types` exactly once. It is used to generate routes (`src/app/[lang]/rephrase/[deck]/page.tsx`, `src/app/[lang]/rephrase/layout.tsx`).
+- Every deck has 40 cards, 20 per level. `src/__tests__/data/decks.test.ts` checks this against the real `DECK_MAP`, and that `deckMetadata` has exactly one entry per locale × deck.
+- `DECK_IDS` must list every `DeckId` literal from `@/types` exactly once. `decks.test.ts` compares it with the keys of `DECK_MAP`, whose type requires every `DeckId`. It is used to generate routes (`src/app/[lang]/rephrase/[deck]/page.tsx`, `src/app/[lang]/rephrase/layout.tsx`).
 - Card array order is part of the persisted identity. Rephrase progress is keyed by `"{deckId}_{cardIndex}"` (see `Progress` in `src/types/index.ts`).
 
 ## Side Effects

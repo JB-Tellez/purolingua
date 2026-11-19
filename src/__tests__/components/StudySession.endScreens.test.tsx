@@ -23,9 +23,9 @@ vi.mock('@/hooks/useVoiceRecognition', () => ({
 
 vi.mock('@/data/decks', () => ({
   deckMetadata: [
-    { id: 'daily', lang: 'it', i18nKey: 'daily', icon: '', theme: 'teal', cardCount: 2 },
-    { id: 'restaurant', lang: 'it', i18nKey: 'restaurant', icon: '', theme: 'red', cardCount: 1 },
-    { id: 'daily', lang: 'es', i18nKey: 'daily', icon: '', theme: 'teal', cardCount: 1 },
+    { id: 'daily', lang: 'it', icon: '', theme: 'teal' },
+    { id: 'restaurant', lang: 'it', icon: '', theme: 'red' },
+    { id: 'daily', lang: 'es', icon: '', theme: 'teal' },
   ],
 }));
 
