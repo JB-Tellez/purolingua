@@ -152,6 +152,11 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     setMicState('idle');
   }
 
+  // Ends the 800 ms error display, unless a new attempt has already replaced it.
+  function resetMicError() {
+    setMicState((s) => (s === 'error' ? 'idle' : s));
+  }
+
   function handleFrontMicPress() {
     if (micState === 'listening') return cancelListening();
     const started = startListening(
@@ -163,13 +168,13 @@ export default function StudySession({ lang, deckId, cards }: Props) {
         } else {
           setFeedbackState('notRecognized');
           setMicState('error');
-          setTimeout(() => setMicState('idle'), 800);
+          setTimeout(resetMicError, 800);
         }
       },
       () => {
         setFeedbackState('notRecognized');
         setMicState('error');
-        setTimeout(() => setMicState('idle'), 800);
+        setTimeout(resetMicError, 800);
       }
     );
     if (started) setMicState('listening'); // a refused start must not look like listening
@@ -188,13 +193,13 @@ export default function StudySession({ lang, deckId, cards }: Props) {
         } else {
           setFeedbackState('notRecognized');
           setMicState('error');
-          setTimeout(() => setMicState('idle'), 800);
+          setTimeout(resetMicError, 800);
         }
       },
       () => {
         setFeedbackState('notRecognized');
         setMicState('error');
-        setTimeout(() => setMicState('idle'), 800);
+        setTimeout(resetMicError, 800);
       }
     );
     if (started) setMicState('listening'); // a refused start must not look like listening

@@ -56,7 +56,7 @@ No drift detected.
 
 ## src/app/[lang]/rephrase/[deck]/README.md
 
-- The 800 ms mic-error reset can overwrite a newer mic state (not reproduced). After `notRecognized`, `setTimeout(() => setMicState('idle'), 800)` runs unconditionally. If the user presses the mic again within those 800 ms, the mic goes to `'listening'` and a new recognizer starts, then the old timer sets it back to `'idle'` while the recognizer runs. A press then tries to start again (refused, see `src/hooks`) instead of cancelling. The contract says the mic shows `error` "for 800 ms" but not what happens to a press during that time. `QAStudySession` has the same timer, and it also clears the feedback.
+- **[FIXED 2026-11-19: `resetMicError` resets only an error still showing, in both sessions; tests in both session test files (reproduced there first).]** The 800 ms mic-error reset can overwrite a newer mic state (not reproduced). After `notRecognized`, `setTimeout(() => setMicState('idle'), 800)` runs unconditionally. If the user presses the mic again within those 800 ms, the mic goes to `'listening'` and a new recognizer starts, then the old timer sets it back to `'idle'` while the recognizer runs. A press then tries to start again (refused, see `src/hooks`) instead of cancelling. The contract says the mic shows `error` "for 800 ms" but not what happens to a press during that time. `QAStudySession` has the same timer, and it also clears the feedback.
 
 ## src/app/[lang]/qa/README.md
 

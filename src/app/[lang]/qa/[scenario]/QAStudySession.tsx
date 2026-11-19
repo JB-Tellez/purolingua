@@ -170,6 +170,12 @@ export default function QAStudySession({ lang, scenario }: Props) {
     setMicState('idle');
   }
 
+  // Ends the 800 ms error display, unless a new attempt has already replaced it.
+  function resetMicError() {
+    setMicState((s) => (s === 'error' ? 'idle' : s));
+    setFeedbackState((f) => (f === 'notRecognized' ? null : f));
+  }
+
   function handleMicPress() {
     // Pressing the mic while listening cancels (the button is a toggle: aria-pressed).
     // micState, not the hook's isListening: that turns true only once the browser starts.
@@ -189,20 +195,14 @@ export default function QAStudySession({ lang, scenario }: Props) {
           // Non-match: notRecognized, no SRS update, choices remain available
           setFeedbackState('notRecognized');
           setMicState('error');
-          setTimeout(() => {
-            setMicState('idle');
-            setFeedbackState(null);
-          }, 800);
+          setTimeout(resetMicError, 800);
         }
       },
       () => {
         // Recognition error
         setFeedbackState('notRecognized');
         setMicState('error');
-        setTimeout(() => {
-          setMicState('idle');
-          setFeedbackState(null);
-        }, 800);
+        setTimeout(resetMicError, 800);
       }
     );
     if (started) setMicState('listening'); // a refused start must not look like listening

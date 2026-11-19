@@ -64,7 +64,9 @@ synthesis, speech recognition).
 - Mic input: the transcript is matched against every choice (`bestMatch`). If
   the best match is the correct choice, it is selected and the card advances.
   A best match on a foil, no match, a tie, or a recognition error shows
-  `notRecognized` for 800 ms and does not update SRS.
+  `notRecognized` for 800 ms and does not update SRS. The reset
+  (`resetMicError`) clears only the error and the `notRecognized` feedback
+  still showing, so a new attempt started within the 800 ms is not cut off.
 - After the last card, the session shows the scenario-done screen if any
   scenario in `@/data/qa` still has due cards at the active levels. Otherwise
   it shows the all-done screen. `advance()` only sets `finished`; the

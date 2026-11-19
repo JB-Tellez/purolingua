@@ -65,7 +65,8 @@ tapping or by voice.
   matches best (`bestMatch`) is selected; when two choices match equally
   well, it counts as no match. A transcript that matches nothing, or a
   recognition error, shows `notRecognized` and sets the mic to `error` for
-  800 ms.
+  800 ms. The reset (`resetMicError`) clears only an error still showing, so a
+  new attempt started within the 800 ms keeps listening.
 - After the last card, the session shows the all-done screen if no deck for
   this `lang` in `deckMetadata` has due cards at the active levels. Otherwise
   it shows the deck-complete screen. `advance()` only sets `finished`; the

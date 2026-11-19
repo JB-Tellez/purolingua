@@ -413,6 +413,20 @@ describe('QAStudySession', () => {
     expect(mic).toHaveAttribute('aria-pressed', 'false');
   });
 
+  it('a new attempt within 800 ms of an error keeps listening when the error reset fires', () => {
+    vi.useFakeTimers();
+    renderQAStudySession('it');
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
+    const [[onResult]] = mockStartListening.mock.calls;
+    act(() => { onResult('something completely wrong'); });
+
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); }); // within 800 ms
+    act(() => { vi.advanceTimersByTime(800); });
+
+    expect(screen.getByRole('button', { name: 'micListening' })).toHaveClass('mic-btn--listening');
+    vi.useRealTimers();
+  });
+
   it('spoken non-match sets notRecognized feedback, no SRS update', () => {
     vi.useFakeTimers();
     renderQAStudySession('it');

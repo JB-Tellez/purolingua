@@ -197,6 +197,20 @@ describe('StudySession voice integration', () => {
     expect(mic).toHaveAttribute('aria-pressed', 'false');
   });
 
+  it('a new attempt within 800 ms of an error keeps listening when the error reset fires', () => {
+    vi.useFakeTimers();
+    renderStudySession();
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
+    act(() => { fireOnResult('wrong phrase that does not match'); });
+    act(() => { mockRecognitionInstance.onend?.(); });
+
+    act(() => { screen.getByRole('button', { name: 'micStart' }).click(); }); // within 800 ms
+    act(() => { vi.advanceTimersByTime(800); });
+
+    expect(screen.getByRole('button', { name: 'micListening' })).toHaveClass('mic-btn--listening');
+    vi.useRealTimers();
+  });
+
   // VOICE-12: transcript no-match on card front triggers error state
   it('VOICE-12: non-matching transcript on card front triggers mic error state', async () => {
     vi.useFakeTimers();
