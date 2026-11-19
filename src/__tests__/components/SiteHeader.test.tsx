@@ -34,6 +34,13 @@ describe('SiteHeader reset', () => {
   // Reset deletes all progress for the language, so it asks first (as v1.1 did).
   beforeEach(() => { vi.spyOn(window, 'confirm').mockReturnValue(true); });
 
+  it('is a button (an action, not a link)', () => {
+    render(<SiteHeader lang="it" />);
+    const reset = screen.getByRole('button', { name: 'reset' });
+    expect(reset).toHaveAttribute('type', 'button');
+    expect(screen.queryByRole('link', { name: 'reset' })).toBeNull();
+  });
+
   it('asks for confirmation with the resetConfirm message', () => {
     render(<SiteHeader lang="it" />);
     fireEvent.click(screen.getByText('reset'));

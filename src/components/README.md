@@ -25,7 +25,7 @@ Consumers are the route files under `src/app/[lang]/` (layout, home, `qa`,
 | `LevelFilterChips` (`LevelFilterChips.tsx`) | `{ lang; activeLevels: Level[]; setActiveLevels(levels: Level[] \| null) }` | A `role="group"` labelled `filter.label`, with one toggle chip per level in `@/lib/levels:LEVELS` (`A1`, `A2`); i18n namespace `filter`. `lang` is unused. |
 | `MicButton` (`MicButton.tsx`) | `{ state: 'idle' \| 'listening' \| 'error'; onPress }` | Class `mic-btn` plus `mic-btn--{state}` when not idle. Label `study.micListening` while listening, otherwise `study.micStart`. A toggle (`aria-pressed`): both sessions cancel listening when it is pressed again. |
 | `ScenarioGrid` (`ScenarioGrid.tsx`) | `{ lang; activeLevels: Level[] }` | One tile per `@/data/qa:scenarios`, linking to `/{lang}/qa/{scenario.id}`; due badge from `useQASRS`; i18n namespace `badge`. |
-| `SiteHeader` (`SiteHeader.tsx`) | `{ lang }` | Logo, back link, progress reset (asks `nav.resetConfirm` first), language dropdown (button labelled `nav.changeLanguage`, with `aria-expanded`); i18n namespace `nav`. |
+| `SiteHeader` (`SiteHeader.tsx`) | `{ lang }` | Logo, back link, progress reset (a `<button>` styled like the links; asks `nav.resetConfirm` first), language dropdown (button labelled `nav.changeLanguage`, with `aria-expanded`); i18n namespace `nav`. |
 
 ## Invariants
 

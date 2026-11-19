@@ -71,13 +71,9 @@ export default function SiteHeader({ lang }: SiteHeaderProps) {
             </li>
           )}
           <li>
-            <a
-              href="#"
-              className="nav-back-btn"
-              onClick={(e) => { e.preventDefault(); handleReset(); }}
-            >
+            <button type="button" className="nav-back-btn" onClick={handleReset}>
               {t('reset')}
-            </a>
+            </button>
           </li>
           <li>
             <div className="language-selector" ref={selectorRef}>
