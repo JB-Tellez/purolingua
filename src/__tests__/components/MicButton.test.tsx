@@ -15,6 +15,8 @@ describe('MicButton', () => {
     expect(btn).toHaveClass('mic-btn');
     expect(btn).not.toHaveClass('mic-btn--listening');
     expect(btn).not.toHaveClass('mic-btn--error');
+    expect(btn).toHaveAttribute('aria-label', 'micStart');
+    expect(btn).toHaveAttribute('aria-pressed', 'false');
   });
 
   // VOICE-08: MicButton renders with listening class when state='listening'
@@ -23,7 +25,9 @@ describe('MicButton', () => {
     const btn = screen.getByRole('button');
     expect(btn).toHaveClass('mic-btn');
     expect(btn).toHaveClass('mic-btn--listening');
-    expect(btn).toHaveAttribute('aria-label', 'micListening');
+    // The name stays fixed; aria-pressed alone says it is listening.
+    expect(btn).toHaveAttribute('aria-label', 'micStart');
+    expect(btn).toHaveAttribute('aria-pressed', 'true');
   });
 
   // VOICE-09: MicButton renders with error class when state='error'

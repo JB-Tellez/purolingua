@@ -381,7 +381,7 @@ describe('QAStudySession', () => {
     setupVoiceRecognitionMock({ stopListening });
     renderQAStudySession();
     act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
-    act(() => { screen.getByRole('button', { name: 'micListening' }).click(); });
+    act(() => { screen.getByRole('button', { name: 'micStart', pressed: true }).click(); });
 
     expect(mockStartListening).toHaveBeenCalledOnce();
     expect(stopListening).toHaveBeenCalledOnce();
@@ -421,7 +421,7 @@ describe('QAStudySession', () => {
     act(() => { screen.getByRole('button', { name: 'micStart' }).click(); }); // within 800 ms
     act(() => { vi.advanceTimersByTime(800); });
 
-    expect(screen.getByRole('button', { name: 'micListening' })).toHaveClass('mic-btn--listening');
+    expect(screen.getByRole('button', { name: 'micStart', pressed: true })).toHaveClass('mic-btn--listening');
     vi.useRealTimers();
   });
 

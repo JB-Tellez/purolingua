@@ -165,7 +165,7 @@ describe('StudySession voice integration', () => {
     act(() => { mockRecognitionInstance.onstart?.(); });
     mockRecognitionInstance.abort.mockClear();
 
-    act(() => { screen.getByRole('button', { name: 'micListening' }).click(); });
+    act(() => { screen.getByRole('button', { name: 'micStart', pressed: true }).click(); });
     act(() => { mockRecognitionInstance.onerror?.({ error: 'aborted' }); }); // Chrome fires this on abort
 
     expect(mockRecognitionInstance.abort).toHaveBeenCalledOnce();
@@ -181,7 +181,7 @@ describe('StudySession voice integration', () => {
     renderStudySession();
     act(() => { screen.getByRole('button', { name: 'micStart' }).click(); });
     // no onstart yet: the browser has not started listening
-    act(() => { screen.getByRole('button', { name: 'micListening' }).click(); });
+    act(() => { screen.getByRole('button', { name: 'micStart', pressed: true }).click(); });
 
     expect(MockSpeechRecognition).toHaveBeenCalledOnce();
     expect(mockRecognitionInstance.abort).toHaveBeenCalledOnce();
@@ -208,7 +208,7 @@ describe('StudySession voice integration', () => {
     act(() => { screen.getByRole('button', { name: 'micStart' }).click(); }); // within 800 ms
     act(() => { vi.advanceTimersByTime(800); });
 
-    expect(screen.getByRole('button', { name: 'micListening' })).toHaveClass('mic-btn--listening');
+    expect(screen.getByRole('button', { name: 'micStart', pressed: true })).toHaveClass('mic-btn--listening');
     vi.useRealTimers();
   });
 

@@ -16,7 +16,9 @@ export default function MicButton({ state, onPress }: Props) {
       type="button"
       className={`${baseClass}${stateClass}`}
       onClick={(e) => { e.stopPropagation(); onPress(); }}
-      aria-label={state === 'listening' ? t('micListening') : t('micStart')}
+      // A fixed name: aria-pressed alone says it is listening (a toggle whose
+      // name also changed would be announced as, e.g., "In ascolto…, pressed").
+      aria-label={t('micStart')}
       aria-pressed={state === 'listening'}
     >
       {'\uD83C\uDF99'}

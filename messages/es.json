@@ -67,7 +67,6 @@
     "audio": "Escuchar",
     "audioChoice": "Escuchar: {text}",
     "micStart": "Empieza a hablar",
-    "micListening": "Escuchando…",
     "heard": "Escuchado",
     "notRecognized": "No reconocido",
     "deckComplete": "¡Mazo completado!",

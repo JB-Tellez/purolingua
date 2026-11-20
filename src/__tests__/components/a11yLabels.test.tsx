@@ -33,7 +33,8 @@ describe.each(['it', 'es'] as const)('translated accessible names (%s)', (locale
     }),
   });
 
-  it('MicButton: idle and listening labels', () => {
+  // One name in every state; aria-pressed says when it is listening.
+  it('MicButton: the same label idle and listening', () => {
     const { rerender } = renderIn(locale, <MicButton state="idle" onPress={vi.fn()} />);
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', m.study.micStart);
     rerender(
@@ -41,7 +42,8 @@ describe.each(['it', 'es'] as const)('translated accessible names (%s)', (locale
         <MicButton state="listening" onPress={vi.fn()} />
       </NextIntlClientProvider>
     );
-    expect(screen.getByRole('button')).toHaveAttribute('aria-label', m.study.micListening);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-label', m.study.micStart);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('ChoiceButton: the speak icon names the answer it plays', () => {
