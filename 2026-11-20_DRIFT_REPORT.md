@@ -1,0 +1,28 @@
+# EGM Drift Report — 2026-11-20
+
+Scope: the 18 EGM contracts (`README.md` plus 17 child `README.md` files), compared against the source at `8a0183c`, after the three fixes from `2026-11-19_DRIFT_REPORT_5.md`. Only divergences are listed.
+
+How findings were checked: run in a fresh session, with no memory of writing the recent fixes. Every contract was read against its source files. The angles this round added: whether each interactive element can be reached by keyboard (no earlier round looked at keyboard use), what happens when a session opens with nothing due, speech side effects when a session starts, replays, or is left, and a scan of the real deck and Q&A data (a throwaway Vitest file, deleted afterwards). The scan checked for unique and well-formed card ids, one level per scenario, at least 3 distinct foils for every Rephrase card within its level, and no two choices that normalize to the same text (saying any choice word for word selects that choice). It found nothing. Every test path the contracts cite exists. Baseline: `npx vitest run` passes (40 files, 370 tests), `tsc --noEmit` is clean.
+
+The two items left open in `2026-11-19_DRIFT_REPORT_5.md` (the correct Q&A answer is usually the longest choice; every page has the same `<title>`) are still open. They are not repeated here.
+
+## src/app/[lang]/rephrase/[deck]/README.md
+
+- **The card cannot be flipped from the keyboard.** The only ways to flip a card are a click on `<div className="card-container">` (`StudySession.tsx`, `onClick={() => { if (!flipped) setFlipped(true); }}`) and a front-mic transcript that matches. That `div` has no `role`, no `tabIndex`, and no key handler, and the "Gira" button only appears once the card is already flipped. A keyboard-only user can Tab to the front's 🔊 and 🎙 buttons but never reach the answers. In browsers without `SpeechRecognition` (Firefox), where the mic is hidden, a keyboard-only user cannot use Rephrase at all. Screen readers do not announce the card as something to activate. The contract says "The user flips it" without saying how. A real `<button>` to reveal the answer on the front face (or making the front face itself a button) would fix this. That button should move focus to the choices after the flip.
+
+## src/app/[lang]/rephrase/[deck]/README.md and src/app/[lang]/qa/[scenario]/README.md
+
+- **Opening a deck or scenario with nothing due says everything is done.** Both sessions show their all-done screen when the session starts with no due cards: `allDone = dueCards.length === 0 || (finished && allDecksEmpty())` in `StudySession.tsx`, with the same shape in `QAStudySession.tsx`. The cross-deck check only runs after the last card. So tapping a deck whose badge reads "Completato" shows "Hai finito per oggi! Torna domani." / "¡Terminado por hoy! Vuelve mañana.", even when other decks still have due cards. A finished scenario likewise shows "Tutti gli scenari completati!" while others are still due. The deck and scenario tiles stay links when they are done, so this is easy to reach. The contracts describe the cross-deck check only "after the last card". The only test of the empty start (`… is not offered when the session started with no due cards`, in both `*.endScreens.test.tsx`) seeds every deck or scenario as not due, so the case where others are still due is untested. Running the same check at mount (show `deckComplete` / `scenarioDone` when other decks or scenarios are still due) would fix it.
+
+## src/app/[lang]/qa/[scenario]/README.md
+
+- **Replaying a one-card session does not read the question aloud.** The question is spoken by `useEffect(() => { … speak(questionText, lang) }, [index])`. "Study again" (`resetSession`) sets `index` to 0. When the session had one due card, `index` was already 0, the effect does not run again, and the replay starts silent. Longer sessions are read aloud on replay because `index` changes. The contract says speech "runs automatically on each `index` change", which is literally true, but it does not cover this case.
+- **The question keeps playing after you leave the session.** The auto-speak effect has no cleanup, and nothing calls `speechSynthesis.cancel()` when the session unmounts. Pressing "← Torna agli scenari" while a question is being read keeps reading it over the scenario list. The contract describes when speech starts but not this. Recognition, by contrast, is cancelled on unmount (`useVoiceRecognition`). A `speechSynthesis.cancel()` cleanup when the session unmounts would make the two consistent.
+
+## src/components/README.md
+
+- **`MicButton` changes its name and its pressed state together.** While listening, the label switches from `study.micStart` ("Inizia a parlare") to `study.micListening` ("In ascolto…") *and* `aria-pressed` becomes `true`. A screen reader then announces something like "In ascolto…, toggle button, pressed". The pressed state already says it is on, and pressing it again does not mean "listening": it cancels. ARIA guidance for toggle buttons is to keep the name fixed and let `aria-pressed` carry the state (or to drop `aria-pressed` and keep the changing label). The contract documents both behaviours but not how they combine. Not checked with a screen reader.
+
+## Contracts with no drift detected
+
+`README.md`, `src/README.md`, `src/types`, `src/lib`, `src/hooks`, `src/i18n`, `src/data`, `src/data/it`, `src/data/es`, `src/data/qa` (apart from the open length-bias item), `src/app` (apart from the open title item), `src/app/[lang]`, `src/app/[lang]/rephrase`, `src/app/[lang]/qa`, `scripts`. No files fall outside a contract.
