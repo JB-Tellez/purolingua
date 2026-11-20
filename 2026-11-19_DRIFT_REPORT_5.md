@@ -11,7 +11,7 @@ How findings were checked: run in the same session that wrote the recent fixes, 
 
 ## src/data/qa/README.md
 
-- **The correct answer is usually the longest choice.** In 65 of the 112 language/card combinations (58%), the correct answer is strictly longer than all three foils; with four options and no length bias that would be about 25%. A learner can often pick the right answer without understanding it. This is content, not code: shortening some correct answers or lengthening some foils would fix it, and the scan could become a data test. The contract describes the foils' shape (fixed 3-tuples) but sets no rule for them.
+- **[FIXED 2026-11-20 (the user chose to lengthen foils, not correct answers): one foil on each of 22 cards was extended in Italian and Spanish together, so the correct answer is now strictly the longest on 15/56 Italian and 14/56 Spanish cards (about chance). Card ids and correct answers are unchanged, so stored progress is unaffected. `src/__tests__/data/qaChoices.test.ts` caps it at a third per language and checks that the four choices differ after `normalize`. Most foils are still off-topic (e.g. train times in the café), which can also give the answer away; that was left as is.]** **The correct answer is usually the longest choice.** In 65 of the 112 language/card combinations (58%), the correct answer is strictly longer than all three foils; with four options and no length bias that would be about 25%. A learner can often pick the right answer without understanding it. This is content, not code: shortening some correct answers or lengthening some foils would fix it, and the scan could become a data test. The contract describes the foils' shape (fixed 3-tuples) but sets no rule for them.
 
 ## src/README.md
 

@@ -24,6 +24,7 @@ Consumers: `src/app/[lang]/qa/layout.tsx` and `src/app/[lang]/qa/[scenario]/page
 - Each scenario must satisfy `Scenario` from `@/types`. `id` must be a `ScenarioId` literal. `foils` and `foilsEs` are fixed 3-tuples (`[string, string, string]`).
 - Scenario `id` values are route segments: pages are generated from `scenarios.map((s) => ({ lang, scenario: s.id }))` and resolved with `scenarios.find`. They must be unique and stable.
 - Card `id`s use the form `"{scenarioId}_NN"`. Progress is looked up by `getQACardKey(scenarioId, card.id)` (`src/lib/srs.ts`, used by `useQASRS` and `QAStudySession`). Renaming a card `id` orphans any stored progress for that card.
+- The choices must not give the answer away by length: in each language the correct answer may be strictly the longest of the four on at most a third of the cards (about a quarter is what chance gives; after the 2026-11-20 rewrite it is 15/56 in Italian, 14/56 in Spanish). Every card's four choices must also differ after `normalize` (`src/lib/matchTranscript.ts`), or a spoken answer could not pick one. `src/__tests__/data/qaChoices.test.ts` checks both. When editing foils, change the Italian and Spanish foil together so they stay parallel translations.
 - Levels are per card. In the current data all 8 cards of a scenario share one level, which is what the `A1`-before-`A2` display order follows.
 - The `scenarios` array order is the display order (A1 before A2). A new scenario must be added both to the `export { ... }` list and to the `scenarios` array.
 
@@ -31,4 +32,4 @@ Consumers: `src/app/[lang]/qa/layout.tsx` and `src/app/[lang]/qa/[scenario]/page
 - None. These are pure constant module exports with no runtime I/O.
 
 ## Verification
-- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). `src/__tests__/app/localeValidation.test.tsx` imports the real `scenarios` to build a valid route. `src/__tests__/components/QAStudySession.test.tsx` mocks `@/data/qa`, and `src/__tests__/hooks/useQASRS.test.tsx` uses an inline fixture.
+- Run: `npx vitest run` (the `npm test` script runs `vitest` in watch mode). `src/__tests__/app/localeValidation.test.tsx` imports the real `scenarios` to build a valid route, and `src/__tests__/data/qaChoices.test.ts` checks the real choices (length cue, normalized duplicates). `src/__tests__/components/QAStudySession.test.tsx` mocks `@/data/qa`, and `src/__tests__/hooks/useQASRS.test.tsx` uses an inline fixture.
