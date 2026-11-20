@@ -20,3 +20,9 @@ export function speak(phrase: string, lang: Lang): void {
   utterance.voice = exact ?? matching[0] ?? null;
   window.speechSynthesis.speak(utterance);
 }
+
+/** Cancels any speech in progress. No-op when speech synthesis is unavailable. */
+export function stopSpeaking(): void {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+}

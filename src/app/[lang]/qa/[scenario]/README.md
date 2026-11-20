@@ -29,7 +29,7 @@ synthesis, speech recognition).
   - Module-private helper: `isScenarioHasDue(progress, scenarioId, cards, activeLevels)`.
   - Dependencies: `useQASRS`, `useLevelFilter`, `useVoiceRecognition`
     (`@/hooks`), `isCardDue` and `getQACardKey` (`@/lib/srs`), `loadProgress`
-    (`@/lib/progressStorage`), `shuffle` (`@/lib/shuffle`), `speak` (`@/lib/speak`), `bestMatch`
+    (`@/lib/progressStorage`), `shuffle` (`@/lib/shuffle`), `speak` and `stopSpeaking` (`@/lib/speak`), `bestMatch`
     (`@/lib/matchTranscript`), `scenarios` (`@/data/qa`), and
     `AudioButton`, `ChoiceButton`, `FeedbackMessage`, `MicButton`
     (`@/components`).
@@ -81,9 +81,12 @@ synthesis, speech recognition).
   through `useQASRS().updateCard`, and the level filter through
   `useLevelFilter`.
 - `window.speechSynthesis`: `speak()` cancels pending speech and speaks the
-  phrase at rate 0.9 with a voice for the matching locale. It runs
-  automatically on each `index` change and when the speak control on a
-  choice is used.
+  phrase at rate 0.9 with a voice for the matching locale. It reads the
+  question automatically whenever a card is shown (each `index` change, and
+  the first card again after "Study again", even in a one-card session, since
+  `finished` returning to `false` also triggers it; never on an end screen), and
+  runs when the speak control on a choice is used. Leaving the session calls
+  `stopSpeaking()`, so a question still being read stops.
 - Speech recognition through `useVoiceRecognition().startListening`.
 - `setTimeout` timers (600 ms and 800 ms) for feedback and advancing.
 

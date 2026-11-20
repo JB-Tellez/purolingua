@@ -6,6 +6,9 @@ import { render, screen, act, fireEvent } from '@testing-library/react';
 import QAStudySession from '@/app/[lang]/qa/[scenario]/QAStudySession';
 import { scenarios } from '@/data/qa';
 import type { Scenario } from '@/types';
+import { speak, stopSpeaking } from '@/lib/speak';
+
+vi.mock('@/lib/speak', () => ({ speak: vi.fn(), stopSpeaking: vi.fn() }));
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string, params?: Record<string, unknown>) =>
@@ -189,5 +192,47 @@ describe('QAStudySession opened with nothing due (real SRS state)', () => {
     seed({ qa_coffee_coffee_01: FUTURE, qa_hotel_hotel_01: FUTURE });
     renderCoffee();
     expect(screen.getByText('allScenariosDone')).toBeInTheDocument();
+  });
+});
+
+// The question is read aloud whenever a card is shown, including the first card
+// of a replay; it stops when the session is left.
+describe('QAStudySession question speech', () => {
+  const studyAgain = () => act(() => { fireEvent.click(screen.getByRole('button', { name: 'studyAgain' })); });
+  beforeEach(() => {
+    vi.mocked(speak).mockClear();
+    vi.mocked(stopSpeaking).mockClear();
+  });
+
+  it('reads the question when the session starts', () => {
+    seed({ qa_hotel_hotel_01: FUTURE });
+    renderCoffee();
+    expect(speak).toHaveBeenCalledWith('coffee_01?', 'it');
+  });
+
+  it('reads the question again when a one-card session is replayed', () => {
+    seed({ qa_hotel_hotel_01: FUTURE });
+    renderCoffee();
+    answerCorrectly();
+    vi.mocked(speak).mockClear();
+    studyAgain();
+    expect(speak).toHaveBeenCalledWith('coffee_01?', 'it');
+  });
+
+  it('does not read anything on the end screen', () => {
+    seed({ qa_hotel_hotel_01: FUTURE });
+    renderCoffee();
+    vi.mocked(speak).mockClear();
+    answerCorrectly();
+    expect(screen.getByText('allScenariosDone')).toBeInTheDocument();
+    expect(speak).not.toHaveBeenCalled();
+  });
+
+  it('stops speaking when the session is left', () => {
+    seed({ qa_hotel_hotel_01: FUTURE });
+    const { unmount } = render(<QAStudySession lang="it" scenario={scenarios[0] as Scenario} />);
+    expect(stopSpeaking).not.toHaveBeenCalled();
+    unmount();
+    expect(stopSpeaking).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { speak } from '@/lib/speak';
+import { speak, stopSpeaking } from '@/lib/speak';
 
 class FakeUtterance {
   lang = '';
@@ -52,5 +52,18 @@ describe('speak', () => {
     vi.stubGlobal('speechSynthesis', undefined);
     expect(() => speak('Ciao', 'it')).not.toThrow();
     expect(synth.speak).not.toHaveBeenCalled();
+  });
+});
+
+describe('stopSpeaking', () => {
+  it('cancels any current speech', () => {
+    stopSpeaking();
+    expect(synth.cancel).toHaveBeenCalledTimes(1);
+    expect(synth.speak).not.toHaveBeenCalled();
+  });
+
+  it('does nothing without speech synthesis', () => {
+    vi.stubGlobal('speechSynthesis', undefined);
+    expect(() => stopSpeaking()).not.toThrow();
   });
 });

@@ -44,6 +44,7 @@ These modules are used by the hooks (`useSRS`, `useQASRS`, `useLevelFilter`, `us
   - `LANG_LOCALE: Record<Lang, string>`: `it -> it-IT`, `es -> es-ES`. The one copy, used by `speak` and `useVoiceRecognition`.
 - `speak.ts`
   - `speak(phrase, lang): void`: cancels current speech, then speaks `phrase` at rate `0.9`, preferring an exact-locale voice, then any voice for the language, then the browser default. No-op without `window.speechSynthesis`.
+  - `stopSpeaking(): void`: cancels any speech in progress. No-op without `window.speechSynthesis`. Used by `QAStudySession` when it unmounts.
 - `reloadPage.ts`
   - `reloadPage(location: Pick<Location, 'reload'> = window.location): void`: calls `location.reload()`. Used by `SiteHeader`'s reset. It exists as a module because jsdom does not allow stubbing `window.location.reload`.
 

@@ -10,7 +10,7 @@ import { isCardDue, getQACardKey } from '@/lib/srs';
 import { loadProgress } from '@/lib/progressStorage';
 import { bestMatch } from '@/lib/matchTranscript';
 import { shuffle } from '@/lib/shuffle';
-import { speak } from '@/lib/speak';
+import { speak, stopSpeaking } from '@/lib/speak';
 import { scenarios as allScenarios } from '@/data/qa';
 import AudioButton from '@/components/AudioButton';
 import ChoiceButton from '@/components/ChoiceButton';
@@ -87,11 +87,16 @@ export default function QAStudySession({ lang, scenario }: Props) {
       : currentCard.questionEs
     : '';
 
-  // Auto-speak the question whenever the card changes
+  // Auto-speak the question whenever a card is shown: a new index, or the
+  // first card again after "Study again" (finished goes back to false, which
+  // matters when a one-card session's index never changes). Not on end screens.
   useEffect(() => {
-    if (questionText) speak(questionText, lang);
+    if (questionText && !finished) speak(questionText, lang);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index]);
+  }, [index, finished]);
+
+  // Leaving the session stops a question still being read.
+  useEffect(() => stopSpeaking, []);
 
   const correctText = currentCard
     ? lang === 'it'
