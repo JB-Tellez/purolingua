@@ -1,15 +1,23 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { routing, isLang } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import RootDocument from '../RootDocument';
+import { TITLE_TEMPLATE } from '../titleTemplate';
 
-export const metadata: Metadata = {
-  title: 'PuroLingua',
-  description: 'Language learning flashcards',
-};
+// Every page below is titled "<page> · PuroLingua" in its own language; the
+// activity picker (a client page, which cannot export metadata) gets the default.
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLang(lang)) return {};
+  const t = await getTranslations({ locale: lang });
+  return {
+    title: { template: TITLE_TEMPLATE, default: `${t('page.activityTitle')} · PuroLingua` },
+    description: t('meta.description'),
+  };
+}
 
 // Step 1: generateStaticParams — tell Next.js which locale paths to build
 export function generateStaticParams() {

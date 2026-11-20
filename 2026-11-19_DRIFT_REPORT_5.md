@@ -19,7 +19,7 @@ How findings were checked: run in the same session that wrote the recent fixes, 
 
 ## src/app/README.md
 
-- Every page has the same `<title>`, "PuroLingua", from the two root layouts and the 404 (`metadata: { title: 'PuroLingua' }`): the language picker, the deck and scenario lists, every study session, and the 404 page. Tabs, history, and screen readers' page announcements cannot tell them apart. The `description` is the English "Language learning flashcards" on the Italian and Spanish pages too. The contract documents the shared metadata as an invariant ("Both root layouts export the same `metadata`") without noting the cost.
+- **[FIXED 2026-11-20 (the user chose "<page> · PuroLingua"): `[lang]/layout.tsx` sets the template and the activity title, `rephrase/` and `qa/layout.tsx` the list titles (passing the template on), and the deck and scenario pages their names; the 404 is "Page not found · PuroLingua"; `[lang]` pages use the new `meta.description`. Tests in `src/__tests__/app/pageTitles.test.ts`; checked in the static build's `out/*/index.html`, which caught that a plain layout title string drops the suffix on the pages below it.]** Every page has the same `<title>`, "PuroLingua", from the two root layouts and the 404 (`metadata: { title: 'PuroLingua' }`): the language picker, the deck and scenario lists, every study session, and the 404 page. Tabs, history, and screen readers' page announcements cannot tell them apart. The `description` is the English "Language learning flashcards" on the Italian and Spanish pages too. The contract documents the shared metadata as an invariant ("Both root layouts export the same `metadata`") without noting the cost.
 
 ## Contracts with no drift detected
 

@@ -10,6 +10,9 @@ The layout generates the static params for the nested `[scenario]` route.
 - `layout.tsx`
   - `generateStaticParams()`: returns `{ lang, scenario }` for every pair in
     `routing.locales` x `scenarios[].id` (`@/data/qa`).
+  - `generateMetadata({ params })`: `title: { default: page.scenarioTitle, template: TITLE_TEMPLATE }`
+    (e.g. "Elige un Escenario · PuroLingua"); the page is a client component, so its title is declared
+    here, and the template is passed on so the session pages below keep the suffix.
   - `default QALayout({ children })`: renders `children` with no wrapper.
 - `page.tsx`
   - `default QABrowserPage()` (`'use client'`): reads `lang` from

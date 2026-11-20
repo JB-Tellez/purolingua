@@ -1,4 +1,7 @@
 {
+  "meta": {
+    "description": "Frases y diálogos para aprender español"
+  },
   "nav": {
     "logo": "Espa\u00f1ol",
     "changeLanguage": "Cambiar idioma",

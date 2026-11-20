@@ -1,8 +1,9 @@
 // src/app/[lang]/rephrase/[deck]/page.tsx
 // Server component: validates route params, loads deck cards, renders StudySession.
 // generateStaticParams covers all 16 lang×deck paths for static export.
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { routing, isLang } from '@/i18n/routing';
 import { DECK_IDS } from '@/data/decks';
 import type { DeckId, Lang } from '@/types';
@@ -22,6 +23,14 @@ export function generateStaticParams() {
 type Props = {
   params: Promise<{ lang: string; deck: string }>;
 };
+
+// Titled with the deck name ("Ristorante · PuroLingua", via the [lang] template).
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { lang, deck } = await params;
+  if (!isLang(lang) || !DECK_IDS.includes(deck as DeckId)) return {};
+  const t = await getTranslations({ locale: lang, namespace: 'decks' });
+  return { title: t(deck as DeckId) };
+}
 
 export default async function DeckPage({ params }: Props) {
   const { lang, deck } = await params;

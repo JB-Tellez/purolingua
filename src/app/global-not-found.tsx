@@ -3,7 +3,7 @@ import Link from 'next/link';
 import RootDocument from './RootDocument';
 
 export const metadata: Metadata = {
-  title: 'PuroLingua',
+  title: 'Page not found · PuroLingua',
 };
 
 // With two root layouts ((home) and [lang]) there is no app/layout.tsx to wrap

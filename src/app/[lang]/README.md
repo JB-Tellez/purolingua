@@ -18,7 +18,10 @@ picker. The two activities are under `qa/` and `rephrase/`.
     `getMessages()`. It is a root layout: renders `<RootDocument lang={lang}>`
     (so the static HTML declares the locale) around
     `<NextIntlClientProvider messages>`, `<SiteHeader lang>`, and `children`.
-  - `metadata`: same as `(home)/layout.tsx`.
+  - `generateMetadata({ params })`: `{}` for an unknown locale; otherwise
+    `title: { template: TITLE_TEMPLATE, default: '<page.activityTitle> · PuroLingua' }`
+    (the activity picker, a client page, gets the default) and `description: meta.description`,
+    both from the locale's messages (`getTranslations({ locale })`).
 - `page.tsx`
   - `default LangPage()` (`'use client'`): reads `lang` from `useParams` and
     renders the `page.activityTitle` and `page.activitySubtitle` messages and
@@ -46,5 +49,5 @@ picker. The two activities are under `qa/` and `rephrase/`.
 
 ## Verification
 
-- Run: `npx vitest run src/__tests__/components/ActivityPicker.test.tsx src/__tests__/app` (`localeValidation`: the layout 404s unknown locales; `htmlLang`: `<html lang>`; `listPageHeadings`: the picker heading).
+- Run: `npx vitest run src/__tests__/components/ActivityPicker.test.tsx src/__tests__/app` (`localeValidation`: the layout 404s unknown locales; `htmlLang`: `<html lang>`; `listPageHeadings`: the picker heading; `pageTitles`: titles and descriptions).
 - Full suite: `npm test`

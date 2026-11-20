@@ -18,6 +18,9 @@ synthesis, speech recognition).
     `params: Promise<{ lang; scenario }>`, calls `notFound()` unless
     `isLang(lang)` and the scenario id exists, calls `setRequestLocale(lang)`, and then
     renders `<QAStudySessionNoSSR lang scenario={matchedScenario} />`.
+  - `generateMetadata({ params })`: `{ title }` from the scenario's `titleIt` (for
+    `it`) or `titleEs` ("Al Caffè · PuroLingua" through the `[lang]` template); `{}`
+    for an unknown locale or scenario.
 - `QAStudySessionNoSSR.tsx`
   - `default QAStudySessionNoSSR(props: { lang: Lang; scenario: Scenario })`:
     `'use client'` wrapper around `next/dynamic(() => import('./QAStudySession'), { ssr: false })`.

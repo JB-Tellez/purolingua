@@ -11,6 +11,9 @@ for the nested `[deck]` route.
 - `layout.tsx`
   - `generateStaticParams()`: returns `{ lang, deck }` for every pair in
     `routing.locales` x `DECK_IDS` (`@/data/decks`).
+  - `generateMetadata({ params })`: `title: { default: page.title, template: TITLE_TEMPLATE }`
+    (e.g. "Scegli un Mazzo · PuroLingua"); the page is a client component, so its title is declared
+    here, and the template is passed on so the session pages below keep the suffix.
   - `default RephraseLayout({ children })`: renders `children` with no wrapper.
 - `page.tsx`
   - `default RephraseBrowserPage()` (`'use client'`): reads `lang` from `useParams`, gets

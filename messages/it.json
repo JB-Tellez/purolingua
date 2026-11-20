@@ -1,4 +1,7 @@
 {
+  "meta": {
+    "description": "Frasi e dialoghi per imparare l'italiano"
+  },
   "nav": {
     "logo": "Italiano",
     "changeLanguage": "Cambia lingua",

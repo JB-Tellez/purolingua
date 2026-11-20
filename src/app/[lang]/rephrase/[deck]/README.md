@@ -19,6 +19,9 @@ tapping or by voice.
     `isLang(lang)` and deck is in `DECK_IDS`, calls
     `setRequestLocale(lang)`, and then renders
     `<StudySession lang deckId cards />` (imported from `./StudySessionNoSSR`).
+  - `generateMetadata({ params })`: `{ title: decks.<deck> }` from the locale's
+    messages ("Ristorante · PuroLingua" through the `[lang]` template); `{}` for an
+    unknown locale or deck.
   - Module-private: `getCards(lang, deckId)` returns
     `DECK_MAP[lang]?.[deckId] ?? []`.
 - `StudySessionNoSSR.tsx`
