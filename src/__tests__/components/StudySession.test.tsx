@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import StudySession from '@/app/[lang]/rephrase/[deck]/StudySession';
 import { mockRecognitionInstance, MockSpeechRecognition } from '../setup';
 import type { Card } from '@/types';
@@ -494,5 +495,55 @@ describe('StudySession allDecksEmpty fix (BUGFIX-02)', () => {
     expect(callCount['Gracias']).toBeUndefined(); // Spanish deck key doesn't exist
 
     vi.useRealTimers();
+  });
+});
+
+// The card used to flip only on a click on a plain <div>: keyboard users could
+// never reach the answers (and without SpeechRecognition, not even by voice).
+describe('StudySession keyboard flip', () => {
+  const isFlipped = () => document.querySelector('.card')!.classList.contains('flipped');
+
+  it('offers a reveal button on the card front', () => {
+    renderStudySession();
+    expect(screen.getByRole('button', { name: 'tapToReveal' })).toBeInTheDocument();
+  });
+
+  it('flips the card when the reveal button is pressed with the keyboard', async () => {
+    const user = userEvent.setup();
+    renderStudySession();
+    screen.getByRole('button', { name: 'tapToReveal' }).focus();
+    await user.keyboard('{Enter}');
+    expect(isFlipped()).toBe(true);
+  });
+
+  it('moves focus to the first answer after the reveal', async () => {
+    const user = userEvent.setup();
+    renderStudySession();
+    screen.getByRole('button', { name: 'tapToReveal' }).focus();
+    await user.keyboard('{Enter}');
+    const answers = document.querySelectorAll<HTMLButtonElement>('.quiz-option .quiz-btn');
+    expect(document.activeElement).toBe(answers[0]);
+  });
+
+  it('moves focus back to the reveal button when the card is flipped back', async () => {
+    const user = userEvent.setup();
+    renderStudySession();
+    screen.getByRole('button', { name: 'tapToReveal' }).focus();
+    await user.keyboard('{Enter}');
+    await user.click(screen.getByRole('button', { name: 'flipButton' }));
+    expect(isFlipped()).toBe(false);
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'tapToReveal' }));
+  });
+
+  it('still flips on a click anywhere on the card', () => {
+    renderStudySession();
+    act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
+    expect(isFlipped()).toBe(true);
+  });
+
+  it('does not flip without the reveal (no reveal button once flipped)', () => {
+    renderStudySession();
+    act(() => { (document.querySelector('.card-container') as HTMLElement).click(); });
+    expect(screen.queryByRole('button', { name: 'tapToReveal' })).toBeNull();
   });
 });

@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ChoiceButton from '@/components/ChoiceButton';
@@ -53,5 +55,18 @@ describe('ChoiceButton', () => {
     expect(speakIcon()).toBeEnabled();
     fireEvent.click(speakIcon());
     expect(onSpeak).toHaveBeenCalledOnce();
+  });
+});
+
+// The Rephrase session focuses the first answer as soon as the card flips. An
+// answer button that transitions `all` also animates the visibility it inherits
+// from the back face, so for 0.2 s it is still hidden and focus() does nothing.
+describe('ChoiceButton styles', () => {
+  it('does not transition visibility, so an answer can take focus the moment it is shown', () => {
+    const css = readFileSync(resolve(__dirname, '../../style-reference.css'), 'utf8');
+    const rule = css.match(/^\.quiz-btn \{([^}]*)\}/m)?.[1] ?? '';
+    const transition = rule.match(/transition(?:-property)?:\s*([^;]*);/)?.[1] ?? '';
+    expect(transition).not.toBe('');
+    expect(transition).not.toMatch(/\ball\b|visibility/);
   });
 });

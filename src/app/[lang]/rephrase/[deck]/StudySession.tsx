@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { Card, DeckId, Lang } from '@/types';
@@ -71,6 +71,18 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     () => currentEntry ? generateChoices(currentEntry.card, filteredCards) : [],
     [currentEntry, filteredCards]
   );
+
+  // Keyboard users follow the flip: to the first answer when the card turns
+  // over, back to the reveal button when it turns back (Flip, or the next card).
+  const revealRef = useRef<HTMLButtonElement>(null);
+  const answersRef = useRef<HTMLDivElement>(null);
+  const wasFlipped = useRef(flipped);
+  useEffect(() => {
+    if (wasFlipped.current === flipped) return;
+    wasFlipped.current = flipped;
+    if (flipped) answersRef.current?.querySelector<HTMLButtonElement>('.quiz-btn')?.focus();
+    else revealRef.current?.focus();
+  }, [flipped]);
 
   function resetSession() {
     setIndex(0);
@@ -257,17 +269,24 @@ export default function StudySession({ lang, deckId, cards }: Props) {
                 <MicButton state={micState} onPress={handleFrontMicPress} />
               )}
               <span id="card-front-text">{currentCard.front}</span>
+              {/* A real button, so the card can be revealed from the keyboard;
+                  a click anywhere on the card still flips it too. */}
               {!flipped && (
-                <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>
+                <button
+                  ref={revealRef}
+                  type="button"
+                  onClick={() => setFlipped(true)}
+                  style={{ font: 'inherit', marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--color-text-light)', background: 'none', border: 'none', cursor: 'pointer' }}
+                >
                   {t('tapToReveal')}
-                </p>
+                </button>
               )}
             </div>
             <div className="card-face card-back">
               {isSupported && flipped && (
                 <MicButton state={micState} onPress={handleBackMicPress} />
               )}
-              <div className="quiz-options">
+              <div className="quiz-options" ref={answersRef}>
                 {choices.map((choice, i) => {
                   let state: 'idle' | 'correct' | 'incorrect' = 'idle';
                   if (selectedChoice !== null) {

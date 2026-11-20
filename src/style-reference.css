@@ -589,7 +589,11 @@ h1 {
     cursor: pointer;
     font-size: 1.05rem;
     font-weight: 600;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Not `all`: that would also animate the visibility inherited from the card's
+       back face, keeping a just-revealed answer unfocusable for 0.2 s. */
+    transition-property: background, border-color, box-shadow, color, transform;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-align: left;
     display: flex;
     align-items: center;
