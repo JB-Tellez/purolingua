@@ -105,7 +105,10 @@ export default function StudySession({ lang, deckId, cards }: Props) {
       );
   }
 
-  const allDone = dueCards.length === 0 || (finished && allDecksEmpty());
+  // Opening a deck with nothing due is like finishing it: all-done only when
+  // no deck has due cards, otherwise deck-complete.
+  const deckDone = finished || dueCards.length === 0;
+  const allDone = deckDone && allDecksEmpty();
 
   if (allDone) {
     return (
@@ -132,7 +135,7 @@ export default function StudySession({ lang, deckId, cards }: Props) {
     );
   }
 
-  if (finished) {
+  if (deckDone) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
@@ -146,7 +149,9 @@ export default function StudySession({ lang, deckId, cards }: Props) {
                 <Link href={backLink}>
                   <button className="btn secondary" type="button">{t('backToDecks')}</button>
                 </Link>
-                <button className="btn primary" type="button" onClick={resetSession}>{t('studyAgain')}</button>
+                {dueCards.length > 0 && (
+                  <button className="btn primary" type="button" onClick={resetSession}>{t('studyAgain')}</button>
+                )}
               </div>
             </div>
           </div>

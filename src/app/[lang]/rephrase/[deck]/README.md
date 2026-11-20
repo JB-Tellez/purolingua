@@ -60,7 +60,7 @@ tapping or by voice.
 - "Study again" (on both end screens) replays the session's due-card snapshot
   as practice: `practice` is set, and a choice skips `updateCard`, so
   boxes and review dates stay as the real session left them. It is hidden on
-  the all-done screen when the session started with no due cards.
+  either end screen when the session started with no due cards.
 - Mic on the front of the card: a transcript that matches `card.front` flips
   the card and shows `heard`. Mic on the back: the choice the transcript
   matches best (`bestMatch`) is selected; when two choices match equally
@@ -68,7 +68,8 @@ tapping or by voice.
   recognition error (including recognition that ends with no result), shows `notRecognized` and sets the mic to `error` for
   800 ms. The reset (`resetMicError`) clears only an error still showing, so a
   new attempt started within the 800 ms keeps listening.
-- After the last card, the session shows the all-done screen if no deck for
+- After the last card, or at once when the deck opens with no due cards (a
+  "done" deck is still a link), the session shows the all-done screen if no deck for
   this `lang` in `deckMetadata` has due cards at the active levels. Otherwise
   it shows the deck-complete screen. `advance()` only sets `finished`; the
   screen is chosen at render time (`allDecksEmpty()`), after `updateCard` has

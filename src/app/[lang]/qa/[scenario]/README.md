@@ -59,15 +59,16 @@ synthesis, speech recognition).
   it, and no timer writes progress after the page is gone. The card is
   recorded once. Covered by `QAStudySession.endScreens.test.tsx`.
 - "Study again" (on both end screens) replays `sessionDueCards` as practice:
-  `practice` is set and a correct answer skips `updateCard`. It is hidden on the
-  all-done screen when the session started with no due cards.
+  `practice` is set and a correct answer skips `updateCard`. It is hidden on
+  either end screen when the session started with no due cards.
 - Mic input: the transcript is matched against every choice (`bestMatch`). If
   the best match is the correct choice, it is selected and the card advances.
   A best match on a foil, no match, a tie, or a recognition error (including recognition that ends with no result) shows
   `notRecognized` for 800 ms and does not update SRS. The reset
   (`resetMicError`) clears only the error and the `notRecognized` feedback
   still showing, so a new attempt started within the 800 ms is not cut off.
-- After the last card, the session shows the scenario-done screen if any
+- After the last card, or at once when the scenario opens with no due cards
+  (a "done" scenario is still a link), the session shows the scenario-done screen if any
   scenario in `@/data/qa` still has due cards at the active levels. Otherwise
   it shows the all-done screen. `advance()` only sets `finished`; the
   screen is chosen at render time from the post-`updateCard` `progress`, so the

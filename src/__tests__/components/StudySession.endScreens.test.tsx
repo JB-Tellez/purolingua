@@ -188,3 +188,27 @@ describe('StudySession uses the Rephrase level filter', () => {
     expect(screen.getByText('Ciao')).toBeInTheDocument();
   });
 });
+
+// A deck with nothing due is still a link ("Completato" badge). Opening it used
+// to say "done for today, come back tomorrow" even when other decks were due.
+describe('StudySession opened with nothing due (real SRS state)', () => {
+  it('shows deckComplete, not allDone, when another deck still has due cards', () => {
+    seed({ daily_0: FUTURE, daily_1: FUTURE }); // restaurant_0 has no record → due
+    renderDaily();
+    expect(screen.getByText('deckComplete')).toBeInTheDocument();
+    expect(screen.queryByText('allDone')).toBeNull();
+  });
+
+  it('offers no "Study again" there: there is nothing to replay', () => {
+    seed({ daily_0: FUTURE, daily_1: FUTURE });
+    renderDaily();
+    expect(screen.queryByRole('button', { name: 'studyAgain' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'backToDecks' })).toBeInTheDocument();
+  });
+
+  it('still shows allDone when no deck has due cards', () => {
+    seed({ daily_0: FUTURE, daily_1: FUTURE, restaurant_0: FUTURE });
+    renderDaily();
+    expect(screen.getByText('allDone')).toBeInTheDocument();
+  });
+});

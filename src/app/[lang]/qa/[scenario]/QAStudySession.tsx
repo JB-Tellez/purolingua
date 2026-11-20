@@ -208,12 +208,13 @@ export default function QAStudySession({ lang, scenario }: Props) {
     if (started) setMicState('listening'); // a refused start must not look like listening
   }
 
-  // All-done screen (shown when 0 due cards at mount OR after all scenarios exhausted).
+  // Opening a scenario with nothing due is like finishing it: all-done only when
+  // no scenario has due cards, otherwise scenario-done.
   // `progress` here is post-updateCard, so the just-answered card is counted correctly.
+  const scenarioDone = finished || sessionDueCards.length === 0;
   const allDone =
-    sessionDueCards.length === 0 ||
-    (finished &&
-      !allScenarios.some((sc) => isScenarioHasDue(progress, sc.id, sc.cards, activeLevels)));
+    scenarioDone &&
+    !allScenarios.some((sc) => isScenarioHasDue(progress, sc.id, sc.cards, activeLevels));
 
   if (allDone) {
     return (
@@ -260,8 +261,8 @@ export default function QAStudySession({ lang, scenario }: Props) {
     );
   }
 
-  // Scenario-done screen (shown after last card in this scenario, but other scenarios have due cards)
-  if (finished) {
+  // Scenario-done screen (this scenario finished or had nothing due, but other scenarios have due cards)
+  if (scenarioDone) {
     return (
       <main>
         <div id="flashcard-view" style={{ paddingTop: '2rem' }}>
@@ -293,9 +294,11 @@ export default function QAStudySession({ lang, scenario }: Props) {
                     {t('backToScenarios')}
                   </button>
                 </Link>
-                <button className="btn primary" type="button" onClick={resetSession}>
-                  {t('studyAgain')}
-                </button>
+                {sessionDueCards.length > 0 && (
+                  <button className="btn primary" type="button" onClick={resetSession}>
+                    {t('studyAgain')}
+                  </button>
+                )}
               </div>
             </div>
           </div>

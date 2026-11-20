@@ -167,3 +167,27 @@ describe('QAStudySession uses the Q&A level filter', () => {
     expect(screen.getByRole('button', { name: /^Un caffè/ })).toBeInTheDocument();
   });
 });
+
+// A finished scenario is still a link. Opening it used to say "all scenarios
+// completed" even when other scenarios were due.
+describe('QAStudySession opened with nothing due (real SRS state)', () => {
+  it('shows scenarioDone, not allScenariosDone, when another scenario still has due cards', () => {
+    seed({ qa_coffee_coffee_01: FUTURE }); // hotel_01 has no record → due
+    renderCoffee();
+    expect(screen.getByText('scenarioDone')).toBeInTheDocument();
+    expect(screen.queryByText('allScenariosDone')).toBeNull();
+  });
+
+  it('offers no "Study again" there: there is nothing to replay', () => {
+    seed({ qa_coffee_coffee_01: FUTURE });
+    renderCoffee();
+    expect(screen.queryByRole('button', { name: 'studyAgain' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'backToScenarios' })).toBeInTheDocument();
+  });
+
+  it('still shows allScenariosDone when no scenario has due cards', () => {
+    seed({ qa_coffee_coffee_01: FUTURE, qa_hotel_hotel_01: FUTURE });
+    renderCoffee();
+    expect(screen.getByText('allScenariosDone')).toBeInTheDocument();
+  });
+});
